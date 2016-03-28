@@ -1,8 +1,9 @@
-1.02 Beta 1         NOT RELEASED
+1.02 RC 1         2016-03-27
 =================================
 - moved all images, CSS, and JS files to /assets (mamba)
 - added tab for bulk Updates (mamba)
 - added patches for Core files, required for "bulk Update" to work, located in /extras (mamba)
+- XOOPS 2.5.8 and PHP 7 (mamba)
 
 1.01 Beta 1         2014-03-18
 =================================

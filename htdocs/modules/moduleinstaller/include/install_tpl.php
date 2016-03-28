@@ -24,12 +24,11 @@
  * @author      Taiwen Jiang <phppp@users.sourceforge.net>
  * @author      Kris <kris@frxoops.org>
  * @author      DuGris (aka L. JEN) <dugris@frxoops.org>
- * @version     $Id: install_tpl.php 8107 2011-11-06 13:26:25Z beckmi $
-**/
+ **/
 
 defined('XOOPS_INSTALL') || die('XOOPS Installation wizard die');
 
-include_once dirname(dirname(dirname(__DIR__))) . '/language/'. $wizard->language . '/global.php';
+include_once dirname(dirname(dirname(__DIR__))) . '/language/' . $wizard->language . '/global.php';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo _LANGCODE; ?>" lang="<?php echo _LANGCODE; ?>">
@@ -37,17 +36,17 @@ include_once dirname(dirname(dirname(__DIR__))) . '/language/'. $wizard->languag
 <head>
     <title>
         <?php echo XOOPS_VERSION . ' : ' . XOOPS_INSTALL_WIZARD; ?>
-        (<?php echo($wizard->pageIndex + 1) . '/' . count($wizard->pages); ?>)
+        (<?php echo ($wizard->pageIndex + 1) . '/' . count($wizard->pages); ?>)
     </title>
-    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo _INSTALL_CHARSET ?>" />
-    <link rel="shortcut icon" type="image/ico" href="../favicon.ico" />
-    <link charset="UTF-8" rel="stylesheet" type="text/css" media="all" href="assets/css/style.css" />
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo _INSTALL_CHARSET ?>"/>
+    <link rel="shortcut icon" type="image/ico" href="../favicon.ico"/>
+    <link charset="UTF-8" rel="stylesheet" type="text/css" media="all" href="assets/css/style.css"/>
     <?php
-        if (file_exists('language/' . $wizard->language . '/style.css')) {
-            echo '<link charset="UTF-8" rel="stylesheet" type="text/css" media="all" href="language/' . $wizard->language . '/style.css" />';
-        } else {
-            $xoTheme->addStylesheet(XOOPS_URL . "/modules/" . $xoopsModule->getVar("dirname") . "/assets/css/style.css");
-        }
+    if (file_exists('language/' . $wizard->language . '/style.css')) {
+        echo '<link charset="UTF-8" rel="stylesheet" type="text/css" media="all" href="language/' . $wizard->language . '/style.css" />';
+    } else {
+        $xoTheme->addStylesheet(XOOPS_URL . '/modules/' . $xoopsModule->getVar('dirname') . '/assets/css/style.css');
+    }
     ?>
 
     <script type="text/javascript" src="./../assets/js/prototype.js"></script>
@@ -56,28 +55,30 @@ include_once dirname(dirname(dirname(__DIR__))) . '/language/'. $wizard->languag
 
 <body>
 
-    <div id="xo-content">
+<div id="xo-content">
 
-                    <form id='<?php echo $wizard->pages[$wizard->currentPage]['name']; ?>' action='<?php echo $_SERVER['PHP_SELF']; ?>' method='post'>
+    <form id='<?php echo $wizard->pages[$wizard->currentPage]['name']; ?>' action='<?php echo $_SERVER['PHP_SELF']; ?>' method='post'>
 
-                            <?php echo $content; ?>
+        <?php echo $content; ?>
 
-                        <div id="buttons">
-                            <?php if (@$pageHasForm) {
-    ?>
-                                <button type="submit">
-                            <?php 
-} else {
-    ?>
-                                <button type="button" accesskey="n" onclick="location.href='<?php echo 'index.php';
-    ?>'">
-                            <?php 
-} ?>
-                            <?php echo BUTTON_NEXT; ?>
-                            </button>
-                        </div>
-                    </form>
+        <div id="buttons">
+            <?php if (@$pageHasForm) {
+            ?>
+            <button type="submit">
+                <?php
 
-    </div>
+                } else {
+                ?>
+                <button type="button" accesskey="n" onclick="location.href='<?php echo 'index.php';
+                ?>'">
+                    <?php
+
+                    } ?>
+                    <?php echo BUTTON_NEXT; ?>
+                </button>
+        </div>
+    </form>
+
+</div>
 </body>
 </html>

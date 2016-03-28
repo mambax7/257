@@ -23,8 +23,7 @@
  * @author      Skalpa Keo <skalpa@xoops.org>
  * @author      Taiwen Jiang <phppp@users.sourceforge.net>
  * @author      DuGris (aka L. JEN) <dugris@frxoops.org>
- * @version     $Id: common.inc.php 8107 2011-11-06 13:26:25Z beckmi $
-**/
+ **/
 
 /**
  * If non-empty, only this user can access this installer

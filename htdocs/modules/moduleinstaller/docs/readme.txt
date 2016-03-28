@@ -6,8 +6,8 @@ ModuleInstaller is a XOOPS module to install and uninstall XOOPS Modules in bulk
  Requirements
  _____________________________________________________________________
 
-- XOOPS >= 2.5.7
-- PHP version >= 5.3.7
+- XOOPS >= 2.5.8
+- PHP version >= 5.5
 
 
 Install/uninstall

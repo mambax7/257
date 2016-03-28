@@ -470,7 +470,7 @@ select {
     opacity:                        0.8;
 }
 select[name=lang] {
-    min-width:                  10em
+    min-width:                  10em;
 }
 .option {
     padding-left:               27px;
