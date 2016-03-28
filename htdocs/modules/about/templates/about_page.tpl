@@ -4,14 +4,14 @@
 <{$xoTheme->addScript("modules/`$xoops_dirname`/assets/jquery-treeview/jquery.treeview.js")}>
 <div class="breadcrumbs">
     <{foreach item=itm from=$xoBreadcrumbs name=bcloop}>
-
+       
         <{if $itm.link}>
             <a href="<{$itm.link}>" title="<{$itm.title}>"><{$itm.title}></a>
         <{else}>
             <{$itm.title}>
         <{/if}>
-
-
+        
+        
         <{if !$smarty.foreach.bcloop.last}>
             &raquo;
         <{/if}>
@@ -20,11 +20,11 @@
 
 <ul class="treeview" id="tree">
     <{foreach item=item from=$pagemenu name=menu}>
-
+    
     <{if $item.child}>
         <li>
         <{if !$item.page_text}><a href="index.php?page_id=<{$item.page_id}>"><{$item.page_menu_title}></a><{else}><span><{$item.page_menu_title}></span><{/if}>
-        <{assign var="children" value=$item.child}>
+        <{assign var="children" value=$item.child}>        
         <{include file="db:about_menu.tpl"}>
         </li>
     <{else}>
@@ -40,12 +40,12 @@
 <br style="clear:both;" />
 <script type="text/javascript">
 $(function() {
-    $("#tree").treeview({
-        animated: "medium",
-        persist: "location",
-        collapsed: true,
-        unique: true
-    });
+	$("#tree").treeview({
+		animated: "medium",
+		persist: "location",
+		collapsed: true,
+		unique: true
+	});
 })
 </script>
 

@@ -18,3 +18,9 @@
  * @author         Susheng Yang <ezskyyoung@gmail.com>
  * @version        $Id: blocks.php 1 2010-2-9 ezsky$
  */
+
+
+define('_MB_ABOUT_BLOCKPAGE', 'Block Page');
+define('_MB_ABOUT_TEXT_LENGTH', 'Length');
+define('_MB_ABOUT_VIEW_MORELINKTEXT', 'More Link Text');
+define('_MB_ABOUT_DOTITLEIMAGE', 'Title Image');

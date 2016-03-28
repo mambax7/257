@@ -60,7 +60,7 @@
     </table>
 </form>
 
-<script src="<{$xoops_url}>/modules/about/include/jquery.js" type="text/javascript"></script>
+<script src="<{$xoops_url}>/modules/about/assets/js/jquery.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(document).ready(function() {
     $(".options").css("visibility","hidden");
