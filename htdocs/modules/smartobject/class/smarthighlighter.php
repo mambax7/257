@@ -53,7 +53,7 @@ class SmartHighlighter {
      * require ('keyhighlighter.class.php');
      *
      * function my_highlighter ($matches) {
-     * 	return '<span style="font-weight: bolder; color: #FF0000;">' . $matches[0] . '</span>';
+     *  return '<span style="font-weight: bolder; color: #FF0000;">' . $matches[0] . '</span>';
      * }
      *
      * new keyhighlighter ('W3C', false, 'my_highlighter');

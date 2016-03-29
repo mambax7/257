@@ -70,8 +70,8 @@ function b_marquee_tplleaguestats($limit, $dateformat, $itemssize)
     while ($myrow = $xoopsDB->fetchArray($result)) {
         $title = $myts->htmlSpecialChars($myrow['home']) . ' - ' . $myts->htmlSpecialChars($myrow['away']) . ' ' . $myts->htmlSpecialChars($myrow['home_p']) . '-' . $myts->htmlSpecialChars($myrow['away_p']);
 
-        if ($use_itemsize && $itemssize > 0) {            
-                $title = xoops_substr($title, 0, $itemssize + 3);          
+        if ($use_itemsize && $itemssize > 0) {
+                $title = xoops_substr($title, 0, $itemssize + 3);
         }
 
         $arr_date = explode('-', $myrow['date']);

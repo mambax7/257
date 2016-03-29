@@ -1,9 +1,9 @@
 <?php
 // $Id: smartobjectlink.php 159 2007-12-17 16:44:05Z malanciault $
 // ------------------------------------------------------------------------ //
-// 				 XOOPS - PHP Content Management System                      //
-//					 Copyright (c) 2000 XOOPS.org                           //
-// 						<http://www.xoops.org/>                             //
+//               XOOPS - PHP Content Management System                      //
+//                   Copyright (c) 2000 XOOPS.org                           //
+//                      <http://www.xoops.org/>                             //
 // ------------------------------------------------------------------------ //
 // This program is free software; you can redistribute it and/or modify     //
 // it under the terms of the GNU General Public License as published by     //
@@ -23,7 +23,7 @@
 // along with this program; if not, write to the Free Software              //
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
 // ------------------------------------------------------------------------ //
-// URL: http://www.xoops.org/												//
+// URL: http://www.xoops.org/                                               //
 // Project: The XOOPS Project                                               //
 // -------------------------------------------------------------------------//
 
@@ -43,8 +43,8 @@ class SmartobjectLink extends SmartObject {
         $this->initVar('to_email', XOBJ_DTYPE_TXTBOX, '', true, 255, '', false, _CO_SOBJECT_LINK_TO_EMAIL, _CO_SOBJECT_LINK_TO_EMAIL_DSC, true);
         $this->initVar('to_name', XOBJ_DTYPE_TXTBOX, '', true, 255, '', false, _CO_SOBJECT_LINK_TO_NAME, _CO_SOBJECT_LINK_TO_NAME_DSC, true);
         $this->initVar('link', XOBJ_DTYPE_TXTBOX, '', false, 255, '', false, _CO_SOBJECT_LINK_LINK, _CO_SOBJECT_LINK_LINK_DSC, true);
-		$this->initVar('subject', XOBJ_DTYPE_TXTBOX, '', true, 255, '', false, _CO_SOBJECT_LINK_SUBJECT, _CO_SOBJECT_LINK_SUBJECT_DSC, true);
-		$this->initVar('body', XOBJ_DTYPE_TXTAREA, '', true, null, '', false, _CO_SOBJECT_LINK_BODY, _CO_SOBJECT_LINK_BODY_DSC);
+        $this->initVar('subject', XOBJ_DTYPE_TXTBOX, '', true, 255, '', false, _CO_SOBJECT_LINK_SUBJECT, _CO_SOBJECT_LINK_SUBJECT_DSC, true);
+        $this->initVar('body', XOBJ_DTYPE_TXTAREA, '', true, null, '', false, _CO_SOBJECT_LINK_BODY, _CO_SOBJECT_LINK_BODY_DSC);
         $this->initVar('mid', XOBJ_DTYPE_INT, '', false, null, '', false, _CO_SOBJECT_LINK_MID, _CO_SOBJECT_LINK_MID_DSC);
         $this->initVar('mid_name', XOBJ_DTYPE_TXTBOX, '', false, 255, '', false, _CO_SOBJECT_LINK_MID_NAME, _CO_SOBJECT_LINK_MID_NAME_DSC, true);
     }
@@ -71,7 +71,7 @@ class SmartobjectLink extends SmartObject {
     }
 
     function to_uid($withContact=false) {
-  	    $ret = smart_getLinkedUnameFromId($this->getVar('to_uid', 'e'), 1, null, true);
+        $ret = smart_getLinkedUnameFromId($this->getVar('to_uid', 'e'), 1, null, true);
         return $ret;
     }
 
@@ -83,57 +83,57 @@ class SmartobjectLink extends SmartObject {
     function link($full=false) {
         $ret = $this->getVar('link','e');
         if ($full) {
-        	$myts = MyTextSanitizer::getInstance();
-        	$ret = $myts->displayTarea($ret);
-        	return $ret;
+            $myts = MyTextSanitizer::getInstance();
+            $ret = $myts->displayTarea($ret);
+            return $ret;
         } else {
-        	$ret = '<a href="' . $ret . '" alt="' . $this->getVar('link','e') . '" title="' . $this->getVar('link','e') . '">' .  _AM_SOBJECT_SENT_LINKS_GOTO . '</a>';
-        	return $ret;
+            $ret = '<a href="' . $ret . '" alt="' . $this->getVar('link','e') . '" title="' . $this->getVar('link','e') . '">' .  _AM_SOBJECT_SENT_LINKS_GOTO . '</a>';
+            return $ret;
         }
     }
 
     function getViewItemLink() {
-		$ret = '<a href="' . SMARTOBJECT_URL . 'admin/link.php?op=view&linkid=' . $this->getVar('linkid') . '"><img src="' . SMARTOBJECT_IMAGES_ACTIONS_URL . 'mail_find.png" alt="' . _AM_SOBJECT_SENT_LINK_VIEW . '" title="' . _AM_SOBJECT_SENT_LINK_VIEW . '" /></a>';
-		return $ret;
+        $ret = '<a href="' . SMARTOBJECT_URL . 'admin/link.php?op=view&linkid=' . $this->getVar('linkid') . '"><img src="' . SMARTOBJECT_IMAGES_ACTIONS_URL . 'mail_find.png" alt="' . _AM_SOBJECT_SENT_LINK_VIEW . '" title="' . _AM_SOBJECT_SENT_LINK_VIEW . '" /></a>';
+        return $ret;
     }
 
     function getFromInfo() {
-    	// check if from_uid represent a user
+        // check if from_uid represent a user
 
-    	if ($this->getVar('from_uid')) {
-			$user = smart_getLinkedUnameFromId($this->getVar('from_uid'));
-			if ($user == $GLOBALS['xoopsConfig']['anonymous']) {
-				$user = '<a href="mailto:' . $this->getVar('from_email') . '">' . $this->getVar('from_email') . '</a>';
-			}
-    	} else {
-    		$user = '<a href="mailto:' . $this->getVar('from_email') . '">' . $this->getVar('from_email') . '</a>';
-    	}
+        if ($this->getVar('from_uid')) {
+            $user = smart_getLinkedUnameFromId($this->getVar('from_uid'));
+            if ($user == $GLOBALS['xoopsConfig']['anonymous']) {
+                $user = '<a href="mailto:' . $this->getVar('from_email') . '">' . $this->getVar('from_email') . '</a>';
+            }
+        } else {
+            $user = '<a href="mailto:' . $this->getVar('from_email') . '">' . $this->getVar('from_email') . '</a>';
+        }
 
-    	return $user;
+        return $user;
 
     }
 
     function toArray() {
-    	$ret = parent::toArray();
-    	$ret['fromInfo'] = $this->getFromInfo();
-    	$ret['toInfo'] = $this->getToInfo();
-    	$ret['fullLink'] = $this->link(true);
-    	return $ret;
+        $ret = parent::toArray();
+        $ret['fromInfo'] = $this->getFromInfo();
+        $ret['toInfo'] = $this->getToInfo();
+        $ret['fullLink'] = $this->link(true);
+        return $ret;
     }
 
     function getToInfo() {
-    	// check if from_uid represent a user
+        // check if from_uid represent a user
 
-    	if ($this->getVar('to_uid')) {
-			$user = smart_getLinkedUnameFromId($this->getVar('to_uid'));
-			if ($user == $GLOBALS['xoopsConfig']['anonymous']) {
-				$user = '<a href="mailto:' . $this->getVar('to_email') . '">' . $this->getVar('to_email') . '</a>';
-			}
-    	} else {
-    		$user = '<a href="mailto:' . $this->getVar('to_email') . '">' . $this->getVar('to_email') . '</a>';
-    	}
+        if ($this->getVar('to_uid')) {
+            $user = smart_getLinkedUnameFromId($this->getVar('to_uid'));
+            if ($user == $GLOBALS['xoopsConfig']['anonymous']) {
+                $user = '<a href="mailto:' . $this->getVar('to_email') . '">' . $this->getVar('to_email') . '</a>';
+            }
+        } else {
+            $user = '<a href="mailto:' . $this->getVar('to_email') . '">' . $this->getVar('to_email') . '</a>';
+        }
 
-    	return $user;
+        return $user;
 
     }
 }

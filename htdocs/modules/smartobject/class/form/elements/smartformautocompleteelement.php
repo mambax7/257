@@ -17,8 +17,8 @@ class SmartFormAutocompleteElement extends SmartAutocompleteElement {
         $control = $object->controls[$key];
         $form_maxlength = isset($control['maxlength']) ? $control['maxlength'] : (isset($var['maxlength']) ? $var['maxlength'] : 255);
 
-		$form_size = isset($control['size']) ? $control['size'] : 50;
-		$this->SmartAutocompleteElement($var['form_caption'], $key, $form_size, $form_maxlength, $object->getVar($key, 'e'));
+        $form_size = isset($control['size']) ? $control['size'] : 50;
+        $this->SmartAutocompleteElement($var['form_caption'], $key, $form_size, $form_maxlength, $object->getVar($key, 'e'));
     }
 }
 ?>

@@ -44,59 +44,59 @@ function smartobject_checkall(formObj, fieldname)
 }
 function goto_URL(object)
 {
-	window.location.href = object.options[object.selectedIndex].value;
+    window.location.href = object.options[object.selectedIndex].value;
 }
 
 function togglecollapse(id)
 {
-	if (document.getElementById) { obj = document.getElementById(id); }
-	if (document.all) { obj = document.all[id]; }
-	if (document.layers) { obj = document.layers[id]; }
-	if (obj) {
-		if (obj.style.display == "none") {
-			obj.style.display = "";
-		} else {
-			obj.style.display = "none";
-		}
-	}
+    if (document.getElementById) { obj = document.getElementById(id); }
+    if (document.all) { obj = document.all[id]; }
+    if (document.layers) { obj = document.layers[id]; }
+    if (obj) {
+        if (obj.style.display == "none") {
+            obj.style.display = "";
+        } else {
+            obj.style.display = "none";
+        }
+    }
 
-	var expDays = 365;
-	var exp = new Date();
-	exp.setTime(exp.getTime() + (expDays*24*60*60*1000));
-	setCookie(window.location.pathname+"_smart_collaps_"+ obj.id , obj.style.display, exp);
+    var expDays = 365;
+    var exp = new Date();
+    exp.setTime(exp.getTime() + (expDays*24*60*60*1000));
+    setCookie(window.location.pathname+"_smart_collaps_"+ obj.id , obj.style.display, exp);
 
-	return false;
+    return false;
 }
 
 function ajaxtogglecollapse(id)
 {
-	if (document.getElementById) { obj = document.getElementById(id); }
-	if (document.all) { obj = document.all[id]; }
-	if (document.layers) { obj = document.layers[id]; }
-	if (obj) {
-		new Effect.toggle(id, 'appear');
-	}
+    if (document.getElementById) { obj = document.getElementById(id); }
+    if (document.all) { obj = document.all[id]; }
+    if (document.layers) { obj = document.layers[id]; }
+    if (obj) {
+        new Effect.toggle(id, 'appear');
+    }
 
-	var expDays = 365;
-	var exp = new Date();
-	exp.setTime(exp.getTime() + (expDays*24*60*60*1000));
-	setCookie(window.location.pathname+"_smart_collaps_"+ obj.id , obj.style.display, exp);
+    var expDays = 365;
+    var exp = new Date();
+    exp.setTime(exp.getTime() + (expDays*24*60*60*1000));
+    setCookie(window.location.pathname+"_smart_collaps_"+ obj.id , obj.style.display, exp);
 
-	return false;
+    return false;
 }
 
 function hideElement(id)
 {
-	if (document.getElementById) { obj = document.getElementById(id); }
-	if (document.all) { obj = document.all[id]; }
-	if (document.layers) { obj = document.layers[id]; }
-	if (obj) {
-		if (obj.style.display == "none") {
-			obj.style.display = "";
-		} else {
-			obj.style.display = "none";
-		}
-	}
+    if (document.getElementById) { obj = document.getElementById(id); }
+    if (document.all) { obj = document.all[id]; }
+    if (document.layers) { obj = document.layers[id]; }
+    if (obj) {
+        if (obj.style.display == "none") {
+            obj.style.display = "";
+        } else {
+            obj.style.display = "none";
+        }
+    }
 }
 
 
@@ -107,12 +107,12 @@ iconOpen.src = smart_url+'images/open12.gif';
 
 function toggleIcon ( iconName )
 {
-	if ( document.images[iconName].src == window.iconOpen.src ) {
-		document.images[iconName].src = window.iconClose.src;
-	} else if ( document.images[iconName].src == window.iconClose.src ) {
-		document.images[iconName].src = window.iconOpen.src;
-	}
-	return;
+    if ( document.images[iconName].src == window.iconOpen.src ) {
+        document.images[iconName].src = window.iconClose.src;
+    } else if ( document.images[iconName].src == window.iconClose.src ) {
+        document.images[iconName].src = window.iconOpen.src;
+    }
+    return;
 }
 
 /**

@@ -29,10 +29,10 @@ class SmartTip
     }
 
     function render($outputNow=true) {
-        $aTip = array(	'id' => $this->id,
-						'caption' => $this->caption,
-						'message' => $this->message,
-						'visible' => $this->visible ? 'block' : 'none');
+        $aTip = array(  'id' => $this->id,
+                        'caption' => $this->caption,
+                        'message' => $this->message,
+                        'visible' => $this->visible ? 'block' : 'none');
         $this->_tpl->assign('tip', $aTip);
         if ($outputNow) {
             $this->_tpl->display( 'db:smartobject_tip.html' );

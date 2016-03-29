@@ -6,7 +6,7 @@
  */
 
 class XoopsCaptchaImage {
-    var $config	= array();
+    var $config = array();
 
     function XoopsCaptchaImage()
     {

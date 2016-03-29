@@ -44,7 +44,7 @@ class SmartMetaGen
             $keywords = $this->createMetaKeywords();
         }
 
-        /*		$myts = MyTextSanitizer::getInstance();
+        /*      $myts = MyTextSanitizer::getInstance();
          if (method_exists($myts, 'formatForML')) {
          $keywords = $myts->formatForML($keywords);
          $description = $myts->formatForML($description);

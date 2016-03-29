@@ -52,21 +52,21 @@ function xoops_module_update_smartobject($module) {
         $table = new SmartDbTable('smartobject_link');
         if (!$table->exists()) {
             $table->setStructure("CREATE TABLE %s (
-			  `linkid` int(11) NOT NULL auto_increment,
-			  `from_uid` int(11) NOT NULL default '0',
-			  `from_email` varchar(255) NOT NULL default '',
-			  `from_name` varchar(255) NOT NULL default '',
-			  `to_uid` int(11) NOT NULL default '0',
-			  `to_email` varchar(255) NOT NULL default '',
-			  `to_name` varchar(255) NOT NULL default '',
-			  `link` varchar(255) NOT NULL default '',
-			  `subject` varchar(255) NOT NULL default '',
-			  `body` TEXT NOT NULL,
-			  `mid` int(11) NOT NULL default '0',
-			  `mid_name` varchar(255) NOT NULL default '',
+              `linkid` int(11) NOT NULL auto_increment,
+              `from_uid` int(11) NOT NULL default '0',
+              `from_email` varchar(255) NOT NULL default '',
+              `from_name` varchar(255) NOT NULL default '',
+              `to_uid` int(11) NOT NULL default '0',
+              `to_email` varchar(255) NOT NULL default '',
+              `to_name` varchar(255) NOT NULL default '',
+              `link` varchar(255) NOT NULL default '',
+              `subject` varchar(255) NOT NULL default '',
+              `body` TEXT NOT NULL,
+              `mid` int(11) NOT NULL default '0',
+              `mid_name` varchar(255) NOT NULL default '',
 
-			  PRIMARY KEY  (`linkid`)
-			) ENGINE=MyISAM COMMENT='SmartObject by The SmartFactory <www.smartfactory.ca>' AUTO_INCREMENT=1 ;");
+              PRIMARY KEY  (`linkid`)
+            ) ENGINE=MyISAM COMMENT='SmartObject by The SmartFactory <www.smartfactory.ca>' AUTO_INCREMENT=1 ;");
 
             if (!$dbupdater->updateTable($table)) {
                 /**
@@ -92,11 +92,11 @@ function xoops_module_update_smartobject($module) {
         $table = new SmartDbTable('smartobject_tag');
         if (!$table->exists()) {
             $table->setStructure("CREATE TABLE %s (
-		      `tagid` int(11) NOT NULL auto_increment,
-			  `name` varchar(255) NOT NULL default '',
-			  `description` TEXT NOT NULL,
-			  PRIMARY KEY  (`id`)
-			) ENGINE=MyISAM COMMENT='SmartObject by The SmartFactory <www.smartfactory.ca>' AUTO_INCREMENT=1 ;");
+              `tagid` int(11) NOT NULL auto_increment,
+              `name` varchar(255) NOT NULL default '',
+              `description` TEXT NOT NULL,
+              PRIMARY KEY  (`id`)
+            ) ENGINE=MyISAM COMMENT='SmartObject by The SmartFactory <www.smartfactory.ca>' AUTO_INCREMENT=1 ;");
 
             if (!$dbupdater->updateTable($table)) {
                 /**
@@ -109,11 +109,11 @@ function xoops_module_update_smartobject($module) {
         $table = new SmartDbTable('smartobject_tag_text');
         if (!$table->exists()) {
             $table->setStructure("CREATE TABLE %s (
-			  `tagid` int(11) NOT NULL default 0,
-			  `language` varchar(255) NOT NULL default '',
-			  `value` TEXT NOT NULL,
-			  PRIMARY KEY  (`id`, `language`)
-			) ENGINE=MyISAM COMMENT='SmartObject by The SmartFactory <www.smartfactory.ca>' AUTO_INCREMENT=1 ;");
+              `tagid` int(11) NOT NULL default 0,
+              `language` varchar(255) NOT NULL default '',
+              `value` TEXT NOT NULL,
+              PRIMARY KEY  (`id`, `language`)
+            ) ENGINE=MyISAM COMMENT='SmartObject by The SmartFactory <www.smartfactory.ca>' AUTO_INCREMENT=1 ;");
 
             if (!$dbupdater->updateTable($table)) {
                 /**
@@ -138,7 +138,7 @@ function xoops_module_update_smartobject($module) {
   `client_id` varchar(100) NOT NULL default '',
   `tag` varchar(50) NOT NULL default '',
   PRIMARY KEY  (`adsenseid`)
-			");
+            ");
         }
 
         if (!$dbupdater->updateTable($table)) {
@@ -165,7 +165,7 @@ function xoops_module_update_smartobject($module) {
   `date` int(11) NOT NULL,
   PRIMARY KEY  (`ratingid`),
   UNIQUE (`dirname`, `item`, `itemid`, `uid`)
-			");
+            ");
         }
 
         if (!$dbupdater->updateTable($table)) {
@@ -197,13 +197,13 @@ function xoops_module_update_smartobject($module) {
         $table = new SmartDbTable('smartobject_customtag');
         if (!$table->exists()) {
             $table->setStructure("
-			  `customtagid` int(11) NOT NULL auto_increment,
-			  `name` VARCHAR(255) NOT NULL,
-			  `description` TEXT NOT NULL,
-			  `content` TEXT NOT NULL,
-			  `language` TEXT NOT NULL,
-			  PRIMARY KEY  (`customtagid`)
-			");
+              `customtagid` int(11) NOT NULL auto_increment,
+              `name` VARCHAR(255) NOT NULL,
+              `description` TEXT NOT NULL,
+              `content` TEXT NOT NULL,
+              `language` TEXT NOT NULL,
+              PRIMARY KEY  (`customtagid`)
+            ");
         }
 
         if (!$dbupdater->updateTable($table)) {
@@ -222,14 +222,14 @@ function xoops_module_update_smartobject($module) {
         $table = new SmartDbTable('smartobject_currency');
         if (!$table->exists()) {
             $table->setStructure("
-			  `currencyid` int(11) NOT NULL auto_increment,
-			  `iso4217` VARCHAR(5) NOT NULL,
-			  `name` VARCHAR(255) NOT NULL,
-			  `symbol`  VARCHAR(1) NOT NULL,
-			  `rate` float NOT NULL,
-			  `default_currency` int(1) NOT NULL,
-			  PRIMARY KEY  (`currencyid`)
-			");
+              `currencyid` int(11) NOT NULL auto_increment,
+              `iso4217` VARCHAR(5) NOT NULL,
+              `name` VARCHAR(255) NOT NULL,
+              `symbol`  VARCHAR(1) NOT NULL,
+              `rate` float NOT NULL,
+              `default_currency` int(1) NOT NULL,
+              PRIMARY KEY  (`currencyid`)
+            ");
         }
 
         if (!$dbupdater->updateTable($table)) {
@@ -254,12 +254,12 @@ function xoops_module_update_smartobject($module) {
         $table = new SmartDbTable('smartobject_file');
         if (!$table->exists()) {
             $table->setStructure("
-			  `fileid` int(11) NOT NULL auto_increment,
-			  `caption` varchar(255) collate latin1_general_ci NOT NULL,
-			  `url` varchar(255) collate latin1_general_ci NOT NULL,
-			  `description` text collate latin1_general_ci NOT NULL,
-			   PRIMARY KEY  (`fileid`)
-			");
+              `fileid` int(11) NOT NULL auto_increment,
+              `caption` varchar(255) collate latin1_general_ci NOT NULL,
+              `url` varchar(255) collate latin1_general_ci NOT NULL,
+              `description` text collate latin1_general_ci NOT NULL,
+               PRIMARY KEY  (`fileid`)
+            ");
             if (!$dbupdater->updateTable($table)) {
                 /**
                  * @todo trap the errors
@@ -271,13 +271,13 @@ function xoops_module_update_smartobject($module) {
         $table = new SmartDbTable('smartobject_urllink');
         if (!$table->exists()) {
             $table->setStructure("
-			  `urllinkid` int(11) NOT NULL auto_increment,
-			  `caption` varchar(255) collate latin1_general_ci NOT NULL,
-			  `url` varchar(255) collate latin1_general_ci NOT NULL,
-			  `description` text collate latin1_general_ci NOT NULL,
-			  `target` varchar(10) collate latin1_general_ci NOT NULL,
- 			   PRIMARY KEY  (`urllinkid`)
-			");
+              `urllinkid` int(11) NOT NULL auto_increment,
+              `caption` varchar(255) collate latin1_general_ci NOT NULL,
+              `url` varchar(255) collate latin1_general_ci NOT NULL,
+              `description` text collate latin1_general_ci NOT NULL,
+              `target` varchar(10) collate latin1_general_ci NOT NULL,
+               PRIMARY KEY  (`urllinkid`)
+            ");
             if (!$dbupdater->updateTable($table)) {
                 /**
                  * @todo trap the errors

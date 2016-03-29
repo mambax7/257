@@ -13,8 +13,8 @@
 class SmartFormParentcategoryElement extends XoopsFormSelect {
     function SmartFormParentcategoryElement($object, $key) {
 
-    	$addNoParent = isset($object->controls[$key]['addNoParent']) ? $object->controls[$key]['addNoParent'] : true;
-    	$criteria = new CriteriaCompo();
+        $addNoParent = isset($object->controls[$key]['addNoParent']) ? $object->controls[$key]['addNoParent'] : true;
+        $criteria = new CriteriaCompo();
         $criteria->setSort("weight, name");
         $category_handler = xoops_getmodulehandler('category', $object->handler->_moduleName);
         $categories = $category_handler->getObjects($criteria);
@@ -26,11 +26,11 @@ class SmartFormParentcategoryElement extends XoopsFormSelect {
         $ret = array();
         $options = $this->getOptionArray($mytree, "name", 0, "", $ret);
         if ($addNoParent) {
-        	$newOptions = array('0'=>'----');
-        	foreach ($options as $k=>$v) {
-        		$newOptions[$k] = $v;
-        	}
-        	$options = $newOptions;
+            $newOptions = array('0'=>'----');
+            foreach ($options as $k=>$v) {
+                $newOptions[$k] = $v;
+            }
+            $options = $newOptions;
         }
         $this->addOptionArray($options);
     }
@@ -50,7 +50,7 @@ class SmartFormParentcategoryElement extends XoopsFormSelect {
 
         if ($key > 0) {
             $value = $tree->_tree[$key]['obj']->getVar($tree->_myId);
-			$ret[$key] = $prefix_curr.$tree->_tree[$key]['obj']->getVar($fieldName);
+            $ret[$key] = $prefix_curr.$tree->_tree[$key]['obj']->getVar($fieldName);
             $prefix_curr .= "-";
         }
         if (isset($tree->_tree[$key]['child']) && !empty($tree->_tree[$key]['child'])) {

@@ -14,7 +14,7 @@ if(empty($_SERVER['HTTP_REFERER']) || !preg_match("/^".preg_quote(XOOPS_URL, '/'
 }
 
 class XoopsCaptchaImageHandler {
-    var $config	= array();
+    var $config = array();
     //var $mode = "gd"; // GD or bmp
     var $code;
     var $invalid = false;
@@ -117,11 +117,11 @@ class XoopsCaptchaImageHandler {
      *  Originated from DuGris' SecurityImage
      */
     //  --------------------------------------------------------------------------- //
-    // Class : SecurityImage 1.5													//
-    // Author: DuGris aka L. Jen <http://www.dugris.info>							//
-    // Email : DuGris@wanadoo.fr													//
-    // Licence: GNU																	//
-    // Project: The XOOPS Project													//
+    // Class : SecurityImage 1.5                                                    //
+    // Author: DuGris aka L. Jen <http://www.dugris.info>                           //
+    // Email : DuGris@wanadoo.fr                                                    //
+    // Licence: GNU                                                                 //
+    // Project: The XOOPS Project                                                   //
     //  --------------------------------------------------------------------------- //
     function createImageGd($file = "")
     {

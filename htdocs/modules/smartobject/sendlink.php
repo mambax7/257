@@ -3,7 +3,7 @@
 /**
  * $Id: sendlink.php 159 2007-12-17 16:44:05Z malanciault $
  * Module: SmartObject
- * Author: The SmartFactory 
+ * Author: The SmartFactory
  * Licence: GNU
  */
 

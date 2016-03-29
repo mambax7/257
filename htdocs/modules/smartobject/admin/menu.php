@@ -1,6 +1,6 @@
 <?php
 /**
-* Id: menu.php 2341 2008-05-21 16:34:21Z malanciault 
+* Id: menu.php 2341 2008-05-21 16:34:21Z malanciault
 * Module: SmartObject
 * Author: The SmartFactory <www.smartfactory.ca>
 * Licence: GNU
@@ -62,46 +62,46 @@ $adminmenu[$i]["icon"]  = $pathIcon32 . '/about.png';
 
 
 if (!defined('SMARTOBJECT_ROOT_PATH')) {
-	include_once XOOPS_ROOT_PATH . '/modules/smartobject/include/functions.php';
+    include_once XOOPS_ROOT_PATH . '/modules/smartobject/include/functions.php';
 }
 
 $smartobject_config = smart_getModuleConfig('smartobject');
 
 if (isset($smartobject_config['enable_currencyman']) && $smartobject_config['enable_currencyman'] == true) {
-	$i++;
-	$adminmenu[$i]['title'] = _MI_SOBJECT_CURRENCIES;
-	$adminmenu[$i]['link'] = "admin/currency.php";
+    $i++;
+    $adminmenu[$i]['title'] = _MI_SOBJECT_CURRENCIES;
+    $adminmenu[$i]['link'] = "admin/currency.php";
     $adminmenu[$i]["icon"]  = $pathIcon32 . '/cash_stack.png';
 }
 
 
 global $xoopsModule;
-if (isset($xoopsModule)) { 
-//	$i = -1;
+if (isset($xoopsModule)) {
+//  $i = -1;
 
-// --- for XCL ---	
-//	$headermenu[$i]['link'] = '../../system/admin.php?fct=preferences&amp;op=showmod&amp;mod=' . $xoopsModule->getVar('mid');
-	$mid = $xoopsModule->getVar('mid') ;
-	if ( defined( 'XOOPS_CUBE_LEGACY' ) ) {
-		$link_pref = XOOPS_URL.'/modules/legacy/admin/index.php?action=PreferenceEdit&confmod_id='.$mid; 
-	} else {
-		$link_pref = XOOPS_URL.'/modules/system/admin.php?fct=preferences&op=showmod&mod='.$mid ;
-	}
-	$headermenu[$i]['link'] = $link_pref ;
+// --- for XCL ---
+//  $headermenu[$i]['link'] = '../../system/admin.php?fct=preferences&amp;op=showmod&amp;mod=' . $xoopsModule->getVar('mid');
+    $mid = $xoopsModule->getVar('mid') ;
+    if ( defined( 'XOOPS_CUBE_LEGACY' ) ) {
+        $link_pref = XOOPS_URL.'/modules/legacy/admin/index.php?action=PreferenceEdit&confmod_id='.$mid;
+    } else {
+        $link_pref = XOOPS_URL.'/modules/system/admin.php?fct=preferences&op=showmod&mod='.$mid ;
+    }
+    $headermenu[$i]['link'] = $link_pref ;
 // -----
 
-// --- for XCL ---	
-//	$headermenu[$i]['link'] = XOOPS_URL . "/modules/system/admin.php?fct=modulesadmin&op=update&module=" . $xoopsModule->getVar('dirname');
-	$dirname = $xoopsModule->getVar('dirname') ;
-	if ( defined( 'XOOPS_CUBE_LEGACY' ) ) {
-		$link_module = XOOPS_URL.'/modules/legacy/admin/index.php?action=ModuleUpdate&dirname='.$dirname;
-	} else {
-		$link_module = XOOPS_URL.'/modules/system/admin.php?fct=modulesadmin&op=update&module='.$dirname;
-	}
-	$headermenu[$i]['link'] = $link_module ;
+// --- for XCL ---
+//  $headermenu[$i]['link'] = XOOPS_URL . "/modules/system/admin.php?fct=modulesadmin&op=update&module=" . $xoopsModule->getVar('dirname');
+    $dirname = $xoopsModule->getVar('dirname') ;
+    if ( defined( 'XOOPS_CUBE_LEGACY' ) ) {
+        $link_module = XOOPS_URL.'/modules/legacy/admin/index.php?action=ModuleUpdate&dirname='.$dirname;
+    } else {
+        $link_module = XOOPS_URL.'/modules/system/admin.php?fct=modulesadmin&op=update&module='.$dirname;
+    }
+    $headermenu[$i]['link'] = $link_module ;
 // -----
 
-	$i++;
+    $i++;
 
 
 }

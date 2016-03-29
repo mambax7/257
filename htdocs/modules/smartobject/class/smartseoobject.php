@@ -12,7 +12,7 @@
  */
 
 if (!defined("XOOPS_ROOT_PATH")) {
-	die("XOOPS root path not defined");
+    die("XOOPS root path not defined");
 }
 include_once XOOPS_ROOT_PATH."/modules/smartobject/class/smartobject.php";
 /**
@@ -39,7 +39,7 @@ class SmartSeoObject extends SmartObject {
      */
     function short_url()
     {
-    	return $this->getVar('short_url');
+        return $this->getVar('short_url');
     }
 
     /**
@@ -49,7 +49,7 @@ class SmartSeoObject extends SmartObject {
      */
     function meta_keywords()
     {
-    	return $this->getVar('meta_keywords');
+        return $this->getVar('meta_keywords');
     }
 
     /**
@@ -59,6 +59,6 @@ class SmartSeoObject extends SmartObject {
      */
     function meta_description()
     {
-    	return $this->getVar('meta_description');
+        return $this->getVar('meta_description');
     }
 }

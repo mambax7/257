@@ -801,10 +801,10 @@ class ExtgalleryPhotoHandler extends ExtgalleryPersistableObjectHandler
         //---------------------------
 
         /*
-        
+
                 $jupart = (isset($_POST['jupart'])) ? (int) $_POST['jupart'] : 0;
                 $jufinal = (isset($_POST['jufinal'])) ? (int) $_POST['jufinal'] : 1;
-        
+
                 if ($this->photoUploader->isError()) {
                     return 4;
                 // We got a chunk, so we don't add photo to database

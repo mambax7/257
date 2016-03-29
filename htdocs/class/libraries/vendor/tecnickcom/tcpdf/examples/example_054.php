@@ -60,8 +60,8 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 // set some language-dependent strings (optional)
 if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-	require_once(dirname(__FILE__).'/lang/eng.php');
-	$pdf->setLanguageArray($l);
+    require_once(dirname(__FILE__).'/lang/eng.php');
+    $pdf->setLanguageArray($l);
 }
 
 // ---------------------------------------------------------
@@ -88,17 +88,17 @@ $html = <<<EOD
 <input type="radio" name="radioquestion" id="rqc" value="3" /> <label for="rqc">three</label><br /><br />
 <label for="selection">select:</label>
 <select name="selection" size="0">
-	<option value="0">zero</option>
-	<option value="1">one</option>
-	<option value="2">two</option>
-	<option value="3">three</option>
+    <option value="0">zero</option>
+    <option value="1">one</option>
+    <option value="2">two</option>
+    <option value="3">three</option>
 </select><br /><br />
 <label for="selection">select:</label>
 <select name="multiselection" size="2" multiple="multiple">
-	<option value="0">zero</option>
-	<option value="1">one</option>
-	<option value="2">two</option>
-	<option value="3">three</option>
+    <option value="0">zero</option>
+    <option value="1">one</option>
+    <option value="2">two</option>
+    <option value="3">three</option>
 </select><br /><br /><br />
 <label for="text">text area:</label><br />
 <textarea cols="40" rows="3" name="text">line one

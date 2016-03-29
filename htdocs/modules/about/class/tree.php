@@ -71,7 +71,7 @@ if (!class_exists('aboutTree')) {
          * @param string  $extra
          * @return string
          */
-        public function makeSelBox($name, $fieldName, $prefix = '-', $selected = '', $addEmptyOption = false, $key = 0, $extra = '') 
+        public function makeSelBox($name, $fieldName, $prefix = '-', $selected = '', $addEmptyOption = false, $key = 0, $extra = '')
         {
             $ret = '<select name=' . $name . '>';
             if (!empty($addEmptyOption)) {

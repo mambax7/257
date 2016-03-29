@@ -13,7 +13,7 @@
  */
 
 if (!defined("XOOPS_ROOT_PATH")) {
-	die("XOOPS root path not defined");
+    die("XOOPS root path not defined");
 }
 
 include_once(XOOPS_ROOT_PATH . "/modules/smartobject/include/common.php");
@@ -33,7 +33,7 @@ include_once(SMARTOBJECT_ROOT_PATH . "class/smarthookhandler.php");
 $smarthook_handler = SmartHookHandler::getInstance();
 
 if (!class_exists('smartmetagen')) {
-	include_once(SMARTOBJECT_ROOT_PATH . "class/smartmetagen.php");
+    include_once(SMARTOBJECT_ROOT_PATH . "class/smartmetagen.php");
 }
 //$smartobject_config = smart_getModuleConfig('smartobject');
 ?>

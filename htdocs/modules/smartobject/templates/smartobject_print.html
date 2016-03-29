@@ -16,23 +16,23 @@
 <link rel="stylesheet" media="all" href="<{$xoops_url}>/modules/smartobject/print.css" type="text/css">
 
 <style>
-	#container {width: <{$smartobject_print_width}>px; margin-left: auto; margin-right: auto;}
+    #container {width: <{$smartobject_print_width}>px; margin-left: auto; margin-right: auto;}
 </style>
 
 </head>
 
 <body onload="self.print();">
 <div id="container">
-	<{if $smartobject_print_title}>
-		<h2><{$smartobject_print_title}></h2>
-	<{/if}>
-	<{if $smartobject_print_dsc}>
-		<h3><{$smartobject_print_dsc}></h3>
-	<{/if}>
-	
-	<div id="smartobject_printer_friendly_content"><{$smartobject_print_content}></div>
-	
-	<div id="print_close"><a href="javascript:window.close();">Close this window</a></div>
+    <{if $smartobject_print_title}>
+        <h2><{$smartobject_print_title}></h2>
+    <{/if}>
+    <{if $smartobject_print_dsc}>
+        <h3><{$smartobject_print_dsc}></h3>
+    <{/if}>
+
+    <div id="smartobject_printer_friendly_content"><{$smartobject_print_content}></div>
+
+    <div id="print_close"><a href="javascript:window.close();">Close this window</a></div>
 </div>
 </body>
 </html>

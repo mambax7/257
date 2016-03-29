@@ -10,24 +10,24 @@
  * @subpackage SmartObjectForm
  */
 if (!defined('XOOPS_ROOT_PATH')) {
-	die("XOOPS root path not defined");
+    die("XOOPS root path not defined");
 }
 
 class SmartFormUser_sigElement extends XoopsFormElementTray {
 
-	function SmartFormUser_sigElement($object, $key){
+    function SmartFormUser_sigElement($object, $key){
 
-	    $var = $object->vars[$key];
-	    $control = $object->controls[$key];
+        $var = $object->vars[$key];
+        $control = $object->controls[$key];
 
-     	$this->XoopsFormElementTray($var['form_caption'], '<br /><br />', $key . '_signature_tray');
+        $this->XoopsFormElementTray($var['form_caption'], '<br /><br />', $key . '_signature_tray');
 
-		$signature_textarea = new XoopsFormDhtmlTextArea('', $key, $object->getVar($key, 'e'));
-		$this->addElement($signature_textarea);
+        $signature_textarea = new XoopsFormDhtmlTextArea('', $key, $object->getVar($key, 'e'));
+        $this->addElement($signature_textarea);
 
-		$attach_checkbox = new XoopsFormCheckBox('', 'attachsig', $object->getVar('attachsig', 'e'));
-		$attach_checkbox->addOption(1, _US_SHOWSIG);
-		$this->addElement($attach_checkbox);
-	}
+        $attach_checkbox = new XoopsFormCheckBox('', 'attachsig', $object->getVar('attachsig', 'e'));
+        $attach_checkbox->addOption(1, _US_SHOWSIG);
+        $this->addElement($attach_checkbox);
+    }
 }
 ?>

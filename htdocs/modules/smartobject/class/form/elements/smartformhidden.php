@@ -30,23 +30,23 @@
 // Project: The XOOPS Project                                                //
 // ------------------------------------------------------------------------- //
 if (!defined('XOOPS_ROOT_PATH')) {
-	die("XOOPS root path not defined");
+    die("XOOPS root path not defined");
 }
 
 class SmartFormHidden extends XoopsFormHidden {
 
 
-	function render(){
-		if(is_array($this->getValue())){
-			$ret = '';
-			foreach($this->getValue() as $value){
-     			$ret .= "<input type='hidden' name='".$this->getName()."[]' id='".$this->getName()."' value='".$value."' />\n";
+    function render(){
+        if(is_array($this->getValue())){
+            $ret = '';
+            foreach($this->getValue() as $value){
+                $ret .= "<input type='hidden' name='".$this->getName()."[]' id='".$this->getName()."' value='".$value."' />\n";
             }
-		}else{
-			$ret = "<input type='hidden' name='".$this->getName()."' id='".$this->getName()."' value='".$this->getValue()."' />";
-		}
-		return $ret;
-	}
+        }else{
+            $ret = "<input type='hidden' name='".$this->getName()."' id='".$this->getName()."' value='".$this->getValue()."' />";
+        }
+        return $ret;
+    }
 }
 
 ?>

@@ -20,7 +20,7 @@ class SmartFormImageUploadElement extends SmartFormUploadElement {
     /**
      * prepare HTML for output
      *
-     * @return	string	HTML
+     * @return  string  HTML
      */
     function render(){
         return "<input type='hidden' name='MAX_FILE_SIZE' value='".$this->getMaxFileSize()."' />

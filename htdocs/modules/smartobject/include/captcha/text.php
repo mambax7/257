@@ -6,7 +6,7 @@
  */
 
 class XoopsCaptchaText {
-    var $config	= array();
+    var $config = array();
     var $code;
 
     function XoopsCaptchaText()

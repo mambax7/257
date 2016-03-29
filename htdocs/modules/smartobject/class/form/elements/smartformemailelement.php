@@ -29,7 +29,7 @@
 // Project: The XOOPS Project                                                //
 // ------------------------------------------------------------------------- //
 if (!defined('XOOPS_ROOT_PATH')) {
-	die("XOOPS root path not defined");
+    die("XOOPS root path not defined");
 }
 
 /**
@@ -37,10 +37,10 @@ if (!defined('XOOPS_ROOT_PATH')) {
  */
 class SmartFormSelectElement extends XoopsFormElement {
 
-	function renderValidationJS( $withtags = true ) {
-		$js = '';
+    function renderValidationJS( $withtags = true ) {
+        $js = '';
 
-		return $js;
-	}
+        return $js;
+    }
 }
 ?>

@@ -121,15 +121,15 @@ function smart_xoops_cp_header() {
     }
     ?>
 <script type='text/javascript'>
-	<!--
-	var smart_url='<?php echo SMARTOBJECT_URL ?>';
-	var smart_modulename='<?php echo $xoopsModule->getVar('dirname') ?>';
-	// -->
-	</script>
+    <!--
+    var smart_url='<?php echo SMARTOBJECT_URL ?>';
+    var smart_modulename='<?php echo $xoopsModule->getVar('dirname') ?>';
+    // -->
+    </script>
 
 <script
-	type='text/javascript'
-	src='<?php echo SMARTOBJECT_URL ?>include/smart.js'></script>
+    type='text/javascript'
+    src='<?php echo SMARTOBJECT_URL ?>include/smart.js'></script>
     <?php
 
     /**
@@ -540,13 +540,13 @@ function smart_openclose_collapsable($name) {
     $cookie = smart_getCookieVar($cookie_name, '');
     if ($cookie == 'none') {
         echo '
-				<script type="text/javascript"><!--
-				togglecollapse("' . $name . '"); toggleIcon("' . $name . '_icon");
-					//-->
-				</script>
-				';
+                <script type="text/javascript"><!--
+                togglecollapse("' . $name . '"); toggleIcon("' . $name . '_icon");
+                    //-->
+                </script>
+                ';
     }
-    /*	if ($cookie == 'none') {
+    /*  if ($cookie == 'none') {
      echo '
      <script type="text/javascript"><!--
      hideElement("' . $name . '");
@@ -849,34 +849,34 @@ function smart_html2text($document)
     // common HTML entities to their text equivalent.
     // Credits : newbb2
     $search = array ("'<script[^>]*?>.*?</script>'si",  // Strip out javascript
-	"'<img.*?/>'si",       // Strip out img tags
-	"'<[\/\!]*?[^<>]*?>'si",          // Strip out HTML tags
-	"'([\r\n])[\s]+'",                // Strip out white space
-	"'&(quot|#34);'i",                // Replace HTML entities
-	"'&(amp|#38);'i",
-	"'&(lt|#60);'i",
-	"'&(gt|#62);'i",
-	"'&(nbsp|#160);'i",
-	"'&(iexcl|#161);'i",
-	"'&(cent|#162);'i",
-	"'&(pound|#163);'i",
-	"'&(copy|#169);'i",
-	"'&#(\d+);'e");                    // evaluate as php
+    "'<img.*?/>'si",       // Strip out img tags
+    "'<[\/\!]*?[^<>]*?>'si",          // Strip out HTML tags
+    "'([\r\n])[\s]+'",                // Strip out white space
+    "'&(quot|#34);'i",                // Replace HTML entities
+    "'&(amp|#38);'i",
+    "'&(lt|#60);'i",
+    "'&(gt|#62);'i",
+    "'&(nbsp|#160);'i",
+    "'&(iexcl|#161);'i",
+    "'&(cent|#162);'i",
+    "'&(pound|#163);'i",
+    "'&(copy|#169);'i",
+    "'&#(\d+);'e");                    // evaluate as php
 
     $replace = array ("",
-	"",
-	"",
-	"\\1",
-	"\"",
-	"&",
-	"<",
-	">",
-	" ",
+    "",
+    "",
+    "\\1",
+    "\"",
+    "&",
+    "<",
+    ">",
+    " ",
     chr(161),
     chr(162),
     chr(163),
     chr(169),
-	"chr(\\1)");
+    "chr(\\1)");
 
     $text = preg_replace($search, $replace, $document);
     return $text;
@@ -934,7 +934,7 @@ function smart_currency($var, $currencyObj=false) {
     if ($currencyObj) {
         $ret = $ret . ' ' . $currencyObj->getCode();
     }
-   	return $ret;
+    return $ret;
 }
 
 function smart_float($var) {

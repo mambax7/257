@@ -49,7 +49,7 @@ class MarqueePersistableObjectHandler extends XoopsPersistableObjectHandler//Xoo
     /**
      * Constructor - called from child classes
      *
-     * @param object|XoopsDatabase $db        {@link XoopsDatabase}     
+     * @param object|XoopsDatabase $db        {@link XoopsDatabase}
      * @param string               $tablename Name of database table
      * @param string               $classname Name of Class, this handler is managing
      * @param string               $keyname   Name of the property, holding the key
@@ -405,8 +405,8 @@ class MarqueePersistableObjectHandler extends XoopsPersistableObjectHandler//Xoo
             unset($cleanvars['dohtml']);
         }
         if ($obj->isNew()) {
-            if (!is_array($this->keyName) && $cleanvars[$this->keyName] < 1) {    
-                    $cleanvars[$this->keyName] = $this->db->genId($this->table . '_' . $this->keyName . '_seq');        
+            if (!is_array($this->keyName) && $cleanvars[$this->keyName] < 1) {
+                    $cleanvars[$this->keyName] = $this->db->genId($this->table . '_' . $this->keyName . '_seq');
             }
             $sql = 'INSERT INTO ' . $this->table . ' (' . implode(',', array_keys($cleanvars)) . ') VALUES (' . implode(',', array_values($cleanvars)) . ')';
         } else {

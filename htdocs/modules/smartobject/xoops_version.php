@@ -10,7 +10,7 @@
 */
 
 if (!defined("XOOPS_ROOT_PATH")) {
- 	die("XOOPS root path not defined");
+    die("XOOPS root path not defined");
 }
 
 $modversion['name'] = "SmartObject Framework";
@@ -76,10 +76,10 @@ $modversion['people']['testers'][] = "Pier-Andre Roy";
 global $xoopsConfig;
 $common_file = XOOPS_ROOT_PATH.'/modules/smartobject/language/'.$xoopsConfig['language'].'/common.php';
 if ( file_exists($common_file) ) {
-	$flag_common = true;
-	include_once $common_file;
+    $flag_common = true;
+    include_once $common_file;
 } else {
-	include_once(XOOPS_ROOT_PATH.'/modules/smartobject/language/english/common.php');
+    include_once(XOOPS_ROOT_PATH.'/modules/smartobject/language/english/common.php');
 }
 // -----
 
@@ -120,10 +120,10 @@ $i = 0;
 $i++;
 $modversion['blocks'][$i]['file'] = "addto.php";
 $modversion['blocks'][$i]['name'] = _MI_SOBJECT_ADDTO_TITLE;
-$modversion['blocks'][$i]['description']	= _MI_SOBJECT_ADDTO_DESC;
+$modversion['blocks'][$i]['description']    = _MI_SOBJECT_ADDTO_DESC;
 $modversion['blocks'][$i]['show_func'] = "smartobject_addto_show";
 $modversion['blocks'][$i]['edit_func'] = "smartobject_addto_edit";
-//$modversion['blocks'][$i]['options']	= "0";
+//$modversion['blocks'][$i]['options']  = "0";
 $modversion['blocks'][$i]['template'] = 'smartobject_block_addto.html';
 
 // Search
@@ -214,8 +214,8 @@ $modversion['config'][$i]['formtype'] = 'select';
 $modversion['config'][$i]['valuetype'] = 'text';
 $modversion['config'][$i]['default'] = 'all';
 $modversion['config'][$i]['options'] = array(_MI_SOBJECT_SHOW_SUBCATS_NO  => 'no',
-                                   		_MI_SOBJECT_SHOW_SUBCATS_NOTEMPTY   => 'nonempty',
-                                  		 _MI_SOBJECT_SHOW_SUBCATS_ALL => 'all');
+                                        _MI_SOBJECT_SHOW_SUBCATS_NOTEMPTY   => 'nonempty',
+                                         _MI_SOBJECT_SHOW_SUBCATS_ALL => 'all');
 
 
 $modversion['config'][$i]['name'] = 'items_per_page';
@@ -224,12 +224,12 @@ $modversion['config'][$i]['description'] = '_MI_SOBJECT_ITEMSPERPAGE_DSC';
 $modversion['config'][$i]['formtype'] = 'select';
 $modversion['config'][$i]['valuetype'] = 'text';
 $modversion['config'][$i]['options'] = array('5'  => 5,
-                                   			'10'  => 10,
-                                   			'15'  => 15,
-                                   			'20'  => 20,
-                                   			'25'  => 25,
-                                   			'30'  => 30,
-                                  		 );
+                                            '10'  => 10,
+                                            '15'  => 15,
+                                            '20'  => 20,
+                                            '25'  => 25,
+                                            '30'  => 30,
+                                         );
 $modversion['config'][$i]['default'] = '10';
 $i++;
 
@@ -247,14 +247,14 @@ $modversion['config'][$i]['description'] = '_CO_SOBJECT_DEFEDITOR_DSC';
 $modversion['config'][$i]['formtype'] = 'select';
 $modversion['config'][$i]['valuetype'] = 'text';
 $modversion['config'][$i]['options'] = array('TextArea'  => 'textarea',
-                                   			 'DHTML Text Area' => 'dhtmltextarea',
-                                   			 'TinyEditor' => 'tiny',
-                                   			 'FCKEditor' => 'fckeditor',
-                                   			 'InBetween' => 'inbetween',
-                                   			 'Koivi' => 'koivi',
-                                   			 'Spaw' => 'spaw',
-                                   			 'HTMLArea' => 'htmlarea'
-                                  		 );
+                                             'DHTML Text Area' => 'dhtmltextarea',
+                                             'TinyEditor' => 'tiny',
+                                             'FCKEditor' => 'fckeditor',
+                                             'InBetween' => 'inbetween',
+                                             'Koivi' => 'koivi',
+                                             'Spaw' => 'spaw',
+                                             'HTMLArea' => 'htmlarea'
+                                         );
 $modversion['config'][$i]['default'] = 'fckeditor';
 $i++;
 */

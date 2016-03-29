@@ -18,10 +18,10 @@ class SmartFormLanguageElement extends XoopsFormSelectLang {
         $control = $object->controls[$key];
         $all = isset($control['all']) ? true : false;
 
-		$this->XoopsFormSelectLang($var['form_caption'], $key, $object->getVar($key, 'e'));
-		if ($all) {
-			$this->addOption('all', _ALL);
-		}
+        $this->XoopsFormSelectLang($var['form_caption'], $key, $object->getVar($key, 'e'));
+        if ($all) {
+            $this->addOption('all', _ALL);
+        }
     }
 }
 ?>

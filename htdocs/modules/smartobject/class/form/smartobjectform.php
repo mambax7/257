@@ -77,9 +77,9 @@ class SmartobjectForm extends XoopsThemeForm {
 
     function addCustomButton($name, $caption, $onclick=false) {
         $custom_button_array = array(
-						'name' => $name,
-						'caption' => $caption,
-						'onclick' => $onclick
+                        'name' => $name,
+                        'caption' => $caption,
+                        'onclick' => $onclick
         );
         $this->_custom_button[] = $custom_button_array;
     }
@@ -87,8 +87,8 @@ class SmartobjectForm extends XoopsThemeForm {
     /**
      * Add an element to the form
      *
-     * @param	object  &$formElement    reference to a {@link XoopsFormElement}
-     * @param	bool    $required       is this a "required" element?
+     * @param   object  &$formElement    reference to a {@link XoopsFormElement}
+     * @param   bool    $required       is this a "required" element?
      */
     function addElement(&$formElement, $key=false, $var=false, $required='notset'){
         if ($key) {
@@ -170,23 +170,23 @@ class SmartobjectForm extends XoopsThemeForm {
 
                         case XOBJ_DTYPE_INT:
                             $this->targetObject->setControl($key, array(
-																'name' => 'text',
-																'size' => '5'
-																));
-																$form_text = $this->getControl("text", $key);
-																$this->addElement($form_text, $key, $var);
-																unset($form_text);
-																break;
+                                                                'name' => 'text',
+                                                                'size' => '5'
+                                                                ));
+                                                                $form_text = $this->getControl("text", $key);
+                                                                $this->addElement($form_text, $key, $var);
+                                                                unset($form_text);
+                                                                break;
 
                         case XOBJ_DTYPE_FLOAT:
                             $this->targetObject->setControl($key, array(
-																'name' => 'text',
-																'size' => '5'
-																));
-																$form_text = $this->getControl("text", $key);
-																$this->addElement($form_text, $key, $var);
-																unset($form_text);
-																break;
+                                                                'name' => 'text',
+                                                                'size' => '5'
+                                                                ));
+                                                                $form_text = $this->getControl("text", $key);
+                                                                $this->addElement($form_text, $key, $var);
+                                                                unset($form_text);
+                                                                break;
 
                         case XOBJ_DTYPE_LTIME:
                             $form_date_time = $this->getControl('date_time', $key);
@@ -208,13 +208,13 @@ class SmartobjectForm extends XoopsThemeForm {
 
                         case XOBJ_DTYPE_CURRENCY:
                             $this->targetObject->setControl($key, array(
-																'name' => 'text',
-																'size' => '15'
-																));
-																$form_currency = $this->getControl("text", $key);
-																$this->addElement($form_currency, $key, $var);
-																unset($form_currency);
-																break;
+                                                                'name' => 'text',
+                                                                'size' => '15'
+                                                                ));
+                                                                $form_currency = $this->getControl("text", $key);
+                                                                $this->addElement($form_currency, $key, $var);
+                                                                unset($form_currency);
+                                                                break;
 
                         case XOBJ_DTYPE_URLLINK:
                             $form_urllink = $this->getControl("urllink", $key);
@@ -438,10 +438,10 @@ class SmartobjectForm extends XoopsThemeForm {
         // if no control has been created, let's create a default one
         if (!isset($this->targetObject->controls[$key])) {
             $control = array('name' => 'textarea',
-			'itemHandler' => false,
-			'method' => false,
-			'module' => false,
-			'form_editor'=>'default');
+            'itemHandler' => false,
+            'method' => false,
+            'module' => false,
+            'form_editor'=>'default');
         } else {
             $control = $this->targetObject->controls[$key];
         }
@@ -493,7 +493,7 @@ class SmartobjectForm extends XoopsThemeForm {
 
                 case 'tiny' :
                     if (!$xoops22) {
-                        if ( is_readable(XOOPS_ROOT_PATH . "/class/xoopseditor/tinyeditor/formtinytextarea.php"))	{
+                        if ( is_readable(XOOPS_ROOT_PATH . "/class/xoopseditor/tinyeditor/formtinytextarea.php"))   {
                             include_once(XOOPS_ROOT_PATH . "/class/xoopseditor/tinyeditor/formtinytextarea.php");
                             $editor = new XoopsFormTinyTextArea(array('caption'=> $caption, 'name'=>$name, 'value'=>$value, 'width'=>'100%', 'height'=>'300px'),true);
                         } else {
@@ -518,7 +518,7 @@ class SmartobjectForm extends XoopsThemeForm {
 
                 case 'fckeditor' :
                     if (!$xoops22) {
-                        if ( is_readable(XOOPS_ROOT_PATH . "/class/xoopseditor/fckeditor/formfckeditor.php"))	{
+                        if ( is_readable(XOOPS_ROOT_PATH . "/class/xoopseditor/fckeditor/formfckeditor.php"))   {
                             include_once(XOOPS_ROOT_PATH . "/class/xoopseditor/fckeditor/formfckeditor.php");
                             $editor = new XoopsFormFckeditor(array('caption'=> $caption, 'name'=>$name, 'value'=>$value, 'width'=>'100%', 'height'=>'300px'),true);
                         } else {
@@ -535,7 +535,7 @@ class SmartobjectForm extends XoopsThemeForm {
 
                 case 'inbetween' :
                     if (!$xoops22) {
-                        if ( is_readable(XOOPS_ROOT_PATH . "/class/xoopseditor/inbetween/forminbetweentextarea.php"))	{
+                        if ( is_readable(XOOPS_ROOT_PATH . "/class/xoopseditor/inbetween/forminbetweentextarea.php"))   {
                             include_once(XOOPS_ROOT_PATH . "/class/xoopseditor/inbetween/forminbetweentextarea.php");
                             $editor = new XoopsFormInbetweenTextArea(array('caption'=> $caption, 'name'=>$name, 'value'=>$value, 'width'=>'100%', 'height'=>'300px'),true);
                         } else {
@@ -552,7 +552,7 @@ class SmartobjectForm extends XoopsThemeForm {
 
                 case 'koivi' :
                     if (!$xoops22) {
-                        if ( is_readable(XOOPS_ROOT_PATH . "/class/wysiwyg/formwysiwygtextarea.php"))	{
+                        if ( is_readable(XOOPS_ROOT_PATH . "/class/wysiwyg/formwysiwygtextarea.php"))   {
                             include_once(XOOPS_ROOT_PATH . "/class/wysiwyg/formwysiwygtextarea.php");
                             $editor = new XoopsFormWysiwygTextArea($caption, $name, $value, '100%', '400px');
                         } else {
@@ -569,7 +569,7 @@ class SmartobjectForm extends XoopsThemeForm {
 
                 case "spaw":
                     if(!$xoops22) {
-                        if (is_readable(XOOPS_ROOT_PATH . "/class/spaw/formspaw.php"))	{
+                        if (is_readable(XOOPS_ROOT_PATH . "/class/spaw/formspaw.php"))  {
                             include_once(XOOPS_ROOT_PATH . "/class/spaw/formspaw.php");
                             $editor = new XoopsFormSpaw($caption, $name, $value);
                         }
@@ -580,7 +580,7 @@ class SmartobjectForm extends XoopsThemeForm {
 
                 case "htmlarea":
                     if(!$xoops22) {
-                        if ( is_readable(XOOPS_ROOT_PATH . "/class/htmlarea/formhtmlarea.php"))	{
+                        if ( is_readable(XOOPS_ROOT_PATH . "/class/htmlarea/formhtmlarea.php")) {
                             include_once(XOOPS_ROOT_PATH . "/class/htmlarea/formhtmlarea.php");
                             $editor = new XoopsFormHtmlarea($caption, $name, $value);
                         }
@@ -640,16 +640,16 @@ class SmartobjectForm extends XoopsThemeForm {
     /**
      * create HTML to output the form as a theme-enabled table with validation.
      *
-     * @return	string
+     * @return  string
      */
     function render()
     {
         $required =& $this->getRequired();
         $ret = "
-			<form name='".$this->getName()."' id='".$this->getName()."' action='".$this->getAction()."' method='".$this->getMethod()."' onsubmit='return xoopsFormValidate_".$this->getName()."(this);'".$this->getExtra().">
-			<table width='100%' class='outer' cellspacing='1'>
-			<tr><th colspan='2'>".$this->getTitle()."</th></tr>
-		";
+            <form name='".$this->getName()."' id='".$this->getName()."' action='".$this->getAction()."' method='".$this->getMethod()."' onsubmit='return xoopsFormValidate_".$this->getName()."(this);'".$this->getExtra().">
+            <table width='100%' class='outer' cellspacing='1'>
+            <tr><th colspan='2'>".$this->getTitle()."</th></tr>
+        ";
         $hidden = '';
         $class ='even';
         foreach ( $this->getElements() as $ele ) {
@@ -674,7 +674,7 @@ class SmartobjectForm extends XoopsThemeForm {
     /**
      * assign to smarty form template instead of displaying directly
      *
-     * @param	object  &$tpl    reference to a {@link Smarty} object
+     * @param   object  &$tpl    reference to a {@link Smarty} object
      * @see     Smarty
      */
     function assign(&$tpl, $smartyName=false){
@@ -682,10 +682,10 @@ class SmartobjectForm extends XoopsThemeForm {
         $elements = array();
         foreach ( $this->getElements() as $ele ) {
             $n = ($ele->getName() != "") ? $ele->getName() : $i;
-            $elements[$n]['name']	  = $ele->getName();
+            $elements[$n]['name']     = $ele->getName();
             $elements[$n]['caption']  = $ele->getCaption();
-            $elements[$n]['body']	  = $ele->render();
-            $elements[$n]['hidden']	  = $ele->isHidden();
+            $elements[$n]['body']     = $ele->render();
+            $elements[$n]['hidden']   = $ele->isHidden();
             $elements[$n]['section']  = strToLower(get_class($ele)) == strToLower('SmartFormSection');
             $elements[$n]['section_close']  = get_class($ele) == 'SmartFormSectionClose';
             $elements[$n]['hide'] = isset($this->targetObject->vars[$n]['hide']) ? $this->targetObject->vars[$n]['hide'] : false;
@@ -721,45 +721,45 @@ class SmartobjectForm extends XoopsThemeForm {
             if (strtolower(get_class($elt)) == 'xoopsformradio') {
                 $js .= "var myOption = -1;";
                 $js .= "for (i=myform.{$eltname}.length-1; i > -1; i--) {
-					if (myform.{$eltname}[i].checked) {
-						myOption = i; i = -1;
-					}
-				}
-				if (myOption == -1) {
-					window.alert(\"{$eltmsg}\"); myform.{$eltname}[0].focus(); return false; }\n";
+                    if (myform.{$eltname}[i].checked) {
+                        myOption = i; i = -1;
+                    }
+                }
+                if (myOption == -1) {
+                    window.alert(\"{$eltmsg}\"); myform.{$eltname}[0].focus(); return false; }\n";
 
             }elseif (strtolower(get_class($elt)) == 'smartformselect_multielement') {
                 $js .= "var hasSelections = false;";
                 $js .= "for(var i = 0; i < myform['{$eltname}[]'].length; i++){
-					if (myform['{$eltname}[]'].options[i].selected) {
-						hasSelections = true;
-					}
+                    if (myform['{$eltname}[]'].options[i].selected) {
+                        hasSelections = true;
+                    }
 
-				}
-				if (hasSelections == false) {
-					window.alert(\"{$eltmsg}\"); myform['{$eltname}[]'].options[0].focus(); return false; }\n";
+                }
+                if (hasSelections == false) {
+                    window.alert(\"{$eltmsg}\"); myform['{$eltname}[]'].options[0].focus(); return false; }\n";
 
             }elseif (strtolower(get_class($elt)) == 'xoopsformcheckbox' || strtolower(get_class($elt)) == 'smartformcheckelement' ) {
                 $js .= "var hasSelections = false;";
                 //sometimes, there is an implicit '[]', sometimes not
                 if(strpos($eltname, '[') === false){
                     $js .= "for(var i = 0; i < myform['{$eltname}[]'].length; i++){
-						if (myform['{$eltname}[]'][i].checked) {
-							hasSelections = true;
-						}
+                        if (myform['{$eltname}[]'][i].checked) {
+                            hasSelections = true;
+                        }
 
-					}
-					if (hasSelections == false) {
-						window.alert(\"{$eltmsg}\"); myform['{$eltname}[]'][0].focus(); return false; }\n";
+                    }
+                    if (hasSelections == false) {
+                        window.alert(\"{$eltmsg}\"); myform['{$eltname}[]'][0].focus(); return false; }\n";
                 }else{
                     $js .= "for(var i = 0; i < myform['{$eltname}'].length; i++){
-						if (myform['{$eltname}'][i].checked) {
-							hasSelections = true;
-						}
+                        if (myform['{$eltname}'][i].checked) {
+                            hasSelections = true;
+                        }
 
-					}
-					if (hasSelections == false) {
-						window.alert(\"{$eltmsg}\"); myform['{$eltname}'][0].focus(); return false; }\n";
+                    }
+                    if (hasSelections == false) {
+                        window.alert(\"{$eltmsg}\"); myform['{$eltname}'][0].focus(); return false; }\n";
                 }
 
             }else{

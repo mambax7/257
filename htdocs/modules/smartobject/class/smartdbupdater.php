@@ -138,14 +138,14 @@ class SmartDbTable {
      *
      * Example :
      *
-     *     	$table->setStructure("`transactionid` int(11) NOT NULL auto_increment,
-     * 				  `date` int(11) NOT NULL default '0',
-     * 				  `status` int(1) NOT NULL default '-1',
-     * 				  `itemid` int(11) NOT NULL default '0',
-     * 				  `uid` int(11) NOT NULL default '0',
-     * 				  `price` float NOT NULL default '0',
-     * 				  `currency` varchar(100) NOT NULL default '',
-     * 				  PRIMARY KEY  (`transactionid`)");
+     *      $table->setStructure("`transactionid` int(11) NOT NULL auto_increment,
+     *                `date` int(11) NOT NULL default '0',
+     *                `status` int(1) NOT NULL default '-1',
+     *                `itemid` int(11) NOT NULL default '0',
+     *                `uid` int(11) NOT NULL default '0',
+     *                `price` float NOT NULL default '0',
+     *                `currency` varchar(100) NOT NULL default '',
+     *                PRIMARY KEY  (`transactionid`)");
      *
      * @param  string $structure table structure
      *
@@ -705,9 +705,9 @@ class SmartobjectDbupdater {
         $table = new SmartDbTable($dirname . '_meta');
         if (!$table->exists()) {
             $table->setStructure("
-			  `metakey` varchar(50) NOT NULL default '',
-			  `metavalue` varchar(255) NOT NULL default '',
-			  PRIMARY KEY (`metakey`)");
+              `metakey` varchar(50) NOT NULL default '',
+              `metavalue` varchar(255) NOT NULL default '',
+              PRIMARY KEY (`metakey`)");
             $table->setData("'version',0");
             if (!$this->updateTable($table)) {
                 /**

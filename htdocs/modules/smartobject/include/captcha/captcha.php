@@ -12,9 +12,9 @@
  */
 
 class XoopsCaptcha {
-    var $active	= true;
-    var $mode 	= "text";	// potential values: image, text
-    var $config	= array();
+    var $active = true;
+    var $mode   = "text";   // potential values: image, text
+    var $config = array();
 
     var $message = array(); // Logging error messages
 
@@ -52,7 +52,7 @@ class XoopsCaptcha {
      *
      * For future possible modes, right now force to use text or image
      *
-     * @param string	$mode	if no mode is set, just verify current mode
+     * @param string    $mode   if no mode is set, just verify current mode
      */
     function setMode($mode = null)
     {
@@ -103,9 +103,9 @@ class XoopsCaptcha {
      */
     function verify($skipMember = null)
     {
-        $sessionName	= @$_SESSION['XoopsCaptcha_name'];
-        $skipMember		= ($skipMember === null) ? @$_SESSION['XoopsCaptcha_skipmember'] : $skipMember;
-        $maxAttempts	= intval( @$_SESSION['XoopsCaptcha_maxattempts'] );
+        $sessionName    = @$_SESSION['XoopsCaptcha_name'];
+        $skipMember     = ($skipMember === null) ? @$_SESSION['XoopsCaptcha_skipmember'] : $skipMember;
+        $maxAttempts    = intval( @$_SESSION['XoopsCaptcha_maxattempts'] );
 
         $is_valid = false;
 

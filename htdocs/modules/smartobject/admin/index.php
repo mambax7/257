@@ -24,7 +24,7 @@ include_once dirname(__FILE__) . '/admin_header.php';
 
 xoops_cp_header();
 
-	$indexAdmin = new ModuleAdmin();
+    $indexAdmin = new ModuleAdmin();
 
     echo $indexAdmin->addNavigation('index.php');
     echo $indexAdmin->renderIndex();

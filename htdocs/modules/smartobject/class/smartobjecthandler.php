@@ -178,9 +178,9 @@ class SmartPersistableObjectHandler extends XoopsObjectHandler {
         include_once(SMARTOBJECT_ROOT_PATH . 'class/smartobjectpermission.php');
 
         $this->permissionsArray[] = array(
-   			'perm_name' => $perm_name,
-   			'caption' => $caption,
-   			'description' => $description
+            'perm_name' => $perm_name,
+            'caption' => $caption,
+            'description' => $description
         );
     }
 
@@ -659,7 +659,7 @@ class SmartPersistableObjectHandler extends XoopsObjectHandler {
                 return false;
             }
 
-        }	else {
+        }   else {
             $eventResult = $this->executeEvent('beforeUpdate', $obj);
             if (!$eventResult) {
                 $obj->setErrors("An error occured during the BeforeUpdate event");
