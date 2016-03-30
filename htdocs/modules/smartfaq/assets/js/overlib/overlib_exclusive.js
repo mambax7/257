@@ -50,15 +50,24 @@ function setExclusiveVariables() {
 }
 
 // Parses Exclusive Parameters
-function parseExclusiveExtras(pf,i,ar) {
-    var k = i,v;
+function parseExclusiveExtras(pf, i, ar) {
+    var k = i, v;
 
     olOverrideIsSet = false;  // a global variable
 
     if (k < ar.length) {
-        if (ar[k] == EXCLUSIVEOVERRIDE) { if(pf !=  'ol_') olOverrideIsSet = true; return k; }
-        if (ar[k] == EXCLUSIVE) { eval(pf +  'exclusive = (' +  pf + 'exclusive == 0)? 1 : 0'); return k; }
-        if (ar[k] == EXCLUSIVESTATUS) { eval(pf + "exclusivestatus = '" + escSglQuote(ar[++k]) + "'"); return k; }
+        if (ar[k] == EXCLUSIVEOVERRIDE) {
+            if (pf != 'ol_') olOverrideIsSet = true;
+            return k;
+        }
+        if (ar[k] == EXCLUSIVE) {
+            eval(pf + 'exclusive = (' + pf + 'exclusive == 0)? 1 : 0');
+            return k;
+        }
+        if (ar[k] == EXCLUSIVESTATUS) {
+            eval(pf + "exclusivestatus = '" + escSglQuote(ar[++k]) + "'");
+            return k;
+        }
     }
 
     return -1;
@@ -71,11 +80,11 @@ function parseExclusiveExtras(pf,i,ar) {
 function isExclusive(args) {
     var rtnVal = false;
 
-    if(args != null) rtnVal = hasCommand(args, EXCLUSIVEOVERRIDE);
+    if (args != null) rtnVal = hasCommand(args, EXCLUSIVEOVERRIDE);
 
-    if(rtnVal) return false;
+    if (rtnVal) return false;
     else {
-        self.status = (o3_exclusive)? o3_exclusivestatus : '';
+        self.status = (o3_exclusive) ? o3_exclusivestatus : '';
         return o3_exclusive;
     }
 
@@ -85,8 +94,8 @@ function isExclusive(args) {
 function hasCommand(args, COMMAND) {
     var rtnFlag = false;
 
-    for (var i=0; i<args.length; i++) {
-        if (typeof args[i] == 'number' &&  args[i] == COMMAND) {
+    for (var i = 0; i < args.length; i++) {
+        if (typeof args[i] == 'number' && args[i] == COMMAND) {
             rtnFlag = true;
             break;
         }
@@ -101,7 +110,7 @@ function clearExclusive() {
 }
 
 function setExclusive() {
-    o3_exclusive = (o3_showingsticky &&  o3_exclusive);
+    o3_exclusive = (o3_showingsticky && o3_exclusive);
 }
 
 function chkForExclusive() {
@@ -116,7 +125,7 @@ function chkForExclusive() {
 registerRunTimeFunction(setExclusiveVariables);
 registerCmdLineFunction(parseExclusiveExtras);
 registerPostParseFunction(chkForExclusive);
-registerHook("createPopup",setExclusive,FBEFORE);
-registerHook("hideObject",clearExclusive,FAFTER);
+registerHook("createPopup", setExclusive, FBEFORE);
+registerHook("hideObject", clearExclusive, FAFTER);
 
 

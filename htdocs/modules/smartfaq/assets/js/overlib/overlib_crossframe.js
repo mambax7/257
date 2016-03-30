@@ -23,11 +23,15 @@ registerCommands('frame');
 ///////
 
 // Parses FRAME command
-function parseFrameExtras(pf,i,ar) {
-    var k = i,v;
+function parseFrameExtras(pf, i, ar) {
+    var k = i, v;
 
     if (k < ar.length) {
-        if (ar[k] == FRAME) { v = ar[++k]; if(pf == 'ol_'&&compatibleframe(v)) ol_frame = v; else opt_FRAME(v); return k; }
+        if (ar[k] == FRAME) {
+            v = ar[++k];
+            if (pf == 'ol_' && compatibleframe(v)) ol_frame = v; else opt_FRAME(v);
+            return k;
+        }
     }
 
     return -1;
@@ -39,7 +43,7 @@ function parseFrameExtras(pf,i,ar) {
 
 // Defines which frame we should point to.
 function opt_FRAME(frm) {
-    o3_frame = compatibleFrame(frm)? frm : ol_frame;
+    o3_frame = compatibleFrame(frm) ? frm : ol_frame;
 
     if (olNs4) {
         over = o3_frame.document.layers['overDiv'];
@@ -66,13 +70,13 @@ function compatibleFrame(frameid) {
 }
 
 // Get frame depth of nested frames
-function frmDepth(thisFrame,ofrm) {
+function frmDepth(thisFrame, ofrm) {
     var retVal = '';
 
-    for (var i = 0; i<thisFrame.length; i++) {
+    for (var i = 0; i < thisFrame.length; i++) {
         if (thisFrame[i].length > 0) {
-            retVal = frmDepth(thisFrame[i],ofrm);
-            if (retVal ==  '') continue;
+            retVal = frmDepth(thisFrame[i], ofrm);
+            if (retVal == '') continue;
         } else if (thisFrame[i] != ofrm) continue;
         retVal = '[' + i + ']' + retVal;
         break;
@@ -82,30 +86,30 @@ function frmDepth(thisFrame,ofrm) {
 }
 
 // Gets frame reference value relative to top frame
-function getFrmRef(srcFrm,tgetFrm) {
+function getFrmRef(srcFrm, tgetFrm) {
     var rtnVal = ''
 
     if (tgetFrm != srcFrm) {
-        var tFrm = frmDepth(top.frames,tgetFrm)
-        var sFrm = frmDepth(top.frames,srcFrm)
-        if (sFrm.length ==  tFrm.length) {
+        var tFrm = frmDepth(top.frames, tgetFrm)
+        var sFrm = frmDepth(top.frames, srcFrm)
+        if (sFrm.length == tFrm.length) {
             l = tFrm.lastIndexOf('[')
 
             if (l) {
-                while ( sFrm.substring(0,l) != tFrm.substring(0,l) )
-                l = tFrm.lastIndexOf('[',l-1)
+                while (sFrm.substring(0, l) != tFrm.substring(0, l))
+                    l = tFrm.lastIndexOf('[', l - 1)
                 tFrm = tFrm.substr(l)
                 sFrm = sFrm.substr(l)
             }
         }
 
-        var cnt = 0, p = '',str = tFrm
+        var cnt = 0, p = '', str = tFrm
         while ((k = str.lastIndexOf('[')) != -1) {
             cnt++
-            str = str.substring(0,k)
+            str = str.substring(0, k)
         }
 
-        for (var i = 0; i<cnt; i++) p = p + 'parent.'
+        for (var i = 0; i < cnt; i++) p = p + 'parent.'
         rtnVal = p + 'frames' + sFrm + '.'
     }
 
@@ -113,7 +117,7 @@ function getFrmRef(srcFrm,tgetFrm) {
 }
 
 function chkForFrmRef() {
-    if(o3_frame != ol_frame) fnRef = getFrmRef(ol_frame,o3_frame)
+    if (o3_frame != ol_frame) fnRef = getFrmRef(ol_frame, o3_frame)
     return true;
 }
 

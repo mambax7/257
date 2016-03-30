@@ -16,14 +16,14 @@ if (typeof olInfo == 'undefined' || olInfo.simpleversion < 400) alert('overLIB 4
 
 // Function which generates the popup with an IFRAME shim
 function generatePopUp(content) {
-    if(!olIe4||olOp||!olIe55||(typeof o3_shadow != 'undefined' && o3_shadow)||(typeof o3_bubble != 'undefined' && o3_bubble)) return;
+    if (!olIe4 || olOp || !olIe55 || (typeof o3_shadow != 'undefined' && o3_shadow) || (typeof o3_bubble != 'undefined' && o3_bubble)) return;
 
-    var wd,ht,txt, zIdx =  0;
+    var wd, ht, txt, zIdx = 0;
 
-    wd =  parseInt(o3_width);
-    ht =  over.offsetHeight;
-    txt =  bckDropSrc(wd,ht,zIdx++);
-    txt += '<div style="position: absolute; top: 0; left: 0; width: '+ wd+'px; z-index: ' + zIdx + ';">' + content + '</div>';
+    wd = parseInt(o3_width);
+    ht = over.offsetHeight;
+    txt = bckDropSrc(wd, ht, zIdx++);
+    txt += '<div style="position: absolute; top: 0; left: 0; width: ' + wd + 'px; z-index: ' + zIdx + ';">' + content + '</div>';
     layerWrite(txt);
 }
 
@@ -35,13 +35,13 @@ function bckDropSrc(width, height, Z) {
 // Hides SELECT boxes that will be under the popup
 // Checking Gecko version number to try to include other browsers based on the Gecko engine
 function hideSelectBox() {
-    if(olNs4 || olOp || olIe55) return;
+    if (olNs4 || olOp || olIe55) return;
     var px, py, pw, ph, sx, sw, sy, sh, selEl, v;
 
-    if(olIe4) v = 0;
+    if (olIe4) v = 0;
     else {
         v = navigator.userAgent.match(/Gecko\/(\d{8})/i);
-        if(!v) return;   // return if no string match
+        if (!v) return;   // return if no string match
         v = parseInt(v[1]);
     }
 
@@ -49,15 +49,15 @@ function hideSelectBox() {
         px = parseInt(over.style.left);
         py = parseInt(over.style.top);
         pw = o3_width;
-        ph = (o3_aboveheight? parseInt(o3_aboveheight) : over.offsetHeight);
-        selEl = (olIe4)? o3_frame.document.all.tags("SELECT") : o3_frame.document.getElementsByTagName("SELECT");
-        for (var i=0; i<selEl.length; i++) {
-            if(!olIe4 && selEl[i].size < 2) continue;  // Not IE and SELECT size is 1 or not specified
-            sx = pageLocation(selEl[i],'Left');
-            sy = pageLocation(selEl[i],'Top');
+        ph = (o3_aboveheight ? parseInt(o3_aboveheight) : over.offsetHeight);
+        selEl = (olIe4) ? o3_frame.document.all.tags("SELECT") : o3_frame.document.getElementsByTagName("SELECT");
+        for (var i = 0; i < selEl.length; i++) {
+            if (!olIe4 && selEl[i].size < 2) continue;  // Not IE and SELECT size is 1 or not specified
+            sx = pageLocation(selEl[i], 'Left');
+            sy = pageLocation(selEl[i], 'Top');
             sw = selEl[i].offsetWidth;
             sh = selEl[i].offsetHeight;
-            if((px+pw) < sx || px > (sx+sw) || (py+ph) < sy || py > (sy+sh)) continue;
+            if ((px + pw) < sx || px > (sx + sw) || (py + ph) < sy || py > (sy + sh)) continue;
             selEl[i].isHidden = 1;
             selEl[i].style.visibility = 'hidden';
         }
@@ -66,20 +66,20 @@ function hideSelectBox() {
 
 // Shows previously hidden SELECT Boxes
 function showSelectBox() {
-    if(olNs4 || olOp || olIe55) return;
+    if (olNs4 || olOp || olIe55) return;
     var selEl, v;
 
-    if(olIe4) v = 0;
+    if (olIe4) v = 0;
     else {
         v = navigator.userAgent.match(/Gecko\/(\d{8})/i);
-        if(!v) return;
+        if (!v) return;
         v = parseInt(v[1]);
     }
 
-    if(v < 20030624) {
-        selEl = (olIe4)? o3_frame.document.all.tags("SELECT") : o3_frame.document.getElementsByTagName("SELECT");
-        for (var i=0; i<selEl.length; i++) {
-            if(typeof selEl[i].isHidden !=  'undefined' && selEl[i].isHidden) {
+    if (v < 20030624) {
+        selEl = (olIe4) ? o3_frame.document.all.tags("SELECT") : o3_frame.document.getElementsByTagName("SELECT");
+        for (var i = 0; i < selEl.length; i++) {
+            if (typeof selEl[i].isHidden != 'undefined' && selEl[i].isHidden) {
                 selEl[i].isHidden = 0;
                 selEl[i].style.visibility = 'visible';
             }
@@ -89,15 +89,15 @@ function showSelectBox() {
 
 // function gets the total offset properties of an element
 // this same function occurs in overlib_mark.js.
-function pageLocation(o,t){
+function pageLocation(o, t) {
     var x = 0
 
-    while(o.offsetParent){
-        x += o['offset'+t]
+    while (o.offsetParent) {
+        x += o['offset' + t]
         o = o.offsetParent
     }
 
-    x += o['offset'+t]
+    x += o['offset' + t]
 
     return x
 }
@@ -116,18 +116,18 @@ if (!(olNs4 || olOp || olIe55 || navigator.userAgent.indexOf('Netscape6') != -1)
         var ls = MMStr.search(strRe);
         ls += f[1].length;
         var le = MMStr.substring(ls).search(/[;|}]\n/);
-        MMStr = MMStr.substring(0,ls) + ' { runHook("placeLayer",FREPLACE); if(olHideForm) hideSelectBox(); ' + MMStr.substring(ls + (le != -1? le+3 : 0));
+        MMStr = MMStr.substring(0, ls) + ' { runHook("placeLayer",FREPLACE); if(olHideForm) hideSelectBox(); ' + MMStr.substring(ls + (le != -1 ? le + 3 : 0));
         document.writeln('<script type="text/javascript">\n<!--\n' + MMStr + '\n//-->\n</' + 'script>');
     }
 
     f = capExtent.onmousemove.toString().match(/function[ ]+(\w*)\(/);
-    if (f&&f[1] != 'annoymous') capExtent.onmousemove = olMouseMove;
+    if (f && f[1] != 'annoymous') capExtent.onmousemove = olMouseMove;
 }
 
 
 ////////
 // PLUGIN REGISTRATIONS
 ////////
-registerHook("createPopup",generatePopUp,FAFTER);
-registerHook("hideObject",showSelectBox,FAFTER);
-olHideForm=1;
+registerHook("createPopup", generatePopUp, FAFTER);
+registerHook("hideObject", showSelectBox, FAFTER);
+olHideForm = 1;
