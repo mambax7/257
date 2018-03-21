@@ -60,13 +60,8 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 // set some language-dependent strings (optional)
 if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-<<<<<<< HEAD
 	require_once(dirname(__FILE__).'/lang/eng.php');
 	$pdf->setLanguageArray($l);
-=======
-    require_once(dirname(__FILE__).'/lang/eng.php');
-    $pdf->setLanguageArray($l);
->>>>>>> 258
 }
 
 // -------------------------------------------------------------------
@@ -106,7 +101,6 @@ $w = 30;
 $h = 30;
 // test all combinations of alignments
 for ($i = 0; $i < 3; ++$i) {
-<<<<<<< HEAD
 	$fitbox = $horizontal_alignments[$i].' ';
 	$x = 15;
 	for ($j = 0; $j < 3; ++$j) {
@@ -116,17 +110,6 @@ for ($i = 0; $i < 3; ++$i) {
 		$x += 32; // new column
 	}
 	$y += 32; // new row
-=======
-    $fitbox = $horizontal_alignments[$i].' ';
-    $x = 15;
-    for ($j = 0; $j < 3; ++$j) {
-        $fitbox[1] = $vertical_alignments[$j];
-        $pdf->Rect($x, $y, $w, $h, 'F', array(), array(128,255,128));
-        $pdf->Image('images/image_demo.jpg', $x, $y, $w, $h, 'JPG', '', '', false, 300, '', false, false, 0, $fitbox, false, false);
-        $x += 32; // new column
-    }
-    $y += 32; // new row
->>>>>>> 258
 }
 
 $x = 115;
@@ -134,7 +117,6 @@ $y = 35;
 $w = 25;
 $h = 50;
 for ($i = 0; $i < 3; ++$i) {
-<<<<<<< HEAD
 	$fitbox = $horizontal_alignments[$i].' ';
 	$x = 115;
 	for ($j = 0; $j < 3; ++$j) {
@@ -144,17 +126,6 @@ for ($i = 0; $i < 3; ++$i) {
 		$x += 27; // new column
 	}
 	$y += 52; // new row
-=======
-    $fitbox = $horizontal_alignments[$i].' ';
-    $x = 115;
-    for ($j = 0; $j < 3; ++$j) {
-        $fitbox[1] = $vertical_alignments[$j];
-        $pdf->Rect($x, $y, $w, $h, 'F', array(), array(128,255,255));
-        $pdf->Image('images/image_demo.jpg', $x, $y, $w, $h, 'JPG', '', '', false, 300, '', false, false, 0, $fitbox, false, false);
-        $x += 27; // new column
-    }
-    $y += 52; // new row
->>>>>>> 258
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

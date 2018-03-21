@@ -31,7 +31,6 @@ require_once('tcpdf_include.php');
 // Extend the TCPDF class to create custom Header and Footer
 class MYPDF extends TCPDF {
 
-<<<<<<< HEAD
 	//Page header
 	public function Header() {
 		// Logo
@@ -52,28 +51,6 @@ class MYPDF extends TCPDF {
 		// Page number
 		$this->Cell(0, 10, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
 	}
-=======
-    //Page header
-    public function Header() {
-        // Logo
-        $image_file = K_PATH_IMAGES.'logo_example.jpg';
-        $this->Image($image_file, 10, 10, 15, '', 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-        // Set font
-        $this->SetFont('helvetica', 'B', 20);
-        // Title
-        $this->Cell(0, 15, '<< TCPDF Example 003 >>', 0, false, 'C', 0, '', 0, false, 'M', 'M');
-    }
-
-    // Page footer
-    public function Footer() {
-        // Position at 15 mm from bottom
-        $this->SetY(-15);
-        // Set font
-        $this->SetFont('helvetica', 'I', 8);
-        // Page number
-        $this->Cell(0, 10, 'Page '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
-    }
->>>>>>> 258
 }
 
 // create new PDF document
@@ -109,13 +86,8 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 // set some language-dependent strings (optional)
 if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-<<<<<<< HEAD
 	require_once(dirname(__FILE__).'/lang/eng.php');
 	$pdf->setLanguageArray($l);
-=======
-    require_once(dirname(__FILE__).'/lang/eng.php');
-    $pdf->setLanguageArray($l);
->>>>>>> 258
 }
 
 // ---------------------------------------------------------

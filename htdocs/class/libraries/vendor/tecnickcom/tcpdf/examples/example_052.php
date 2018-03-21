@@ -60,13 +60,8 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 // set some language-dependent strings (optional)
 if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-<<<<<<< HEAD
 	require_once(dirname(__FILE__).'/lang/eng.php');
 	$pdf->setLanguageArray($l);
-=======
-    require_once(dirname(__FILE__).'/lang/eng.php');
-    $pdf->setLanguageArray($l);
->>>>>>> 258
 }
 
 // ---------------------------------------------------------
@@ -83,19 +78,11 @@ $certificate = 'file://data/cert/tcpdf.crt';
 
 // set additional information
 $info = array(
-<<<<<<< HEAD
 	'Name' => 'TCPDF',
 	'Location' => 'Office',
 	'Reason' => 'Testing TCPDF',
 	'ContactInfo' => 'http://www.tcpdf.org',
 	);
-=======
-    'Name' => 'TCPDF',
-    'Location' => 'Office',
-    'Reason' => 'Testing TCPDF',
-    'ContactInfo' => 'http://www.tcpdf.org',
-    );
->>>>>>> 258
 
 // set document signature
 $pdf->setSignature($certificate, $certificate, 'tcpdfdemo', '', 2, $info);

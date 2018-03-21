@@ -60,20 +60,14 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 // set some language-dependent strings (optional)
 if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-<<<<<<< HEAD
 	require_once(dirname(__FILE__).'/lang/eng.php');
 	$pdf->setLanguageArray($l);
-=======
-    require_once(dirname(__FILE__).'/lang/eng.php');
-    $pdf->setLanguageArray($l);
->>>>>>> 258
 }
 
 // ---------------------------------------------------------
 
 // set array for viewer preferences
 $preferences = array(
-<<<<<<< HEAD
 	'HideToolbar' => true,
 	'HideMenubar' => true,
 	'HideWindowUI' => true,
@@ -90,24 +84,6 @@ $preferences = array(
 	'PickTrayByPDFSize' => true,
 	'PrintPageRange' => array(1,1,2,3),
 	'NumCopies' => 2
-=======
-    'HideToolbar' => true,
-    'HideMenubar' => true,
-    'HideWindowUI' => true,
-    'FitWindow' => true,
-    'CenterWindow' => true,
-    'DisplayDocTitle' => true,
-    'NonFullScreenPageMode' => 'UseNone', // UseNone, UseOutlines, UseThumbs, UseOC
-    'ViewArea' => 'CropBox', // CropBox, BleedBox, TrimBox, ArtBox
-    'ViewClip' => 'CropBox', // CropBox, BleedBox, TrimBox, ArtBox
-    'PrintArea' => 'CropBox', // CropBox, BleedBox, TrimBox, ArtBox
-    'PrintClip' => 'CropBox', // CropBox, BleedBox, TrimBox, ArtBox
-    'PrintScaling' => 'AppDefault', // None, AppDefault
-    'Duplex' => 'DuplexFlipLongEdge', // Simplex, DuplexFlipShortEdge, DuplexFlipLongEdge
-    'PickTrayByPDFSize' => true,
-    'PrintPageRange' => array(1,1,2,3),
-    'NumCopies' => 2
->>>>>>> 258
 );
 
 // Check the example n. 60 for advanced page settings

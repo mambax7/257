@@ -60,13 +60,8 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 // set some language-dependent strings (optional)
 if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-<<<<<<< HEAD
 	require_once(dirname(__FILE__).'/lang/eng.php');
 	$pdf->setLanguageArray($l);
-=======
-    require_once(dirname(__FILE__).'/lang/eng.php');
-    $pdf->setLanguageArray($l);
->>>>>>> 258
 }
 
 // ---------------------------------------------------------
@@ -90,7 +85,6 @@ $pdf->SetFont('helvetica', '', 10);
 
 // set style for barcode
 $style = array(
-<<<<<<< HEAD
 	'border' => true,
 	'vpadding' => 'auto',
 	'hpadding' => 'auto',
@@ -98,15 +92,6 @@ $style = array(
 	'bgcolor' => false, //array(255,255,255)
 	'module_width' => 1, // width of a single module in points
 	'module_height' => 1 // height of a single module in points
-=======
-    'border' => true,
-    'vpadding' => 'auto',
-    'hpadding' => 'auto',
-    'fgcolor' => array(0,0,0),
-    'bgcolor' => false, //array(255,255,255)
-    'module_width' => 1, // width of a single module in points
-    'module_height' => 1 // height of a single module in points
->>>>>>> 258
 );
 
 // write RAW 2D Barcode
@@ -122,7 +107,6 @@ $pdf->write2DBarcode($code, 'RAW2', 80, 60, 30, 20, $style, 'N');
 
 // set style for barcode
 $style = array(
-<<<<<<< HEAD
 	'border' => 2,
 	'vpadding' => 'auto',
 	'hpadding' => 'auto',
@@ -130,15 +114,6 @@ $style = array(
 	'bgcolor' => false, //array(255,255,255)
 	'module_width' => 1, // width of a single module in points
 	'module_height' => 1 // height of a single module in points
-=======
-    'border' => 2,
-    'vpadding' => 'auto',
-    'hpadding' => 'auto',
-    'fgcolor' => array(0,0,0),
-    'bgcolor' => false, //array(255,255,255)
-    'module_width' => 1, // width of a single module in points
-    'module_height' => 1 // height of a single module in points
->>>>>>> 258
 );
 
 // QRCODE,L : QR-CODE Low error correction
@@ -169,7 +144,6 @@ $pdf->Text(20, 205, 'QRCODE H');
 
  Possible options are:
 
-<<<<<<< HEAD
  	a  = aspect ratio (width/height);
  	e  = error correction level (0-8);
 
@@ -185,23 +159,6 @@ $pdf->Text(20, 205, 'QRCODE H');
  	o4 = Addressee (text);
  	o5 = File Size (numeric);
  	o6 = Checksum (numeric).
-=======
-    a  = aspect ratio (width/height);
-    e  = error correction level (0-8);
-
-    Macro Control Block options:
-
-    t  = total number of macro segments;
-    s  = macro segment index (0-99998);
-    f  = file ID;
-    o0 = File Name (text);
-    o1 = Segment Count (numeric);
-    o2 = Time Stamp (numeric);
-    o3 = Sender (text);
-    o4 = Addressee (text);
-    o5 = File Size (numeric);
-    o6 = Checksum (numeric).
->>>>>>> 258
 
  Parameters t, s and f are required for a Macro Control Block, all other parametrs are optional.
  To use a comma character ',' on text options, replace it with the character 255: "\xff".
@@ -221,17 +178,10 @@ $pdf->Text(80, 145, 'DATAMATRIX (ISO/IEC 16022:2006)');
 
 // new style
 $style = array(
-<<<<<<< HEAD
 	'border' => 2,
 	'padding' => 'auto',
 	'fgcolor' => array(0,0,255),
 	'bgcolor' => array(255,255,64)
-=======
-    'border' => 2,
-    'padding' => 'auto',
-    'fgcolor' => array(0,0,255),
-    'bgcolor' => array(255,255,64)
->>>>>>> 258
 );
 
 // QRCODE,H : QR-CODE Best error correction
@@ -240,17 +190,10 @@ $pdf->Text(80, 205, 'QRCODE H - COLORED');
 
 // new style
 $style = array(
-<<<<<<< HEAD
 	'border' => false,
 	'padding' => 0,
 	'fgcolor' => array(128,0,0),
 	'bgcolor' => false
-=======
-    'border' => false,
-    'padding' => 0,
-    'fgcolor' => array(128,0,0),
-    'bgcolor' => false
->>>>>>> 258
 );
 
 // QRCODE,H : QR-CODE Best error correction
