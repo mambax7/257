@@ -15,7 +15,7 @@
             $reportCount = $wfdownloads->getHandler('report')->getCount($criteria);
             if ($reportCount > 0) {
                 redirect_header('index.php', 2, _MD_WFDOWNLOADS_ALREADYREPORTED);
-
+
             } else {
                 $reportObj = $wfdownloads->getHandler('report')->create();
                 $reportObj->setVar('lid', $lid);
@@ -30,10 +30,10 @@
                     $subdate = formatTimestamp($downloadObj->getVar('published'), $wfdownloads->getConfig('dateformat'));
                     $cid     = $downloadObj->getVar('cid');
                     $title   = $downloadObj->getVar('title');
-                    $subject = _MD_WFDOWNLOADS_BROKENREPORTED;
+                    $subject = _MD_WFDOWNLOADS_BROKENREPORTED;
                     $xoopsMailer = &getMailer();
                     $xoopsMailer->useMail();
-                    $template_dir = WFDOWNLOADS_ROOT_PATH . '/language/' . $GLOBALS['xoopsConfig']['language'] . '/mail_template';
+                    $template_dir = WFDOWNLOADS_ROOT_PATH . '/language/' . $GLOBALS['xoopsConfig']['language'] . '/mail_template';
                     $xoopsMailer->setTemplateDir($template_dir);
                     $xoopsMailer->setTemplate('filebroken_notify.tpl');
                     $xoopsMailer->setToEmails($user->email());
@@ -50,22 +50,22 @@
                     $xoopsMailer->send();
                     redirect_header('index.php', 2, _MD_WFDOWNLOADS_BROKENREPORTED);
                     exit();
-
+
                 } else {
                     echo $reportObj->getHtmlErrors();
-
+
                 }
-
+
             }
-
+
         } else {
             $xoopsOption['template_main'] = "{$wfdownloads->getModule()->dirname()}_brokenfile.tpl";
             include_once XOOPS_ROOT_PATH . '/header.php';            // Begin Main page Heading etc            $catarray['imageheader'] = wfdownloads_headerImage();
-            $xoopsTpl->assign('catarray', $catarray);
+            $xoopsTpl->assign('catarray', $catarray);
             $xoTheme->addScript(XOOPS_URL . '/browse.php?Frameworks/jquery/jquery.js');
             $xoTheme->addScript(WFDOWNLOADS_URL . '/assets/js/magnific/jquery.magnific-popup.min.js');
             $xoTheme->addStylesheet(WFDOWNLOADS_URL . '/assets/js/magnific/magnific-popup.css');
-            $xoTheme->addStylesheet(WFDOWNLOADS_URL . '/assets/css/module.css');
+            $xoTheme->addStylesheet(WFDOWNLOADS_URL . '/assets/css/module.css');
             $xoopsTpl->assign('wfdownloads_url', WFDOWNLOADS_URL . '/');            // Breadcrumb            $breadcrumb->addLink(_MD_WFDOWNLOADS_REPORTBROKEN, '');
             $xoopsTpl->assign('wfdownloads_breadcrumb', $breadcrumb->render());            // Generate form            include_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
             $sform = new XoopsThemeForm(_MD_WFDOWNLOADS_RATETHISFILE, 'reportform', xoops_getenv('PHP_SELF'));
@@ -80,17 +80,17 @@
             $button_tray->addElement($cancel_button);
             $sform->addElement($button_tray);
             $xoopsTpl->assign('reportform', $sform->render());
-            $xoopsTpl->assign('download',                array('lid' => $lid, 'cid' => $cid, 'title' => $downloadObj->getVar('title'), 'description' => $downloadObj->getVar('description')));
+            $xoopsTpl->assign('download',                array('lid' => $lid, 'cid' => $cid, 'title' => $downloadObj->getVar('title'), 'description' => $downloadObj->getVar('description')));
             $criteria   = new Criteria('lid', $lid);
-            $reportObjs = $wfdownloads->getHandler('report')->getObjects($criteria);
+            $reportObjs = $wfdownloads->getHandler('report')->getObjects($criteria);
             if (count($reportObjs) > 0) {
-                $reportObj = $reportObjs[0];
+                $reportObj = $reportObjs[0];
                 $broken['title']        = trim($downloadObj->getVar('title'));
                 $broken['id']           = $reportObj->getVar('reportid');
                 $broken['reporter']     = XoopsUserUtility::getUnameFromId((int)$reportObj->getVar('sender'));
                 $broken['date']         = formatTimestamp($reportObj->getVar('published'), $wfdownloads->getConfig('dateformat'));
                 $broken['acknowledged'] = ($reportObj->getVar('acknowledged') == 1) ? _YES : _NO;
-                $broken['confirmed']    = ($reportObj->getVar('confirmed') == 1) ? _YES : _NO;
+                $broken['confirmed']    = ($reportObj->getVar('confirmed') == 1) ? _YES : _NO;
                 $xoopsTpl->assign('brokenreportexists', true);
                 $xoopsTpl->assign('broken', $broken);
                 $xoopsTpl->assign('brokenreport', true); // this definition is not removed for backward compatibility issues
@@ -99,15 +99,15 @@
                 $time              = ($downloadObj->getVar('updated') != false) ? $downloadObj->getVar('updated') : $downloadObj->getVar('published');
                 $down['updated']   = formatTimestamp($time, $wfdownloads->getConfig('dateformat'));
                 $is_updated        = ($downloadObj->getVar('updated') != false) ? _MD_WFDOWNLOADS_UPDATEDON : _MD_WFDOWNLOADS_SUBMITDATE;
-                $down['publisher'] = XoopsUserUtility::getUnameFromId((int)$downloadObj->getVar('submitter'));
+                $down['publisher'] = XoopsUserUtility::getUnameFromId((int)$downloadObj->getVar('submitter'));
                 $xoopsTpl->assign('brokenreportexists', false);
                 $xoopsTpl->assign('file_id', $lid);
                 $xoopsTpl->assign('lang_subdate', $is_updated);
                 $xoopsTpl->assign('is_updated', $downloadObj->getVar('updated'));
                 $xoopsTpl->assign('lid', $lid);
                 $xoopsTpl->assign('down', $down);
-
+
             }
             include_once __DIR__ . '/footer.php';
-
+
         }        break;}

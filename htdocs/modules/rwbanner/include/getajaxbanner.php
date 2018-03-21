@@ -29,17 +29,19 @@
 // Descrição: Sistema de gerenciamento de mídias publicitárias               //
 // ------------------------------------------------------------------------- //
 
-  include "../../../mainfile.php";
-  include_once(dirname(dirname(__FILE__)) .'/class/class.banner.php');
+use XoopsModules\Rwbanner;
 
-  //Desabilitando a exibição do debug dentro do bloco
-  error_reporting(0);
-  $xoopsLogger->activated = false;
+include __DIR__ . '/../../../mainfile.php';
+// require_once __DIR__ . '/../class/class.banner.php';
 
-  //recebendo parâmetros de configuração
-  $categ = $_GET['categ'];
-  $qtde  = $_GET['qtde'];
-  $cols  = $_GET['cols'];
+//Desabilitando a exibição do debug dentro do bloco
+error_reporting(0);
+$xoopsLogger->activated = false;
 
-  $banner = new RWbanners();
-  echo $banner->showBanner($categ, $qtde, $cols);
+//recebendo parâmetros de configuração
+$categ = $_GET['categ'];
+$qtde  = $_GET['qtde'];
+$cols  = $_GET['cols'];
+
+$banner = new Banner();
+echo $banner->showBanner($categ, $qtde, $cols);

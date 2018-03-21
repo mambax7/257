@@ -1,20 +1,21 @@
 <?php
 
 /**
-* $Id: faqs_context.php,v 1.8 2005/08/16 15:39:45 fx2024 Exp $
-* Module: SmartFAQ
-* Author: The SmartFactory <www.smartfactory.ca>
-* Licence: GNU
-*/
-// defined("XOOPS_ROOT_PATH") || exit("XOOPS root path not defined");
+ * Module: SmartFAQ
+ * Author: The SmartFactory <www.smartfactory.ca>
+ * Licence: GNU
+ * @param $options
+ * @return array
+ */
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 function b_faqs_context_show($options)
 {
-    include_once(XOOPS_ROOT_PATH."/modules/smartfaq/include/functions.php");
+//    require_once XOOPS_ROOT_PATH . '/modules/smartfaq/include/functions.php';
 
-    $block = array();
+    $block = [];
 
-    if ($options[0] == 0) {
+    if (0 == $options[0]) {
         $categoryid = -1;
     } else {
         $categoryid = $options[0];
@@ -23,27 +24,32 @@ function b_faqs_context_show($options)
     $limit = $options[0];
 
     // Creating the faq handler object
-    $faq_handler =& sf_gethandler('faq');
+    /** @var \XoopsModules\Smartfaq\FaqHandler $faqHandler */
+    $faqHandler = \XoopsModules\Smartfaq\Helper::getInstance()->getHandler('Faq');
 
     // creating the FAQ objects that belong to the selected category
-    $faqsObj = $faq_handler->getContextualFaqs($limit);
-    $totalfaqs = count($faqsObj);
+    $faqsObj   = $faqHandler->getContextualFaqs($limit);
 
     if ($faqsObj) {
-        for ($i = 0; $i < $totalfaqs; ++$i) {
-            $faq = array();
-            $faq['id'] = $faqsObj[$i]->faqid();
-            $faq['question'] = $faqsObj[$i]->question();
+        foreach ($faqsObj as $iValue) {
+            $faq             = [];
+            $faq['id']       = $iValue->faqid();
+            $faq['question'] = $iValue->question();
             $block['faqs'][] = $faq;
         }
     }
 
     return $block;
 }
+
+/**
+ * @param $options
+ * @return string
+ */
 function b_faqs_context_edit($options)
 {
-    $form = "" . _MB_SF_DISP . "&nbsp;";
-    $form .= "<input type='text' name='options[]' value='" . $options[0] . "' />&nbsp;" . _MB_SF_FAQS . "";
+    $form = '' . _MB_SF_DISP . '&nbsp;';
+    $form .= "<input type='text' name='options[]' value='" . $options[0] . "'>&nbsp;" . _MB_SF_FAQS . '';
 
     return $form;
 }

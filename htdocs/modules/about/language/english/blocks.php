@@ -10,11 +10,15 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright      The XOOPS Co.Ltd. http://www.xoops.com.cn
- * @copyright      XOOPS Project (http://xoops.org)
+ * @copyright      XOOPS Project (https://xoops.org)
  * @license        GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
  * @package        about
  * @since          1.0.0
  * @author         Mengjue Shao <magic.shao@gmail.com>
  * @author         Susheng Yang <ezskyyoung@gmail.com>
- * @version        $Id: blocks.php 1 2010-2-9 ezsky$
  */
+
+define('_MB_ABOUT_BLOCKPAGE', 'Block Page');
+define('_MB_ABOUT_TEXT_LENGTH', 'Length');
+define('_MB_ABOUT_VIEW_MORELINKTEXT', 'More Link Text');
+define('_MB_ABOUT_DOTITLEIMAGE', 'Title Image');

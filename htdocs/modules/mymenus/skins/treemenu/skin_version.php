@@ -10,18 +10,16 @@
  */
 
 /**
- * @copyright       The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright       XOOPS Project (https://xoops.org)
  * @license         http://www.fsf.org/copyleft/gpl.html GNU public license
  * @package         Mymenus
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
- * @version         $Id: skin_version.php 0 2010-07-21 18:47:04Z trabis $
  */
 
 $skinVersion['template'] = 'templates/template.tpl';
-$skinVersion['css']      = array('treemenu.css');
-$skinVersion['js']       = array('simpletreemenu.js');
+$skinVersion['css']      = ['treemenu.css'];
+$skinVersion['js']       = ['simpletreemenu.js'];
 
 //$skinVersion['header'] = '';
 //$skinVersion['prefix'] = 'sf';
-

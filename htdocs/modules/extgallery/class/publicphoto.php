@@ -1,4 +1,5 @@
-<?php
+<?php namespace XoopsModules\Extgallery;
+
 /**
  * ExtGallery Class Manager
  *
@@ -9,155 +10,29 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright   The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright   {@link https://xoops.org/ XOOPS Project}
  * @license     GNU GPL 2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  * @author      Zoullou (http://www.zoullou.net)
  * @package     ExtGallery
- * @version     $Id: publicphoto.php 8088 2011-11-06 09:38:12Z beckmi $
  */
 
-if (!defined("XOOPS_ROOT_PATH")) {
-    die("XOOPS root path not defined");
-}
+use XoopsModules\Extgallery;
 
-include_once 'photoHandler.php';
-include_once 'publicPerm.php';
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
-class ExtgalleryPublicphoto extends ExtgalleryPhoto
+//require_once __DIR__ . '/photoHandler.php';
+//require_once __DIR__ . '/publicPerm.php';
+
+/**
+ * Class Extgallery\PublicPhoto
+ */
+class PublicPhoto extends Extgallery\Photo
 {
-
-    public function ExtgalleryPublicphoto()
+    /**
+     * Extgallery\PublicPhoto constructor.
+     */
+    public function __construct()
     {
-        parent::ExtgalleryPhoto();
-    }
-}
-
-class ExtgalleryPublicphotoHandler extends ExtgalleryPhotoHandler
-{
-
-    public function ExtgalleryPublicphotoHandler(&$db)
-    {
-        $this->ExtgalleryPhotoHandler($db, 'public');
-    }
-
-    public function deleteFile(&$photo)
-    {
-        if (file_exists(XOOPS_ROOT_PATH."/uploads/extgallery/public-photo/thumb/thumb_".$photo->getVar('photo_name'))) {
-            unlink(XOOPS_ROOT_PATH."/uploads/extgallery/public-photo/thumb/thumb_".$photo->getVar('photo_name'));
-        }
-
-        if (file_exists(XOOPS_ROOT_PATH."/uploads/extgallery/public-photo/medium/".$photo->getVar('photo_name'))) {
-            unlink(XOOPS_ROOT_PATH."/uploads/extgallery/public-photo/medium/".$photo->getVar('photo_name'));
-        }
-
-        if (file_exists(XOOPS_ROOT_PATH."/uploads/extgallery/public-photo/large/large_".$photo->getVar('photo_name'))) {
-            unlink(XOOPS_ROOT_PATH."/uploads/extgallery/public-photo/large/large_".$photo->getVar('photo_name'));
-        }
-
-        if ($photo->getVar('photo_orig_name') != "" && file_exists(XOOPS_ROOT_PATH."/uploads/extgallery/public-photo/original/".$photo->getVar('photo_orig_name'))) {
-            unlink(XOOPS_ROOT_PATH."/uploads/extgallery/public-photo/original/".$photo->getVar('photo_orig_name'));
-        }
-    }
-
-    public function getAllSize()
-    {
-        return $this->getSum(null, 'photo_size');
-    }
-
-    public function _getUploadPhotoPath()
-    {
-        return XOOPS_ROOT_PATH.'/uploads/extgallery/public-photo/';
-    }
-
-    public function getUserAlbumPhotoPage($userId, $start, $sortby, $orderby)
-    {
-        $catHandler = xoops_getmodulehandler('publiccat', 'extgallery');
-
-        $criteria = new CriteriaCompo();
-        $criteria->add($catHandler->getCatRestrictCriteria());
-        $criteria->add(new Criteria('photo_approved', 1));
-        $criteria->add(new Criteria('uid', $userId));
-        $criteria->setSort($sortby);
-        $criteria->setOrder($orderby);
-        $criteria->setStart($start);
-        $criteria->setLimit($GLOBALS['xoopsModuleConfig']['nb_column']*$GLOBALS['xoopsModuleConfig']['nb_line']);
-
-        return $this->getObjects($criteria);
-    }
-
-    public function getUserAlbumPrevPhoto($userId, $photoDate)
-    {
-        $catHandler = xoops_getmodulehandler('publiccat', 'extgallery');
-
-        $criteria = new CriteriaCompo();
-        $criteria->add($catHandler->getCatRestrictCriteria());
-        $criteria->add(new Criteria('photo_approved', 1));
-        $criteria->add(new Criteria('uid', $userId));
-        $criteria->add(new Criteria('photo_date', $photoDate, '>'));
-        $criteria->setSort('photo_date');
-        $criteria->setOrder('ASC');
-        $criteria->setLimit(1);
-
-        return $this->getObjects($criteria);
-    }
-
-    public function getUserAlbumNextPhoto($userId, $photoDate)
-    {
-        $catHandler = xoops_getmodulehandler('publiccat', 'extgallery');
-
-        $criteria = new CriteriaCompo();
-        $criteria->add($catHandler->getCatRestrictCriteria());
-        $criteria->add(new Criteria('photo_approved', 1));
-        $criteria->add(new Criteria('uid', $userId));
-        $criteria->add(new Criteria('photo_date', $photoDate, '<'));
-        $criteria->setSort('photo_date');
-        $criteria->setOrder('DESC');
-        $criteria->setLimit(1);
-
-        return $this->getObjects($criteria);
-    }
-
-    public function getUserAlbumCurrentPhotoPlace($userId, $photoDate)
-    {
-        $catHandler = xoops_getmodulehandler('publiccat', 'extgallery');
-
-        $criteria = new CriteriaCompo();
-        $criteria->add($catHandler->getCatRestrictCriteria());
-        $criteria->add(new Criteria('photo_approved', 1));
-        $criteria->add(new Criteria('uid', $userId));
-        $criteria->add(new Criteria('photo_date', $photoDate, '>='));
-        $criteria->setSort('photo_date');
-        $criteria->setOrder('ASC');
-
-        return $this->getCount($criteria);
-    }
-
-    public function getUserAlbumCount($userId)
-    {
-        $catHandler = xoops_getmodulehandler('publiccat', 'extgallery');
-
-        $criteria = new CriteriaCompo();
-        $criteria->add($catHandler->getCatRestrictCriteria());
-        $criteria->add(new Criteria('photo_approved', 1));
-        $criteria->add(new Criteria('uid', $userId));
-
-        return $this->getCount($criteria);
-    }
-
-    public function getUserPhotoAlbumId($userId)
-    {
-        $criteria = new CriteriaCompo();
-        $criteria->add(new Criteria('uid', $userId));
-        $criteria->add(new Criteria('photo_approved', 1));
-
-        $sql = 'SELECT photo_id FROM '.$this->db->prefix('extgallery_publicphoto').' '.$criteria->renderWhere().' ORDER BY photo_date, photo_id DESC;';
-
-        $result = $this->db->query($sql);
-        $ret = array();
-        while ($myrow = $this->db->fetchArray($result)) {
-            $ret[] = $myrow['photo_id'];
-        }
-
-        return $ret;
+        parent::__construct();
     }
 }

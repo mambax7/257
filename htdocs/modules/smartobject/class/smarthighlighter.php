@@ -10,50 +10,48 @@
  *
  * This class highlight the chosen keywords in the current output buffer
  *
- * @package keyhighlighter
- * @author Setec Astronomy
- * @version 1.0
- * @abstract Highlight specific keywords.
+ * @package   keyhighlighter
+ * @author    Setec Astronomy
+ * @abstract  Highlight specific keywords.
  * @copyright 2004
- * @example sample.php A sample code.
- * @link http://setecastronomy.stufftoread.com
+ * @example   sample.php A sample code.
+ * @link      http://setecastronomy.stufftoread.com
  */
+class SmartHighlighter
+{
+    /**
+     * @access private
+     */
+    public $preg_keywords = '';
+    /**
+     * @access private
+     */
+    public $keywords = '';
+    /**
+     * @access private
+     */
+    public $singlewords = false;
+    /**
+     * @access private
+     */
+    public $replace_callback = null;
 
-class SmartHighlighter {
-
-    /**
-     * @access private
-     */
-    var $preg_keywords = '';
-    /**
-     * @access private
-     */
-    var $keywords = '';
-    /**
-     * @access private
-     */
-    var $singlewords = false;
-    /**
-     * @access private
-     */
-    var $replace_callback = null;
-
-    var $content;
+    public $content;
 
     /**
      * Main constructor
      *
-     * This is the main constructor of keyhighlighter class. <br />
+     * This is the main constructor of keyhighlighter class. <br>
      * It's the only public method of the class.
-     * @param string $keywords the keywords you want to highlight
-     * @param boolean $singlewords specify if it has to highlight also the single words.
+     * @param string   $keywords         the keywords you want to highlight
+     * @param boolean  $singlewords      specify if it has to highlight also the single words.
      * @param callback $replace_callback a custom callback for keyword highlight.
-     * <code>
-     * <?php
-     * require ('keyhighlighter.class.php');
+     *                                   <code>
+     *                                   <?php
+     *                                   require ('keyhighlighter.class.php');
      *
      * function my_highlighter ($matches) {
-     * 	return '<span style="font-weight: bolder; color: #FF0000;">' . $matches[0] . '</span>';
+     *  return '<span style="font-weight: bolder; color: #FF0000;">' . $matches[0] . '</span>';
      * }
      *
      * new keyhighlighter ('W3C', false, 'my_highlighter');
@@ -62,20 +60,23 @@ class SmartHighlighter {
      * </code>
      */
     // public function __construct ()
-    function SmartHighlighter ($keywords, $singlewords = false, $replace_callback = null ) {
-        $this->keywords = $keywords;
-        $this->singlewords = $singlewords;
+    public function __construct($keywords, $singlewords = false, $replace_callback = null)
+    {
+        $this->keywords         = $keywords;
+        $this->singlewords      = $singlewords;
         $this->replace_callback = $replace_callback;
     }
 
     /**
      * @access private
+     * @param $replace_matches
+     * @return mixed
      */
-    function replace ($replace_matches) {
-
-        $patterns = array ();
+    public function replace($replace_matches)
+    {
+        $patterns = [];
         if ($this->singlewords) {
-            $keywords = explode (' ', $this->preg_keywords);
+            $keywords = explode(' ', $this->preg_keywords);
             foreach ($keywords as $keyword) {
                 $patterns[] = '/(?' . '>' . $keyword . '+)/si';
             }
@@ -86,10 +87,10 @@ class SmartHighlighter {
         $result = $replace_matches[0];
 
         foreach ($patterns as $pattern) {
-            if (!is_null ($this->replace_callback)) {
-                $result = preg_replace_callback ($pattern, $this->replace_callback, $result);
+            if (null !== $this->replace_callback) {
+                $result = preg_replace_callback($pattern, $this->replace_callback, $result);
             } else {
-                $result = preg_replace ($pattern, '<span class="highlightedkey">\\0</span>', $result);
+                $result = preg_replace($pattern, '<span class="highlightedkey">\\0</span>', $result);
             }
         }
 
@@ -98,14 +99,16 @@ class SmartHighlighter {
 
     /**
      * @access private
+     * @param $buffer
+     * @return mixed|string
      */
-    function highlight ($buffer) {
-        $buffer = '>' . $buffer . '<';
-        $this->preg_keywords = preg_replace ('/[^\w ]/si', '', $this->keywords);
-        $buffer = preg_replace_callback ("/(\>(((?" . ">[^><]+)|(?R))*)\<)/is", array (&$this, 'replace'), $buffer);
-        $buffer = substr ($buffer, 1, -1);
+    public function highlight($buffer)
+    {
+        $buffer              = '>' . $buffer . '<';
+        $this->preg_keywords = preg_replace('/[^\w ]/si', '', $this->keywords);
+        $buffer              = preg_replace_callback("/(\>(((?" . ">[^><]+)|(?R))*)\<)/is", [&$this, 'replace'], $buffer);
+        $buffer              = substr($buffer, 1, -1);
+
         return $buffer;
     }
 }
-
-?>

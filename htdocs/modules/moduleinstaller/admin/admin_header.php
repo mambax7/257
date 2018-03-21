@@ -9,29 +9,37 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright   XOOPS Project (http://xoops.org)
+ * @copyright           XOOPS Project (https://xoops.org)
  * @license             http://www.gnu.org/licenses/gpl-2.0.html GNU Public License
- * @package moduleinstaller
- * @since       1.0
- * @author  XOOPS Module Team
- * @version $Id $
-**/
-$path = dirname(dirname(dirname(__DIR__)));
-include_once $path . '/mainfile.php';
-include_once $path . '/include/cp_functions.php';
-require_once $path . '/include/cp_header.php';
+ * @package             moduleinstaller
+ * @since               1.0
+ * @author              XOOPS Module Team
+ **/
 
-global $xoopsModule;
+use XoopsModules\Moduleinstaller;
 
-$moduleDirName = $GLOBALS['xoopsModule']->getVar('dirname');
+//$path = dirname(dirname(dirname(__DIR__)));
+//require_once $path . '/mainfile.php';
+//require_once $path . '/include/cp_functions.php';
+//require_once $path . '/include/cp_header.php';
+require_once __DIR__ . '/../../../include/cp_header.php';
+
+$moduleDirName = basename(dirname(__DIR__));
+$helper = Moduleinstaller\Helper::getInstance();
+$adminObject = \Xmf\Module\Admin::getInstance();
+
+$pathIcon16    = \Xmf\Module\Admin::iconUrl('', 16);
+$pathIcon32    = \Xmf\Module\Admin::iconUrl('', 32);
+$pathModIcon32 = $helper->getModule()->getInfo('modicons32');
 
 // Load language files
-xoops_loadLanguage('admin', $moduleDirName);
-xoops_loadLanguage('modinfo', $moduleDirName);
-xoops_loadLanguage('main', $moduleDirName);
+$helper->loadLanguage('admin');
+$helper->loadLanguage('modinfo');
+$helper->loadLanguage('main');
 
-$pathIcon16 = '../'.$xoopsModule->getInfo('icons16');
-$pathIcon32 = '../'.$xoopsModule->getInfo('icons32');
-$pathModuleAdmin = $xoopsModule->getInfo('dirmoduleadmin');
+$myts = \MyTextSanitizer::getInstance();
 
-include_once $GLOBALS['xoops']->path($pathModuleAdmin.'/moduleadmin.php');
+if (!isset($GLOBALS['xoopsTpl']) || !($GLOBALS['xoopsTpl'] instanceof XoopsTpl)) {
+    require_once $GLOBALS['xoops']->path('class/template.php');
+    $xoopsTpl = new \XoopsTpl();
+}

@@ -12,47 +12,53 @@
 /**
  * Contact module
  *
- * @copyright   The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright   XOOPS Project (https://xoops.org)
  * @license     http://www.fsf.org/copyleft/gpl.html GNU public license
  * @author      Kazumi Ono (aka Onokazu)
  * @author      Trabis <lusopoemas@gmail.com>
  * @author      Hossein Azizabadi (AKA Voltan)
- * @version     $Id$
  */
 
-defined("XOOPS_ROOT_PATH") or die("XOOPS root path not defined");
+use XoopsModules\Contact;
 
-$dirname = basename(dirname(dirname(__FILE__)));
-$module_handler = xoops_gethandler('module');
-$module = $module_handler->getByDirname($dirname);
-$pathIcon32 = $module->getInfo('icons32');
+// require_once __DIR__ . '/../class/Helper.php';
+//require_once __DIR__ . '/../include/common.php';
+$helper = Contact\Helper::getInstance();
 
-//xoops_loadLanguage('admin', $dirname);
+$pathIcon32 = \Xmf\Module\Admin::menuIconPath('');
+$pathModIcon32 = $helper->getModule()->getInfo('modicons32');
 
-$adminmenu = array();
+$adminmenu[] = [
+    'title' => _MI_CONTACT_MENU_HOME,
+    'desc'  => _MI_CONTACT_MENU_HOME_DESC,
+    'icon'  => $pathIcon32 . '/home.png',
+    'link'  => 'admin/index.php'
+];
 
-$i = 1;
-$adminmenu[$i]["title"] = _MI_CONTACT_MENU_HOME;
-$adminmenu[$i]["link"]  = "admin/index.php";
-$adminmenu[$i]["desc"] = _MI_CONTACT_MENU_HOME_DESC;
-$adminmenu[$i]["icon"] = $pathIcon32.'/home.png';
-$i++;
-$adminmenu[$i]["title"] = _MI_CONTACT_MENU_CONTACT;
-$adminmenu[$i]["link"]  = "admin/contact.php";
-$adminmenu[$i]["desc"] = _MI_CONTACT_MENU_CONTACT_DESC;
-$adminmenu[$i]["icon"] = $pathIcon32.'/content.png';
-$i++;
-$adminmenu[$i]["title"] = _MI_CONTACT_MENU_LOGS;
-$adminmenu[$i]["link"]  = "admin/log.php";
-$adminmenu[$i]["desc"] = _MI_CONTACT_MENU_LOGS_DESC;
-$adminmenu[$i]["icon"] = $pathIcon32.'/exec.png';
-$i++;
-$adminmenu[$i]["title"] = _MI_CONTACT_MENU_TOOLS;
-$adminmenu[$i]["link"]  = "admin/tools.php";
-$adminmenu[$i]["desc"] = _MI_CONTACT_MENU_TOOLS_DESC;
-$adminmenu[$i]["icon"] = $pathIcon32.'/exec.png';
-$i++;
-$adminmenu[$i]["title"] = _MI_CONTACT_MENU_ABOUT;
-$adminmenu[$i]["link"]  = "admin/about.php";
-$adminmenu[$i]["desc"] = _MI_CONTACT_MENU_ABOUT_DESC;
-$adminmenu[$i]["icon"] = $pathIcon32.'/about.png';
+$adminmenu[] = [
+    'title' => _MI_CONTACT_MENU_CONTACT,
+    'desc'  => _MI_CONTACT_MENU_CONTACT_DESC,
+    'icon'  => $pathIcon32 . '/content.png',
+    'link'  => 'admin/main.php'
+];
+
+$adminmenu[] = [
+    'title' => _MI_CONTACT_MENU_LOGS,
+    'desc'  => _MI_CONTACT_MENU_LOGS_DESC,
+    'icon'  => $pathIcon32 . '/identity.png',
+    'link'  => 'admin/log.php'
+];
+
+$adminmenu[] = [
+    'title' => _MI_CONTACT_MENU_TOOLS,
+    'desc'  => _MI_CONTACT_MENU_TOOLS_DESC,
+    'icon'  => $pathIcon32 . '/delete.png',
+    'link'  => 'admin/tools.php'
+];
+
+$adminmenu[] = [
+    'title' => _MI_CONTACT_MENU_ABOUT,
+    'desc'  => _MI_CONTACT_MENU_ABOUT_DESC,
+    'icon'  => $pathIcon32 . '/about.png',
+    'link'  => 'admin/about.php'
+];

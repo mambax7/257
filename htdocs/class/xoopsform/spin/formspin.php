@@ -26,7 +26,7 @@ xoops_load('XoopsFormElement');
  * A select field
  *
  * @author      Jean-Jacques DELALANDRE <jjd@kiolo.com>
- * @copyright JJD http:xoops.kiolo.com
+ * @copyright   JJD http:xoops.kiolo.com
  * @access      public
  */
 
@@ -34,8 +34,12 @@ xoops_load('XoopsFormElement');
 /* set here the folder of the clas relative at the root     */
 /*----------------------------------------------------------*/
 define('_SPIN_FOLDER', '/class/xoopsform/spin/');
+
 /*----------------------------------------------------------*/
 
+/**
+ * Class XoopsFormSpin
+ */
 class XoopsFormSpin extends XoopsFormElement
 {
 
@@ -109,7 +113,7 @@ class XoopsFormSpin extends XoopsFormElement
      * @var integer
      * @access private
      */
-    public $_minMaxVisible= true;
+    public $_minMaxVisible = true;
 
     /**
      *  tyleBordure ;  style CSS of frame control
@@ -117,7 +121,7 @@ class XoopsFormSpin extends XoopsFormElement
      * @var string
      * @access private
      */
-    public $_styleBordure = "color: #FFFFFF; background-color: #CCCCCC; line-height: 100%;border-width:1px; border-style: solid; border-color: #000000; margin-top: 0; margin-bottom: 0; padding: 0";
+    public $_styleBordure = 'color: #FFFFFF; background-color: #CCCCCC; line-height: 100%;border-width:1px; border-style: solid; border-color: #000000; margin-top: 0; margin-bottom: 0; padding: 0';
 
     /**
      *  tyleText : style CSS of input text
@@ -125,7 +129,7 @@ class XoopsFormSpin extends XoopsFormElement
      * @var string
      * @access private
      */
-    public $_styleText = "color: #000000; text-align: right; margin-left: 1; margin-right: 2; padding-right: 8";
+    public $_styleText = 'color: #000000; text-align: right; margin-left: 1; margin-right: 2; padding-right: 8';
 
     /**
      * Allow loading of javascript
@@ -139,27 +143,22 @@ class XoopsFormSpin extends XoopsFormElement
     /**
      * Constructor
      *
-     * @param string $caption        Caption
-     * @param string $name           "name" attribute
-     * @param int    $value          Pre-selected value.
-     * @param int    $min            value
-     * @param int    $max            value
-     * @param int    $smallIncrement Increment when click on button
-     * @param int    $largeIncrement Increment when click on button
-     * @param int    $size           Number caractere of inputtext
-     * @param string $unite          of the value
-     * @param string $imgFolder      of image gif for button
-     * @param string $styleText      style CSs of text
-     * @param string $styleBordure   style CSs of frame
-     * @param bool   $minMaxVisible  show min and mas buttons
+     * @param string $caption      Caption
+     * @param string $name         "name" attribute
+     * @param int $value           Pre-selected value.
+     * @param int $min             value
+     * @param int $max             value
+     * @param int $smallIncrement  Increment when click on button
+     * @param int $largeIncrement  Increment when click on button
+     * @param int $size            Number caractere of inputtext
+     * @param string $unite        of the value
+     * @param string $imgFolder    of image gif for button
+     * @param string $styleText    style CSs of text
+     * @param string $styleBordure style CSs of frame
+     * @param bool $minMaxVisible  show min and mas buttons
      *
      */
-    public function XoopsFormSpin($caption, $name, $value = 0,
-                           $min = 0, $max=100,
-                           $smallIncrement = 1, $largeIncrement = 10,
-                           $size = 5, $unite='', $imgFolder='default',
-                           $styleText = '', $styleBordure = '',
-                           $minMaxVisible = true)
+    public function __construct($caption, $name, $value = 0, $min = 0, $max = 100, $smallIncrement = 1, $largeIncrement = 10, $size = 5, $unite = '', $imgFolder = 'default', $styleText = '', $styleBordure = '', $minMaxVisible = true)
     {
         $this->setName($name);
         $this->setCaption($caption);
@@ -211,7 +210,7 @@ class XoopsFormSpin extends XoopsFormElement
      */
     public function setMin($min)
     {
-        $this->_min = intval($min);
+        $this->_min = (int)$min;
     }
     /*-----------------------------------------------------------------*/
     /**
@@ -229,7 +228,7 @@ class XoopsFormSpin extends XoopsFormElement
      */
     public function setMax($max)
     {
-        $this->_max = intval($max);
+        $this->_max = (int)$max;
     }
 
     /*-----------------------------------------------------------------*/
@@ -245,13 +244,14 @@ class XoopsFormSpin extends XoopsFormElement
      * Set the small increment when click a short time on up down nutton
      * must be  " > 0 "
      *
-     * @param  $value int
+     * @param $smallIncrement
+     * @internal param int $value
      */
     public function setSmallIncrement($smallIncrement)
     {
-        $this->_smallIncrement = intval($smallIncrement);
+        $this->_smallIncrement = (int)$smallIncrement;
         if ($this->_smallIncrement == 0) {
-            $this->_smallIncrement =1;
+            $this->_smallIncrement = 1;
         }
     }
 
@@ -271,7 +271,7 @@ class XoopsFormSpin extends XoopsFormElement
      */
     public function setLargeIncrement($largeIncrement)
     {
-        $this->_largeIncrement = intval($largeIncrement);
+        $this->_largeIncrement = (int)$largeIncrement;
         if ($this->_largeIncrement == 0) {
             $this->_largeIncrement = 10;
         }
@@ -299,11 +299,15 @@ class XoopsFormSpin extends XoopsFormElement
             $this->_size = 2;
         }
     }
+
     /*-----------------------------------------------------------------*/
-    public function getImgFolder()
     /**
-     * Get the shortname of the folder images
+     * @return string
      */
+    public function getImgFolder()
+        /**
+         * Get the shortname of the folder images
+         */
     {
         return $this->_imgFolder;
     }
@@ -405,112 +409,115 @@ class XoopsFormSpin extends XoopsFormElement
     public function render()
     {
         $sSpinFolder = $this->getFolder();
-        $sFolderImg =  "{$sSpinFolder}/images/{$this->getImgFolder()}/";
+        $sFolderImg  = "{$sSpinFolder}/images/{$this->getImgFolder()}/";
 
-        $prefixe = $this->getName();
-        $prefixe2 = 'spin'.$prefixe;
+        $prefixe  = $this->getName();
+        $prefixe2 = 'spin' . $prefixe;
 
         $smallIncrement = $this->getSmallIncrement();
         $largeIncrement = $this->getLargeIncrement();
 
-      /*----------------------------------------------*/
-      $delai = 200;
+        /*----------------------------------------------*/
+        $delai        = 200;
         $onMouseDown1 = "spinStart(\"{$prefixe}\", \"{$prefixe2}\",  {$smallIncrement},  {$largeIncrement}, {$delai}, \"{$sFolderImg}spinUp1.gif\");";
         $onMouseDown2 = "spinStart(\"{$prefixe}\", \"{$prefixe2}\", -{$smallIncrement}, -{$largeIncrement}, {$delai}, \"{$sFolderImg}spinDown1.gif\");";
 
-        $onMouseUp = "spinStop();";
-      //----------------------------------------------------------------
-      $styleBordure = $this->htmlAddAttribut('style', $this->getStyleBordure());
+        $onMouseUp = 'spinStop();';
+        //----------------------------------------------------------------
+        $styleBordure = $this->htmlAddAttribut('style', $this->getStyleBordure());
         $styleText    = $this->htmlAddAttribut('style', $this->getStyleText());
-        $styleArrow = "style=\"display: table-cell;vertical-align: middle; text-align: center; line-height: 100%; font-size: 7 pt; margin-top: 0; margin-bottom: 0; padding: 0\"";
-      //----------------------------------------------------------------
-      $t = array();
+        $styleArrow   = "style=\"display: table-cell;vertical-align: middle; text-align: center; line-height: 100%; font-size: 7 pt; margin-top: 0; margin-bottom: 0; padding: 0\"";
+        //----------------------------------------------------------------
+        $t = array();
 
         if ($this->_loadJS) {
-            $js = $sSpinFolder . "/js/spin.js";
+            $js  = $sSpinFolder . '/js/spin.js';
             $t[] = "<script src='{$js}' type='text/javascript'></script>";
         }
 
-        $t[] = "<div STYLE='width:50px'>";
-      //$t[] = "<table border='0' width='8%' cellpadding='0' cellspacing='0'>";
-      $t[] = "<table border='0' width='8%' cellpadding='0' cellspacing='0' {$styleBordure}>";
-        $t[] = "  <tr>";
-      //$t[] = "    <td width='60%'>{$Caption}</td>";
-      $t[] = "    <td width='60%'>";
+        $t[] = "<div STYLE='width:50px;'>";
+        //$t[] = "<table border='0' width='8%' cellpadding='0' cellspacing='0'>";
+        $t[] = "<table border='0' width='8%' cellpadding='0' cellspacing='0' {$styleBordure}>";
+        $t[] = '  <tr>';
+        //$t[] = "    <td width='60%'>{$Caption}</td>";
+        $t[] = "    <td width='60%'>";
         $t[] = "      <INPUT TYPE='hidden' NAME='{$prefixe2}_min' VALUE='{$this->getMin()}'>";
         $t[] = "      <INPUT TYPE='hidden' NAME='{$prefixe2}_max' VALUE='{$this->getMax()}'>";
-        $t[] = "      <INPUT TYPE='hidden' NAME='{$prefixe2}_smallIncrement' VALUE='{$this->_smallIncrement}'  style='text-align: right'>";
-        $t[] = "      <input type='text'  name='{$prefixe}' size='{$this->GetSize()}' value='{$this->getValue()}' {$styleText}>";
-        $t[] = "    </td>";
+        $t[] = "      <INPUT TYPE='hidden' NAME='{$prefixe2}_smallIncrement' VALUE='{$this->_smallIncrement}'  style='text-align: right;'>";
+        $t[] = "      <input type='text'  name='{$prefixe}' size='{$this->getSize()}' value='{$this->getValue()}' {$styleText}>";
+        $t[] = '    </td>';
 
         $unite = $this->getUnite();
         if ($unite <> '') {
             $t[] = "    <td style='display: table-cell;vertical-align: middle; '>&nbsp;{$unite}&nbsp;</td>";
         }
-      //-------------------------------------------------------
-      if ($this->getMinMaxVisible()) {
-          $onMouseDownMin = "spinSetValue(\"{$prefixe}\", \"{$prefixe2}\",  \"Min\", {$this->getMin()}, {$delai}, \"{$sFolderImg}spinMin1.gif\");";
-          $t[] = "    <td width='63%' align='center' {$styleArrow}>";
-          $t[] = "      <img border='0' name='{$prefixe2}_imgMin' src='{$sFolderImg}spinMin0.gif'   onmousedown='{$onMouseDownMin}'><br>";
-          $t[] = "    </td>";
-      }
-      //-------------------------------------------------------
-      $t[] = "    <td width='63%' align='center' {$styleArrow}>";
+        //-------------------------------------------------------
+        if ($this->getMinMaxVisible()) {
+            $onMouseDownMin = "spinSetValue(\"{$prefixe}\", \"{$prefixe2}\",  \"Min\", {$this->getMin()}, {$delai}, \"{$sFolderImg}spinMin1.gif\");";
+            $t[]            = "    <td width='63%' align='center' {$styleArrow}>";
+            $t[]            = "      <img border='0' name='{$prefixe2}_imgMin' src='{$sFolderImg}spinMin0.gif'   onmousedown='{$onMouseDownMin}'><br>";
+            $t[]            = '    </td>';
+        }
+        //-------------------------------------------------------
+        $t[] = "    <td width='63%' align='center' {$styleArrow}>";
 
         $t[] = "      <img border='0' name='{$prefixe2}_img0' src='{$sFolderImg}spinUp0.gif'   onmousedown='{$onMouseDown1}' onmouseup='{$onMouseUp}' onmouseout='{$onMouseUp}'><br>";
         $t[] = "      <img border='0' name='{$prefixe2}_img1' src='{$sFolderImg}spinDown0.gif' onmousedown='{$onMouseDown2}' onmouseup='{$onMouseUp}' onmouseout='{$onMouseUp}'>";
 
-        $t[] = "    </td>";
+        $t[] = '    </td>';
 
-      //-------------------------------------------------------
-      if ($this->getMinMaxVisible()) {
-          $onMouseDownMax = "spinSetValue(\"{$prefixe}\", \"{$prefixe2}\",  \"Max\", {$this->getMax()}, {$delai}, \"{$sFolderImg}spinMax1.gif\");";
-          $t[] = "    <td width='63%' align='center' {$styleArrow}>";
-          $t[] = "      <img border='0' name='{$prefixe2}_imgMax' src='{$sFolderImg}spinMax0.gif'   onmousedown='{$onMouseDownMax}'><br>";
-          $t[] = "    </td>";
-      }
-      //-------------------------------------------------------
+        //-------------------------------------------------------
+        if ($this->getMinMaxVisible()) {
+            $onMouseDownMax = "spinSetValue(\"{$prefixe}\", \"{$prefixe2}\",  \"Max\", {$this->getMax()}, {$delai}, \"{$sFolderImg}spinMax1.gif\");";
+            $t[]            = "    <td width='63%' align='center' {$styleArrow}>";
+            $t[]            = "      <img border='0' name='{$prefixe2}_imgMax' src='{$sFolderImg}spinMax0.gif'   onmousedown='{$onMouseDownMax}'><br>";
+            $t[]            = '    </td>';
+        }
+        //-------------------------------------------------------
 
-      $t[] = "  </tr>";
-        $t[] = "</table>"."\n";
-        $t[] = "</div>";
-      //-------------------------------------------
-      $html = implode("\n", $t);
+        $t[] = '  </tr>';
+        $t[] = '</table>' . "\n";
+        $t[] = '</div>';
+        //-------------------------------------------
+        $html = implode("\n", $t);
 
         return $html;
     }
 
-/**************************************************************************
- * calcul du dossier du composant
- *************************************************************************/
-public function getFolder()
-{
-    $sSpinFolder = XOOPS_URL . _SPIN_FOLDER;
+    /**************************************************************************
+     * calcul du dossier du composant
+     *************************************************************************/
+    public function getFolder()
+    {
+        $sSpinFolder = XOOPS_URL . _SPIN_FOLDER;
 
-    return $sSpinFolder;
-}
-
-/********************************************************************
- *
-*********************************************************************/
-public function htmlAddAttribut($attribut, $value, $default = '')
-{
-    if ($value == '') {
-        $value = $default;
+        return $sSpinFolder;
     }
 
-    if ($value <> "") {
-        if (substr($value, 0, strlen($attribut)) <> $attribut) {
-            $r ="{$attribut}=\"{$value}\"";
-        }
-    } else {
+    /********************************************************************
+     *
+     ********************************************************************
+     * @param $attribut
+     * @param $value
+     * @param string $default
+     * @return string
+     */
+    public function htmlAddAttribut($attribut, $value, $default = '')
+    {
         $r = '';
+        if ($value == '') {
+            $value = $default;
+        }
+
+        if ($value <> '') {
+            if (substr($value, 0, strlen($attribut)) <> $attribut) {
+                $r = "{$attribut}=\"{$value}\"";
+            }
+            return $r;
+        }
+
+        /*-----------------------------------------------*/
+        /*---          fin de la classe               ---*/
+        /*-----------------------------------------------*/
     }
-
-    return $r;
-}
-
-/*-----------------------------------------------*/
-/*---          fin de la classe               ---*/
-/*-----------------------------------------------*/
 }

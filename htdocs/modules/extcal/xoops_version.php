@@ -1,51 +1,72 @@
 <?php
+/*
+ * You may not change or alter any portion of this comment or credits
+ * of supporting developers from this source code or any supporting source code
+ * which is considered copyrighted (c) material of the original comment or credit authors.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ */
+
+/**
+ * @copyright    {@link https://xoops.org/ XOOPS Project}
+ * @license      {@link http://www.gnu.org/licenses/gpl-2.0.html GNU GPL 2 or later}
+ * @package      extcal
+ * @since
+ * @author       XOOPS Development Team,
+ */
+
+use XoopsModules\Extcal;
 
 // defined('XOOPS_ROOT_PATH') || die('XOOPS Root Path not defined');
-//include_once('include/constantes.php');
-include_once(XOOPS_ROOT_PATH . '/modules/extcal/include/constantes.php');
-include_once(XOOPS_ROOT_PATH . '/modules/extcal/include/agenda_fnc.php');
-include_once(XOOPS_ROOT_PATH . '/modules/extcal/class/config.php');
+
+include __DIR__ . '/preloads/autoloader.php';
+
+$moduleDirName = basename(__DIR__);
+
+require_once __DIR__ . '/include/constantes.php';
+require_once __DIR__ . '/include/agenda_fnc.php';
+require_once __DIR__ . '/class/config.php';
 //$loc_de = setlocale (LC_ALL, 'french');
 
 //echo "local :" .  setlocale(LC_TIME, $xoopsConfig['language'])."</ br>";
 setlocale(LC_TIME, $xoopsConfig['language']);
 
 //***************************************************************************************
-$modversion['name']        = _MI_EXTCAL_NAME;
-$modversion['version']     = '2.38';
-$modversion['description'] = _MI_EXTCAL_DESC;
-$modversion['credits']     = 'Zoullou';
-$modversion['author']      = 'Zoullou, Mage, Mamba, JJ Delalandre (JJDai)';
-$modversion['nickname']    = '';
-$modversion['website']     = '';
-$modversion['license']     = 'GPL see LICENSE';
-$modversion['license_url'] = "www.gnu.org/licenses/gpl-2.0.html/";
-$modversion['official']    = 0;
-$modversion['image']       = 'assets/images/extcal_logo.png';
-$modversion['dirname']     = basename(__DIR__);
-//$modversion['status_version']   = 'Beta 4';
+$modversion['version']          = '2.40';
+$modversion['module_status']    = 'Beta 1';
+$modversion['release_date']     = '2018/01/08';
+$modversion['name']             = _MI_EXTCAL_NAME;
+$modversion['description']      = _MI_EXTCAL_DESC;
+$modversion['credits']          = 'Zoullou';
+$modversion['author']           = 'Zoullou, Mage, Mamba, JJ Delalandre (JJDai)';
+$modversion['nickname']         = '';
+$modversion['website']          = '';
+$modversion['license']          = 'GPL see LICENSE';
+$modversion['license_url']      = 'www.gnu.org/licenses/gpl-2.0.html/';
+$modversion['official']         = 0;
+$modversion['image']            = 'assets/images/logoModule.png';
+$modversion['dirname']          = basename(__DIR__);
 $modversion['sqlfile']['mysql'] = 'sql/mysql.sql';
 $modversion['onInstall']        = 'include/install_function.php';
 $modversion['onUpdate']         = 'include/update_function.php';
 $modversion['system_menu']      = 1;
 $modversion['help']             = 'page=help';
-$modversion['dirmoduleadmin']   = '/Frameworks/moduleclasses/moduleadmin';
-$modversion['icons16']          = '../../Frameworks/moduleclasses/icons/16';
-$modversion['icons32']          = '../../Frameworks/moduleclasses/icons/32';
-//***************************************************************************************
-
+//$modversion['dirmoduleadmin']   = 'Frameworks/moduleclasses/moduleadmin';
+//$modversion['sysicons16']       = 'Frameworks/moduleclasses/icons/16';
+//$modversion['sysicons32']       = 'Frameworks/moduleclasses/icons/32';
+$modversion['modicons16'] = 'assets/images/icons/16';
+$modversion['modicons32'] = 'assets/images/icons/32';
 //about
-$modversion["module_status"]       = "RC 1";
-$modversion["release_date"]        = "2014/04/23";
-$modversion["module_website_url"]  = "www.xoops.org/";
-$modversion["module_website_name"] = "XOOPS";
+$modversion['module_website_url']  = 'www.xoops.org/';
+$modversion['module_website_name'] = 'XOOPS';
 $modversion['min_php']             = '5.5';
-$modversion['min_xoops']           = "2.5.7";
-
+$modversion['min_xoops']           = '2.5.9';
 // Admin things
 $modversion['hasAdmin']   = 1;
-$modversion['adminindex'] = "admin/index.php";
-$modversion['adminmenu']  = "admin/menu.php";
+$modversion['adminindex'] = 'admin/index.php';
+$modversion['adminmenu']  = 'admin/menu.php';
 
 // Menu
 
@@ -53,34 +74,40 @@ $modversion['adminmenu']  = "admin/menu.php";
 $modversion['hasMain'] = 1;
 $i                     = 0;
 
-if (isset($GLOBALS['xoopsModule'])
-    && $GLOBALS['xoopsModule']->getVar('dirname') == "extcal"
-) {
-    /*
-        $user = isset($GLOBALS['xoopsUser']) ? $GLOBALS['xoopsUser'] : null;
-        $catHandler = xoops_getmodulehandler(_EXTCAL_CLS_CAT, _EXTCAL_MODULE);
-        if ($catHandler->haveSubmitRight($user)) {
-            $modversion['sub'][0]['name'] = _MI_EXTCAL_SUBMIT_EVENT;
-            $modversion['sub'][0]['url'] = _EXTCAL_FILE_NEW_EVENT;
-        }
-    */
+if (isset($GLOBALS['xoopsModule']) && is_object($GLOBALS['xoopsModule'])
+    && 'extcal' === $GLOBALS['xoopsModule']->getVar('dirname')) {
+    $user = isset($GLOBALS['xoopsUser']) ? $GLOBALS['xoopsUser'] : null;
+    //    $catHandler = xoops_getModuleHandler(_EXTCAL_CLS_CAT, _EXTCAL_MODULE);
+    $catHandler = Extcal\Helper::getInstance()->getHandler(_EXTCAL_CLN_CAT);
+    if ($catHandler->haveSubmitRight($user)) {
+        $modversion['sub'][0]['name'] = _MI_EXTCAL_SUBMIT_EVENT;
+        $modversion['sub'][0]['url']  = _EXTCAL_FILE_NEW_EVENT;
+    }
+
     $tTabs = getNavBarTabs();
-    while (list($k, $v) = each($tTabs)) {
+    //    while (list($key, $value) = each($tTabs)) {
+    foreach ($tTabs as $key => $value) {
         ++$i;
-        $modversion['sub'][$i]['name'] = $v['name'];
-        $modversion['sub'][$i]['url']  = $v['href'];
+        $modversion['sub'][$i]['name'] = $value['name'];
+        $modversion['sub'][$i]['url']  = $value['href'];
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////
+// ------------------- Mysql ------------------- //
+$modversion['sqlfile']['mysql'] = 'sql/mysql.sql';
+
+// Tables created by sql file (without prefix!)
+$modversion['tables'] = [
+    $moduleDirName . '_' . 'cat',
+    $moduleDirName . '_' . 'event',
+    $moduleDirName . '_' . 'eventmember',
+    $moduleDirName . '_' . 'eventnotmember',
+    $moduleDirName . '_' . 'file',
+    $moduleDirName . '_' . 'etablissement'
+];
 
 // SQL
-$modversion['tables'][1] = "extcal_cat";
-$modversion['tables'][2] = "extcal_event";
-$modversion['tables'][3] = "extcal_eventmember";
-$modversion['tables'][4] = "extcal_eventnotmember";
-$modversion['tables'][5] = "extcal_file";
-$modversion['tables'][6] = "extcal_etablissement";
 
 // Comments
 $modversion['hasComments']          = 1;
@@ -89,8 +116,8 @@ $modversion['comments']['pageName'] = 'event.php';
 
 // Search
 $modversion['hasSearch']      = 1;
-$modversion['search']['file'] = "include/search.inc.php";
-$modversion['search']['func'] = "extcal_search";
+$modversion['search']['file'] = 'include/search.inc.php';
+$modversion['search']['func'] = 'extcal_search';
 
 // Config items
 $i = 0;
@@ -100,7 +127,7 @@ $modversion['config'][$i]['title']       = '_MI_EXTCAL_VISIBLE_TABS';
 $modversion['config'][$i]['description'] = '_MI_EXTCAL_VISIBLE_TABS_DESC';
 $modversion['config'][$i]['formtype']    = 'select_multi';
 $modversion['config'][$i]['valuetype']   = 'array';
-$modversion['config'][$i]['default']     = array(
+$modversion['config'][$i]['default']     = [
     _EXTCAL_NAV_CALMONTH,
     _EXTCAL_NAV_CALWEEK,
     _EXTCAL_NAV_YEAR,
@@ -110,11 +137,11 @@ $modversion['config'][$i]['default']     = array(
     _EXTCAL_NAV_AGENDA_WEEK,
     _EXTCAL_NAV_AGENDA_DAY,
     _EXTCAL_NAV_SEARCH,
-    _EXTCAL_NAV_NEW_EVENT
-);
+    _EXTCAL_NAV_NEW_EVENT,
+];
 // $t = print_r($modversion['config'][$i]['default'],true);
-// echo _EXTCAL_NAV_CALMONTH . "<br /><pre>{$t}</pre>";
-$modversion['config'][$i]['options'] = array(
+// echo _EXTCAL_NAV_CALMONTH . "<br><pre>{$t}</pre>";
+$modversion['config'][$i]['options'] = [
     '_MI_EXTCAL_NAV_CALMONTH'    => _EXTCAL_NAV_CALMONTH,
     '_MI_EXTCAL_NAV_CALWEEK'     => _EXTCAL_NAV_CALWEEK,
     '_MI_EXTCAL_NAV_YEAR'        => _EXTCAL_NAV_YEAR,
@@ -124,8 +151,8 @@ $modversion['config'][$i]['options'] = array(
     '_MI_EXTCAL_NAV_AGENDA_WEEK' => _EXTCAL_NAV_AGENDA_WEEK,
     '_MI_EXTCAL_NAV_AGENDA_DAY'  => _EXTCAL_NAV_AGENDA_DAY,
     '_MI_EXTCAL_NAV_SEARCH'      => _EXTCAL_NAV_SEARCH,
-    '_MI_EXTCAL_NAV_NEW_EVENT'   => _EXTCAL_NAV_NEW_EVENT
-);
+    '_MI_EXTCAL_NAV_NEW_EVENT'   => _EXTCAL_NAV_NEW_EVENT,
+];
 //-----------------------------------------------------------------------------
 ++$i;
 $modversion['config'][$i]['name']        = 'weight_tabs';
@@ -144,7 +171,7 @@ $modversion['config'][$i]['description'] = '';
 $modversion['config'][$i]['formtype']    = 'select';
 $modversion['config'][$i]['valuetype']   = 'text';
 $modversion['config'][$i]['default']     = _EXTCAL_FILE_CALMONTH;
-$modversion['config'][$i]['options']     = array(
+$modversion['config'][$i]['options']     = [
     '_MI_EXTCAL_NAV_CALMONTH'    => _EXTCAL_FILE_CALMONTH,
     '_MI_EXTCAL_NAV_CALWEEK'     => _EXTCAL_FILE_CALWEEK,
     '_MI_EXTCAL_NAV_YEAR'        => _EXTCAL_FILE_YEAR,
@@ -154,8 +181,8 @@ $modversion['config'][$i]['options']     = array(
     '_MI_EXTCAL_NAV_AGENDA_WEEK' => _EXTCAL_FILE_AGENDA_WEEK,
     '_MI_EXTCAL_NAV_AGENDA_DAY'  => _EXTCAL_FILE_AGENDA_DAY,
     '_MI_EXTCAL_NAV_SEARCH'      => _EXTCAL_FILE_SEARCH,
-    '_MI_EXTCAL_NAV_NEW_EVENT'   => _EXTCAL_FILE_NEW_EVENT
-);
+    '_MI_EXTCAL_NAV_NEW_EVENT'   => _EXTCAL_FILE_NEW_EVENT,
+];
 
 ++$i;
 $modversion['config'][$i]['name']        = 'week_start_day';
@@ -164,15 +191,15 @@ $modversion['config'][$i]['description'] = '_MI_EXTCAL_WEEK_START_DAY_DESC';
 $modversion['config'][$i]['formtype']    = 'select';
 $modversion['config'][$i]['valuetype']   = 'int';
 $modversion['config'][$i]['default']     = 1;
-$modversion['config'][$i]['options']     = array(
+$modversion['config'][$i]['options']     = [
     '_MI_EXTCAL_DAY_SUNDAY'    => 0,
     '_MI_EXTCAL_DAY_MONDAY'    => 1,
     '_MI_EXTCAL_DAY_TUESDAY'   => 2,
     '_MI_EXTCAL_DAY_WEDNESDAY' => 3,
     '_MI_EXTCAL_DAY_THURSDAY'  => 4,
     '_MI_EXTCAL_DAY_FRIDAY'    => 5,
-    '_MI_EXTCAL_DAY_SATURDAY'  => 6
-);
+    '_MI_EXTCAL_DAY_SATURDAY'  => 6,
+];
 ++$i;
 $modversion['config'][$i]['name']        = 'list_position';
 $modversion['config'][$i]['title']       = '_MI_EXTCAL_LIST_POS';
@@ -180,19 +207,19 @@ $modversion['config'][$i]['description'] = '_MI_EXTCAL_LIST_POS_DESC';
 $modversion['config'][$i]['formtype']    = 'select';
 $modversion['config'][$i]['valuetype']   = 'text';
 $modversion['config'][$i]['default']     = 1;
-$modversion['config'][$i]['options']     = array(
+$modversion['config'][$i]['options']     = [
     '_MI_EXTCAL_BEFORE' => 0,
-    '_MI_EXTCAL_AFTER'  => 1
-);
+    '_MI_EXTCAL_AFTER'  => 1,
+];
 
 xoops_load('XoopsEditorHandler');
-$editor_handler = XoopsEditorHandler::getInstance();
-$editorList     = array_flip($editor_handler->getList());
+$editorHandler = \XoopsEditorHandler::getInstance();
+$editorList    = array_flip($editorHandler->getList());
 
 ++$i;
 $modversion['config'][$i]['name']        = 'editorAdmin';
-$modversion['config'][$i]['title']       = "_MI_EXTCAL_EDITOR_ADMIN";
-$modversion['config'][$i]['description'] = "_MI_EXTCAL_EDITOR_ADMIN_DESC";
+$modversion['config'][$i]['title']       = '_MI_EXTCAL_EDITOR_ADMIN';
+$modversion['config'][$i]['description'] = '_MI_EXTCAL_EDITOR_ADMIN_DESC';
 $modversion['config'][$i]['formtype']    = 'select';
 $modversion['config'][$i]['valuetype']   = 'text';
 $modversion['config'][$i]['options']     = $editorList;
@@ -200,8 +227,8 @@ $modversion['config'][$i]['default']     = 'dhtml';
 
 ++$i;
 $modversion['config'][$i]['name']        = 'editorUser';
-$modversion['config'][$i]['title']       = "_MI_EXTCAL_EDITOR_USER";
-$modversion['config'][$i]['description'] = "_MI_EXTCAL_EDITOR_USER_DESC";
+$modversion['config'][$i]['title']       = '_MI_EXTCAL_EDITOR_USER';
+$modversion['config'][$i]['description'] = '_MI_EXTCAL_EDITOR_USER_DESC';
 $modversion['config'][$i]['formtype']    = 'select';
 $modversion['config'][$i]['valuetype']   = 'text';
 $modversion['config'][$i]['options']     = $editorList;
@@ -242,10 +269,10 @@ $modversion['config'][$i]['description'] = '_MI_EXTCAL_SORT_ORDER_DESC';
 $modversion['config'][$i]['formtype']    = 'select';
 $modversion['config'][$i]['valuetype']   = 'text';
 $modversion['config'][$i]['default']     = 1;
-$modversion['config'][$i]['options']     = array(
+$modversion['config'][$i]['options']     = [
     '_MI_EXTCAL_ASCENDING'  => 'ASC',
-    '_MI_EXTCAL_DESCENDING' => 'DESC'
-);
+    '_MI_EXTCAL_DESCENDING' => 'DESC',
+];
 ++$i;
 $modversion['config'][$i]['name']        = 'event_date_year';
 $modversion['config'][$i]['title']       = '_MI_EXTCAL_EY_DATE_PATTERN';
@@ -329,105 +356,106 @@ $modversion['config'][$i]['title']       = '_MI_EXTCAL_FILE_EXTENTION';
 $modversion['config'][$i]['description'] = '_MI_EXTCAL_FILE_EXTENTION_DESC';
 $modversion['config'][$i]['formtype']    = 'select_multi';
 $modversion['config'][$i]['valuetype']   = 'array';
-$modversion['config'][$i]['default']     = array('doc', 'jpg', 'jpeg', 'gif', 'png', 'pdf', 'txt');
-$modversion['config'][$i]['options']     = array('ai'    => 'ai',
-                                                 'aif'   => 'aif',
-                                                 'aiff'  => 'aiff',
-                                                 'asc'   => 'asc',
-                                                 'au'    => 'au',
-                                                 'avi'   => 'avi',
-                                                 'bin'   => 'bin',
-                                                 'bmp'   => 'bmp',
-                                                 'class' => 'class',
-                                                 'csh'   => 'csh',
-                                                 'css'   => 'css',
-                                                 'dcr'   => 'dcr',
-                                                 'dir'   => 'dir',
-                                                 'dll'   => 'dll',
-                                                 'doc'   => 'doc',
-                                                 'dot'   => 'dot',
-                                                 'dtd'   => 'dtd',
-                                                 'dxr'   => 'dxr',
-                                                 'ent'   => 'ent',
-                                                 'eps'   => 'eps',
-                                                 'exe'   => 'exe',
-                                                 'gif'   => 'gif',
-                                                 'gtar'  => 'gtar',
-                                                 'gz'    => 'gz',
-                                                 'hqx'   => 'hqx',
-                                                 'htm'   => 'htm',
-                                                 'html'  => 'html',
-                                                 'ics'   => 'ics',
-                                                 'ifb'   => 'ifb',
-                                                 'jpe'   => 'jpe',
-                                                 'jpeg'  => 'jpeg',
-                                                 'jpg'   => 'jpg',
-                                                 'js'    => 'js',
-                                                 'kar'   => 'kar',
-                                                 'lha'   => 'lha',
-                                                 'lzh'   => 'lzh',
-                                                 'm3u'   => 'm3u',
-                                                 'mid'   => 'mid',
-                                                 'midi'  => 'midi',
-                                                 'mod'   => 'mod',
-                                                 'mov'   => 'mov',
-                                                 'mp1'   => 'mp1',
-                                                 'mp2'   => 'mp2',
-                                                 'mp3'   => 'mp3',
-                                                 'mpe'   => 'mpe',
-                                                 'mpeg'  => 'mpeg',
-                                                 'mpg'   => 'mpg',
-                                                 'pbm'   => 'pbm',
-                                                 'pdf'   => 'pdf',
-                                                 'pgm'   => 'pgm',
-                                                 'php'   => 'php',
-                                                 'php3'  => 'php3',
-                                                 'php5'  => 'php5',
-                                                 'phtml' => 'phtml',
-                                                 'png'   => 'png',
-                                                 'pnm'   => 'pnm',
-                                                 'ppm'   => 'ppm',
-                                                 'ppt'   => 'ppt',
-                                                 'ps'    => 'ps',
-                                                 'qt'    => 'qt',
-                                                 'ra'    => 'ra',
-                                                 'ram'   => 'ram',
-                                                 'rm'    => 'rm',
-                                                 'rpm'   => 'rpm',
-                                                 'rtf'   => 'rtf',
-                                                 'sgm'   => 'sgm',
-                                                 'sgml'  => 'sgml',
-                                                 'sh'    => 'sh',
-                                                 'sit'   => 'sit',
-                                                 'smi'   => 'smi',
-                                                 'smil'  => 'smil',
-                                                 'snd'   => 'snd',
-                                                 'so'    => 'so',
-                                                 'spl'   => 'spl',
-                                                 'swf'   => 'swf',
-                                                 'tar'   => 'tar',
-                                                 'tcl'   => 'tcl',
-                                                 'tif'   => 'tif',
-                                                 'tiff'  => 'tiff',
-                                                 'tsv'   => 'tsv',
-                                                 'txt'   => 'txt',
-                                                 'wav'   => 'wav',
-                                                 'wbmp'  => 'wbmp',
-                                                 'wbxml' => 'wbxml',
-                                                 'wml'   => 'wml',
-                                                 'wmlc'  => 'wmlc',
-                                                 'wmls'  => 'wmls',
-                                                 'wmlsc' => 'wmlsc',
-                                                 'xbm'   => 'xbm',
-                                                 'xht'   => 'xht',
-                                                 'xhtml' => 'xhtml',
-                                                 'xla'   => 'xla',
-                                                 'xls'   => 'xls',
-                                                 'xlt'   => 'xlt',
-                                                 'xpm'   => 'xpm',
-                                                 'xsl'   => 'xsl',
-                                                 'zip'   => 'zip'
-);
+$modversion['config'][$i]['default']     = ['doc', 'jpg', 'jpeg', 'gif', 'png', 'pdf', 'txt'];
+$modversion['config'][$i]['options']     = [
+    'ai'    => 'ai',
+    'aif'   => 'aif',
+    'aiff'  => 'aiff',
+    'asc'   => 'asc',
+    'au'    => 'au',
+    'avi'   => 'avi',
+    'bin'   => 'bin',
+    'bmp'   => 'bmp',
+    'class' => 'class',
+    'csh'   => 'csh',
+    'css'   => 'css',
+    'dcr'   => 'dcr',
+    'dir'   => 'dir',
+    'dll'   => 'dll',
+    'doc'   => 'doc',
+    'dot'   => 'dot',
+    'dtd'   => 'dtd',
+    'dxr'   => 'dxr',
+    'ent'   => 'ent',
+    'eps'   => 'eps',
+    'exe'   => 'exe',
+    'gif'   => 'gif',
+    'gtar'  => 'gtar',
+    'gz'    => 'gz',
+    'hqx'   => 'hqx',
+    'htm'   => 'htm',
+    'html'  => 'html',
+    'ics'   => 'ics',
+    'ifb'   => 'ifb',
+    'jpe'   => 'jpe',
+    'jpeg'  => 'jpeg',
+    'jpg'   => 'jpg',
+    'js'    => 'js',
+    'kar'   => 'kar',
+    'lha'   => 'lha',
+    'lzh'   => 'lzh',
+    'm3u'   => 'm3u',
+    'mid'   => 'mid',
+    'midi'  => 'midi',
+    'mod'   => 'mod',
+    'mov'   => 'mov',
+    'mp1'   => 'mp1',
+    'mp2'   => 'mp2',
+    'mp3'   => 'mp3',
+    'mpe'   => 'mpe',
+    'mpeg'  => 'mpeg',
+    'mpg'   => 'mpg',
+    'pbm'   => 'pbm',
+    'pdf'   => 'pdf',
+    'pgm'   => 'pgm',
+    'php'   => 'php',
+    'php3'  => 'php3',
+    'php5'  => 'php5',
+    'phtml' => 'phtml',
+    'png'   => 'png',
+    'pnm'   => 'pnm',
+    'ppm'   => 'ppm',
+    'ppt'   => 'ppt',
+    'ps'    => 'ps',
+    'qt'    => 'qt',
+    'ra'    => 'ra',
+    'ram'   => 'ram',
+    'rm'    => 'rm',
+    'rpm'   => 'rpm',
+    'rtf'   => 'rtf',
+    'sgm'   => 'sgm',
+    'sgml'  => 'sgml',
+    'sh'    => 'sh',
+    'sit'   => 'sit',
+    'smi'   => 'smi',
+    'smil'  => 'smil',
+    'snd'   => 'snd',
+    'so'    => 'so',
+    'spl'   => 'spl',
+    'swf'   => 'swf',
+    'tar'   => 'tar',
+    'tcl'   => 'tcl',
+    'tif'   => 'tif',
+    'tiff'  => 'tiff',
+    'tsv'   => 'tsv',
+    'txt'   => 'txt',
+    'wav'   => 'wav',
+    'wbmp'  => 'wbmp',
+    'wbxml' => 'wbxml',
+    'wml'   => 'wml',
+    'wmlc'  => 'wmlc',
+    'wmls'  => 'wmls',
+    'wmlsc' => 'wmlsc',
+    'xbm'   => 'xbm',
+    'xht'   => 'xht',
+    'xhtml' => 'xhtml',
+    'xla'   => 'xla',
+    'xls'   => 'xls',
+    'xlt'   => 'xlt',
+    'xpm'   => 'xpm',
+    'xsl'   => 'xsl',
+    'zip'   => 'zip',
+];
 ++$i;
 $modversion['config'][$i]['name']        = 'allow_html';
 $modversion['config'][$i]['title']       = '_MI_EXTCAL_HTML';
@@ -539,11 +567,11 @@ $modversion['config'][$i]['description'] = '_MI_EXTCAL_EMAIL_MODE_DESC';
 $modversion['config'][$i]['formtype']    = 'select';
 $modversion['config'][$i]['valuetype']   = 'int';
 $modversion['config'][$i]['default']     = 0;
-$modversion['config'][$i]['options']     = array(
+$modversion['config'][$i]['options']     = [
     '_MI_EXTCAL_EMAIL_MODE_NONE' => 0,
     '_MI_EXTCAL_EMAIL_MODE_TEXT' => 1,
-    '_MI_EXTCAL_EMAIL_MODE_HTML' => 2
-);
+    '_MI_EXTCAL_EMAIL_MODE_HTML' => 2,
+];
 
 ++$i;
 $modversion['config'][$i]['name']        = 'pear_path';
@@ -648,19 +676,19 @@ $modversion['templates'][$i]['description'] = 'Mail html member inscription/desi
 //template de l'admin
 //-------------------------------------------------------------
 ++$i;
-$modversion["templates"][$i]["file"]        = "admin/extcal_admin_cat_list.tpl";
-$modversion["templates"][$i]["description"] = "Category list";
+$modversion['templates'][$i]['file']        = 'admin/extcal_admin_cat_list.tpl';
+$modversion['templates'][$i]['description'] = 'Category list';
 
 //-------------------------------------------------------------
 
 // Blocs
 $i                                       = 1;
-$modversion['blocks'][$i]['file']        = "minical.php";
+$modversion['blocks'][$i]['file']        = 'minical.php';
 $modversion['blocks'][$i]['name']        = _MI_EXTCAL_BNAME1;
 $modversion['blocks'][$i]['description'] = _MI_EXTCAL_BNAME1_DESC;
-$modversion['blocks'][$i]['show_func']   = "bExtcalMinicalShow";
-$modversion['blocks'][$i]['options']     = "0|0|150|225|1|3|10|0|1|1,2,3,4,5|| |120|120";
-$modversion['blocks'][$i]['edit_func']   = "bExtcalMinicalEdit";
+$modversion['blocks'][$i]['show_func']   = 'bExtcalMinicalShow';
+$modversion['blocks'][$i]['options']     = '0|0|150|225|1|3|10|0|1|1,2,3,4,5|| |120|120';
+$modversion['blocks'][$i]['edit_func']   = 'bExtcalMinicalEdit';
 $modversion['blocks'][$i]['template']    = 'extcal_block_minical.tpl';
 //++$i;
 //$modversion['blocks'][$i]['file'] = "spotlight_events.php";
@@ -671,44 +699,44 @@ $modversion['blocks'][$i]['template']    = 'extcal_block_minical.tpl';
 //$modversion['blocks'][$i]['edit_func'] = "bExtcalSpotlightEdit";
 //$modversion['blocks'][$i]['template'] = 'extcal_block_spotlight.tpl';
 ++$i;
-$modversion['blocks'][$i]['file']        = "upcoming.php";
+$modversion['blocks'][$i]['file']        = 'upcoming.php';
 $modversion['blocks'][$i]['name']        = _MI_EXTCAL_BNAME3;
 $modversion['blocks'][$i]['description'] = _MI_EXTCAL_BNAME3_DESC;
-$modversion['blocks'][$i]['show_func']   = "bExtcalUpcomingShow";
-$modversion['blocks'][$i]['options']     = "5|25|30|0";
-$modversion['blocks'][$i]['edit_func']   = "bExtcalUpcomingEdit";
+$modversion['blocks'][$i]['show_func']   = 'bExtcalUpcomingShow';
+$modversion['blocks'][$i]['options']     = '5|25|30|0';
+$modversion['blocks'][$i]['edit_func']   = 'bExtcalUpcomingEdit';
 $modversion['blocks'][$i]['template']    = 'extcal_block_upcoming.tpl';
 ++$i;
-$modversion['blocks'][$i]['file']        = "day_events.php";
+$modversion['blocks'][$i]['file']        = 'day_events.php';
 $modversion['blocks'][$i]['name']        = _MI_EXTCAL_BNAME4;
 $modversion['blocks'][$i]['description'] = _MI_EXTCAL_BNAME4_DESC;
-$modversion['blocks'][$i]['show_func']   = "bExtcalDayShow";
-$modversion['blocks'][$i]['options']     = "5|25|0";
-$modversion['blocks'][$i]['edit_func']   = "bExtcalDayEdit";
+$modversion['blocks'][$i]['show_func']   = 'bExtcalDayShow';
+$modversion['blocks'][$i]['options']     = '5|25|0';
+$modversion['blocks'][$i]['edit_func']   = 'bExtcalDayEdit';
 $modversion['blocks'][$i]['template']    = 'extcal_block_day.tpl';
 ++$i;
-$modversion['blocks'][$i]['file']        = "new_events.php";
+$modversion['blocks'][$i]['file']        = 'new_events.php';
 $modversion['blocks'][$i]['name']        = _MI_EXTCAL_BNAME5;
 $modversion['blocks'][$i]['description'] = _MI_EXTCAL_BNAME5_DESC;
-$modversion['blocks'][$i]['show_func']   = "bExtcalNewShow";
-$modversion['blocks'][$i]['options']     = "5|25|0";
-$modversion['blocks'][$i]['edit_func']   = "bExtcalNewEdit";
+$modversion['blocks'][$i]['show_func']   = 'bExtcalNewShow';
+$modversion['blocks'][$i]['options']     = '5|25|0';
+$modversion['blocks'][$i]['edit_func']   = 'bExtcalNewEdit';
 $modversion['blocks'][$i]['template']    = 'extcal_block_new.tpl';
 ++$i;
-$modversion['blocks'][$i]['file']        = "random_events.php";
+$modversion['blocks'][$i]['file']        = 'random_events.php';
 $modversion['blocks'][$i]['name']        = _MI_EXTCAL_BNAME6;
 $modversion['blocks'][$i]['description'] = _MI_EXTCAL_BNAME6_DESC;
-$modversion['blocks'][$i]['show_func']   = "bExtcalRandomShow";
-$modversion['blocks'][$i]['options']     = "5|25|0";
-$modversion['blocks'][$i]['edit_func']   = "bExtcalRandomEdit";
+$modversion['blocks'][$i]['show_func']   = 'bExtcalRandomShow';
+$modversion['blocks'][$i]['options']     = '5|25|0';
+$modversion['blocks'][$i]['edit_func']   = 'bExtcalRandomEdit';
 $modversion['blocks'][$i]['template']    = 'extcal_block_random.tpl';
 ++$i;
-$modversion['blocks'][$i]['file']        = "category_events.php";
+$modversion['blocks'][$i]['file']        = 'category_events.php';
 $modversion['blocks'][$i]['name']        = _MI_EXTCAL_BNAME7;
 $modversion['blocks'][$i]['description'] = _MI_EXTCAL_BNAME7_DESC;
-$modversion['blocks'][$i]['show_func']   = "bExtcalUpcomingByCategoryShow";
-$modversion['blocks'][$i]['options']     = "5|25|0";
-$modversion['blocks'][$i]['edit_func']   = "bExtcalUpcomingByCategoryEdit";
+$modversion['blocks'][$i]['show_func']   = 'bExtcalUpcomingByCategoryShow';
+$modversion['blocks'][$i]['options']     = '5|25|0';
+$modversion['blocks'][$i]['edit_func']   = 'bExtcalUpcomingByCategoryEdit';
 $modversion['blocks'][$i]['template']    = 'extcal_block_upcomingByCategory.tpl';
 
 //---------------------------------------------------------
@@ -726,7 +754,7 @@ $modversion['notification']['category'][1]['item_name']      = '';
 $modversion['notification']['category'][2]['name']           = 'cat';
 $modversion['notification']['category'][2]['title']          = _MI_EXTCAL_CAT_NOTIFY;
 $modversion['notification']['category'][2]['description']    = _MI_EXTCAL_CAT_NOTIFYDSC;
-$modversion['notification']['category'][2]['subscribe_from'] = array('calendar.php', 'year.php', 'day.php');
+$modversion['notification']['category'][2]['subscribe_from'] = ['calendar.php', 'year.php', 'day.php'];
 $modversion['notification']['category'][2]['item_name']      = 'cat';
 
 $modversion['notification']['category'][3]['name']           = 'event';
@@ -762,13 +790,13 @@ $modversion['notification']['event'][3]['mail_template'] = 'cat_new_event';
 $modversion['notification']['event'][3]['mail_subject']  = _MI_EXTCAL_NEW_EVENT_CAT_NOTIFYSBJ;
 
 // XoopsInfo
-$modversion['developer_website_url']  = "http://www.zoullou.net/";
-$modversion['developer_website_name'] = "eXtCal and eXtGallery module for XOOPS : Zoullou.net";
-$modversion['download_website']       = "http://www.zoullou.net/";
-$modversion['status_fileinfo']        = "";
-$modversion['demo_site_url']          = "http://www.zoullou.net/modules/extcal/";
-$modversion['demo_site_name']         = "eXtCal and eXtGallery module for XOOPS : Zoullou.net";
-$modversion['support_site_url']       = "http://www.zoullou.net/";
-$modversion['support_site_name']      = "eXtCal and eXtGallery module for XOOPS : Zoullou.net";
-$modversion['submit_bug']             = "http://sourceforge.net/tracker/?func=add&group_id=177145&atid=880070";
-$modversion['submit_feature']         = "http://sourceforge.net/tracker/?func=add&group_id=177145&atid=880073";
+$modversion['developer_website_url']  = 'http://www.zoullou.net/';
+$modversion['developer_website_name'] = 'eXtCal and eXtGallery module for XOOPS : Zoullou.net';
+$modversion['download_website']       = 'http://www.zoullou.net/';
+$modversion['status_fileinfo']        = '';
+$modversion['demo_site_url']          = 'http://www.zoullou.net/modules/extcal/';
+$modversion['demo_site_name']         = 'eXtCal and eXtGallery module for XOOPS : Zoullou.net';
+$modversion['support_site_url']       = 'http://www.zoullou.net/';
+$modversion['support_site_name']      = 'eXtCal and eXtGallery module for XOOPS : Zoullou.net';
+$modversion['submit_bug']             = 'http://sourceforge.net/tracker/?func=add&group_id=177145&atid=880070';
+$modversion['submit_feature']         = 'http://sourceforge.net/tracker/?func=add&group_id=177145&atid=880073';

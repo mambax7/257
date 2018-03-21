@@ -1,4 +1,5 @@
-<?php
+<?php namespace XoopsModules\Extgallery;
+
 /**
  * ExtGallery Class Manager
  *
@@ -9,16 +10,20 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright   The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright   {@link https://xoops.org/ XOOPS Project}
  * @license     GNU GPL 2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  * @author      Zoullou (http://www.zoullou.net)
  * @package     ExtGallery
- * @version     $Id: photoUploader.php 11938 2013-08-19 18:29:38Z beckmi $
  */
 
-class ExtgalleryPhotoUploader
-{
+use XoopsModules\Extgallery;
 
+/**
+ * Class PhotoUploader
+ * @package XoopsModules\Extgallery
+ */
+class PhotoUploader
+{
     public $uploadDir;
     public $savedDestination;
     public $savedFilename;
@@ -29,29 +34,41 @@ class ExtgalleryPhotoUploader
     public $error;
     public $checkMd5;
 
-    public function ExtgalleryPhotoUploader($uploadDir, $maxFileSize=0, $maxWidth=null, $maxHeight=null)
+    /**
+     * Extgallery\PhotoUploader constructor.
+     * @param      $uploadDir
+     * @param int  $maxFileSize
+     * @param null $maxWidth
+     * @param null $maxHeight
+     */
+    public function __construct($uploadDir, $maxFileSize = 0, $maxWidth = null, $maxHeight = null)
     {
-        $this->uploadDir = $uploadDir;
-        $this->maxFileSize = intval($maxFileSize);
+        $this->uploadDir   = $uploadDir;
+        $this->maxFileSize = (int)$maxFileSize;
         if (isset($maxWidth)) {
-            $this->maxWidth = intval($maxWidth);
+            $this->maxWidth = (int)$maxWidth;
         }
         if (isset($maxHeight)) {
-            $this->maxHeight = intval($maxHeight);
+            $this->maxHeight = (int)$maxHeight;
         }
 
-        $this->isError = false;
-        $this->error = '';
+        $this->isError  = false;
+        $this->error    = '';
         $this->checkMd5 = true;
     }
 
+    /**
+     * @param $file
+     *
+     * @return bool
+     */
     public function fetchPhoto($file)
     {
-        $jupart = (isset($_POST['jupart'])) ? (int)$_POST['jupart'] : 0;
-        $jufinal = (isset($_POST['jufinal'])) ? (int)$_POST['jufinal'] : 1;
-        $md5sums = (isset($_POST['md5sum'][0])) ? $_POST['md5sum'][0] : null;
+        $jupart  = isset($_POST['jupart']) ? (int)$_POST['jupart'] : 0;
+        $jufinal = isset($_POST['jufinal']) ? (int)$_POST['jufinal'] : 1;
+        $md5sums = isset($_POST['md5sum'][0]) ? $_POST['md5sum'][0] : null;
 
-        if ($this->uploadDir == '') {
+        if ('' == $this->uploadDir) {
             $this->abort('upload dir not defined');
 
             return false;
@@ -63,7 +80,7 @@ class ExtgalleryPhotoUploader
             return false;
         }
 
-        if (!is_writeable($this->uploadDir)) {
+        if (!is_writable($this->uploadDir)) {
             $this->abort('upload dir not writable');
 
             return false;
@@ -75,9 +92,9 @@ class ExtgalleryPhotoUploader
             return false;
         }
 
-        $dstdir = $this->uploadDir;
-        $dstname = $dstdir.'/juvar.'.session_id();
-        $tmpname = $dstdir.'/juvar.tmp'.session_id();
+        $dstdir  = $this->uploadDir;
+        $dstname = $dstdir . '/juvar.' . session_id();
+        $tmpname = $dstdir . '/juvar.tmp' . session_id();
 
         if (!move_uploaded_file($file['tmp_name'], $tmpname)) {
             $this->abort('Unable to move uploaded file');
@@ -87,14 +104,14 @@ class ExtgalleryPhotoUploader
 
         if ($jupart) {
             // got a chunk of a multi-part upload
-   $len = filesize($tmpname);
+            $len                       = filesize($tmpname);
             $_SESSION['juvar.tmpsize'] += $len;
             if ($len > 0) {
                 $src = fopen($tmpname, 'rb');
-                $dst = fopen($dstname, ($jupart == 1) ? 'wb' : 'ab');
+                $dst = fopen($dstname, (1 == $jupart) ? 'wb' : 'ab');
                 while ($len > 0) {
                     $rlen = ($len > 8192) ? 8192 : $len;
-                    $buf = fread($src, $rlen);
+                    $buf  = fread($src, $rlen);
                     if (!$buf) {
                         fclose($src);
                         fclose($dst);
@@ -119,7 +136,7 @@ class ExtgalleryPhotoUploader
             }
             if ($jufinal) {
                 // This is the last chunk. Check total lenght and rename it to it's final name.
-    $dlen = filesize($dstname);
+                $dlen = filesize($dstname);
                 if ($dlen != $_SESSION['juvar.tmpsize']) {
                     $this->abort('file size mismatch');
 
@@ -130,26 +147,26 @@ class ExtgalleryPhotoUploader
 
                     return false;
                 }
-    // remove zero sized files
-    if ($dlen > 0) {
-        if (!$this->_saveFile($dstname, $file['name'])) {
-            return false;
-        }
-    } else {
-        $this->abort('0 file size');
+                // remove zero sized files
+                if ($dlen > 0) {
+                    if (!$this->_saveFile($dstname, $file['name'])) {
+                        return false;
+                    }
+                } else {
+                    $this->abort('0 file size');
 
-        return false;
-    }
-    // reset session var
-    $_SESSION['juvar.tmpsize'] = 0;
+                    return false;
+                }
+                // reset session var
+                $_SESSION['juvar.tmpsize'] = 0;
             }
         } else {
             // Got a single file upload. Trivial.
-   if ($this->checkMd5 && $md5sums != md5_file($tmpname)) {
-       $this->abort('MD5 checksum mismatch');
+            if ($this->checkMd5 && $md5sums != md5_file($tmpname)) {
+                $this->abort('MD5 checksum mismatch');
 
-       return false;
-   }
+                return false;
+            }
             if (!$this->_saveFile($tmpname, $file['name'])) {
                 return false;
             }
@@ -158,10 +175,16 @@ class ExtgalleryPhotoUploader
         return true;
     }
 
+    /**
+     * @param $tmpDestination
+     * @param $fileName
+     *
+     * @return bool
+     */
     public function _saveFile($tmpDestination, $fileName)
     {
-        $this->savedFilename = $fileName;
-        $this->savedDestination = $this->uploadDir.$fileName;
+        $this->savedFilename    = $fileName;
+        $this->savedDestination = $this->uploadDir . $fileName;
 
         if (!$this->_checkFile($tmpDestination)) {
             return false;
@@ -178,19 +201,23 @@ class ExtgalleryPhotoUploader
         return true;
     }
 
+    /**
+     * @param $tmpDestination
+     *
+     * @return bool
+     */
     public function _checkFile($tmpDestination)
     {
+        //  $imageExtensions = array(IMAGETYPE_GIF => 'gif', IMAGETYPE_JPEG => 'jpeg', IMAGETYPE_JPG => 'jpg', IMAGETYPE_PNG => 'png');
 
-//  $imageExtensions = array(IMAGETYPE_GIF => 'gif', IMAGETYPE_JPEG => 'jpeg', IMAGETYPE_JPG => 'jpg', IMAGETYPE_PNG => 'png');
+        $valid_types = [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_BMP];
 
-     $valid_types = array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_BMP);
+        $imageExtensions = ['gif', 'jpg', 'jpeg', 'png'];
 
-        $imageExtensions = array('gif', 'jpg', 'jpeg', 'png');
-
-  // Check IE XSS before returning success
-  $ext = strtolower(substr(strrchr($this->savedDestination, '.'), 1)) ;
+        // Check IE XSS before returning success
+        $ext       = strtolower(substr(strrchr($this->savedDestination, '.'), 1));
         $photoInfo = getimagesize($tmpDestination);
-        if ($photoInfo === false || $imageExtensions[ (int)$photoInfo[2] ] != $ext) {
+        if (false === $photoInfo || $imageExtensions[(int)$photoInfo[2]] != $ext) {
             $this->abort('Suspicious image upload refused');
 
             return false;
@@ -223,6 +250,11 @@ class ExtgalleryPhotoUploader
         return true;
     }
 
+    /**
+     * @param $file
+     *
+     * @return bool
+     */
     public function checkMaxFileSize($file)
     {
         if (!isset($this->maxFileSize)) {
@@ -236,6 +268,11 @@ class ExtgalleryPhotoUploader
         return true;
     }
 
+    /**
+     * @param $photoInfo
+     *
+     * @return bool
+     */
     public function checkMaxWidth($photoInfo)
     {
         if (!isset($this->maxWidth)) {
@@ -249,6 +286,11 @@ class ExtgalleryPhotoUploader
         return true;
     }
 
+    /**
+     * @param $photoInfo
+     *
+     * @return bool
+     */
     public function checkMaxHeight($photoInfo)
     {
         if (!isset($this->maxHeight)) {
@@ -262,11 +304,15 @@ class ExtgalleryPhotoUploader
         return true;
     }
 
+    /**
+     * @param $photoInfo
+     *
+     * @return bool
+     */
     public function checkImageType($photoInfo)
     {
-
-//  $allowedMimeTypes = array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPG, IMAGETYPE_PNG);
-   $allowedMimeTypes = array('image/gif', 'image/jpg', 'image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png');
+        //  $allowedMimeTypes = array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPG, IMAGETYPE_PNG);
+        $allowedMimeTypes = ['image/gif', 'image/jpg', 'image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png'];
         if (!in_array($photoInfo['mime'], $allowedMimeTypes)) {
             return false;
         }
@@ -274,31 +320,40 @@ class ExtgalleryPhotoUploader
         return true;
     }
 
+    /**
+     * @param string $msg
+     */
     public function abort($msg = '')
     {
         // remove all uploaded files of *this* request
-  if (isset($_FILES)) {
-      foreach ($_FILES as $key => $val) {
-          //@unlink($val['tmp_name']);
-      }
-  }
+        if (isset($_FILES)) {
+            foreach ($_FILES as $key => $val) {
+                //@unlink($val['tmp_name']);
+            }
+        }
 
-  // remove accumulated file, if any.
-  //@unlink($this->uploadDir .'/juvar.'.session_id());
-  //@unlink($this->uploadDir .'/juvar.tmp'.session_id());
+        // remove accumulated file, if any.
+        //@unlink($this->uploadDir .'/juvar.'.session_id());
+        //@unlink($this->uploadDir .'/juvar.tmp'.session_id());
 
-  // reset session var
-  $_SESSION['juvar.tmpsize'] = 0;
+        // reset session var
+        $_SESSION['juvar.tmpsize'] = 0;
 
         $this->isError = true;
-        $this->error = $msg;
+        $this->error   = $msg;
     }
 
+    /**
+     * @return bool
+     */
     public function isError()
     {
         return $this->isError;
     }
 
+    /**
+     * @return string
+     */
     public function getError()
     {
         return $this->error;

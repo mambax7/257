@@ -1,9 +1,9 @@
 <?php
-// $Id: admin_forum_reorder.php 62 2012-08-17 10:15:26Z alfred $
+//
 // ------------------------------------------------------------------------ //
 // XOOPS - PHP Content Management System                      //
-// Copyright (c) 2000 XOOPS.org                           //
-// <http://xoops.org/>                             //
+// Copyright (c) 2000-2016 XOOPS.org                           //
+// <https://xoops.org/>                             //
 // ------------------------------------------------------------------------ //
 // This program is free software; you can redistribute it and/or modify     //
 // it under the terms of the GNU General Public License as published by     //
@@ -25,52 +25,48 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
 // ------------------------------------------------------------------------ //
 // Author: Kazumi Ono (AKA onokazu)                                          //
-// URL: http://www.myweb.ne.jp/, http://xoops.org/, http://jp.xoops.org/ //
+// URL: http://www.myweb.ne.jp/, https://xoops.org/, http://jp.xoops.org/ //
 // Project: XOOPS Project                                                    //
 // ------------------------------------------------------------------------- //
-include_once __DIR__ . '/admin_header.php';
 
-$cat_orders = XoopsRequest::getArray('cat_orders', null, 'POST');
-$orders     = XoopsRequest::getArray('orders', null, 'POST');
-$cat        = XoopsRequest::getArray('cat', null, 'POST');
-$forum      = XoopsRequest::getArray('forum', null, 'POST');
+use Xmf\Request;
 
-if (XoopsRequest::getString('submit', '', 'POST')) {
+require_once __DIR__ . '/admin_header.php';
+
+$cat_orders = Request::getArray('cat_orders', null, 'POST');
+$orders     = Request::getArray('orders', null, 'POST');
+$cat        = Request::getArray('cat', null, 'POST');
+$forum      = Request::getArray('forum', null, 'POST');
+
+if (Request::getString('submit', '', 'POST')) {
     $catOrdersCount = count($cat_orders);
     for ($i = 0; $i < $catOrdersCount; ++$i) {
-        $sql = 'update ' . $GLOBALS['xoopsDB']->prefix('bb_categories') . ' set cat_order = ' . $cat_orders[$i] . " WHERE cat_id=$cat[$i]";
+        $sql = 'update ' . $GLOBALS['xoopsDB']->prefix('newbb_categories') . ' set cat_order = ' . $cat_orders[$i] . " WHERE cat_id=$cat[$i]";
         if (!$result = $GLOBALS['xoopsDB']->query($sql)) {
             redirect_header('admin_forum_reorder.php', 1, _AM_NEWBB_FORUM_ERROR);
         }
     }
     $ordersCount = count($orders);
     for ($i = 0; $i < $ordersCount; ++$i) {
-        $sql = 'update ' . $GLOBALS['xoopsDB']->prefix('bb_forums') . ' set forum_order = ' . $orders[$i] . ' WHERE forum_id=' . $forum[$i];
+        $sql = 'update ' . $GLOBALS['xoopsDB']->prefix('newbb_forums') . ' set forum_order = ' . $orders[$i] . ' WHERE forum_id=' . $forum[$i];
         if (!$result = $GLOBALS['xoopsDB']->query($sql)) {
             redirect_header('admin_forum_reorder.php', 1, _AM_NEWBB_FORUM_ERROR);
         }
     }
     redirect_header('admin_forum_reorder.php', 1, _AM_NEWBB_BOARDREORDER);
 } else {
-    include_once $GLOBALS['xoops']->path('modules/' . $xoopsModule->getVar('dirname') . '/class/xoopsformloader.php');
-    $orders     = array();
-    $cat_orders = array();
-    $forum      = array();
-    $cat        = array();
+    require_once $GLOBALS['xoops']->path('class/xoopsformloader.php');
+    $orders     = [];
+    $cat_orders = [];
+    $forum      = [];
+    $cat        = [];
 
     xoops_cp_header();
-    echo '<fieldset>';
 
-    if (!$newXoopsModuleGui) {
-        //loadModuleAdminMenu(4, _AM_NEWBB_SETFORUMORDER);
-        echo '<fieldset>';
-        echo "<legend style='font-weight: bold; color: #900;'>" . _AM_NEWBB_SETFORUMORDER . '</legend>';
-    } else {
-        echo $indexAdmin->addNavigation('admin_forum_reorder.php');
-    }
+    $adminObject->displayNavigation(basename(__FILE__));
 
     echo "<table width='100%' border='0' cellspacing='1' class='outer'>" . "<tr><td class='odd'>";
-    $tform = new XoopsThemeForm(_AM_NEWBB_SETFORUMORDER, '', '');
+    $tform = new \XoopsThemeForm(_AM_NEWBB_SETFORUMORDER, '', '');
     $tform->display();
     echo "<form name='reorder' method='post'>";
     echo "<table border='0' width='100%' cellpadding='2' cellspacing='1' class='outer'>";
@@ -79,11 +75,13 @@ if (XoopsRequest::getString('submit', '', 'POST')) {
     echo "<td class='head' align='center'><strong>" . _AM_NEWBB_REORDERWEIGHT . '</strong></td>';
     echo '</tr>';
 
-    $forumHandler     = &xoops_getmodulehandler('forum', 'newbb');
-    $categoryHandler  = &xoops_getmodulehandler('category', 'newbb');
-    $criteriaCategory = new CriteriaCompo(new criteria('1', 1));
+    //    /** @var Newbb\ForumHandler $forumHandler */
+    //    $forumHandler     = Newbb\Helper::getInstance()->getHandler('Forum');
+    //    /** @var Newbb\CategoryHandler $categoryHandler */
+    //    $categoryHandler  = Newbb\Helper::getInstance()->getHandler('Category');
+    $criteriaCategory = new \CriteriaCompo(new \Criteria('1', 1));
     $criteriaCategory->setSort('cat_order');
-    $categories = $categoryHandler->getAll($criteriaCategory, array('cat_id', 'cat_order', 'cat_title'));
+    $categories = $categoryHandler->getAll($criteriaCategory, ['cat_id', 'cat_order', 'cat_title']);
     $forums     = $forumHandler->getTree(array_keys($categories), 0, 'all', '&nbsp;&nbsp;&nbsp;&nbsp;');
     foreach (array_keys($categories) as $c) {
         echo '<tr>';
@@ -116,9 +114,9 @@ if (XoopsRequest::getString('submit', '', 'POST')) {
     echo '</table>';
     echo '</form>';
     echo '</td></tr></table>';
+    echo '<fieldset>';
+    echo '<legend>&nbsp;' . _MI_NEWBB_ADMENU_ORDER . '&nbsp;</legend>';
+    echo _AM_NEWBB_HELP_ORDER_TAB;
     echo '</fieldset>';
-    if (!$newXoopsModuleGui) {
-        echo '</fieldset>';
-    }
 }
-xoops_cp_footer();
+require_once __DIR__ . '/admin_footer.php';

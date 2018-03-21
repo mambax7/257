@@ -10,12 +10,11 @@
  */
 
 /**
- * @copyright       The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright       XOOPS Project (https://xoops.org)
  * @license         http://www.gnu.org/licenses/gpl-2.0.html GNU Public License
  * @package         Mymenus
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
- * @version         $Id: skin_version.php 13003 2015-02-20 04:45:42Z zyspec $
  */
 
 $skinVersion['template'] = 'templates/template.tpl';

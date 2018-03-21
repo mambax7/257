@@ -17,12 +17,13 @@
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
  * @author          The SmartFactory <www.smartfactory.ca>
- * @version         $Id: date_to_date.php 10374 2012-12-12 23:39:48Z trabis $
  */
 
-// defined("XOOPS_ROOT_PATH") || exit("XOOPS root path not defined");
+use XoopsModules\Publisher;
 
-include_once dirname(__DIR__) . '/include/common.php';
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
+
+require_once __DIR__ . '/../include/common.php';
 
 /**
  * @param $options
@@ -31,19 +32,19 @@ include_once dirname(__DIR__) . '/include/common.php';
  */
 function publisher_date_to_date_show($options)
 {
-    $myts      = MyTextSanitizer::getInstance();
-    $publisher =& PublisherPublisher::getInstance();
+    $myts      = \MyTextSanitizer::getInstance();
+    $helper = Publisher\Helper::getInstance();
 
-    $block = array();
+    $block = $newItems = [];
 
-    $criteria = new CriteriaCompo();
-    $criteria->add(new Criteria('datesub', strtotime($options[0]), '>'));
-    $criteria->add(new Criteria('datesub', strtotime($options[1]), '<'));
+    $criteria = new \CriteriaCompo();
+    $criteria->add(new \Criteria('datesub', strtotime($options[0]), '>'));
+    $criteria->add(new \Criteria('datesub', isset($options[1]) ? strtotime($options[1]) : '', '<'));
     $criteria->setSort('datesub');
     $criteria->setOrder('DESC');
 
     // creating the ITEM objects that belong to the selected category
-    $itemsObj   =& $publisher->getHandler('item')->getObjects($criteria);
+    $itemsObj   = $helper->getHandler('Item')->getObjects($criteria);
     $totalItems = count($itemsObj);
 
     if ($itemsObj) {
@@ -63,9 +64,9 @@ function publisher_date_to_date_show($options)
         $block['lang_category']         = _MB_PUBLISHER_CATEGORY;
         $block['lang_poster']           = _MB_PUBLISHER_POSTEDBY;
         $block['lang_date']             = _MB_PUBLISHER_DATE;
-        $modulename                     = $myts->displayTarea($publisher->getModule()->getVar('name'));
-        $block['lang_visitItem']        = _MB_PUBLISHER_VISITITEM . ' ' . $modulename;
-        $block['lang_articles_from_to'] = sprintf(_MB_PUBLISHER_ARTICLES_FROM_TO, $options[0], $options[1]);
+        $moduleName                     = $myts->displayTarea($helper->getModule()->getVar('name'));
+        $block['lang_visitItem']        = _MB_PUBLISHER_VISITITEM . ' ' . $moduleName;
+        $block['lang_articles_from_to'] = sprintf(_MB_PUBLISHER_ARTICLES_FROM_TO, $options[0], isset($options[1]) ? $options[1] : 0);
     }
 
     return $block;
@@ -78,14 +79,14 @@ function publisher_date_to_date_show($options)
  */
 function publisher_date_to_date_edit($options)
 {
-    include_once PUBLISHER_ROOT_PATH . '/class/blockform.php';
+    // require_once PUBLISHER_ROOT_PATH . '/class/blockform.php';
     xoops_load('XoopsFormLoader');
     xoops_load('XoopsFormTextDateSelect');
 
-    $form    = new PublisherBlockForm();
-    $fromEle = new XoopsFormTextDateSelect(_MB_PUBLISHER_FROM, 'options[0]', 15, strtotime($options[0]));
+    $form    = new Publisher\BlockForm();
+    $fromEle = new \XoopsFormTextDateSelect(_MB_PUBLISHER_FROM, 'options[0]', 15, strtotime($options[0]));
     //    $fromEle->setNocolspan();
-    $untilEle = new XoopsFormTextDateSelect(_MB_PUBLISHER_UNTIL, 'options[1]', 15, isset($options[1]) ? strtotime($options[1]) : '');
+    $untilEle = new \XoopsFormTextDateSelect(_MB_PUBLISHER_UNTIL, 'options[1]', 15, isset($options[1]) ? strtotime($options[1]) : '');
     //    $untilEle->setNocolspan();
 
     $form->addElement($fromEle);

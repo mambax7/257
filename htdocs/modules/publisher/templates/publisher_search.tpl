@@ -1,12 +1,12 @@
 <{if $search_info}>
     <div class="resultMsg"> <{$search_info}></div>
     <{if $results}>
-        <{foreachq item=result from=$results}>
+        <{foreach item=result from=$results}>
         <div class="item">
-            <strong><a href="<{$result.link}>"><{$result.title}></a></strong><br/>
+            <strong><a href="<{$result.link}>"><{$result.title}></a></strong><br>
             <{$result.author}> <{$result.datesub}>
             <{if $result.text}>
-                <br/>
+                <br>
                 <{$result.text}>
             <{/if}>
         </div>
@@ -24,13 +24,13 @@
                         <td class="head" width="10%" align="right">
                             <strong><{$smarty.const._SR_KEYWORDS}></strong></td>
                         <td class="even">
-                            <input type="text" name="term" title="term" value="<{$search_term}>" size="50"/>
+                            <input type="text" name="term" title="term" value="<{$search_term}>" size="50">
                         </td>
                     </tr>
                     <tr>
                         <td class="head" align="right">
                             <strong><{$smarty.const._SR_TYPE}></strong></td>
-                        <td class="even"><{$typeSelect}></td>
+                        <td class="even"><{$type_select}></td>
                     </tr>
                     <tr>
                         <td class="head" align="right">
@@ -41,21 +41,21 @@
                     <tr>
                         <td class="head" align="right">
                             <strong><{$smarty.const._SR_SEARCHIN}></strong></td>
-                        <td class="even"><{$searchSelect}></td>
+                        <td class="even"><{$searchin_select}></td>
                     </tr>
                     <tr>
                         <td class="head" align="right">
                             <strong><{$smarty.const._CO_PUBLISHER_UID}></strong>&nbsp;
                         </td>
                         <td class="even">
-                            <input type="text" name="uname" title="uname" value="<{$search_user}>"/>
+                            <input type="text" name="uname" title="uname" value="<{$search_user}>">
                         </td>
                     </tr>
                     <tr>
                         <td class="head" align="right">
                             <strong><{$smarty.const._CO_PUBLISHER_SORTBY}></strong>&nbsp;
                         </td>
-                        <td class="even"><{$sortbySelect}></td>
+                        <td class="even"><{$sortby_select}></td>
                     </tr>
                     <{if $search_rule}>
                         <tr>
@@ -68,8 +68,8 @@
                     <tr>
                         <td class="head" align="right">&nbsp;</td>
                         <td class="even">
-                            <input type="submit" name="submit" value="<{$smarty.const._SUBMIT}>"/>&nbsp;
-                            <input type="reset" name="cancel" value="<{$smarty.const._CANCEL}>"/>
+                            <input type="submit" name="submit" value="<{$smarty.const._SUBMIT}>">&nbsp;
+                            <input type="reset" name="cancel" value="<{$smarty.const._CANCEL}>">
                         </td>
                 </table>
             </td>

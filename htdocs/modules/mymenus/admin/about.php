@@ -10,21 +10,18 @@
  */
 
 /**
- * @copyright       The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright       XOOPS Project (https://xoops.org)
  * @license         http://www.gnu.org/licenses/gpl-2.0.html GNU Public License
  * @package         Mymenus
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
- * @version         $Id: about.php
  */
 
-include_once __DIR__ . '/admin_header.php';
-
+require_once __DIR__ . '/admin_header.php';
 xoops_cp_header();
 
-$aboutAdmin = new ModuleAdmin();
+$adminObject->displayNavigation(basename(__FILE__));
+$adminObject::setPaypal('xoopsfoundation@gmail.com');
+$adminObject->displayAbout(false);
 
-echo $aboutAdmin->addNavigation('about.php');
-echo $aboutAdmin->renderAbout('6KJ7RW5DR3VTJ', false);
-
-include __DIR__ . '/admin_footer.php';
+require_once __DIR__ . '/admin_footer.php';

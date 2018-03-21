@@ -75,7 +75,7 @@ To include this back, open the file XOOPS_ROOT_PATH/header.php and in the end of
 ###########################################################################################
 $mod = XoopsModule::getByDirname("rwbanner");
 if ($mod){
-  include_once (dirname(dirname(__FILE__)) .'/include/maketags.php');
+  include_once (dirname(__DIR__) .'/include/maketags.php');
 }
 ###########################################################################################
 #### End of the Hack by rw-banner
@@ -90,9 +90,9 @@ To add the hack, open the XOOPS_ROOT_PATH/class/module.textsanitizer.php file an
 #### Hack by rw-banner
 #### Allow the exhibition of random banners an any module with bbcodes
 #######################################################################################
-$mod = XoopsModule::getByDirname("rw_banner");
+$mod = XoopsModule::getByDirname("rwbanner");
 if ($mod){
-  include(dirname(dirname(__FILE__)) .'/include/bbcode.php');
+  include(dirname(__DIR__) .'/include/bbcode.php');
 }
 #######################################################################################
 #### end of the Hack by rw-banner
@@ -118,7 +118,7 @@ The parameter align accpets the values "left" for left alignment, "right"for rig
 
 UPDATES:
 The modules had structural changes in relation to the database in relation to the previous verions. If you use any versions prior to 1.3RC we recommend you to unistall the module before installing the new version.
-In case you have a version newer than the 1.3RC, delete the rw_banner folder and replace it by the folder from the new version. Login as administrator to your site. If you use the hack in header.php file, comment it first. Access via browser the URL "XOOPS_URL/modules/rwbanner/admin/upgrade.php" and the script will update the tables automatically without loosing all the setup you have already defined and all the registered banners. Follow the steps described in the script and your module will be updated.
+In case you have a version newer than the 1.3RC, delete the prefix('rwbanner_banner' folder and replace it by the folder from the new version. Login as administrator to your site. If you use the hack in header.php file, comment it first. Access via browser the URL "XOOPS_URL/modules/rwbanner/admin/upgrade.php" and the script will update the tables automatically without loosing all the setup you have already defined and all the registered banners. Follow the steps described in the script and your module will be updated.
 
 KNOWN BUGS:
 -Banners in HTML code don't have their click counted. This bug is originally from the original xoops banner module. This function is used in our module but with some changes.
@@ -130,7 +130,7 @@ For further information or problem solving for this module access the following 
 
 [b]ITS DISPOSAL:[/b]
 ===============================
-We will be inside of the possible always creating examples of as to use rw_banner and thus you will be able to get the biggest possible advantage to use this module.
+We will be inside of the possible always creating examples of as to use rwbanner and thus you will be able to get the biggest possible advantage to use this module.
 
 If you will be using this module, does not leave to visit our site of development to suggest new features.
 

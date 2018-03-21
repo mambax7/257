@@ -1,4 +1,5 @@
-<?php
+<?php namespace XoopsModules\Publisher;
+
 /*
  You may not change or alter any portion of this comment or credits
  of supporting developers from this source code or any supporting source code
@@ -16,16 +17,15 @@
  * @package         Publisher
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
- * @version         $Id: formdatetime.php 10276 2012-11-27 13:58:28Z trabis $
  */
-// defined("XOOPS_ROOT_PATH") || exit("XOOPS root path not defined");
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
-include_once dirname(__DIR__) . '/include/common.php';
+require_once __DIR__ . '/../include/common.php';
 
 /**
- * Class PublisherFormDateTime
+ * Class FormDateTime
  */
-class PublisherFormDateTime extends XoopsFormElementTray
+class FormDateTime extends \XoopsFormElementTray
 {
     /**
      * @param      $caption
@@ -38,23 +38,23 @@ class PublisherFormDateTime extends XoopsFormElementTray
     public function __construct($caption, $name, $size = 15, $value = 0, $showtime = true, $formatTimestamp = true)
     {
         parent::__construct($caption, '&nbsp;');
-        $value = (int)($value);
+        $value = (int)$value;
         $value = ($value > 0) ? $value : time();
         if ($formatTimestamp) {
             $value = strtotime(formatTimestamp($value));
         }
         $datetime = getdate($value);
 
-        $this->addElement(new XoopsFormTextDateSelect('', $name . '[date]', $size, $value, $showtime));
-        $timearray = array();
+        $this->addElement(new \XoopsFormTextDateSelect('', $name . '[date]', $size, $value, $showtime));
+        $timearray = [];
         for ($i = 0; $i < 24; ++$i) {
             for ($j = 0; $j < 60; $j += 10) {
                 $key             = ($i * 3600) + ($j * 60);
-                $timearray[$key] = ($j != 0) ? $i . ':' . $j : $i . ':0' . $j;
+                $timearray[$key] = (0 != $j) ? $i . ':' . $j : $i . ':0' . $j;
             }
         }
         ksort($timearray);
-        $timeselect = new XoopsFormSelect('', $name . '[time]', $datetime['hours'] * 3600 + 600 * floor($datetime['minutes'] / 10));
+        $timeselect = new \XoopsFormSelect('', $name . '[time]', $datetime['hours'] * 3600 + 600 * floor($datetime['minutes'] / 10));
         $timeselect->addOptionArray($timearray);
         $this->addElement($timeselect);
     }

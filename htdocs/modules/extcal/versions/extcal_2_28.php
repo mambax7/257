@@ -1,6 +1,6 @@
 <?php
 /**
- * extcal module
+ * extcal module.
  *
  * You may not change or alter any portion of this comment or credits
  * of supporting developers from this source code or any supporting source code
@@ -9,38 +9,39 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright   The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright           XOOPS Project (https://xoops.org)
  * @license             http://www.fsf.org/copyleft/gpl.html GNU public license
- * @package extcal
- * @since       2.2
- * @author      JJDai <http://xoops.kiolo.com>
- * @version     $Id$
-**/
+ *
+ * @since               2.2
+ *
+ * @author              JJDai <http://xoops.kiolo.com>
+ **/
 
 //----------------------------------------------------
-class extcal_2_28
+class Extcal_2_28
 {
     //----------------------------------------------------
 
     /**
-     * @param $module
-     * @param $options
+     * @param XoopsModule $module
+     * @param             $options
      */
-    public function extcal_2_28(& $module, $options)
+    public function __construct(\XoopsModule $module, $options)
     {
         global $xoopsDB;
 
         $this->addTable_etablissement();
         $this->alterTable_event();
     }
-//----------------------------------------------------
-public function alterTable_event()
-{
-    global $xoopsDB;
 
-    $tbl = $xoopsDB->prefix('extcal_event');
+    //----------------------------------------------------
+    public function alterTable_event()
+    {
+        global $xoopsDB;
 
-    $sql = <<<__sql__
+        $tbl = $xoopsDB->prefix('extcal_event');
+
+        $sql = <<<__sql__
 ALTER TABLE `{$tbl}`
   add  `event_organisateur` varchar(255) NOT NULL default '',
   add  `event_picture1` varchar(255) NOT NULL,
@@ -49,17 +50,17 @@ ALTER TABLE `{$tbl}`
   add  `event_etablissement` int(5) NOT NULL DEFAULT '1';
 __sql__;
 
-    $xoopsDB->queryF($sql);
-}
+        $xoopsDB->queryF($sql);
+    }
 
-//----------------------------------------------------
-public function addTable_etablissement()
-{
-    global $xoopsDB;
+    //----------------------------------------------------
+    public function addTable_etablissement()
+    {
+        global $xoopsDB;
 
-    $tbl = $xoopsDB->prefix('extcal_etablissement');
+        $tbl = $xoopsDB->prefix('extcal_etablissement');
 
-    $sql = <<<__sql__
+        $sql = <<<__sql__
 CREATE TABLE `{$tbl}` (
   `id` int(5) NOT NULL auto_increment,
   `nom` varchar(255) NOT NULL,
@@ -83,9 +84,8 @@ CREATE TABLE `{$tbl}` (
 ) ENGINE = MYISAM ;
 __sql__;
 
-    $xoopsDB->queryF($sql);
-//---------------------------------------------------
-}
-//-----------------------------------------------------------------
+        $xoopsDB->queryF($sql);
+        //---------------------------------------------------
+    }
+    //-----------------------------------------------------------------
 }   // fin de la classe
-

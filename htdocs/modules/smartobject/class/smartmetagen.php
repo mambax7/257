@@ -3,39 +3,41 @@
 /**
  * Containing the class to manage meta informations of the SmartObject framework
  *
- * @license GNU
- * @author marcan <marcan@smartfactory.ca>
- * @version $Id: smartmetagen.php 159 2007-12-17 16:44:05Z malanciault $
- * @link http://smartfactory.ca The SmartFactory
- * @package SmartObject
+ * @license    GNU
+ * @author     marcan <marcan@smartfactory.ca>
+ * @link       http://smartfactory.ca The SmartFactory
+ * @package    SmartObject
  * @subpackage SmartObjectCore
  */
 
-if (!defined("XOOPS_ROOT_PATH")) {
-    die("XOOPS root path not defined");
-}
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 /**
  * Class MetaGen is a class providing some methods to dynamically and automatically customize Meta Tags information
  * @author The SmartFactory <www.smartfactory.ca>
  */
-
 class SmartMetaGen
 {
+    public $_myts;
 
-    var $_myts;
+    public $_title;
+    public $_original_title;
+    public $_keywords;
+    public $_meta_description;
+    public $_categoryPath;
+    public $_description;
+    public $_minChar = 4;
 
-    var $_title;
-    var $_original_title;
-    var $_keywords;
-    var $_meta_description;
-    var $_categoryPath;
-    var $_description;
-    var $_minChar = 4;
-
-    function SmartMetaGen($title, $keywords=false, $description=false, $categoryPath=false)
+    /**
+     * SmartMetaGen constructor.
+     * @param      $title
+     * @param bool $keywords
+     * @param bool $description
+     * @param bool $categoryPath
+     */
+    public function __construct($title, $keywords = false, $description = false, $categoryPath = false)
     {
-        $this->_myts = MyTextSanitizer::GetInstance();
+        $this->_myts = \MyTextSanitizer::getInstance();
         $this->setCategoryPath($categoryPath);
         $this->setTitle($title);
         $this->setDescription($description);
@@ -44,14 +46,13 @@ class SmartMetaGen
             $keywords = $this->createMetaKeywords();
         }
 
-        /*		$myts = MyTextSanitizer::getInstance();
+        /*      $myts = \MyTextSanitizer::getInstance();
          if (method_exists($myts, 'formatForML')) {
          $keywords = $myts->formatForML($keywords);
          $description = $myts->formatForML($description);
          }
          */
         $this->setKeywords($keywords);
-
     }
 
     /**
@@ -59,10 +60,10 @@ class SmartMetaGen
      *
      * @credit psylove
      *
-     * @var string $string Chaine de caractère
+     * @var    string $string Chaine de caractï¿½re
      * @return boolean
      */
-    function emptyString($var)
+    public function emptyString($var)
     {
         return (strlen($var) > 0);
     }
@@ -72,58 +73,138 @@ class SmartMetaGen
      *
      * @credit psylove
      *
-     * @var string $title title of the article
-     * @var string $withExt do we add an html extension or not
-     * @return string sort_url for the article
+     * @var    string      $title title of the article
+     * @param  bool|string $withExt
+     * @return string      sort_url for the article
      */
-    function generateSeoTitle($title='', $withExt=true) {
+    public function generateSeoTitle($title = '', $withExt = true)
+    {
         // Transformation de la chaine en minuscule
-        // Codage de la chaine afin d'éviter les erreurs 500 en cas de caractères imprévus
-        $title   = rawurlencode(strtolower($title));
+        // Codage de la chaine afin d'Ã©viter les erreurs 500 en cas de caractÃ¨res imprÃ©vus
+        $title = rawurlencode(strtolower($title));
 
         // Transformation des ponctuations
-        //                 Tab     Space      !        "        #        %        &        '        (        )        ,        /        :        ;        <        =        >        ?        @        [        \        ]        ^        {        |        }        ~       .
-        $pattern = array("/%09/", "/%20/", "/%21/", "/%22/", "/%23/", "/%25/", "/%26/", "/%27/", "/%28/", "/%29/", "/%2C/", "/%2F/", "/%3A/", "/%3B/", "/%3C/", "/%3D/", "/%3E/", "/%3F/", "/%40/", "/%5B/", "/%5C/", "/%5D/", "/%5E/", "/%7B/", "/%7C/", "/%7D/", "/%7E/", "/\./");
-        $rep_pat = array(  "-"  ,   "-"  ,   "-"  ,   "-"  ,   "-"  , "-100" ,   "-"  ,   "-"  ,   "-"  ,   "-"  ,   "-"  ,   "-"  ,  "-"   ,   "-"  ,   "-"  ,   "-"  ,  "-"   ,   "-"  , "-at-" ,   "-"  ,   "-"   ,  "-"  ,   "-"  ,   "-"  ,   "-"  ,   "-"  ,   "-"  ,   "-" );
+        $pattern = [
+            '/%09/', // Tab
+            '/%20/', // Space
+            '/%21/', // !
+            '/%22/', // "
+            '/%23/', // #
+            '/%25/', // %
+            '/%26/', // &
+            '/%27/', // '
+            '/%28/', // (
+            '/%29/', // )
+            '/%2C/', // ,
+            '/%2F/', // /
+            '/%3A/', // :
+            '/%3B/', // ;
+            '/%3C/', // <
+            '/%3D/', // =
+            '/%3E/', // >
+            '/%3F/', // ?
+            '/%40/', // @
+            '/%5B/', // [
+            '/%5C/', // \
+            '/%5D/', // ]
+            '/%5E/', // ^
+            '/%7B/', // {
+            '/%7C/', // |
+            '/%7D/', // }
+            '/%7E/', // ~
+            "/\./" // .
+        ];
+        $rep_pat = [
+            '-',
+            '-',
+            '-',
+            '-',
+            '-',
+            '-100',
+            '-',
+            '-',
+            '-',
+            '-',
+            '-',
+            '-',
+            '-',
+            '-',
+            '-',
+            '-',
+            '-',
+            '-',
+            '-at-',
+            '-',
+            '-',
+            '-',
+            '-',
+            '-',
+            '-',
+            '-',
+            '-',
+            '-'
+        ];
         $title   = preg_replace($pattern, $rep_pat, $title);
 
-        // Transformation des caractères accentués
-        //                  °        è        é        ê        ë        ç        à        â        ä        î        ï        ù        ü        û        ô        ö
-        $pattern = array("/%B0/", "/%E8/", "/%E9/", "/%EA/", "/%EB/", "/%E7/", "/%E0/", "/%E2/", "/%E4/", "/%EE/", "/%EF/", "/%F9/", "/%FC/", "/%FB/", "/%F4/", "/%F6/");
-        $rep_pat = array(  "-"  ,   "e"  ,   "e"  ,   "e"  ,   "e"  ,   "c"  ,   "a"  ,   "a"  ,   "a"  ,   "i"  ,   "i"  ,   "u"  ,   "u"  ,   "u"  ,   "o"  ,   "o"  );
+        // Transformation des caractÃ¨res accentuÃ©s
+        $pattern = [
+            '/%B0/', // Â°
+            '/%E8/', // Ã¨
+            '/%E9/', // Ã©
+            '/%EA/', // Ãª
+            '/%EB/', // Ã«
+            '/%E7/', // Ã§
+            '/%E0/', // Ã 
+            '/%E2/', // Ã¢
+            '/%E4/', // Ã¤
+            '/%EE/', // Ã®
+            '/%EF/', // Ã¯
+            '/%F9/', // Ã¹
+            '/%FC/', // Ã¼
+            '/%FB/', // Ã»
+            '/%F4/', // Ã´
+            '/%F6/', // Ã¶
+        ];
+        $rep_pat = ['-', 'e', 'e', 'e', 'e', 'c', 'a', 'a', 'a', 'i', 'i', 'u', 'u', 'u', 'o', 'o'];
         $title   = preg_replace($pattern, $rep_pat, $title);
 
-        $tableau = explode("-", $title); // Transforme la chaine de caractères en tableau
-        $tableau = array_filter($tableau, array($this, "emptyString")); // Supprime les chaines vides du tableau
-        $title   = implode("-", $tableau); // Transforme un tableau en chaine de caractères séparé par un tiret
+        $tableau = explode('-', $title); // Transforme la chaine de caractï¿½res en tableau
+        $tableau = array_filter($tableau, [$this, 'emptyString']); // Supprime les chaines vides du tableau
+        $title   = implode('-', $tableau); // Transforme un tableau en chaine de caractï¿½res sï¿½parï¿½ par un tiret
 
-        if (sizeof($title) > 0)
-        {
+        if (count($title) > 0) {
             if ($withExt) {
                 $title .= '.html';
             }
+
             return $title;
+        } else {
+            return '';
         }
-        else
-        return '';
     }
 
-    function html2text($document)
+    /**
+     * @param $document
+     * @return mixed
+     */
+    public function html2text($document)
     {
         return smart_html2text($document);
     }
 
-    function setTitle($title)
+    /**
+     * @param $title
+     */
+    public function setTitle($title)
     {
-
         global $xoopsModule, $xoopsModuleConfig;
-        $this->_title = $this->html2text($title);
-        $this->_title = $this->purifyText($this->_title);
+        $this->_title          = $this->html2text($title);
+        $this->_title          = $this->purifyText($this->_title);
         $this->_original_title = $this->_title;
 
         $moduleName = $xoopsModule->getVar('name');
 
-        $titleTag = array();
+        $titleTag = [];
 
         $show_mod_name_breadcrumb = isset($xoopsModuleConfig['show_mod_name_breadcrumb']) ? $xoopsModuleConfig['show_mod_name_breadcrumb'] : true;
 
@@ -131,24 +212,24 @@ class SmartMetaGen
             $titleTag['module'] = $moduleName;
         }
 
-        if (isset($this->_title) && ($this->_title != '') && (strtoupper($this->_title) != strtoupper($moduleName))) {
+        if (isset($this->_title) && ('' !== $this->_title) && (strtoupper($this->_title) != strtoupper($moduleName))) {
             $titleTag['title'] = $this->_title;
         }
 
-        if (isset($this->_categoryPath) && ($this->_categoryPath != '')) {
+        if (isset($this->_categoryPath) && ('' !== $this->_categoryPath)) {
             $titleTag['category'] = $this->_categoryPath;
         }
 
         $ret = isset($titleTag['title']) ? $titleTag['title'] : '';
 
-        if (isset($titleTag['category']) && $titleTag['category'] != '') {
-            if ($ret != '') {
+        if (isset($titleTag['category']) && '' !== $titleTag['category']) {
+            if ('' !== $ret) {
                 $ret .= ' - ';
             }
             $ret .= $titleTag['category'];
         }
-        if (isset($titleTag['module']) && $titleTag['module'] != '') {
-            if ($ret != '') {
+        if (isset($titleTag['module']) && '' !== $titleTag['module']) {
+            if ('' !== $ret) {
                 $ret .= ' - ';
             }
             $ret .= $titleTag['module'];
@@ -156,18 +237,27 @@ class SmartMetaGen
         $this->_title = $ret;
     }
 
-    function setKeywords($keywords)
+    /**
+     * @param $keywords
+     */
+    public function setKeywords($keywords)
     {
         $this->_keywords = $keywords;
     }
 
-    function setCategoryPath($categoryPath)
+    /**
+     * @param $categoryPath
+     */
+    public function setCategoryPath($categoryPath)
     {
-        $categoryPath = $this->html2text($categoryPath);
+        $categoryPath        = $this->html2text($categoryPath);
         $this->_categoryPath = $categoryPath;
     }
 
-    function setDescription($description)
+    /**
+     * @param $description
+     */
+    public function setDescription($description)
     {
         if (!$description) {
             global $xoopsModuleConfig;
@@ -181,56 +271,68 @@ class SmartMetaGen
 
         $description = preg_replace("/([^\r\n])\r\n([^\r\n])/", "\\1 \\2", $description);
         $description = preg_replace("/[\r\n]*\r\n[\r\n]*/", "\r\n\r\n", $description);
-        $description = preg_replace("/[ ]* [ ]*/", ' ', $description);
-        $description = StripSlashes($description);
+        $description = preg_replace('/[ ]* [ ]*/', ' ', $description);
+        $description = stripslashes($description);
 
-        $this->_description = $description;
+        $this->_description      = $description;
         $this->_meta_description = $this->createMetaDescription();
-
     }
 
-    function createTitleTag()
+    public function createTitleTag()
     {
-
     }
 
-    function purifyText($text, $keyword = false)
+    /**
+     * @param               $text
+     * @param  bool         $keyword
+     * @return mixed|string
+     */
+    public function purifyText($text, $keyword = false)
     {
         return smart_purifyText($text, $keyword);
     }
 
-    function createMetaDescription($maxWords = 100)
+    /**
+     * @param  int $maxWords
+     * @return string
+     */
+    public function createMetaDescription($maxWords = 100)
     {
-        $words = array();
-        $words = explode(" ", $this->_description);
+        $words = [];
+        $words = explode(' ', $this->_description);
 
         // Only keep $maxWords words
-        $newWords = array();
-        $i = 0;
+        $newWords = [];
+        $i        = 0;
 
-        while ($i < $maxWords-1 && $i < count($words)) {
+        while ($i < $maxWords - 1 && $i < count($words)) {
             $newWords[] = $words[$i];
-            $i++;
+            ++$i;
         }
         $ret = implode(' ', $newWords);
 
         return $ret;
     }
 
-    function findMetaKeywords($text, $minChar)
+    /**
+     * @param $text
+     * @param $minChar
+     * @return array
+     */
+    public function findMetaKeywords($text, $minChar)
     {
-        $keywords = array();
+        $keywords = [];
 
         $text = $this->purifyText($text);
         $text = $this->html2text($text);
 
         $text = preg_replace("/([^\r\n])\r\n([^\r\n])/", "\\1 \\2", $text);
         $text = preg_replace("/[\r\n]*\r\n[\r\n]*/", "\r\n\r\n", $text);
-        $text = preg_replace("/[ ]* [ ]*/", ' ', $text);
-        $text = StripSlashes($text);
+        $text = preg_replace('/[ ]* [ ]*/', ' ', $text);
+        $text = stripslashes($text);
         $text =
 
-        $originalKeywords = preg_split ('/[^a-zA-Z\'"-]+/', $text, -1, PREG_SPLIT_NO_EMPTY);
+        $originalKeywords = preg_split('/[^a-zA-Z\'"-]+/', $text, -1, PREG_SPLIT_NO_EMPTY);
 
         foreach ($originalKeywords as $originalKeyword) {
             $secondRoundKeywords = explode("'", $originalKeyword);
@@ -242,16 +344,21 @@ class SmartMetaGen
                 }
             }
         }
+
         return $keywords;
     }
 
-    function createMetaKeywords()
+    /**
+     * @return string
+     */
+    public function createMetaKeywords()
     {
         global $xoopsModuleConfig;
-        $keywords = $this->findMetaKeywords($this->_original_title . " " . $this->_description, $this->_minChar);
-        if (isset($xoopsModuleConfig) && isset($xoopsModuleConfig['moduleMetaKeywords']) && $xoopsModuleConfig['moduleMetaKeywords'] != '') {
-            $moduleKeywords = explode(",", $xoopsModuleConfig['moduleMetaKeywords']);
-            $keywords = array_merge($keywords, $moduleKeywords);
+        $keywords = $this->findMetaKeywords($this->_original_title . ' ' . $this->_description, $this->_minChar);
+        if (isset($xoopsModuleConfig) && isset($xoopsModuleConfig['moduleMetaKeywords'])
+            && '' !== $xoopsModuleConfig['moduleMetaKeywords']) {
+            $moduleKeywords = explode(',', $xoopsModuleConfig['moduleMetaKeywords']);
+            $keywords       = array_merge($keywords, $moduleKeywords);
         }
 
         /* Commenting this out as it may cause problem on XOOPS ML websites
@@ -265,47 +372,42 @@ class SmartMetaGen
          }*/
 
         // Only take the first 90 keywords
-        $newKeywords = array();
-        $i = 0;
+        $newKeywords = [];
+        $i           = 0;
         while ($i < 90 - 1 && isset($keywords[$i])) {
             $newKeywords[] = $keywords[$i];
-            $i++;
+            ++$i;
         }
         $ret = implode(', ', $newKeywords);
 
         return $ret;
     }
 
-    function autoBuildMeta_keywords()
+    public function autoBuildMeta_keywords()
     {
-
     }
 
-    function buildAutoMetaTags()
+    public function buildAutoMetaTags()
     {
         global $xoopsModule, $xoopsModuleConfig;
 
-        $this->_keywords = $this->createMetaKeywords();
+        $this->_keywords         = $this->createMetaKeywords();
         $this->_meta_description = $this->createMetaDescription();
-        $this->_title = $this->createTitleTag();
-
+        $this->_title            = $this->createTitleTag();
     }
 
-    function createMetaTags()
+    public function createMetaTags()
     {
         global $xoopsTpl, $xoTheme;
 
         if (is_object($xoTheme)) {
-            $xoTheme->addMeta( 'meta', 'keywords',$this->_keywords);
-            $xoTheme->addMeta( 'meta', 'description',$this->_description);
-            $xoTheme->addMeta( 'meta', 'title', $this->_title);
+            $xoTheme->addMeta('meta', 'keywords', $this->_keywords);
+            $xoTheme->addMeta('meta', 'description', $this->_description);
+            $xoTheme->addMeta('meta', 'title', $this->_title);
         } else {
-            $xoopsTpl->assign('xoops_meta_keywords',$this->_keywords);
-            $xoopsTpl->assign('xoops_meta_description',$this->_description);
+            $xoopsTpl->assign('xoops_meta_keywords', $this->_keywords);
+            $xoopsTpl->assign('xoops_meta_description', $this->_description);
         }
-        $xoopsTpl->assign('xoops_pagetitle',$this->_title);
+        $xoopsTpl->assign('xoops_pagetitle', $this->_title);
     }
-
 }
-
-?>

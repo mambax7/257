@@ -1,7 +1,7 @@
 .closebutton {
     /* NOTE! This URL is relative to the HTML page, not the CSS */
-    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(
-        src='../highslide/graphics/close.png', sizingMethod='scale');
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(
+            src='../highslide/graphics/close.png', sizingMethod='scale');
 
     background: none;
     cursor: hand;
@@ -21,23 +21,27 @@
     position: relative;
     overflow: hidden;
 }
+
 .highslide-scroll-down div, .highslide-scroll-up div {
     /* NOTE! This URL is relative to the HTML page, not the CSS */
-    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(
-        src='../highslide/graphics/scrollarrows.png', sizingMethod='scale');
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(
+            src='../highslide/graphics/scrollarrows.png', sizingMethod='scale');
     background: none !important;
     position: absolute;
     cursor: hand;
     width: 75px;
     height: 75px !important;
 }
+
 .highslide-thumbstrip-horizontal .highslide-scroll-down div {
     left: -50px;
     top: -15px;
 }
+
 .highslide-thumbstrip-horizontal .highslide-scroll-up div {
     top: -15px;
 }
+
 .highslide-thumbstrip-vertical .highslide-scroll-down div {
     top: -50px;
 }
@@ -46,12 +50,15 @@
 .highslide-thumbstrip .highslide-marker {
     border-color: white; /* match the background */
 }
+
 .dark .highslide-thumbstrip-horizontal .highslide-marker {
     border-color: #111;
 }
+
 .highslide-viewport .highslide-marker {
     border-color: #333;
 }
+
 .highslide-thumbstrip {
     float: left;
 }
@@ -60,12 +67,15 @@
 .text-controls .highslide-controls {
     width: 480px;
 }
+
 .text-controls a span {
     width: 4em;
 }
+
 .text-controls .highslide-full-expand a span {
     width: 0;
 }
+
 .text-controls .highslide-close a span {
     width: 0;
 }

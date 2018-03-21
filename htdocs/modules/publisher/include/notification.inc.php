@@ -17,12 +17,13 @@
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
  * @author          The SmartFactory <www.smartfactory.ca>
- * @version         $Id: notification.inc.php 10374 2012-12-12 23:39:48Z trabis $
  */
 
-// defined("XOOPS_ROOT_PATH") || exit("XOOPS root path not defined");
+use XoopsModules\Publisher;
 
-include_once __DIR__ . '/seo_functions.php';
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
+
+//require_once __DIR__ . '/seo_functions.php';
 
 /**
  * @param $category
@@ -32,31 +33,32 @@ include_once __DIR__ . '/seo_functions.php';
  */
 function publisher_notify_iteminfo($category, $itemId)
 {
-    if ($category === 'global') {
+    if ('global' === $category) {
         $item['name'] = '';
         $item['url']  = '';
 
         return $item;
     }
 
-    if ($category === 'category') {
+    global $module;
+    if ('category' === $category) {
         // Assume we have a valid category id
-        $sql          = 'SELECT name, short_url FROM ' . $GLOBALS['xoopsDB']->prefix('publisher_categories') . ' WHERE categoryid  = ' . $itemId;
+        $sql          = 'SELECT name, short_url FROM ' . $GLOBALS['xoopsDB']->prefix($module->getVar('dirname', 'n') . '_categories') . ' WHERE categoryid  = ' . $itemId;
         $result       = $GLOBALS['xoopsDB']->query($sql); // TODO: error check
-        $resultArray = $GLOBALS['xoopsDB']->fetchArray($result);
+        $resultArray  = $GLOBALS['xoopsDB']->fetchArray($result);
         $item['name'] = $resultArray['name'];
-        $item['url']  = PublisherSeo::generateUrl('category', $itemId, $resultArray['short_url']);
+        $item['url']  = Publisher\Seo::generateUrl('category', $itemId, $resultArray['short_url']);
 
         return $item;
     }
 
-    if ($category === 'item') {
+    if ('item' === $category) {
         // Assume we have a valid story id
-        $sql          = 'SELECT title, short_url FROM ' . $GLOBALS['xoopsDB']->prefix('publisher_items') . ' WHERE itemid = ' . $itemId;
+        $sql          = 'SELECT title, short_url FROM ' . $GLOBALS['xoopsDB']->prefix($module->getVar('dirname', 'n') . '_items') . ' WHERE itemid = ' . $itemId;
         $result       = $GLOBALS['xoopsDB']->query($sql); // TODO: error check
-        $resultArray = $GLOBALS['xoopsDB']->fetchArray($result);
+        $resultArray  = $GLOBALS['xoopsDB']->fetchArray($result);
         $item['name'] = $resultArray['title'];
-        $item['url']  = PublisherSeo::generateUrl('item', $itemId, $resultArray['short_url']);
+        $item['url']  = Publisher\Seo::generateUrl('item', $itemId, $resultArray['short_url']);
 
         return $item;
     }

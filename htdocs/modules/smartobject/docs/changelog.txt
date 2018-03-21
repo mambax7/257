@@ -1,0 +1,107 @@
+<h5>1.12 RC 2  [2017-07-20]</h5>
+<hr>
+
+- XOOPS 2.5.9, PHP 7 (mamba)
+- Converted to XOOPS 2.5.8 Admin GUI (mamba)
+- removed @version (mamba)
+- PSR-2 code cosmetics (mamba)
+- addNavigation(basename(__FILE__))  (mamba)
+- dirname(__FILE__) to __DIR__ (mamba)
+- replaced < br /> with < br > (mamba)
+- Unnecessary double quotes (mamba)
+- reference mismatch (mamba)
+- Hardening to type safe (mamba)
+- update Help (mamba)
+- changed _handler to Handler (mamba)
+- removed '/' from void HTML elements (&lt;br>, &lt;img>, etc) (mamba)
+- HTML 5: removed 'selected' and 'checked' (mamba)
+- updated file headers for consistency (mamba)
+- renamed several $indexAdmin with $adminObject for consistency (mamba)
+- Updates for PayPal changes (zyspec)
+- added Contributing.md (mamba)
+- moved functions to Utility class (mamba)
+- include_once to require_once (mamba)
+- php-cs-fixer updates (mamba)
+- started conversion to XMF (mamba)
+    &nbsp;&nbsp;- updated addInfoBoxLine entries (mamba)
+    &nbsp;&nbsp;- displayNavigation(basename(__FILE__))  (mamba)
+    &nbsp;&nbsp;- changed to ->displayButton('left') (mamba)
+
+<h5>1.12 RC 1 [2016-03-28]</h5>
+<hr>
+
+- XOOPS 2.5.8 and PHP 7 updates (mamba)
+
+<h5>1.11 Beta 3 [2013-04-30]</h5>
+<hr>
+
+- moved all images, CSS, and JS files to /assets (mamba)
+- renamed .html Smarty templates to .tpl (mamba)
+
+<h5>1.11 Beta 2 [2013-04-30]</h5>
+<hr>
+
+- Converted to XOOPS 2.5.5 Admin GUI (mamba)
+
+<h5>1.10 [2012-03-31]</h5>
+<hr>
+
+This version adds the following changes to 1.0.1 because the offical development site was lost.
+<a href="http://linux2.ohwada.net/" target="_blank">K.OHWADA - Happy Linux</a>
+
+- Improved : <a href="http://www.php.net/manual/en/migration53.deprecated.php" target="_blank">Migrating to PHP 5.3</a>
+(1) ereg
+(2) Assigning the return value of new by reference is now deprecated.
+
+- Improved : Migrating to MySQL 5.5
+(1) TYPE=MyISAM -> ENGINE=MyISAM
+
+- Added : Japanaese language pack
+- Added : Japanaese UTF-8 (ja_uft8) in fpdf
+
+Fixed bugs (ohwada):
+(1) not read other language file in xoops_version.php
+(2) undifined table in xoops_version.php
+(3) undefined constant in module manager
+(4) Undefined variable in admin's link
+
+Fixed bugs for PDF (ohwada):
+(1) not show the image
+(2) Fatal error in specifing the image which doesn't exist
+(3) undefined constant SRC
+(4) undedined _MD_POSTEDON
+(5) mojibake (character garble) in Japanese
+
+<h5>1.0.1 Final [2008-07-05]</h5>
+<hr>
+
+- Fixed : XOOPS logo removed from admin footer
+- Fixed : INBOX logo in admin footer changed to used an image inside SmartObject images folder instead of linking to an image on the web
+- Added : Addition of a preference to turn off all SmartModules admin footer
+
+
+<h5>1.0 Final [2008-04-13]</h5>
+<hr>
+
+- Fixed : a few bugs fixed throughout the module
+
+<h5>0.92 RC [2007-09-21]</h5>
+<hr>
+
+- Added : Rating system feature
+- Added : Custom tag feature
+- Added : Google Adsense tag feature
+- Added : Currency management feature
+- Added : SmartExprt Feature
+- Added : SmartAddTo class and bloc to easily add any content to social bookmarking/networking sites
+- Added : Smartjax class based on Projax, an AJAX PHP interface library. To be improved later.
+- Added : SmartObjectSingleView clas sto easily display a single object
+- Added : SmartObjectRegistry
+- Improved : SmartObjecTable
+
+
+
+<h5>0.8 Beta [2006-09-27]</h5>
+<hr>
+
+- First public release of the module.

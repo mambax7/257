@@ -1,7 +1,6 @@
 <?php
 
-function smarthook_footer_start() {
-	// code...
+function smarthook_footer_start()
+{
+    // code...
 }
-
-?>

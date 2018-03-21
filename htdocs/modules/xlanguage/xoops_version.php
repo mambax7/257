@@ -9,74 +9,110 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright    XOOPS Project (http://xoops.org)
+ * @copyright    XOOPS Project (https://xoops.org)
  * @license      {@link http://www.gnu.org/licenses/gpl-2.0.html GNU Public License}
  * @package      xlanguage
  * @since        2.0
  * @author       D.J.(phppp) php_pp@hotmail.com
- * @version      $Id $
  **/
 
-$modversion['name'] = _MI_XLANGUAGE_NAME;
-$modversion['version'] = 3.05;
-$modversion['description'] = _MI_XLANGUAGE_DESC;
-$modversion['credits'] = "Adi Chiributa - webmaster@artistic.ro; wjue - http://www.wjue.org; GIJOE - http://www.peak.ne.jp";
-$modversion['author'] = "phppp(D.J.)" ;
-$modversion['help'] = "page=help";
-$modversion['license'] = "GNU GPL";
-$modversion['license_url'] = "www.gnu.org/licenses/gpl-2.0.html";
- $modversion['official'] = 0; //1 indicates supported by XOOPS Dev Team, 0 means 3rd party supported
-$modversion['image'] = "xlanguage_logo.png";
-$modversion['dirname'] = basename(__DIR__);
-$modversion['dirmoduleadmin'] = '/Frameworks/moduleclasses/moduleadmin';
-$modversion['icons16'] = '../../Frameworks/moduleclasses/icons/16';
-$modversion['icons32'] = '../../Frameworks/moduleclasses/icons/32';
+require_once __DIR__ . '/preloads/autoloader.php';
 
-//about
-$modversion['release_file'] = XOOPS_URL."/modules/".$modversion['dirname']."/docs/changelog.txt";
-$modversion['release_date'] = "2015/09/23";
-$modversion["module_website_url"] = "www.xoops.org/";
-$modversion["module_website_name"] = "XOOPS";
-$modversion["module_status"] = "Beta 1";
-$modversion['min_php']='5.5';
-$modversion['min_xoops']="2.5.7.2";
-$modversion['min_admin']='1.1';
-$modversion['min_db']= array('mysql'=>'5.0.7', 'mysqli'=>'5.0.7');
+$moduleDirName = basename(__DIR__);
 
-$modversion['system_menu'] = 1;
+// ------------------- Informations ------------------- //
+$modversion = [
+    'version'             => 3.05,
+    'module_status'       => 'RC 2',
+    'release_date'        => '2017/10/07',
+    'name'                => _MI_XLANGUAGE_NAME,
+    'description'         => _MI_XLANGUAGE_DESC,
+    'official'            => 1, //1 indicates official XOOPS module supported by XOOPS Dev Team, 0 means 3rd party supported
+    'author'              => 'phppp(D.J.)',
+    'credits'             => 'Adi Chiributa - webmaster@artistic.ro; wjue - http://www.wjue.org; GIJOE - http://www.peak.ne.jp, XOOPS Development Team',
+    'author_mail'         => 'author-email',
+    'author_website_url'  => 'https://xoops.org',
+    'author_website_name' => 'XOOPS',
+    'license'             => 'GPL 2.0 or later',
+    'license_url'         => 'www.gnu.org/licenses/gpl-2.0.html/',
+    'help'                => 'page=help',
+    // ------------------- Folders & Files -------------------
+    'release_info'        => 'Changelog',
+    'release_file'        => XOOPS_URL . "/modules/$moduleDirName/docs/changelog.txt",
+    //
+    'manual'              => 'link to manual file',
+    'manual_file'         => XOOPS_URL . "/modules/$moduleDirName/docs/install.txt",
+    // images
+    'image'               => 'assets/images/logoModule.png',
+    'iconsmall'           => 'assets/images/iconsmall.png',
+    'iconbig'             => 'assets/images/iconbig.png',
+    'dirname'             => $moduleDirName,
+    //Frameworks
+    //    'dirmoduleadmin'      => 'Frameworks/moduleclasses/moduleadmin',
+    //    'sysicons16'          => 'Frameworks/moduleclasses/icons/16',
+    //    'sysicons32'          => 'Frameworks/moduleclasses/icons/32',
+    // Local path icons
+    'modicons16'          => 'assets/images/icons/16',
+    'modicons32'          => 'assets/images/icons/32',
+    //About
+    'demo_site_url'       => 'https://xoops.org',
+    'demo_site_name'      => 'XOOPS Demo Site',
+    'support_url'         => 'https://xoops.org/modules/newbb/viewforum.php?forum=28/',
+    'support_name'        => 'Support Forum',
+    'submit_bug'          => 'https://github.com/XoopsModules25x/' . $moduleDirName . '/issues',
+    'module_website_url'  => 'www.xoops.org',
+    'module_website_name' => 'XOOPS Project',
+    // ------------------- Min Requirements -------------------
+    'min_php'             => '5.5',
+    'min_xoops'           => '2.5.9',
+    'min_admin'           => '1.2',
+    'min_db'              => ['mysql' => '5.5'],
+    // ------------------- Admin Menu -------------------
+    'system_menu'         => 1,
+    'hasAdmin'            => 1,
+    'adminindex'          => 'admin/index.php',
+    'adminmenu'           => 'admin/menu.php',
+    // ------------------- Main Menu -------------------
+    'hasMain'             => 1,
 
-$modversion['sqlfile']['mysql'] = "sql/mysql.sql";
-$modversion['tables'][0] = "xlanguage_base";
-$modversion['tables'][1] = "xlanguage_ext";
+    // ------------------- Install/Update -------------------
+    //    'onInstall'           => 'include/oninstall.php',
+    //    'onUpdate'            => 'include/onupdate.php',
+    //  'onUninstall'         => 'include/onuninstall.php',
+    // -------------------  PayPal ---------------------------
+    'paypal'              => [
+        'business'      => 'foundation@xoops.org',
+        'item_name'     => 'Donation : ' . _MI_XLANGUAGE_NAME,
+        'amount'        => 0,
+        'currency_code' => 'USD'
+    ],
+    // ------------------- Mysql -----------------------------
+    'sqlfile'             => ['mysql' => 'sql/mysql.sql'],
+    // ------------------- Tables ----------------------------
+    'tables'              => [
+        $moduleDirName . '_' . 'base',
+        $moduleDirName . '_' . 'ext',
+    ],
+];
 
-// Admin things
-$modversion['hasAdmin'] = 1;
-$modversion['adminindex'] = "admin/index.php";
-$modversion['adminmenu'] = "admin/menu.php";
+// ------------------- Help files ------------------- //
+$modversion['helpsection'] = [
+    ['name' => _MI_XLANGUAGE_OVERVIEW, 'link' => 'page=help'],
+    ['name' => _MI_XLANGUAGE_DISCLAIMER, 'link' => 'page=disclaimer'],
+    ['name' => _MI_XLANGUAGE_LICENSE, 'link' => 'page=license'],
+    ['name' => _MI_XLANGUAGE_SUPPORT, 'link' => 'page=support'],
+];
 
 // Use smarty
-$modversion["use_smarty"] = 1;
+$modversion['use_smarty'] = 1;
 
 //language selection block
-$modversion['blocks'][1]['file'] = "xlanguage_blocks.php";
-$modversion['blocks'][1]['name'] = _MI_XLANGUAGE_BNAME;
-$modversion['blocks'][1]['description'] = '';
-$modversion['blocks'][1]['show_func'] = "b_xlanguage_select_show";
-$modversion['blocks'][1]['edit_func'] = "b_xlanguage_select_edit";
-$modversion['blocks'][1]['options'] = "images| |5";
-$modversion["blocks"][1]["template"] = "xlanguage_block.tpl";
-
-$modversion['releasedate'] = "July 9th, 2006";
-$modversion['status'] = "stable";
-$modversion['xoopsversion'] = "2.0+";
-
-$modversion['author_website'][1]['url'] = "http://xoops.org.cn";
-$modversion['author_website'][1]['name'] = "The Xoops China Community";
-$modversion['author_website'][2]['url'] = "http://xoopsforge.com";
-$modversion['author_website'][2]['name'] = "XForge";
-
-$modversion['author_email'] = "php_pp@hotmail.com";
-$modversion['demo_site_url'] = "http://xoops.org.cn";
-$modversion['demo_site_name'] = "Xoops China";
-$modversion['support_site_url'] = "http://xoopsforge.com";
-$modversion['support_site_name'] = "XForge";
+$modversion['blocks'][] = [
+    'file'        => 'xlanguage_blocks.php',
+    'name'        => _MI_XLANGUAGE_BNAME,
+    'description' => '',
+    'show_func'   => 'b_xlanguage_select_show',
+    'edit_func'   => 'b_xlanguage_select_edit',
+    'options'     => 'images| |5',
+    'template'    => 'xlanguage_block.tpl',
+];

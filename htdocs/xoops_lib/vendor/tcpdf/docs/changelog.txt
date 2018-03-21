@@ -1,0 +1,115 @@
+=======================
+Changelog TCPDF_for_XOOPS
+=======================
+
+=======================
+Version 2.02 2015-09-02
+=======================
+- PHP TCPDF class has been updated (6.0.093 => 6.2.11) (mamba)
+    * see the TCPDF changelog for changes
+
+=======================
+Version 2.01 2014-09-13
+=======================
+- PHP TCPDF class has been optmized and lightened (montuy337513/black_beard - Philodenelle)
+
+=======================
+Version 2.00 2014-08-20
+=======================
+- PHP TCPDF class has been updated (6.0.084 => 6.0.093)
+    * K_TIMEZONE constant was added to the default configuration to supress date-time warnings.
+    * Bug item #956 "Monospaced fonts are not alignd at the baseline" was fixed.
+    * Bug item #964 "Problem when changing font size" was fixed.
+    * Bug item #969 "ImageSVG with radialGradient problem" was fixed.
+    * sRGB.icc file was replaced with the one from the Debian package icc-profiles-free (2.0.1+dfsg-1)
+    * Issue #325"Division by zero when css fontsize equals 0" was fixed.
+    * Function getmypid() was removed for better compatibility with shared hosting environments.
+    * Support for pulling SVG stroke opacity value from RGBa color was mergeg [adf006].
+    * Bug item #951 "HTML Table within TCPDF columns doesnt flow correctly on page break ..." was fixed.
+    * Bug item #948 "bottom line of rowspan cell not work correctly" was fixed.
+    * Bug item #946 "Case sensitive type check causes broken match for SVG" was fixed.
+    * Bug item #945 "Imagick load doesn't account for passed data string " was fixed.
+    * A bug affecting fitcell option in Multicell was fixed.
+    * Bug item #938 "Hyphenation-dash extends outside of cell" was fixed (collateral effect).
+    * Some example images were replaced.
+    * A race condition bug was fixed.
+    * Bug item #938 "Hyphenation-dash extends outside of cell" was fixed.
+    * A bug related to MultiCell fitcell feature was fixed.
+    * Bug item #931 "Documentation error for setPageFormat()" was fixed.
+- PHP TCPDF class has been optmized and lightened (montuy337513/black_beard)
+- Bugs minors fixed (montuy337513/black_beard)
+- Add multiple configuration for modules (page sizes, orientation, fonts, margins ...) through an array() in this makepdf.php (see file pdf_data.txt) (montuy337513/black_beard)
+
+
+=======================
+Version 1.07 2014-06-15
+=======================
+- PHP TCPDF class has been updated (5.9.193 => 6.0.084) (mamba)
+    * moved the library to /xoops_lib/vendor (mamba)
+
+=======================
+Version 1.06 2012-10-04
+=======================
+- PHP TCPDF class has been updated (5.9.180 => 5.9.193) (montuy337513/black_beard)
+    * composer.json file was added
+    * Subset feature was extended to include the first 256 characters.
+    * bug fix related to cached images and a new composer file.
+    * bug fix related to font names
+    * bug fix related "Infinite loop in Write() method"
+    * bug fix related to EAN barcodes
+    * bug fix related datamatrix barcode
+    * bug fix related "ini_get safe_mode error"
+    * buf fix related to Image() method.
+    * includes support for named destinations on HTML links.
+
+=======================
+Version 1.05 2012-08-24
+=======================
+- PHP TCPDF class has been updated (5.9.176 => 5.9.180) (montuy337513/black_beard)
+- separate Frameworks tcpdf_for_xoops and makepdf.php for module (montuy337513/black_beard)
+
+
+=======================
+Version 1.04 2012-08-04
+=======================
+- Add the URL in header for makepdf.php for news (montuy337513/black_beard)
+- Add the URL in header for makepdf.php for newBB (montuy337513/black_beard)
+- Fix the bug in the automatic selection of specific languages (Japanese, Chinese simplifed, Chinese taiwanaise, Korean)  (montuy337513/black_beard)
+- Add makepdf.php for 'publisher' module (montuy337513/black_beard)
+
+=======================
+Version 1.03 2012-08-01
+=======================
+- PHP TCPDF class has been updated (5.9.172 => 5.9.176) (montuy337513/black_beard)
+- Exotic font has been deleted (montuy337513/black_beard)
+- Creating a separate package for Japanese, Chinese simplified, (montuy337513/black_beard)
+  Chinese Taiwanese, Korean fonts. You can install them in
+  the directories ./Frameworks/tcpdf/fonts or ./language/fonts (montuy337513/black_beard)
+- Adding the support Ukrainian language (./Frameworks/tcpdf/config/lang/ukrainian.php) (montuy337513/black_beard)
+- Adding support Chinese simplified language (./Frameworks/tcpdf/config/lang/schinese.php) (montuy337513/black_beard)
+- Adding support Chinese taiwanese language (./Frameworks/tcpdf/config/lang/tchinese.php) (montuy337513/black_beard)
+- Adding file : ./Frameworks/tcpdf/docs/changelog.txt (montuy337513/black_beard)
+- Adding file : ./Frameworks/tcpdf/docs/README.txt (montuy337513/black_beard)
+- Adding makepdf.php for 'newbb' mobule (montuy337513/black_beard)
+
+=======================
+Version 1.02 2012-07-29
+=======================
+- Fixed bug : Error 500 - ./Frameworks/tcpdf/config/tcpdf_config.php has been modified (montuy337513/black_beard)
+
+=======================
+Version 1.01 2012-07-29
+=======================
+- default font changed to  'dejavusans' (montuy337513/black_beard)
+
+=======================
+Version 1.00 2012-07-25
+=======================
+- ./modules/news/tcpdf => ./Frameworks/tcpdf (montuy337513/black_beard)
+- PHP TCPDF class has been optmized and lightened (montuy337513/black_beard)
+- Adding makepdf.php for 'news' module (montuy337513/black_beard)
+
+=======================
+Version 0.99 2012-07-18
+=======================
+- baseline (montuy337513/black_beard)

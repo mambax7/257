@@ -9,19 +9,23 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright   The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright   {@link https://xoops.org/ XOOPS Project}
  * @license     GNU GPL 2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  * @author      Zoullou (http://www.zoullou.net)
  * @package     ExtGallery
- * @version     $Id: comment_function.php 8088 2011-11-06 09:38:12Z beckmi $
  */
 
-if (!defined("XOOPS_ROOT_PATH")) {
-    die("XOOPS root path not defined");
-}
+use XoopsModules\Extgallery;
 
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
+
+/**
+ * @param $photoId
+ * @param $nbCom
+ */
 function extgalleryComUpdate($photoId, $nbCom)
 {
-    $photoHandler = xoops_getmodulehandler('publicphoto', 'extgallery');
-    $photoHandler->modifyPhoto($photoId, array('photo_comment'=>$nbCom));
+    /** @var Extgallery\PhotoHandler $photoHandler */
+    $photoHandler = Extgallery\Helper::getInstance()->getHandler('PublicPhoto');
+    $photoHandler->modifyPhoto($photoId, ['photo_comment' => $nbCom]);
 }

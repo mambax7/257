@@ -1,7 +1,7 @@
 <?php
 
 /**
- * $Id: blocks.php 10066 2012-08-13 09:22:47Z beckmi $
+ *
  * Module: SmartPartner
  * Author: The SmartFactory <www.smartfactory.ca>
  * Licence: GNU
@@ -9,9 +9,9 @@
 // including the common language file
 $fileName = XOOPS_ROOT_PATH . '/modules/smartpartner/language/' . $GLOBALS['xoopsConfig']['language'] . '/common.php';
 if (file_exists($fileName)) {
-    include_once $fileName;
+    require_once $fileName;
 } else {
-    include_once XOOPS_ROOT_PATH . '/modules/smartpartner/language/english/common.php';
+    require_once XOOPS_ROOT_PATH . '/modules/smartpartner/language/english/common.php';
 }
 define('_MB_SPARTNER_PARTNERS_PSPACE', 'Put spaces between partners?');
 define('_MB_SPARTNER_BRAND', 'Randomize partners in blocks?');
@@ -29,8 +29,8 @@ define('_MB_SPARTNER_TEXT', 'Text Links');
 define('_MB_SPARTNER_BOTH', 'Both');
 define('_MB_SPARTNER_FADE', 'Fade Image');
 define('_MB_SPARTNER_SEE_ALL', "Display 'See all partners...'");
-define('_MB_SPARTNER_LANG_SEE_ALL', "See all partners...");
-define('_MB_SMARTPARTNER_CATEGORY', "Category");
+define('_MB_SPARTNER_LANG_SEE_ALL', 'See all partners...');
+define('_MB_SMARTPARTNER_CATEGORY', 'Category');
 define('_MB_SPARTNER_BWIDTH', 'Block width');
 define('_MB_SPARTNER_BHEIGHT', 'Block height');
 define('_MB_SPARTNER_BSPEED', 'Speed (1 to 10; ten = fast)');
@@ -41,5 +41,5 @@ define('_MB_SPARTNER_ORDER', 'Order by');
 define('_MB_SPARTNER_SHOW_SUBS', 'Display subcats');
 define('_MB_SPARTNER_YES', 'Yes');
 define('_MB_SPARTNER_NO', 'No');
-define('_MB_SPARTNER_LANG_SEE_ALL_OFFERS', "See all offers...");
+define('_MB_SPARTNER_LANG_SEE_ALL_OFFERS', 'See all offers...');
 define('_MB_SPARTNER_SHOW_CURR_SUBS', 'Display subcats of current category');

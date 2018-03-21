@@ -12,12 +12,11 @@
  * @category        Module
  * @package         Xoopstube
  * @author          XOOPS Development Team
- * @copyright       2001-2013 The XOOPS Project
+ * @copyright       2001-2016 XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
- * @version         $Id$
- * @link            http://sourceforge.net/projects/xoops/
+ * @link            https://xoops.org/
  * @since           1.0.6
  */
 
-include dirname(dirname(__DIR__)) . '/mainfile.php';
+include __DIR__ . '/../../mainfile.php';
 include XOOPS_ROOT_PATH . '/include/comment_post.php';

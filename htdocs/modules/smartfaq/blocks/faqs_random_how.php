@@ -1,28 +1,34 @@
 <?php
 
 /**
-* $Id: faqs_random_how.php,v 1.8 2005/08/16 15:39:45 fx2024 Exp $
-* Module: SmartFAQ
-* Author: The SmartFactory <www.smartfactory.ca>
-* Licence: GNU
-*/
-// defined("XOOPS_ROOT_PATH") || exit("XOOPS root path not defined");
+ * Module: SmartFAQ
+ * Author: The SmartFactory <www.smartfactory.ca>
+ * Licence: GNU
+ */
 
+use XoopsModules\Smartfaq\Constants;
+
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
+
+/**
+ * @return array
+ */
 function b_faqs_random_how_show()
 {
-    include_once(XOOPS_ROOT_PATH."/modules/smartfaq/include/functions.php");
+//    require_once XOOPS_ROOT_PATH . '/modules/smartfaq/include/functions.php';
 
-    $block = array();
+    $block = [];
 
     // Creating the faq handler object
-    $faq_handler =& sf_gethandler('faq');
+    /** @var \XoopsModules\Smartfaq\FaqHandler $faqHandler */
+    $faqHandler = \XoopsModules\Smartfaq\Helper::getInstance()->getHandler('Faq');
 
     // creating the FAQ object
-    $faqsObj = $faq_handler->getRandomFaq('howdoi', array(_SF_STATUS_PUBLISHED, _SF_STATUS_NEW_ANSWER));
+    $faqsObj = $faqHandler->getRandomFaq('howdoi', [Constants::SF_STATUS_PUBLISHED, Constants::SF_STATUS_NEW_ANSWER]);
 
     if ($faqsObj) {
-        $block['content'] = $faqsObj->howdoi();
-        $block['id'] = $faqsObj->faqid();
+        $block['content']     = $faqsObj->howdoi();
+        $block['id']          = $faqsObj->faqid();
         $block['lang_answer'] = _MB_SF_ANSWERHERE;
     }
 

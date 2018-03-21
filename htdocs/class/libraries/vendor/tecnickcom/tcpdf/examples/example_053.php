@@ -60,8 +60,13 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 // set some language-dependent strings (optional)
 if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+<<<<<<< HEAD
 	require_once(dirname(__FILE__).'/lang/eng.php');
 	$pdf->setLanguageArray($l);
+=======
+    require_once(dirname(__FILE__).'/lang/eng.php');
+    $pdf->setLanguageArray($l);
+>>>>>>> 258
 }
 
 // ---------------------------------------------------------
@@ -80,6 +85,7 @@ $pdf->writeHTML($text, true, 0, true, 0);
 $js = <<<EOD
 app.alert('JavaScript Popup Example', 3, 0, 'Welcome');
 var cResponse = app.response({
+<<<<<<< HEAD
 	cQuestion: 'How are you today?',
 	cTitle: 'Your Health Status',
 	cDefault: 'Fine',
@@ -89,6 +95,17 @@ if (cResponse == null) {
 	app.alert('Thanks for trying anyway.', 3, 0, 'Result');
 } else {
 	app.alert('You responded, "'+cResponse+'", to the health question.', 3, 0, 'Result');
+=======
+    cQuestion: 'How are you today?',
+    cTitle: 'Your Health Status',
+    cDefault: 'Fine',
+    cLabel: 'Response:'
+});
+if (cResponse == null) {
+    app.alert('Thanks for trying anyway.', 3, 0, 'Result');
+} else {
+    app.alert('You responded, "'+cResponse+'", to the health question.', 3, 0, 'Result');
+>>>>>>> 258
 }
 EOD;
 

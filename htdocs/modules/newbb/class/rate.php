@@ -1,9 +1,10 @@
-<?php
-// $Id: rate.php 62 2012-08-17 10:15:26Z alfred $
+<?php namespace XoopsModules\Newbb;
+
+//
 //  ------------------------------------------------------------------------ //
 //                XOOPS - PHP Content Management System                      //
-//                    Copyright (c) 2000 XOOPS.org                           //
-//                       <http://xoops.org/>                             //
+//                  Copyright (c) 2000-2016 XOOPS.org                        //
+//                       <https://xoops.org/>                             //
 //  ------------------------------------------------------------------------ //
 //  This program is free software; you can redistribute it and/or modify     //
 //  it under the terms of the GNU General Public License as published by     //
@@ -25,60 +26,30 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
 //  ------------------------------------------------------------------------ //
 //  Author: phppp (D.J., infomax@gmail.com)                                  //
-//  URL: http://xoops.org                                                    //
+//  URL: https://xoops.org                                                    //
 //  Project: Article Project                                                 //
 //  ------------------------------------------------------------------------ //
 
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 defined('NEWBB_FUNCTIONS_INI') || include $GLOBALS['xoops']->path('modules/newbb/include/functions.ini.php');
-newbb_load_object();
 
 /**
- * Class Nrate
+ * Class Rate
  */
-class Nrate extends ArtObject
+class Rate extends \XoopsObject
 {
     /**
      *
      */
     public function __construct()
     {
-        parent::__construct('bb_votedata');
+        parent::__construct();
         $this->initVar('ratingid', XOBJ_DTYPE_INT);
         $this->initVar('topic_id', XOBJ_DTYPE_INT);
         $this->initVar('ratinguser', XOBJ_DTYPE_INT);
         $this->initVar('rating', XOBJ_DTYPE_INT);
         $this->initVar('ratingtimestamp', XOBJ_DTYPE_INT);
         $this->initVar('ratinghostname', XOBJ_DTYPE_TXTBOX);
-    }
-}
-
-/**
- * Class NewbbRateHandler
- */
-class NewbbRateHandler extends ArtObjectHandler
-{
-    /**
-     * @param XoopsDatabase $db
-     */
-    public function __construct(XoopsDatabase $db)
-    {
-        parent::__construct($db, 'bb_votedata', 'Nrate', 'ratingid', '');
-    }
-
-    public function synchronization()
-    {
-        //        return;
-    }
-
-    /**
-     * clean orphan items from database
-     *
-     * @return bool true on success
-     */
-    public function cleanOrphan()
-    {
-        return parent::cleanOrphan($this->db->prefix('bb_topics'), 'topic_id');
     }
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: blocks.php 10055 2012-08-11 12:46:10Z beckmi $
+//
 // Blocks
 define('_MB_XLANGUAGE_SELECT', 'Click to select your language');
 define('_MB_XLANGUAGE_DISPLAY_METHOD', 'Display method');

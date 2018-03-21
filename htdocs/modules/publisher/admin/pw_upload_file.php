@@ -16,19 +16,21 @@
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
  * @author          The SmartFactory <www.smartfactory.ca>
- * @version         $Id: pw_upload_file.php 10374 2012-12-12 23:39:48Z trabis $
  */
 
-include_once __DIR__ . '/admin_header.php';
+use Xmf\Request;
+use XoopsModules\Publisher;
 
-$errors = array();
+require_once __DIR__ . '/admin_header.php';
+
+$errors = [];
 
 if (publisher_pagewrap_upload($errors)) {
-    redirect_header(XoopsRequest::getString('backto', '', 'POST'), 2, _AM_PUBLISHER_FILEUPLOAD_SUCCESS);
+    redirect_header(Request::getString('backto', '', 'POST'), 2, _AM_PUBLISHER_FILEUPLOAD_SUCCESS);
 } else {
-    $errorstxt = implode('<br />', $errors);
+    $errorstxt = implode('<br>', $errors);
     $message   = sprintf(_CO_PUBLISHER_MESSAGE_FILE_ERROR, $errorstxt);
-    redirect_header(XoopsRequest::getString('backto', '', 'POST'), 5, $message);
+    redirect_header(Request::getString('backto', '', 'POST'), 5, $message);
 }
 
 /**
@@ -38,21 +40,21 @@ if (publisher_pagewrap_upload($errors)) {
  */
 function publisher_pagewrap_upload(&$errors)
 {
-    //    include_once PUBLISHER_ROOT_PATH . '/class/uploader.php';
+    //    require_once PUBLISHER_ROOT_PATH . '/class/uploader.php';
     xoops_load('XoopsMediaUploader');
 
-    $publisher =& PublisherPublisher::getInstance();
+    $helper = Publisher\Helper::getInstance();
     $postField = 'fileupload';
 
-    $maxFileSize    = $publisher->getConfig('maximum_filesize');
-    $maxImageWidth  = $publisher->getConfig('maximum_image_width');
-    $maxImageHeight = $publisher->getConfig('maximum_image_height');
+    $maxFileSize    = $helper->getConfig('maximum_filesize');
+    $maxImageWidth  = $helper->getConfig('maximum_image_width');
+    $maxImageHeight = $helper->getConfig('maximum_image_height');
 
-    if (!is_dir(publisherGetUploadDir(true, 'content'))) {
-        mkdir(publisherGetUploadDir(true, 'content'), 0757);
+    if (!is_dir(Publisher\Utility::getUploadDir(true, 'content'))) {
+        mkdir(Publisher\Utility::getUploadDir(true, 'content'), 0757);
     }
-    $allowedMimeTypes = array('text/html', 'text/plain', 'application/xhtml+xml');
-    $uploader         = new XoopsMediaUploader(publisherGetUploadDir(true, 'content') . '/', $allowedMimeTypes, $maxFileSize, $maxImageWidth, $maxImageHeight);
+    $allowedMimeTypes = ['text/html', 'text/plain', 'application/xhtml+xml'];
+    $uploader         = new \XoopsMediaUploader(Publisher\Utility::getUploadDir(true, 'content') . '/', $allowedMimeTypes, $maxFileSize, $maxImageWidth, $maxImageHeight);
     if ($uploader->fetchMedia($postField)) {
         $uploader->setTargetFileName($uploader->getMediaName());
         if ($uploader->upload()) {

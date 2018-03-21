@@ -30,13 +30,13 @@
 // ------------------------------------------------------------------------- //
 
 error_reporting(0);
-include "../../mainfile.php";
+include __DIR__ . '/../../mainfile.php';
 
 $id = $_GET['id'];
 
-include_once('class/class.banner.php');
+require_once __DIR__ . '/class/Banner.php';
 
-$rwbanner = new RWbanners(null, $id);
+$rwbanner = new Banner(null, $id);
 
 $rwbanner->incClicks();
 

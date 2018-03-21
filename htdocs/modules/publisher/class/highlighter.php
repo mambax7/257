@@ -1,4 +1,5 @@
-<?php
+<?php namespace XoopsModules\Publisher;
+
 /*
  You may not change or alter any portion of this comment or credits
  of supporting developers from this source code or any supporting source code
@@ -10,14 +11,13 @@
  */
 
 /**
- * @copyright       The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright       XOOPS Project (https://xoops.org)
  * @license         http://www.fsf.org/copyleft/gpl.html GNU public license
  * @author          trabis <lusopoemas@gmail.com>
  * @author          Aidan Lister <aidan@php.net>
  * @link            http://aidanlister.com/2004/04/highlighting-a-search-string-in-html-text/
- * @version         $Id: highlighter.php 10374 2012-12-12 23:39:48Z trabis $
  */
-class PublisherHighlighter
+class Highlighter
 {
     /**
      * Perform a simple text replace
@@ -110,15 +110,15 @@ class PublisherHighlighter
     {
         // Select pattern to use
         if ($this->simple) {
-            $pattern    = '#(%s)#';
+            $pattern   = '#(%s)#';
             $slPattern = '#(%s)#';
         } else {
-            $pattern    = '#(?!<.*?)(%s)(?![^<>]*?>)#';
+            $pattern   = '#(?!<.*?)(%s)(?![^<>]*?>)#';
             $slPattern = '#<a\s(?:.*?)>(%s)</a>#';
         }
         // Case sensitivity
         if (!$this->caseSens) {
-            $pattern .= 'i';
+            $pattern   .= 'i';
             $slPattern .= 'i';
         }
         $needle = (array)$needle;
@@ -131,7 +131,7 @@ class PublisherHighlighter
             // Strip links
             if ($this->stripLinks) {
                 $slRegex = sprintf($slPattern, $needleS);
-                $text     = preg_replace($slRegex, '\1', $text);
+                $text    = preg_replace($slRegex, '\1', $text);
             }
             $regex = sprintf($pattern, $needleS);
             $text  = preg_replace($regex, $this->replacementString, $text);

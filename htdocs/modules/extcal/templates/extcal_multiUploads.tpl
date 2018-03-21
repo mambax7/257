@@ -2,16 +2,16 @@
     <h1><{$event.event_title}> (#<{$event.event_id}>)</h1>
 
     <p><{$event.event_desc}></p>
-    <br/>
+    <br>
 
     <{if $multiUploadsOK}>
         <{$multiUploads}>
     <{else}>
-        <p><b><font color="#FF0000" size="6">
+        <p><b><span style="color: #FF0000; font-size: x-large; ">
                     <{$smarty.const._AM_EXTCAL_MULTIUPLOADS_NOT_OK}>
-                </font></b></p>
-        <br/>
-        <br/>
+                </span></b></p>
+        <br>
+        <br>
     <{/if}>
 
 </div>

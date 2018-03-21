@@ -2,8 +2,7 @@
  * Installation procedure of the smartObejct Framework
  *
  * @license GNU
- * @author marcan <marcan@smartfactory.ca> 
- * @version $Id: readme.txt,v 1.1 2007/06/05 18:31:42 marcan Exp $
+ * @author marcan <marcan@smartfactory.ca>
  * @link http://smartfactory.ca The SmartFactory
  * @package SmartObject
  * @subpackage SmartObjectCore
@@ -25,13 +24,13 @@ In order to install and use the SmartObject Framework, please follow these instr
 Juste BEFORE these lines, please include this :
 
     // #################### Include SmartObject Framework ##################
-    include_once XOOPS_ROOT_PATH."/class/smartobject/smartloader.php";	
+    include_once XOOPS_ROOT_PATH."/class/smartobject/smartloader.php";
 
 We have included an example of the modified file in include/common.php
 
 Please report any bugs on The SmartFactory (http://smartfactory.ca)
 
 
-.:: marcan aka Marc-André Lanciault ::.
+.:: marcan aka Marc-AndrÃ© Lanciault ::.
 .:: Open Source :: smartfactory.ca::.
 .:: Professionnal :: inboxsolutions.net ::.

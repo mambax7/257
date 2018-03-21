@@ -9,39 +9,34 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright       The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright       XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  * @package         pm
  * @since           2.4.0
  * @author          trabis <lusopoemas@gmail.com>
- * @version         $Id: core.php 11912 2013-08-14 07:47:47Z beckmi $
  */
 
-defined('XOOPS_ROOT_PATH') or die('Restricted access');
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 /**
  * rw-banner core preloads
  *
- * @copyright       The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright       XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  * @author          mamba
  */
 class RwbannerCorePreload extends XoopsPreloadItem
 {
-
-    public function eventCoreHeaderEnd($args)
+    /**
+     * @param $args
+     */
+    public static function eventCoreHeaderEnd($args)
     {
-        if (RwbannerCorePreload::isActive()) {
-            if (file_exists($filename = dirname(dirname(__FILE__)) .'/include/maketags.php')) {
-                include $filename;
-            }
+        if (file_exists($filename = __DIR__ . '/../include/maketags.php')) {
+            include $filename;
         }
-    }
-    public function isActive()
-    {
-        $module_handler =& xoops_getHandler('module');
-        $module = $module_handler->getByDirname('rw_banner');
 
-        return ($module && $module->getVar('isactive')) ? true : false;
+        // to add PSR-4 autoloader
+        include __DIR__ . '/autoloader.php';
     }
 }

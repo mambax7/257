@@ -16,20 +16,36 @@
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
  * @author          The SmartFactory <www.smartfactory.ca>
- * @version         $Id: pw_delete_file.php 10374 2012-12-12 23:39:48Z trabis $
  */
 
-include_once __DIR__ . '/admin_header.php';
+use Xmf\Assert;
+use Xmf\Request;
+use XoopsModules\Publisher;
 
-if ('delfileok' === XoopsRequest::getString('op', '', 'POST')) {
-    $dir      = publisherGetUploadDir(true, 'content');
-    $filename = XoopsRequest::getString('address', '', 'POST');
+require_once __DIR__ . '/admin_header.php';
+
+if ('delfileok' === Request::getString('op', '', 'POST')) {
+    if (!$GLOBALS['xoopsSecurity']->check()) {
+        redirect_header(XOOPS_URL . '/modules/publisher/admin/item.php', 3, _AM_PUBLISHER_FILE_DELETE_ERROR);
+    }
+
+    $dir        = Publisher\Utility::getUploadDir(true, 'content');
+    $check_path = realpath($dir);
+
+    $filename  = Request::getString('address', '', 'POST');
+    $path_file = realpath($dir . '/' . $filename);
+    try {
+        Assert::startsWith($path_file, $check_path, _AM_PUBLISHER_FILE_DELETE_ERROR);
+    } catch (\InvalidArgumentException $e) {
+        // handle the exception
+        redirect_header(XOOPS_URL . '/modules/publisher/admin/item.php', 2, $e->getMessage());
+    }
     if (file_exists($dir . '/' . $filename)) {
         unlink($dir . '/' . $filename);
     }
-    redirect_header(XoopsRequest::getString('backto', '', 'POST'), 2, _AM_PUBLISHER_FDELETED);
+    redirect_header(Request::getString('backto', '', 'POST'), 2, _AM_PUBLISHER_FDELETED);
 } else {
     xoops_cp_header();
-    xoops_confirm(array('backto' => XoopsRequest::getString('backto', '', 'POST'), 'address' => XoopsRequest::getString('address', '', 'POST'), 'op' => 'delfileok'), 'pw_delete_file.php', _AM_PUBLISHER_RUSUREDELF, _YES);
+    xoops_confirm(['backto' => Request::getString('backto', '', 'POST'), 'address' => Request::getString('address', '', 'POST'), 'op' => 'delfileok'], 'pw_delete_file.php', _AM_PUBLISHER_RUSUREDELF, _YES);
     xoops_cp_footer();
 }

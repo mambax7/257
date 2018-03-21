@@ -29,78 +29,88 @@
 // Descrição: Sistema de gerenciamento de mídias publicitárias               //
 // ------------------------------------------------------------------------- //
 
-include("admin_header.php");
+use Xmf\Request;
+use  XoopsModules\Rwbanner;
 
-include_once XOOPS_ROOT_PATH."/include/cp_functions.php";
-include_once("../class/class.categoria.php");
+require_once __DIR__ . '/admin_header.php';
 
-$op = (isset($_GET['op']))?$_GET['op']:((isset($_POST['op']))?$_POST['op']:'');
-$id = (isset($_GET['id']))?$_GET['id']:((isset($_POST['id']))?$_POST['id']:'');
+require_once XOOPS_ROOT_PATH . '/include/cp_functions.php';
+// require_once __DIR__ . '/../class/class.categoria.php';
+
+$op = Request::getCmd('op', '');
+$id = Request::getCmd('id', '');
 
 if (isset($_POST['post'])) {
-    $op='grava';
+    $op = 'grava';
 }
-$form = (isset($_POST['form']))?$_POST['form']:'';
+$form = isset($_POST['form']) ? $_POST['form'] : '';
 
 global $xoopsDB;
 switch ($op) {
-  case 'grava':
-         if ($_POST['post'] == _AM_RWBANNER_BTN_OP1) {
-             $cat = new Categoria($form);
-             if ($cat->grava()) {
-                 redirect_header('main.php', 1, _AM_RWBANNER_MSG5);
-             } else {
-                 redirect_header('index.php', 1, _AM_RWBANNER_MSG6.'<br />'.$cat->getError());
-             }
-         } elseif ($_POST['post'] == _AM_RWBANNER_BTN_OP2) {
-             $cat = new Categoria($form);
-             if ($cat->edita()) {
-                 redirect_header('main.php', 1, _AM_RWBANNER_MSG4);
-             } else {
-                 redirect_header('index.php', 1, _AM_RWBANNER_MSG7.'<br />'.$cat->getError());
-             }
-         }
-         break;
-  case 'editar_categ':
-         xoops_cp_header();
-         // rwbanner_adminMenu('','Editando Categoria codigo: '.$id);
-         $cat = new Categoria(null, $id);
-         $cat->clearDB();
-         foreach ($cat as $key=>$value) {
-             $form[$key] = $value;
-         }
-         //echo '<br><br><br><br><br><br>';
-         monta_form(_AM_RWBANNER_BTN_OP2);
-         xoops_cp_footer();
-         break;
-  default:
-         xoops_cp_header();
-         $indexAdmin = new ModuleAdmin();
-         echo $indexAdmin->addNavigation('insercateg.php');
-         // rwbanner_adminMenu(2,_AM_RWBANNER_VALUE_BTN5);
-         //echo '<br><br><br><br><br><br>';
-         monta_form(_AM_RWBANNER_BTN_OP1);
-         xoops_cp_footer();
-         break;
+    case 'grava':
+        if (_AM_RWBANNER_BTN_OP1 == $_POST['post']) {
+            $cat = new Rwbanner\Categoria($form);
+            if ($cat->grava()) {
+                redirect_header('main.php', 1, _AM_RWBANNER_MSG5);
+            } else {
+                redirect_header('index.php', 1, _AM_RWBANNER_MSG6 . '<br>' . $cat->getError());
+            }
+        } elseif (_AM_RWBANNER_BTN_OP2 == $_POST['post']) {
+            $cat = new Rwbanner\Categoria($form);
+            if ($cat->edita()) {
+                redirect_header('main.php', 1, _AM_RWBANNER_MSG4);
+            } else {
+                redirect_header('index.php', 1, _AM_RWBANNER_MSG7 . '<br>' . $cat->getError());
+            }
+        }
+        break;
+    case 'editar_categ':
+        xoops_cp_header();
+        // rwbanner_adminMenu('','Editando Categoria codigo: '.$id);
+        $cat = new Rwbanner\Categoria(null, $id);
+        $cat->clearDb();
+        foreach ($cat as $key => $value) {
+            $form[$key] = $value;
+        }
+        //echo '<br><br><br><br><br><br>';
+        monta_form(_AM_RWBANNER_BTN_OP2);
+        xoops_cp_footer();
+        break;
+    default:
+        xoops_cp_header();
+        $adminObject = \Xmf\Module\Admin::getInstance();
+        $adminObject->displayNavigation(basename(__FILE__));
+        // rwbanner_adminMenu(2,_AM_RWBANNER_VALUE_BTN5);
+        //echo '<br><br><br><br><br><br>';
+        monta_form(_AM_RWBANNER_BTN_OP1);
+        xoops_cp_footer();
+        break;
 }
 
+/**
+ * @param $value
+ */
 function monta_form($value)
 {
     global $form;
-    $xoopsDB =& XoopsDatabaseFactory::getDatabaseConnection();
-    include_once XOOPS_ROOT_PATH.'/class/xoopsformloader.php';
+    $xoopsDB = \XoopsDatabaseFactory::getDatabaseConnection();
+    require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
-    $banner_form = new XoopsThemeForm(_AM_RWBANNER_TITLE38, "form", "insercateg.php", "post", false);
+    $id = '';
+
+    $banner_form = new \XoopsThemeForm(_AM_RWBANNER_TITLE38, 'form', 'insercateg.php', 'post', false);
     $banner_form->setExtra('enctype="multipart/form-data"');
-    $titulo = new XoopsFormText(_AM_RWBANNER_TITLE31, "form[titulo]", 50, 255, (isset($form['titulo']) ? $form['titulo'] : ''));
-    $largura = new XoopsFormText(_AM_RWBANNER_TITLE32, "form[larg]", 10, 255, (isset($form['larg']) ? $form['larg'] : ''));
-    $altura = new XoopsFormText(_AM_RWBANNER_TITLE33, "form[alt]", 10, 255, (isset($form['alt']) ? $form['alt'] : ''));
+    $titulo  = new \XoopsFormText(_AM_RWBANNER_TITLE31, 'form[titulo]', 50, 255, (isset($form['titulo']) ? $form['titulo'] : ''));
+    $largura = new \XoopsFormText(_AM_RWBANNER_TITLE32, 'form[larg]', 10, 255, (isset($form['larg']) ? $form['larg'] : ''));
+    $altura  = new \XoopsFormText(_AM_RWBANNER_TITLE33, 'form[alt]', 10, 255, (isset($form['alt']) ? $form['alt'] : ''));
 
-    $button_tray = new XoopsFormElementTray('', '');
-    if ($value == _AM_RWBANNER_BTN_OP2) { // bug fix - luciorota
-    $id = new XoopsFormHidden('form[cod]', $form['cod']);
+    $button_tray = new \XoopsFormElementTray('', '');
+    if (_AM_RWBANNER_BTN_OP2 == $value) {
+        // bug fix - luciorota
+
+        $id = new \XoopsFormHidden('form[cod]', $form['cod']);
     }
-    $submit_btn = new XoopsFormButton('', 'post', $value, 'submit');
+    $submit_btn = new \XoopsFormButton('', 'post', $value, 'submit');
 
     $banner_form->addElement($titulo);
     $banner_form->addElement($largura);

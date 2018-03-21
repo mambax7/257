@@ -9,19 +9,19 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright   The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright   {@link https://xoops.org/ XOOPS Project}
  * @license     GNU GPL 2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  * @author      Zoullou (http://www.zoullou.net)
  * @package     ExtGallery
- * @version     $Id: install_function.php 8088 2011-11-06 09:38:12Z beckmi $
+ * @param $module
+ * @return bool
  */
 
-function xoops_module_pre_install_extgallery(&$xoopsModule)
+function xoops_module_pre_install_extgallery(\XoopsModule $module)
 {
-
- // Check if this XOOPS version is supported
- $minSupportedVersion = explode('.', '2.5.0');
-    $currentVersion = explode('.', substr(XOOPS_VERSION, 6));
+    // Check if this XOOPS version is supported
+    $minSupportedVersion = explode('.', '2.5.0');
+    $currentVersion      = explode('.', substr(XOOPS_VERSION, 6));
 
     if ($currentVersion[0] > $minSupportedVersion[0]) {
         return true;
@@ -40,11 +40,18 @@ function xoops_module_pre_install_extgallery(&$xoopsModule)
     return false;
 }
 
-function xoops_module_install_extgallery(&$xoopsModule)
+/**
+ * @param XoopsModule $module
+ *
+ * @return bool
+ */
+function xoops_module_install_extgallery(\XoopsModule $module)
 {
-    $module_id = $xoopsModule->getVar('mid');
-    $gpermHandler =& xoops_gethandler('groupperm');
-    $configHandler =& xoops_gethandler('config');
+    $module_id = $module->getVar('mid');
+    /** @var XoopsGroupPermHandler $gpermHandler */
+    $gpermHandler = xoops_getHandler('groupperm');
+    /** @var XoopsModuleHandler $moduleHandler */
+    $configHandler = xoops_getHandler('config');
 
     /**
      * Default public category permission mask
@@ -100,33 +107,33 @@ function xoops_module_install_extgallery(&$xoopsModule)
     $gpermHandler->addRight('extgallery_private', 16, XOOPS_GROUP_ADMIN, $module_id);
 
     // Create eXtGallery main upload directory
-    $dir = XOOPS_ROOT_PATH."/uploads/extgallery";
+    $dir = XOOPS_ROOT_PATH . '/uploads/extgallery';
     if (!is_dir($dir)) {
         mkdir($dir, 0777);
     }
     chmod($dir, 0777);
     // Create directory for photo in public album
-    $dir = XOOPS_ROOT_PATH."/uploads/extgallery/public-photo";
+    $dir = XOOPS_ROOT_PATH . '/uploads/extgallery/public-photo';
     if (!is_dir($dir)) {
         mkdir($dir, 0777);
     }
     chmod($dir, 0777);
-    $dir = XOOPS_ROOT_PATH."/uploads/extgallery/public-photo/original";
+    $dir = XOOPS_ROOT_PATH . '/uploads/extgallery/public-photo/original';
     if (!is_dir($dir)) {
         mkdir($dir, 0777);
     }
     chmod($dir, 0777);
-    $dir = XOOPS_ROOT_PATH."/uploads/extgallery/public-photo/large";
+    $dir = XOOPS_ROOT_PATH . '/uploads/extgallery/public-photo/large';
     if (!is_dir($dir)) {
         mkdir($dir, 0777);
     }
     chmod($dir, 0777);
-    $dir = XOOPS_ROOT_PATH."/uploads/extgallery/public-photo/medium";
+    $dir = XOOPS_ROOT_PATH . '/uploads/extgallery/public-photo/medium';
     if (!is_dir($dir)) {
         mkdir($dir, 0777);
     }
     chmod($dir, 0777);
-    $dir = XOOPS_ROOT_PATH."/uploads/extgallery/public-photo/thumb";
+    $dir = XOOPS_ROOT_PATH . '/uploads/extgallery/public-photo/thumb';
     if (!is_dir($dir)) {
         mkdir($dir, 0777);
     }
@@ -135,13 +142,13 @@ function xoops_module_install_extgallery(&$xoopsModule)
     //mkdir(XOOPS_ROOT_PATH."/uploads/extgallery/user-photo");
 
     // Copy index.html files on uploads folders
-    $indexFile = XOOPS_ROOT_PATH."/modules/extgallery/include/index.html";
-    copy($indexFile, XOOPS_ROOT_PATH."/uploads/extgallery/index.html");
-    copy($indexFile, XOOPS_ROOT_PATH."/uploads/extgallery/public-photo/index.html");
-    copy($indexFile, XOOPS_ROOT_PATH."/uploads/extgallery/public-photo/original/index.html");
-    copy($indexFile, XOOPS_ROOT_PATH."/uploads/extgallery/public-photo/large/index.html");
-    copy($indexFile, XOOPS_ROOT_PATH."/uploads/extgallery/public-photo/medium/index.html");
-    copy($indexFile, XOOPS_ROOT_PATH."/uploads/extgallery/public-photo/thumb/index.html");
+    $indexFile = XOOPS_ROOT_PATH . '/modules/extgallery/include/index.html';
+    copy($indexFile, XOOPS_ROOT_PATH . '/uploads/extgallery/index.html');
+    copy($indexFile, XOOPS_ROOT_PATH . '/uploads/extgallery/public-photo/index.html');
+    copy($indexFile, XOOPS_ROOT_PATH . '/uploads/extgallery/public-photo/original/index.html');
+    copy($indexFile, XOOPS_ROOT_PATH . '/uploads/extgallery/public-photo/large/index.html');
+    copy($indexFile, XOOPS_ROOT_PATH . '/uploads/extgallery/public-photo/medium/index.html');
+    copy($indexFile, XOOPS_ROOT_PATH . '/uploads/extgallery/public-photo/thumb/index.html');
 
     return true;
 }

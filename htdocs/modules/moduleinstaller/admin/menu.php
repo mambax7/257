@@ -1,33 +1,42 @@
 <?php
 
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
-$dirname = basename(dirname(__DIR__));
-$module_handler = & xoops_getHandler('module');
-$module = $module_handler->getByDirname($dirname);
-$pathIcon32 = $module->getInfo('icons32');
+use XoopsModules\Moduleinstaller;
 
-//xoops_loadLanguage('admin', $dirname);
+// require_once __DIR__ . '/../class/Helper.php';
+//require_once __DIR__ . '/../include/common.php';
+$helper = Moduleinstaller\Helper::getInstance();
 
-$adminmenu = array();
+$pathIcon32 = \Xmf\Module\Admin::menuIconPath('');
+$pathModIcon32 = $helper->getModule()->getInfo('modicons32');
 
-$i = 1;
-$adminmenu[$i]["title"] = _MI_INSTALLER_MENU_00;
-$adminmenu[$i]["link"] = 'admin/index.php';
-$adminmenu[$i]["icon"] = $pathIcon32.'/home.png';
-++$i;
-$adminmenu[$i]["title"] = _MI_INSTALLER_MENU_01;
-$adminmenu[$i]["link"] = 'admin/install.php';
-$adminmenu[$i]["icon"] = $pathIcon32.'/add.png';
-++$i;
-$adminmenu[$i]["title"] = _MI_INSTALLER_MENU_03;
-$adminmenu[$i]["link"] = 'admin/update.php';
-$adminmenu[$i]["icon"] = $pathIcon32.'/update.png';
-++$i;
-$adminmenu[$i]["title"] = _MI_INSTALLER_MENU_02;
-$adminmenu[$i]["link"] = 'admin/uninstall.php';
-$adminmenu[$i]["icon"] = $pathIcon32.'/delete.png';
-++$i;
-$adminmenu[$i]["title"] = _MI_INSTALLER_ADMIN_ABOUT;
-$adminmenu[$i]["link"] = 'admin/about.php';
-$adminmenu[$i]["icon"] = $pathIcon32.'/about.png';
+$adminmenu[] = [
+    'title' => _MI_INSTALLER_MENU_00,
+    'link'  => 'admin/index.php',
+    'icon'  => $pathIcon32 . '/home.png',
+];
+
+$adminmenu[] = [
+    'title' => _MI_INSTALLER_MENU_01,
+    'link'  => 'admin/install.php',
+    'icon'  => $pathIcon32 . '/add.png',
+];
+
+$adminmenu[] = [
+    'title' => _MI_INSTALLER_MENU_03,
+    'link'  => 'admin/update.php',
+    'icon'  => $pathIcon32 . '/update.png',
+];
+
+$adminmenu[] = [
+    'title' => _MI_INSTALLER_MENU_02,
+    'link'  => 'admin/uninstall.php',
+    'icon'  => $pathIcon32 . '/delete.png',
+];
+
+$adminmenu[] = [
+    'title' => _MI_INSTALLER_ADMIN_ABOUT,
+    'link'  => 'admin/about.php',
+    'icon'  => $pathIcon32 . '/about.png',
+];

@@ -1,6 +1,6 @@
 <?php
 /**
- *  $Id: blocks.php 10523 2012-12-23 12:48:50Z beckmi $
+ *
  */
 
 // Blocks

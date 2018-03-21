@@ -1,7 +1,5 @@
 <?php
-/**
- * ****************************************************************************
- * Module généré par TDMCreate de la TDM "http://www.tdmxoops.net"
+/*
  * ****************************************************************************
  * xsitemap - MODULE FOR XOOPS CMS
  * Copyright (c) Urbanspaceman (http://www.takeaweb.it)
@@ -12,41 +10,49 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
- * @copyright       Urbanspaceman (http://www.takeaweb.it)
- * @license         GPL
- * @package         xsitemap
- * @author          Urbanspaceman (http://www.takeaweb.it)
- *
- * Version : 1.00:
- * ****************************************************************************
  */
-defined("XOOPS_ROOT_PATH") or die("XOOPS root path not defined");
 
-$dirname = basename(dirname(dirname(__FILE__)));
-$module_handler = xoops_gethandler('module');
-$module = $module_handler->getByDirname($dirname);
-$pathIcon32 = $module->getInfo('icons32');
+/**
+ * Module: xsitemap
+ *
+ * @package         module\Xsitemap\admin
+ * @author          XOOPS Module Development Team
+ * @author          Urbanspaceman (http://www.takeaweb.it)
+ * @copyright       Urbanspaceman (http://www.takeaweb.it)
+ * @copyright       XOOPS Project (https://xoops.org)
+ * @license         http://www.fsf.org/copyleft/gpl.html GNU public license
+ * @link            https://xoops.org XOOPS
+ * @since           1.00
+ */
 
-xoops_loadLanguage('admin', $dirname);
+use \XoopsModules\Xsitemap;
 
-$adminmenu = array();
-$i = 1;
-$adminmenu[$i]["title"] = _MI_XSITEMAP_MANAGER_INDEX;
-$adminmenu[$i]["link"] = "admin/index.php";
-$adminmenu[$i]["icon"]  = $pathIcon32 . '/home.png';
-$i++;
-$adminmenu[$i]["title"] = _MI_XSITEMAP_MANAGER_PLUGIN;
-$adminmenu[$i]["link"] = "admin/plugin.php";
-$adminmenu[$i]["icon"] = "images/admin/plugin.png";
-$i++;
-$adminmenu[$i]["title"] = _MI_XSITEMAP_MANAGER_XML;
-$adminmenu[$i]["link"] = "admin/xml.php";
-$adminmenu[$i]["icon"] = "images/admin/xml.png";
-//$i++;
-//$adminmenu[$i]["title"] = _MI_XSITEMAP_MANAGER_PERMISSIONS;
-//$adminmenu[$i]["link"] = "admin/permissions.php";
-$i++;
-$adminmenu[$i]["title"] = _MI_XSITEMAP_MANAGER_ABOUT;
-$adminmenu[$i]["link"] = "admin/about.php";
-$adminmenu[$i]["icon"] = $pathIcon32 . '/about.png';
+// require_once __DIR__ . '/../class/Helper.php';
+//require_once __DIR__ . '/../include/common.php';
+$helper = Xsitemap\Helper::getInstance();
+
+$pathIcon32 = \Xmf\Module\Admin::menuIconPath('');
+$pathModIcon32 = $helper->getModule()->getInfo('modicons32');
+
+$adminmenu = [
+    [
+        'title' => _MI_XSITEMAP_MANAGER_INDEX,
+        'link'  => 'admin/index.php',
+        'icon'  => $pathIcon32 . '/home.png'
+    ],
+    [
+        'title' => _MI_XSITEMAP_MANAGER_PLUGIN,
+        'link'  => 'admin/plugin.php',
+        'icon'  => 'assets/images/admin/plugin.png'
+    ],
+    [
+        'title' => _MI_XSITEMAP_MANAGER_XML,
+        'link'  => 'admin/xml.php',
+        'icon'  => 'assets/images/admin/xml.png'
+    ],
+    [
+        'title' => _MI_XSITEMAP_MANAGER_ABOUT,
+        'link'  => 'admin/about.php',
+        'icon'  => $pathIcon32 . '/about.png'
+    ],
+];

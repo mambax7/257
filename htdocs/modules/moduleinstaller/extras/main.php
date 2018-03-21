@@ -1,41 +1,29 @@
 <?php
-// $Id: main.php 12516 2014-04-30 14:03:37Z cesagonchu $
-//  ------------------------------------------------------------------------ //
-//                XOOPS - PHP Content Management System                      //
-//                    Copyright (c) 2000 XOOPS.org                           //
-//                       <http://xoops.org/>                             //
-//  ------------------------------------------------------------------------ //
-//  This program is free software; you can redistribute it and/or modify     //
-//  it under the terms of the GNU General Public License as published by     //
-//  the Free Software Foundation; either version 2 of the License, or        //
-//  (at your option) any later version.                                      //
-//                                                                           //
-//  You may not change or alter any portion of this comment or credits       //
-//  of supporting developers from this source code or any supporting         //
-//  source code which is considered copyrighted (c) material of the          //
-//  original comment or credit authors.                                      //
-//                                                                           //
-//  This program is distributed in the hope that it will be useful,          //
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of           //
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            //
-//  GNU General Public License for more details.                             //
-//                                                                           //
-//  You should have received a copy of the GNU General Public License        //
-//  along with this program; if not, write to the Free Software              //
-//  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
-//  ------------------------------------------------------------------------ //
-// Author: Kazumi Ono (AKA onokazu)                                          //
-// URL: http://www.myweb.ne.jp/, http://xoops.org/, http://jp.xoops.org/ //
-// Project: XOOPS Project                                                    //
-// ------------------------------------------------------------------------- //
+/*
+ * You may not change or alter any portion of this comment or credits
+ * of supporting developers from this source code or any supporting source code
+ * which is considered copyrighted (c) material of the original comment or credit authors.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ */
+
+/**
+ * @copyright    XOOPS Project https://xoops.org/
+ * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @package
+ * @since
+ * @author       XOOPS Development Team, Kazumi Ono (AKA onokazu)
+ */
 
 // Check users rights
 if (!is_object($xoopsUser) || !is_object($xoopsModule) || !$xoopsUser->isAdmin($xoopsModule->mid())) {
     exit(_NOPERM);
 }
 
-include_once XOOPS_ROOT_PATH . '/class/xoopsblock.php';
-include_once XOOPS_ROOT_PATH . '/modules/system/admin/modulesadmin/modulesadmin.php';
+require_once XOOPS_ROOT_PATH . '/class/xoopsblock.php';
+require_once XOOPS_ROOT_PATH . '/modules/system/admin/modulesadmin/modulesadmin.php';
 
 if (isset($_POST)) {
     foreach ($_POST as $k => $v) {
@@ -47,25 +35,23 @@ if (isset($_POST)) {
 $op     = system_CleanVars($_REQUEST, 'op', 'list', 'string');
 $module = system_CleanVars($_REQUEST, 'module', '', 'string');
 
-if (in_array($op, array('confirm', 'submit', 'install_ok', 'update_ok', 'uninstall_ok'))) {
+if (in_array($op, ['confirm', 'submit', 'install_ok', 'update_ok', 'uninstall_ok'])) {
     if (!$GLOBALS['xoopsSecurity']->check()) {
         $op = 'list';
     }
 }
-$myts =& MyTextsanitizer::getInstance();
+$myts = \MyTextSanitizer::getInstance();
 
 switch ($op) {
 
     case 'list':
         // Define main template
-        $xoopsOption['template_main'] = 'system_modules.html';
+        $GLOBALS['xoopsOption']['template_main'] = 'system_modules.html';
         // Call Header
         xoops_cp_header();
         // Define Stylesheet
         $xoTheme->addStylesheet(XOOPS_URL . '/modules/system/css/admin.css');
-        $xoTheme->addStylesheet(
-            XOOPS_URL . '/modules/system/css/ui/' . $GLOBALS['xoopsModuleConfig']['jquery_theme'] . '/ui.all.css'
-        );
+        $xoTheme->addStylesheet(XOOPS_URL . '/modules/system/css/ui/' . $GLOBALS['xoopsModuleConfig']['jquery_theme'] . '/ui.all.css');
         // Define scripts
         $xoTheme->addScript('browse.php?Frameworks/jquery/jquery.js');
         $xoTheme->addScript('browse.php?Frameworks/jquery/plugins/jquery.ui.js');
@@ -77,26 +63,27 @@ switch ($op) {
         $xoBreadCrumb->addTips(_AM_SYSTEM_MODULES_TIPS);
         $xoBreadCrumb->render();
         // Get Module Handler
-        $module_handler =& xoops_getHandler('module');
-        $criteria       = new CriteriaCompo();
+        /** @var XoopsModuleHandler $moduleHandler */
+        $moduleHandler = xoops_getHandler('module');
+        $criteria      = new \CriteriaCompo();
         $criteria->setSort('weight');
         $criteria->setOrder('ASC');
         // Get all installed modules
-        $installed_mods = $module_handler->getObjects($criteria);
-        $listed_mods    = array();
+        $installed_mods = $moduleHandler->getObjects($criteria);
+        $listed_mods    = [];
         $i              = 0;
-        $install_mods   = array();
+        $install_mods   = [];
         foreach ($installed_mods as $module) {
-            $listed_mods[$i]                = $module->toArray();
-            $listed_mods[$i]['image']       = $module->getInfo('image');
-            $listed_mods[$i]['adminindex']  = $module->getInfo('adminindex');
-            $listed_mods[$i]['version']     = round($module->getVar('version') / 100, 2);
+            $listed_mods[$i]                  = $module->toArray();
+            $listed_mods[$i]['image']         = $module->getInfo('image');
+            $listed_mods[$i]['adminindex']    = $module->getInfo('adminindex');
+            $listed_mods[$i]['version']       = round($module->getVar('version') / 100, 2);
             $listed_mods[$i]['module_status'] = $module->getInfo('module_status');
-            $listed_mods[$i]['last_update'] = formatTimestamp($module->getVar('last_update'), 'm');
-            $listed_mods[$i]['author']      = $module->getInfo('author');
-            $listed_mods[$i]['credits']     = $module->getInfo('credits');
-            $listed_mods[$i]['license']     = $module->getInfo('license');
-            $listed_mods[$i]['description'] = $module->getInfo('description');
+            $listed_mods[$i]['last_update']   = formatTimestamp($module->getVar('last_update'), 'm');
+            $listed_mods[$i]['author']        = $module->getInfo('author');
+            $listed_mods[$i]['credits']       = $module->getInfo('credits');
+            $listed_mods[$i]['license']       = $module->getInfo('license');
+            $listed_mods[$i]['description']   = $module->getInfo('description');
             if (round($module->getInfo('version'), 2) != $listed_mods[$i]['version']) {
                 $listed_mods[$i]['warning_update'] = true;
             } else {
@@ -108,7 +95,7 @@ switch ($op) {
         }
         // Get module to install
         $dirlist        = XoopsLists::getModulesList();
-        $toinstall_mods = array();
+        $toinstall_mods = [];
         $i              = 0;
         foreach ($dirlist as $file) {
             if (file_exists(XOOPS_ROOT_PATH . '/modules/' . $file . '/xoops_version.php')) {
@@ -130,14 +117,12 @@ switch ($op) {
 
     case 'installlist':
         // Define main template
-        $xoopsOption['template_main'] = 'system_modules.html';
+        $GLOBALS['xoopsOption']['template_main'] = 'system_modules.html';
         // Call Header
         xoops_cp_header();
         // Define Stylesheet
         $xoTheme->addStylesheet(XOOPS_URL . '/modules/system/css/admin.css');
-        $xoTheme->addStylesheet(
-            XOOPS_URL . '/modules/system/css/ui/' . $GLOBALS['xoopsModuleConfig']['jquery_theme'] . '/ui.all.css'
-        );
+        $xoTheme->addStylesheet(XOOPS_URL . '/modules/system/css/ui/' . $GLOBALS['xoopsModuleConfig']['jquery_theme'] . '/ui.all.css');
         // Define scripts
         $xoTheme->addScript('browse.php?Frameworks/jquery/jquery.js');
         $xoTheme->addScript('browse.php?Frameworks/jquery/plugins/jquery.ui.js');
@@ -149,33 +134,34 @@ switch ($op) {
         $xoBreadCrumb->addTips(_AM_SYSTEM_MODULES_TIPS);
         $xoBreadCrumb->render();
         // Get Module Handler
-        $module_handler =& xoops_getHandler('module');
+        /** @var XoopsModuleHandler $moduleHandler */
+        $moduleHandler = xoops_getHandler('module');
         // Get all installed modules
-        $installed_mods = $module_handler->getObjects();
+        $installed_mods = $moduleHandler->getObjects();
         foreach ($installed_mods as $module) {
             $install_mods[] = $module->getInfo('dirname');
         }
         // Get module to install
         $dirlist        = XoopsLists::getModulesList();
-        $toinstall_mods = array();
+        $toinstall_mods = [];
         $i              = 0;
         foreach ($dirlist as $file) {
             if (file_exists(XOOPS_ROOT_PATH . '/modules/' . $file . '/xoops_version.php')) {
                 clearstatcache();
                 $file = trim($file);
                 if (!in_array($file, $install_mods)) {
-                    $module =& $module_handler->create();
+                    $module = $moduleHandler->create();
                     $module->loadInfo($file);
-                    $toinstall_mods[$i]['name']        = $module->getInfo('name');
-                    $toinstall_mods[$i]['dirname']     = $module->getInfo('dirname');
-                    $toinstall_mods[$i]['image']       = $module->getInfo('image');
-                    $toinstall_mods[$i]['version']     = round($module->getInfo('version'), 2);
+                    $toinstall_mods[$i]['name']          = $module->getInfo('name');
+                    $toinstall_mods[$i]['dirname']       = $module->getInfo('dirname');
+                    $toinstall_mods[$i]['image']         = $module->getInfo('image');
+                    $toinstall_mods[$i]['version']       = round($module->getInfo('version'), 2);
                     $toinstall_mods[$i]['module_status'] = $module->getInfo('module_status');
-                    $toinstall_mods[$i]['author']      = $module->getInfo('author');
-                    $toinstall_mods[$i]['credits']     = $module->getInfo('credits');
-                    $toinstall_mods[$i]['license']     = $module->getInfo('license');
-                    $toinstall_mods[$i]['description'] = $module->getInfo('description');
-                    $toinstall_mods[$i]['mid']         = $i; // Use only for display popup
+                    $toinstall_mods[$i]['author']        = $module->getInfo('author');
+                    $toinstall_mods[$i]['credits']       = $module->getInfo('credits');
+                    $toinstall_mods[$i]['license']       = $module->getInfo('license');
+                    $toinstall_mods[$i]['description']   = $module->getInfo('description');
+                    $toinstall_mods[$i]['mid']           = $i; // Use only for display popup
                     unset($module);
                     ++$i;
                 }
@@ -190,16 +176,17 @@ switch ($op) {
 
     case 'order':
         // Get Module Handler
-        $module_handler =& xoops_getHandler('module');
+        /** @var XoopsModuleHandler $moduleHandler */
+        $moduleHandler = xoops_getHandler('module');
         if (isset($_POST['mod'])) {
             $i = 1;
             foreach ($_POST['mod'] as $order) {
                 if ($order > 0) {
-                    $module = $module_handler->get($order);
+                    $module = $moduleHandler->get($order);
                     //Change order only for visible modules
-                    if ($module->getVar('weight') != 0) {
+                    if (0 != $module->getVar('weight')) {
                         $module->setVar('weight', $i);
-                        if (!$module_handler->insert($module)) {
+                        if (!$moduleHandler->insert($module)) {
                             $error = true;
                         }
                         ++$i;
@@ -212,7 +199,7 @@ switch ($op) {
 
     case 'confirm':
         // Define main template
-        $xoopsOption['template_main'] = 'system_modules_confirm.html';
+        $GLOBALS['xoopsOption']['template_main'] = 'system_modules_confirm.html';
         // Call Header
         xoops_cp_header();
         // Define Stylesheet
@@ -223,11 +210,11 @@ switch ($op) {
         $xoBreadCrumb->addHelp(system_adminVersion('modulesadmin', 'help') . '#confirm');
         $xoBreadCrumb->addTips(_AM_SYSTEM_MODULES_CONFIRM_TIPS);
         $xoBreadCrumb->render();
-        $error = array();
+        $error = [];
         if (!is_writable(XOOPS_CACHE_PATH . '/')) {
             // attempt to chmod 666
             if (!chmod(XOOPS_CACHE_PATH . '/', 0777)) {
-                $error[] = sprintf(_MUSTWABLE, "<strong>" . XOOPS_CACHE_PATH . '/</strong>');
+                $error[] = sprintf(_MUSTWABLE, '<strong>' . XOOPS_CACHE_PATH . '/</strong>');
             }
         }
         if (count($error) > 0) {
@@ -238,14 +225,14 @@ switch ($op) {
             exit();
         }
         $i           = 0;
-        $modifs_mods = array();
-        $module      = empty($_POST['module']) ? array() : $_POST['module'];
+        $modifs_mods = [];
+        $module      = empty($_POST['module']) ? [] : $_POST['module'];
         foreach ($module as $mid) {
-            $mid                          = (int) $mid;
+            $mid                          = (int)$mid;
             $modifs_mods[$i]['mid']       = $mid;
             $modifs_mods[$i]['oldname']   = $myts->htmlspecialchars($myts->stripSlashesGPC($oldname[$mid]));
             $modifs_mods[$i]['newname']   = $myts->htmlspecialchars(trim($myts->stripslashesGPC($newname[$mid])));
-            $modifs_mods[$i]['newstatus'] = (isset($newstatus[$mid])) ? $myts->htmlspecialchars($newstatus[$mid]) : 0;
+            $modifs_mods[$i]['newstatus'] = isset($newstatus[$mid]) ? $myts->htmlspecialchars($newstatus[$mid]) : 0;
             ++$i;
         }
         $xoopsTpl->assign('modifs_mods', $modifs_mods);
@@ -256,14 +243,15 @@ switch ($op) {
 
     case 'display':
         // Get module handler
-        $module_handler =& xoops_getHandler('module');
-        $module_id      = system_CleanVars($_POST, 'mid', 0, 'int');
+        /** @var XoopsModuleHandler $moduleHandler */
+        $moduleHandler = xoops_getHandler('module');
+        $module_id     = system_CleanVars($_POST, 'mid', 0, 'int');
         if ($module_id > 0) {
-            $module =& $module_handler->get($module_id);
+            $module = $moduleHandler->get($module_id);
             $old    = $module->getVar('isactive');
             // Set value
             $module->setVar('isactive', !$old);
-            if (!$module_handler->insert($module)) {
+            if (!$moduleHandler->insert($module)) {
                 $error = true;
             }
             $blocks = XoopsBlock::getByModule($module_id);
@@ -279,30 +267,31 @@ switch ($op) {
 
     case 'display_in_menu':
         // Get module handler
-        $module_handler =& xoops_getHandler('module');
-        $module_id      = system_CleanVars($_POST, 'mid', 0, 'int');
+        /** @var XoopsModuleHandler $moduleHandler */
+        $moduleHandler = xoops_getHandler('module');
+        $module_id     = system_CleanVars($_POST, 'mid', 0, 'int');
         if ($module_id > 0) {
-            $module =& $module_handler->get($module_id);
+            $module = $moduleHandler->get($module_id);
             $old    = $module->getVar('weight');
             // Set value
             $module->setVar('weight', !$old);
-            if (!$module_handler->insert($module)) {
+            if (!$moduleHandler->insert($module)) {
                 $error = true;
             }
         }
         break;
 
     case 'submit':
-        $ret    = array();
+        $ret    = [];
         $write  = false;
-        $module = empty($_POST['module']) ? array() : $_POST['module'];
+        $module = empty($_POST['module']) ? [] : $_POST['module'];
         foreach ($module as $mid) {
-            if (isset($newstatus[$mid]) && $newstatus[$mid] == 1) {
-                if ($oldstatus[$mid] == 0) {
+            if (isset($newstatus[$mid]) && 1 == $newstatus[$mid]) {
+                if (0 == $oldstatus[$mid]) {
                     $ret[] = xoops_module_activate($mid);
                 }
             } else {
-                if ($oldstatus[$mid] == 1) {
+                if (1 == $oldstatus[$mid]) {
                     $ret[] = xoops_module_deactivate($mid);
                 }
             }
@@ -321,7 +310,7 @@ switch ($op) {
         //Set active modules in cache folder
         xoops_setActiveModules();
         // Define main template
-        $xoopsOption['template_main'] = 'system_modules_confirm.html';
+        $GLOBALS['xoopsOption']['template_main'] = 'system_modules_confirm.html';
         // Call Header
         xoops_cp_header();
         // Define Stylesheet
@@ -341,17 +330,15 @@ switch ($op) {
     case 'install':
         $module = $myts->htmlspecialchars($module);
         // Get module handler
-        $module_handler =& xoops_getHandler('module');
-        $mod            =& $module_handler->create();
+        /** @var XoopsModuleHandler $moduleHandler */
+        $moduleHandler = xoops_getHandler('module');
+        $mod           = $moduleHandler->create();
         $mod->loadInfoAsVar($module);
         // Construct message
-        if ($mod->getInfo('image') != false && trim($mod->getInfo('image')) != '') {
-            $msgs = '<img src="' . XOOPS_URL . '/modules/' . $mod->getVar('dirname', 'n') . '/' . trim(
-                    $mod->getInfo('image')
-                ) . '" alt="" />';
+        if (false !== $mod->getInfo('image') && '' != trim($mod->getInfo('image'))) {
+            $msgs = '<img src="' . XOOPS_URL . '/modules/' . $mod->getVar('dirname', 'n') . '/' . trim($mod->getInfo('image')) . '" alt="">';
         }
-        $msgs .= '<br /><span style="font-size:smaller;">' . $mod->getVar('name', 's')
-            . '</span><br /><br />' . _AM_SYSTEM_MODULES_RUSUREINS;
+        $msgs .= '<br><span style="font-size:smaller;">' . $mod->getVar('name', 's') . '</span><br><br>' . _AM_SYSTEM_MODULES_RUSUREINS;
         // Call Header
         xoops_cp_header();
         // Define Stylesheet
@@ -362,18 +349,13 @@ switch ($op) {
         $xoBreadCrumb->addHelp(system_adminVersion('modulesadmin', 'help') . '#install');
         $xoBreadCrumb->render();
         // Display question message
-        xoops_confirm(
-            array('module' => $module, 'op' => 'install_ok', 'fct' => 'modulesadmin'),
-            'admin.php',
-            $msgs,
-            _AM_SYSTEM_MODULES_INSTALL
-        );
+        xoops_confirm(['module' => $module, 'op' => 'install_ok', 'fct' => 'modulesadmin'], 'admin.php', $msgs, _AM_SYSTEM_MODULES_INSTALL);
         // Call Footer
         xoops_cp_footer();
         break;
 
     case 'install_ok':
-        $ret   = array();
+        $ret   = [];
         $ret[] = xoops_module_install($module);
         // Flush cache files for cpanel GUIs
         xoops_load('cpanel', 'system');
@@ -381,7 +363,7 @@ switch ($op) {
         //Set active modules in cache folder
         xoops_setActiveModules();
         // Define main template
-        $xoopsOption['template_main'] = 'system_header.html';
+        $GLOBALS['xoopsOption']['template_main'] = 'system_header.html';
         // Call Header
         xoops_cp_header();
         // Define Stylesheet
@@ -393,7 +375,7 @@ switch ($op) {
         $xoBreadCrumb->render();
         if (count($ret) > 0) {
             foreach ($ret as $msg) {
-                if ($msg != '') {
+                if ('' != $msg) {
                     echo $msg;
                 }
             }
@@ -405,16 +387,14 @@ switch ($op) {
     case 'uninstall':
         $module = $myts->htmlspecialchars($module);
         // Get module handler
-        $module_handler =& xoops_getHandler('module');
-        $mod            =& $module_handler->getByDirname($module);
+        /** @var XoopsModuleHandler $moduleHandler */
+        $moduleHandler = xoops_getHandler('module');
+        $mod           = $moduleHandler->getByDirname($module);
         // Construct message
-        if ($mod->getInfo('image') != false && trim($mod->getInfo('image')) != '') {
-            $msgs = '<img src="' . XOOPS_URL . '/modules/' . $mod->getVar('dirname', 'n') . '/' . trim(
-                    $mod->getInfo('image')
-                ) . '" alt="" />';
+        if (false !== $mod->getInfo('image') && '' != trim($mod->getInfo('image'))) {
+            $msgs = '<img src="' . XOOPS_URL . '/modules/' . $mod->getVar('dirname', 'n') . '/' . trim($mod->getInfo('image')) . '" alt="">';
         }
-        $msgs .= '<br /><span style="font-size:smaller;">' . $mod->getVar('name')
-            . '</span><br /><br />' . _AM_SYSTEM_MODULES_RUSUREUNINS;
+        $msgs .= '<br><span style="font-size:smaller;">' . $mod->getVar('name') . '</span><br><br>' . _AM_SYSTEM_MODULES_RUSUREUNINS;
         // Call Header
         xoops_cp_header();
         // Define Stylesheet
@@ -425,26 +405,21 @@ switch ($op) {
         $xoBreadCrumb->addHelp(system_adminVersion('modulesadmin', 'help') . '#delete');
         $xoBreadCrumb->render();
         // Display Question
-        xoops_confirm(
-            array('module' => $module, 'op' => 'uninstall_ok', 'fct' => 'modulesadmin'),
-            'admin.php',
-            $msgs,
-            _AM_SYSTEM_MODULES_UNINSTALL
-        );
+        xoops_confirm(['module' => $module, 'op' => 'uninstall_ok', 'fct' => 'modulesadmin'], 'admin.php', $msgs, _AM_SYSTEM_MODULES_UNINSTALL);
         // Call Footer
         xoops_cp_footer();
         break;
 
     case 'uninstall_ok':
-        $ret   = array();
+        $ret   = [];
         $ret[] = xoops_module_uninstall($module);
         // Flush cache files for cpanel GUIs
-        xoops_load("cpanel", "system");
+        xoops_load('cpanel', 'system');
         XoopsSystemCpanel::flush();
         //Set active modules in cache folder
         xoops_setActiveModules();
         // Define main template
-        $xoopsOption['template_main'] = 'system_header.html';
+        $GLOBALS['xoopsOption']['template_main'] = 'system_header.html';
         // Call Header
         xoops_cp_header();
         // Define Stylesheet
@@ -456,7 +431,7 @@ switch ($op) {
         $xoBreadCrumb->render();
         if (count($ret) > 0) {
             foreach ($ret as $msg) {
-                if ($msg != '') {
+                if ('' != $msg) {
                     echo $msg;
                 }
             }
@@ -468,16 +443,14 @@ switch ($op) {
     case 'update':
         $module = $myts->htmlspecialchars($module);
         // Get module handler
-        $module_handler =& xoops_getHandler('module');
-        $mod            =& $module_handler->getByDirname($module);
+        /** @var XoopsModuleHandler $moduleHandler */
+        $moduleHandler = xoops_getHandler('module');
+        $mod           = $moduleHandler->getByDirname($module);
         // Construct message
-        if ($mod->getInfo('image') != false && trim($mod->getInfo('image')) != '') {
-            $msgs = '<img src="' . XOOPS_URL . '/modules/' . $mod->getVar('dirname', 'n') . '/' . trim(
-                    $mod->getInfo('image')
-                ) . '" alt="" />';
+        if (false !== $mod->getInfo('image') && '' != trim($mod->getInfo('image'))) {
+            $msgs = '<img src="' . XOOPS_URL . '/modules/' . $mod->getVar('dirname', 'n') . '/' . trim($mod->getInfo('image')) . '" alt="">';
         }
-        $msgs .= '<br /><span style="font-size:smaller;">' . $mod->getVar('name', 's')
-            . '</span><br /><br />' . _AM_SYSTEM_MODULES_RUSUREUPD;
+        $msgs .= '<br><span style="font-size:smaller;">' . $mod->getVar('name', 's') . '</span><br><br>' . _AM_SYSTEM_MODULES_RUSUREUPD;
         // Call Header
         xoops_cp_header();
         // Define Stylesheet
@@ -488,29 +461,24 @@ switch ($op) {
         $xoBreadCrumb->addHelp(system_adminVersion('modulesadmin', 'help') . '#update');
         $xoBreadCrumb->render();
         // Display message
-        xoops_confirm(
-            array('module' => $module, 'op' => 'update_ok', 'fct' => 'modulesadmin'),
-            'admin.php',
-            $msgs,
-            _AM_SYSTEM_MODULES_UPDATE
-        );
+        xoops_confirm(['module' => $module, 'op' => 'update_ok', 'fct' => 'modulesadmin'], 'admin.php', $msgs, _AM_SYSTEM_MODULES_UPDATE);
         // Call Footer
         xoops_cp_footer();
         break;
 
     case 'update_ok':
 
-//--------------------------
+        //--------------------------
 
-        $ret   = array();
+        $ret   = [];
         $ret[] = xoops_module_update($module);
         // Flush cache files for cpanel GUIs
-        xoops_load("cpanel", "system");
+        xoops_load('cpanel', 'system');
         XoopsSystemCpanel::flush();
         //Set active modules in cache folder
         xoops_setActiveModules();
         // Define main template
-        $xoopsOption['template_main'] = 'system_header.html';
+        $GLOBALS['xoopsOption']['template_main'] = 'system_header.html';
         // Call Header
         xoops_cp_header();
         // Define Stylesheet
@@ -522,7 +490,7 @@ switch ($op) {
         $xoBreadCrumb->render();
         if (count($ret) > 0) {
             foreach ($ret as $msg) {
-                if ($msg != '') {
+                if ('' != $msg) {
                     echo $msg;
                 }
             }
@@ -531,7 +499,6 @@ switch ($op) {
         xoops_cp_footer();
         break;
 
-//---------------------------------------
-
+    //---------------------------------------
 
 }

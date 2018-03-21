@@ -10,17 +10,16 @@
  */
 
 /**
- * @copyright       The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright       XOOPS Project (https://xoops.org)
  * @license         http://www.gnu.org/licenses/gpl-2.0.html GNU Public License
  * @package         Mymenus
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
- * @version         $Id: functions.php 0 2010-07-21 18:47:04Z trabis $
  */
 
-defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
-include_once __DIR__ . '/common.php';
+require_once __DIR__ . '/common.php';
 
 /**
  * Checks if a user is admin of Mymenus
@@ -50,13 +49,13 @@ function mymenusUserIsAdmin()
  */
 function mymenusGetSkinInfo($moduleSkin = 'default', $useThemeSkin = false, $themeSkin = '')
 {
-    include_once __DIR__ . '/common.php';
+    require_once __DIR__ . '/common.php';
     $mymenus = MymenusMymenus::getInstance();
     $error   = false;
     if ($useThemeSkin) {
-        $path = "themes/" . $GLOBALS['xoopsConfig']['theme_set'] . "/menu";
+        $path = 'themes/' . $GLOBALS['xoopsConfig']['theme_set'] . '/menu';
         if (!file_exists($GLOBALS['xoops']->path("{$path}/skin_version.php"))) {
-            $path = "themes/" . $GLOBALS['xoopsConfig']['theme_set'] . "/modules/{$mymenus->dirname}/skins/{$themeSkin}";
+            $path = 'themes/' . $GLOBALS['xoopsConfig']['theme_set'] . "/modules/{$mymenus->dirname}/skins/{$themeSkin}";
             if (!file_exists($GLOBALS['xoops']->path("{$path}/skin_version.php"))) {
                 $error = true;
             }
@@ -68,11 +67,11 @@ function mymenusGetSkinInfo($moduleSkin = 'default', $useThemeSkin = false, $the
     }
 
     $file = $GLOBALS['xoops']->path("{$path}/skin_version.php");
-    $info = array();
+    $info = [];
 
     if (file_exists($file)) {
         include $file;
-        $info =& $skinVersion;
+        $info = $skinVersion;
     }
 
     $info['path'] = $GLOBALS['xoops']->path($path);
@@ -103,7 +102,7 @@ function mymenusGetSkinInfo($moduleSkin = 'default', $useThemeSkin = false, $the
     }
 
     if (!isset($info['config'])) {
-        $info['config'] = array();
+        $info['config'] = [];
     }
 
     return $info;

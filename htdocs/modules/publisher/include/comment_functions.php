@@ -16,7 +16,6 @@
  * @subpackage      Include
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
- * @version         $Id: comment_functions.php 10374 2012-12-12 23:39:48Z trabis $
  *
  * @param $itemId
  * @param $totalNum
@@ -24,8 +23,9 @@
 
 function publisher_com_update($itemId, $totalNum)
 {
-    $db  =& XoopsDatabaseFactory::getDatabaseConnection();
-    $sql = 'UPDATE ' . $db->prefix('publisher_items') . ' SET comments = ' . $totalNum . ' WHERE itemid = ' . $itemId;
+    global $module;
+    $db  = \XoopsDatabaseFactory::getDatabaseConnection();
+    $sql = 'UPDATE ' . $db->prefix($module->getVar('dirname', 'n') . '_items') . ' SET comments = ' . $totalNum . ' WHERE itemid = ' . $itemId;
     $db->query($sql);
 }
 

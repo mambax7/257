@@ -1,7 +1,5 @@
 <?php
-/**
- * ****************************************************************************
- * Module généré par TDMCreate de la TDM "http://www.tdmxoops.net"
+/*
  * ****************************************************************************
  * xsitemap - MODULE FOR XOOPS CMS
  * Copyright (c) Urbanspaceman (http://www.takeaweb.it)
@@ -12,72 +10,74 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
- * @copyright       Urbanspaceman (http://www.takeaweb.it)
- * @license         GPL
- * @package         xsitemap
- * @author          Urbanspaceman (http://www.takeaweb.it)
- *
- * Version : 1.00:
  * ****************************************************************************
  */
-include '../../../include/cp_header.php';
-include_once("./admin_header.php");
-//$moduleInfo =& $module_handler->get( $xoopsModule->getVar("mid") );
+/**
+ * Module: xsitemap
+ *
+ * @package    module\Xsitemap\admin
+ * @author     XOOPS Module Development Team
+ * @author     Urbanspaceman (http://www.takeaweb.it)
+ * @copyright  Urbanspaceman (http://www.takeaweb.it)
+ * @copyright  XOOPS Project (https://xoops.org)
+ * @license    http://www.fsf.org/copyleft/gpl.html GNU public license
+ * @link       https://xoops.org XOOPS
+ * @since      1.00
+ *
+ * @uses       Xmf\Module\Admin
+ */
+
+use XoopsModules\Xsitemap;
+
+require_once __DIR__ . '/admin_header.php';
+// Display Admin header
 xoops_cp_header();
+$adminObject = \Xmf\Module\Admin::getInstance();
 
-$index_admin = new ModuleAdmin();
 
-global $xoopsModule;
+// Get online plugin info
+//$countPlugins       = $pluginHandler->getCount();
+$criteria           = new \Criteria('plugin_online', 1);
 
-//Apelle du menu admin
-// if ( !is_readable(XOOPS_ROOT_PATH."/Frameworks/art/functions.admin.php"))    {
-// xsitemap_adminmenu(0, _AM_XSITEMAP_MANAGER_INDEX);
-// } else {
-// include_once XOOPS_ROOT_PATH."/Frameworks/art/functions.admin.php";
-// loadModuleAdminMenu (0, _AM_XSITEMAP_MANAGER_INDEX);
-// }
+/** @var Xsitemap\PluginHandler $pluginHandler */
+$pluginHandler = Xsitemap\Helper::getInstance()->getHandler('Plugin');
+$onlinePluginObjs = [];
+$onlinePluginObjs   = $pluginHandler->getAll($criteria);
+$countPluginsOnline = !empty($onlinePluginObjs) ? count($onlinePluginObjs) : 0;
+$onlinePluginArray  = [];
+/** @var \XoopsObject $onlineObj */
+foreach ($onlinePluginObjs as $onlineObj) {
+    $onlinePluginArray[] = $onlineObj->getVar('plugin_name');
+}
+natsort($onlinePluginArray);
+$onlinePluginNames = implode(', ', $onlinePluginArray);
 
-    //compte "total"
-    $count_plugin = $pluginHandler->getCount();
-    //compte "attente"
-    $criteria = new CriteriaCompo();
-    $criteria->add(new Criteria("plugin_online", 1));
-    $plugin_online = $pluginHandler->getCount($criteria);
+// get offline plugin info
+$criteria            = new \Criteria('plugin_online', 0);
+$offlinePluginObjs   = $pluginHandler->getAll($criteria);
+$countPluginsOffline = !empty($offlinePluginObjs) ? count($offlinePluginObjs) : 0;
+$offlinePluginArray  = [];
+/** @var Xsitemap\Plugin $offlineObj */
+foreach ($offlinePluginObjs as $offlineObj) {
+    $offlinePluginArray[] = $offlineObj->getVar('plugin_name');
+}
+natsort($offlinePluginArray);
+$offlinePluginNames = implode(', ', $offlinePluginArray);
 
-    echo $index_admin->addNavigation('index.php');
-    echo $index_admin->renderIndex();
+$adminObject->addInfoBox(_AM_XSITEMAP_MANAGER_INDEX);
+// display number of plugins online
+$adminObject->addInfoBoxLine(sprintf(_AM_XSITEMAP_THEREARE_PLUGIN_ONLINE, $countPluginsOnline), '', 'green');
+// display number of plugins offline
+$adminObject->addInfoBoxLine(sprintf(_AM_XSITEMAP_THEREARE_PLUGIN_OFFLINE, $countPluginsOffline), '', 'green');
+// display total number of plugins
+$adminObject->addInfoBoxLine(sprintf(_AM_XSITEMAP_THEREARE_PLUGIN, $countPluginsOnline + $countPluginsOffline), '', 'green');
 
-// include_once XOOPS_ROOT_PATH."/modules/xsitemap/class/menu.php";
+$adminObject->addConfigBoxLine(sprintf(_AM_XSITEMAP_PLUGIN_ONLINE_NAMES, $onlinePluginNames), 'information');
+$adminObject->addConfigBoxLine(sprintf(_AM_XSITEMAP_PLUGIN_OFFLINE_NAMES, $offlinePluginNames), 'information');
 
-    // $menu = new xsitemapMenu();
-    // $menu->addItem("plugin", "plugin.php", "../images/deco/contact.png", _AM_XSITEMAP_MANAGER_PLUGIN);
-    // $menu->addItem("xml", "xml.php", "../images/deco/xml.png",  _AM_XSITEMAP_XML);
-    // $menu->addItem("about", "about.php", "../images/deco/about.png", _AM_XSITEMAP_MANAGER_ABOUT);
-    // $menu->addItem("preference", "../../system/admin.php?fct=preferences&amp;op=showmod&amp;mod=".$xoopsModule->getVar("mid").
-                                                // "&amp;&confcat_id=1", "../images/deco/pref.png", _AM_XSITEMAP_MANAGER_PREFERENCES);
-    // $menu->addItem("update", "../../system/admin.php?fct=modulesadmin&op=update&module=xsitemap", "../images/deco/update.png",  _AM_XSITEMAP_MANAGER_UPDATE);
+$adminObject->displayNavigation(basename(__FILE__));
+$adminObject->displayIndex();
 
-//  echo $menu->getCSS();
+echo $utility::getServerStats();
 
-// echo "<div class=\"CPbigTitle\" style=\"background-image: url(../images/deco/index.png); background-repeat: no-repeat; background-position: left; padding-left: 50px;\"><strong>"._AM_XSITEMAP_MANAGER_INDEX."</strong></div><br />
-        // <table width=\"100%\" border=\"0\" cellspacing=\"10\" cellpadding=\"4\">
-            // <tr>
-                // <td valign=\"top\">".$menu->render()."</td>
-                // <td valign=\"top\" width=\"60%\">";
-
-                    // echo "<fieldset>
-                        // <legend class=\"CPmediumTitle\">"._AM_XSITEMAP_MANAGER_PLUGIN."</legend>
-                        // <br />";
-                        // printf(_AM_XSITEMAP_THEREARE_PLUGIN, $count_plugin);
-                        // echo "<br /><br />";
-                        // printf(_AM_XSITEMAP_THEREARE_PLUGIN_ONLINE, $plugin_online);
-                        // echo "<br />
-                    // </fieldset><br /><br />";
-
-                // echo "</td>
-            // </tr>
-        // </table>
-// <br /><br />
-// <div align=\"center\">"._AM_XSITEMAP_ABOUT_BY."</div>";
-include 'admin_footer.php';
+require_once __DIR__ . '/admin_footer.php';

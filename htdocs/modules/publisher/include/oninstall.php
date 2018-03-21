@@ -10,67 +10,95 @@
  */
 
 /**
- * @copyright       The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright       XOOPS Project (https://xoops.org)
  * @license         http://www.fsf.org/copyleft/gpl.html GNU public license
  * @author          luciorota <lucio.rota@gmail.com>
- * @version         $Id: oninstall.php 11345 2013-04-03 22:35:51Z luciorota $
- *
- * @param $xoopsModule
- *
- * @return bool
  */
 
+use XoopsModules\Publisher;
+use XoopsModules\Publisher\Common;
+
 /**
- * @param  XoopsModule $xoopsModule
+ * @param  \XoopsModule $module
  * @return bool
  */
-function xoops_module_pre_install_publisher(XoopsModule $xoopsModule)
+function xoops_module_pre_install_publisher(\XoopsModule $module)
 {
-    // NOP
-    return true;
+    include __DIR__ . '/../preloads/autoloader.php';
+    /** @var Publisher\Utility $utility */
+    $utility      = new Publisher\Utility();
+
+    //check for minimum XOOPS version
+    $xoopsSuccess = $utility::checkVerXoops($module);
+    
+    // check for minimum PHP version
+    $phpSuccess   = $utility::checkVerPhp($module);
+
+    if (false !== $xoopsSuccess && false !==  $phpSuccess) {
+        $moduleTables =& $module->getInfo('tables');
+        foreach ($moduleTables as $table) {
+            $GLOBALS['xoopsDB']->queryF('DROP TABLE IF EXISTS ' . $GLOBALS['xoopsDB']->prefix($table) . ';');
+        }
+    }
+    return $xoopsSuccess && $phpSuccess;
 }
 
 /**
- * @param $xoopsModule
+ * @param \XoopsModule $module
  *
  * @return bool|string
  */
-function xoops_module_install_publisher(XoopsModule $xoopsModule)
+function xoops_module_install_publisher(\XoopsModule $module)
 {
-    include_once dirname(dirname(dirname(__DIR__))) . '/mainfile.php';
+    include __DIR__ . '/../preloads/autoloader.php';
 
-    xoops_loadLanguage('admin', $xoopsModule->getVar('dirname'));
-    xoops_loadLanguage('modinfo', $xoopsModule->getVar('dirname'));
+    $moduleDirName = basename(dirname(__DIR__));
 
-    $moduleDirName =  $xoopsModule->getVar('dirname');
-    include_once $GLOBALS['xoops']->path('modules/'.$moduleDirName.'/include/config.php');
+    
+    /** @var Publisher\Helper $helper */
+    /** @var Publisher\Utility $utility */
+    /** @var Common\Configurator $configurator */
+    $helper       = Publisher\Helper::getInstance();
+    $utility      = new Publisher\Utility();
+    $configurator = new Common\Configurator();
 
-    foreach (array_keys($uploadFolders) as $i) {
-        PublisherUtilities::createFolder($uploadFolders[$i]);
+    // Load language files
+    $helper->loadLanguage('admin');
+    $helper->loadLanguage('modinfo');
+
+
+    //  ---  CREATE FOLDERS ---------------
+    if (count($configurator->uploadFolders) > 0) {
+        //    foreach (array_keys($GLOBALS['uploadFolders']) as $i) {
+        foreach (array_keys($configurator->uploadFolders) as $i) {
+            $utility::createFolder($configurator->uploadFolders[$i]);
+        }
     }
 
-    $file = PUBLISHER_ROOT_PATH . '/assets/images/blank.png';
-    foreach (array_keys($copyFiles) as $i) {
-        $dest   = $copyFiles[$i] . '/blank.png';
-        PublisherUtilities::copyFile($file, $dest);
+    //  ---  COPY blank.png FILES ---------------
+    if (count($configurator->copyBlankFiles) > 0) {
+        $file = __DIR__ . '/../assets/images/blank.png';
+        foreach (array_keys($configurator->copyBlankFiles) as $i) {
+            $dest = $configurator->copyBlankFiles[$i] . '/blank.png';
+            $utility::copyFile($file, $dest);
+        }
     }
+
+
+    //  ---  COPY test folder files ---------------
+    if (count($configurator->copyTestFolders) > 0) {
+        //        $file = __DIR__ . '/../testdata/images/';
+        foreach (array_keys($configurator->copyTestFolders) as $i) {
+            $src  = $configurator->copyTestFolders[$i][0];
+            $dest = $configurator->copyTestFolders[$i][1];
+            $utility::xcopy($src, $dest);
+        }
+    }
+
+
+    //delete .html entries from the tpl table
+    $sql = 'DELETE FROM ' . $GLOBALS['xoopsDB']->prefix('tplfile') . " WHERE `tpl_module` = '" . $module->getVar('dirname', 'n') . "' AND `tpl_file` LIKE '%.html%'";
+    $GLOBALS['xoopsDB']->queryF($sql);
 
     return true;
-
-    /*
-        include_once $GLOBALS['xoops']->path('modules/' . $xoopsModule->getVar('dirname') . '/include/functions.php');
-
-        $ret = true;
-        $msg = '';
-        // Create content directory
-        $dir = $GLOBALS['xoops']->path('uploads/' . $xoopsModule->getVar('dirname') . '/content');
-        if (!publisherMkdir($dir)) {
-            $msg .= sprintf(_AM_PUBLISHER_DIRNOTCREATED, $dir);
-        }
-        if (empty($msg)) {
-            return $ret;
-        } else {
-            return $msg;
-        }
-    */
 }

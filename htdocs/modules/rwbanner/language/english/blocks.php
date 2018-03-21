@@ -34,7 +34,7 @@ define('_MB_RWBANNER_OPTION1', 'Show category:');
 define('_MB_RWBANNER_OPTION2', 'Total Banners:');
 define('_MB_RWBANNER_OPTION3', 'Total Columns:');
 define('_MB_RWBANNER_OPTION4', 'Resize banners?');
-define('_MB_RWBANNER_OPTION4_DESC', 'If you select \"Yes\" all the images shown in the block will have the size of the selected category. Choose NO to show the image in its original size.');
+define('_MB_RWBANNER_OPTION4_DESC', 'If you select \'Yes\' all the images shown in the block will have the size of the selected category. Choose \'No\' to show the image in its original size.');
 define('_MB_RWBANNER_OPTION5', 'Show the window once each X reloads:');
 define('_MB_RWBANNER_OPTION6', 'Window Background:');
 define('_MB_RWBANNER_OPTION7', 'Color of the window border:');
@@ -42,7 +42,7 @@ define('_MB_RWBANNER_OPTION8', 'Space between banners(cell spacing):');
 define('_MB_RWBANNER_OPTION9', 'Show automatic closing warning?');
 define('_MB_RWBANNER_OPTION10', 'Alternative text for the block (If you don\'t want to show any text leave this field blank):');
 define('_MB_RWBANNER_OPTION11', 'This field accepts [bbcodes] and HTML content.');
-define('_MB_RWBANNER_OPTION12', 'Select the blocks to be shown: ');
+//define('_MB_RWBANNER_OPTION12', 'Select the blocks to be shown: ');
 define('_MB_RWBANNER_OPTION13', 'Refresh time of the banners (in milliseconds): ');
 define('_MB_RWBANNER_OPTION14', 'Exhibition time in the window (in seconds):');
 define('_MB_RWBANNER_OPTION15', 'Loading...');
@@ -61,8 +61,8 @@ define('_MB_RWBANNER_OPTION20', 'Top margin (in pixels):');
 define('_MB_RWBANNER_OPTION21', 'Background color:');
 
 define('_MB_RWBANNER_TEXT1', 'This add will close automatically in a few seconds!');
-define('_MB_RWBANNER_TEXT2', 'Yes');
-define('_MB_RWBANNER_TEXT3', 'No');
+//define('_MB_RWBANNER_TEXT1', 'Yes');
+//define('_MB_RWBANNER_TEXT3', 'No');
 define('_MB_RWBANNER_TEXT4', '[CLOSE]');
 //blocks/estatisticas.php
 define('_MB_RWBANNER_CODBANNER', 'ID');
@@ -72,9 +72,9 @@ define('_MB_RWBANNER_CLIQUES', 'CLICKS');
 define('_MB_RWBANNER_PORCCLI', '%');
 define('_MB_RWBANNER_DATA', 'CREATION DATE');
 define('_MB_RWBANNER_PERIODO', 'EXPIRATION DATE');
-define('_MB_RWBANNER_MSG1', '<b>Note:</b> To see the banner image, click on the code of this banner on the list to create a popup window showing your banner');
+define('_MB_RWBANNER_MSG1', '<b>Note:</b> To see the banner image, click on the ID of the banner on the list to create a popup window showing your banner');
 define('_MB_RWBANNER_MSG2', 'To be able to use the services of advertising of  %s you need to be a registered user.
-   This procedure helps to have a better control of our partners and a better management of our advertising medias.<br /><br />
+   This procedure helps to have a better control of our partners and a better management of our advertising medias.<br><br>
    In case you are already registered on our site, click <a href=\"%s\">here</a> and login in order to fill out the registration form
    of banners and join our advertising system. If you are not registered at our site, click <a href=\"%s\">here</a> and
    register. After you have registered on our site you will be able to join our advertising system.');

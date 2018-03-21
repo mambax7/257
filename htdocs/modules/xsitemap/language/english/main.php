@@ -1,7 +1,5 @@
 <?php
-/**
- * ****************************************************************************
- * Module généré par TDMCreate de la TDM "http://www.tdmxoops.net"
+/*
  * ****************************************************************************
  * xsitemap - MODULE FOR XOOPS CMS
  * Copyright (c) Urbanspaceman (http://www.takeaweb.it)
@@ -12,25 +10,28 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
- * @copyright       Urbanspaceman (http://www.takeaweb.it)
- * @license         GPL
- * @package         xsitemap
- * @author          Urbanspaceman (http://www.takeaweb.it)
- *
- * Version : 1.00:
  * ****************************************************************************
+ */
+/**
+ * Module: xsitemap
+ *
+ * @package    module\Xsitemap\language
+ * @author     Urbanspaceman (http://www.takeaweb.it)
+ * @copyright  Urbanspaceman (http://www.takeaweb.it)
+ * @copyright  XOOPS Project
+ * @license    http://www.fsf.org/copyleft/gpl.html GNU public license
+ * @since      1.00
  */
 
 //Add by urbanspaceman 26/08/2009
 //home
-define("_MA_XSITEMAP", "Sitemap");
-define("_MA_XSITEMAP_XML", "Sitemap XML");
-define("_MA_XSITEMAP_HOME", "HOME");
-define("_MA_XSITEMAP_REGISTER", "Register");
-define("_MA_XSITEMAP_LOGIN", "Login");
-define("_MA_XSITEMAP_SITEMAP", "Sitemap");
-define("_MA_XSITEMAP_LAST_MOD", "Last update of file xsitemap.xml");
-define("_MA_XSITEMAP_XML_UPDATE", "XML file update with success");
-define("_MA_XSITEMAP_XML_VIEW_XML", "View XML file");
-define("_MA_XSITEMAP_XML_ERROR_UPDATE", "Error during the update of XML file");
+define('_MA_XSITEMAP', 'Sitemap');
+define('_MA_XSITEMAP_XML', 'Sitemap XML');
+define('_MA_XSITEMAP_HOME', 'HOME');
+define('_MA_XSITEMAP_REGISTER', 'Register');
+define('_MA_XSITEMAP_LOGIN', 'Login');
+define('_MA_XSITEMAP_SITEMAP', 'Sitemap');
+define('_MA_XSITEMAP_LAST_MOD', 'Last update of file xsitemap.xml');
+define('_MA_XSITEMAP_XML_UPDATE', 'XML file update with success');
+define('_MA_XSITEMAP_XML_VIEW_XML', 'View XML file');
+define('_MA_XSITEMAP_XML_ERROR_UPDATE', 'Error during the update of XML file');

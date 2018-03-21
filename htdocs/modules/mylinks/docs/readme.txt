@@ -1,14 +1,14 @@
 // ----------------------------------------------------------- //
 //                         mylinks-w 3.11                      //
 //                The XOOPS Module Development Team            //
-//                         http://www.xoops.org                //
+//                         https://xoops.org                //
 // ----------------------------------------------------------- //
 //                         mylinks-w 3.0                       //
 //                    Just enjoy! Internet for everyone!!      //
 //                      wanikoo <http://www.wanisys.net/>      //
 // ----------------------------------------------------------- //
 //                Original Module: mylinks 1.10                //
-//             The XOOPS Project ( http://www.xoops.org/ )     //
+//             XOOPS Project ( https://xoops.org/ )     //
 // ----------------------------------------------------------- //
 
 
@@ -178,7 +178,7 @@ History
 ------------------------------
 
 Support Forum:
-http://xoops.org/modules/newbb/viewtopic.php?post_id=352230
+https://xoops.org/modules/newbb/viewtopic.php?post_id=352230
 
 From wanikoo [wani@wanisys.net]
 the most educational site, wanisys.net [ http://www.wanisys.net  ]

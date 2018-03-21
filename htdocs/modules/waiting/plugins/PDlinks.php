@@ -8,40 +8,43 @@
 #                                                                        #
 # Last modified on 21.04.2005                                            #
 /*************************************************************************/
+/**
+ * @return array
+ */
 function b_waiting_PDlinks()
 {
-    $xoopsDB =& XoopsDatabaseFactory::getDatabaseConnection();
-    $ret = array() ;
+    $xoopsDB = \XoopsDatabaseFactory::getDatabaseConnection();
+    $ret     = [];
 
     // PDlinks waiting
-    $block = array();
-    $result = $xoopsDB->query("SELECT COUNT(*) FROM ".$xoopsDB->prefix("PDlinks_links")." WHERE status=0");
+    $block  = [];
+    $result = $xoopsDB->query('SELECT COUNT(*) FROM ' . $xoopsDB->prefix('PDlinks_links') . ' WHERE status=0');
     if ($result) {
-        $block['adminlink'] = XOOPS_URL."/modules/PDlinks/admin/newlinks.php";
+        $block['adminlink'] = XOOPS_URL . '/modules/PDlinks/admin/newlinks.php';
         list($block['pendingnum']) = $xoopsDB->fetchRow($result);
-        $block['lang_linkname'] = _PI_WAITING_WAITINGS ;
+        $block['lang_linkname'] = _PI_WAITING_WAITINGS;
     }
-    $ret[] = $block ;
+    $ret[] = $block;
 
     // PDlinks broken
-    $block = array();
-    $result = $xoopsDB->query("SELECT COUNT(*) FROM ".$xoopsDB->prefix("PDlinks_broken"));
+    $block  = [];
+    $result = $xoopsDB->query('SELECT COUNT(*) FROM ' . $xoopsDB->prefix('PDlinks_broken'));
     if ($result) {
-        $block['adminlink'] = XOOPS_URL."/modules/PDlinks/admin/brokenlink.php";
+        $block['adminlink'] = XOOPS_URL . '/modules/PDlinks/admin/brokenlink.php';
         list($block['pendingnum']) = $xoopsDB->fetchRow($result);
-        $block['lang_linkname'] = _PI_WAITING_BROKENS ;
+        $block['lang_linkname'] = _PI_WAITING_BROKENS;
     }
-    $ret[] = $block ;
+    $ret[] = $block;
 
     // PDlinks modreq
-    $block = array();
-    $result = $xoopsDB->query("SELECT COUNT(*) FROM ".$xoopsDB->prefix("PDlinks_mod"));
+    $block  = [];
+    $result = $xoopsDB->query('SELECT COUNT(*) FROM ' . $xoopsDB->prefix('PDlinks_mod'));
     if ($result) {
-        $block['adminlink'] = XOOPS_URL."/modules/PDlinks/admin/index.php?op=listModReq";
+        $block['adminlink'] = XOOPS_URL . '/modules/PDlinks/admin/index.php?op=listModReq';
         list($block['pendingnum']) = $xoopsDB->fetchRow($result);
-        $block['lang_linkname'] = _PI_WAITING_MODREQS ;
+        $block['lang_linkname'] = _PI_WAITING_MODREQS;
     }
-    $ret[] = $block ;
+    $ret[] = $block;
 
     return $ret;
 }

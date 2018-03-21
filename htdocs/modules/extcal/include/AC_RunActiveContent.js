@@ -179,19 +179,19 @@ function AC_Generateobj(objAttrs, params, embedAttrs) {
 
 function AC_FL_RunContent() {
     var ret =
-            AC_GetArgs
-                    (arguments, ".swf", "movie", "clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
-                            , "application/x-shockwave-flash"
-                    );
+        AC_GetArgs
+        (arguments, ".swf", "movie", "clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+            , "application/x-shockwave-flash"
+        );
     AC_Generateobj(ret.objAttrs, ret.params, ret.embedAttrs);
 }
 
 function AC_SW_RunContent() {
     var ret =
-            AC_GetArgs
-                    (arguments, ".dcr", "src", "clsid:166B1BCA-3F9C-11CF-8075-444553540000"
-                            , null
-                    );
+        AC_GetArgs
+        (arguments, ".dcr", "src", "clsid:166B1BCA-3F9C-11CF-8075-444553540000"
+            , null
+        );
     AC_Generateobj(ret.objAttrs, ret.params, ret.embedAttrs);
 }
 

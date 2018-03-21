@@ -1,6 +1,6 @@
 <?php
 /**
- * $Id: admin.php 11267 2013-03-20 13:16:32Z cesag $
+ *
  * Module: Publisher
  * Author: The SmartFactory <www.smartfactory.ca>
  * Licence: GNU
@@ -44,9 +44,15 @@ define('_AM_PUBLISHER_CATEGORY_EDIT_INFO', 'You can edit this category. Modifica
 define('_AM_PUBLISHER_CATEGORY_HEADER', 'Category header');
 define('_AM_PUBLISHER_CATEGORY_HEADER_DSC', '');
 define('_AM_PUBLISHER_CATEGORY_META_DESCRIPTION', 'Meta Description');
-define('_AM_PUBLISHER_CATEGORY_META_DESCRIPTION_DSC', 'In order to help Search Engines, you can customize the meta description you would like to use for this category. if you leave this field empty when creating a category, it will automatically be populated with the Description field of this category.');
+define(
+    '_AM_PUBLISHER_CATEGORY_META_DESCRIPTION_DSC',
+       'In order to help Search Engines, you can customize the meta description you would like to use for this category. if you leave this field empty when creating a category, it will automatically be populated with the Description field of this category.'
+);
 define('_AM_PUBLISHER_CATEGORY_META_KEYWORDS', 'Meta Keywords');
-define('_AM_PUBLISHER_CATEGORY_META_KEYWORDS_DSC', 'In order to help Search Engines, you can customize the keywords you would like to use for this category. if you leave this field empty when creating a category, it will automatically be populated with words from the Description field of this category.');
+define(
+    '_AM_PUBLISHER_CATEGORY_META_KEYWORDS_DSC',
+       'In order to help Search Engines, you can customize the keywords you would like to use for this category. if you leave this field empty when creating a category, it will automatically be populated with words from the Description field of this category.'
+);
 define('_AM_PUBLISHER_CATEGORY_SAVE_ERROR', 'An error occurred while saving the category. Here is a list of error(s) :');
 define('_AM_PUBLISHER_CATEGORY_SHORT_URL', 'Short URL');
 define('_AM_PUBLISHER_CATEGORY_SHORT_URL_DSC', 'When using the SEO features of this module, you can specify a Short URL for this category. This field is optional.');
@@ -134,7 +140,7 @@ define('_AM_PUBLISHER_IMAGE_ITEM', 'Article image');
 //define('_AM_PUBLISHER_IMAGE_ITEM_DSC','Image representing the article');
 define('_AM_PUBLISHER_IMAGE_UPLOAD', 'Image upload');
 define('_AM_PUBLISHER_IMAGE_UPLOAD_DSC', 'Select an image on your computer. This image will be uploaded to the site and set as the category image.');
-//define('_AM_PUBLISHER_IMAGE_UPLOAD_ITEM_DSC','Select an image on your computer. <br />This image will be uploaded to the site <br />and set as the article image.');
+//define('_AM_PUBLISHER_IMAGE_UPLOAD_ITEM_DSC','Select an image on your computer. <br>This image will be uploaded to the site <br>and set as the article image.');
 define('_AM_PUBLISHER_IMPORT', 'Import');
 define('_AM_PUBLISHER_IMPORTED_COMMENT', "Comment '%s' imported.");
 define('_AM_PUBLISHER_IMPORTED_COMMENT_ERROR', "Error while importing comment '%s'");
@@ -177,7 +183,7 @@ define('_AM_PUBLISHER_ITEM_DELETE_ERROR', 'An error occurred while deleting this
 define('_AM_PUBLISHER_ITEM_DUPLICATING', 'Duplicating an article');
 define('_AM_PUBLISHER_ITEM_DUPLICATING_DSC', 'Edit the present form in order to create a new article based on the original article.');
 define('_AM_PUBLISHER_ITEM_EDIT', 'Edit this article');
-define('_AM_PUBLISHER_ITEM_RECEIVED_NEED_APPROVAL', 'Your article has been sent and will be published upon approval by a moderator.<br />Thank you for your contribution!');
+define('_AM_PUBLISHER_ITEM_RECEIVED_NEED_APPROVAL', 'Your article has been sent and will be published upon approval by a moderator.<br>Thank you for your contribution!');
 define('_AM_PUBLISHER_ITEM_REJECTED', 'This article has been set as rejected.');
 define('_AM_PUBLISHER_ITEMCAT', 'Category');
 define('_AM_PUBLISHER_ITEMCATEGORYNAME', 'Category');
@@ -240,10 +246,13 @@ define('_AM_PUBLISHER_OFFLINEEDITING_INFO', 'You can edit this offline article. 
 define('_AM_PUBLISHER_PAGEWRAP', 'Page wrap');
 define('_AM_PUBLISHER_PAGEWRAPDSC', "A page-wrap is the ability to link an article with a content file. Doing this, the content of the article is directly taken from that file and you don't need to add the content manually. This is useful when you have already formatted HTML or PHP files.");
 define('_AM_PUBLISHER_PARENT_CATEGORY_EXP', "Parent category<span style='font-size: xx-small; font-weight: normal; display: block;'>Select a parent to make this a sub-category.</span>");
-define('_AM_PUBLISHER_PERMERROR', 'ERROR: cannot access file directory. Please CHMOD the uploads/publisher/content directory with value 755 (or 777 depending on your environment)');
+define('_AM_PUBLISHER_PERMERROR', 'ERROR: cannot access file directory. Please CHMOD the uploads/publisher/content directory with value 755 or 775 depending on your environment');
 define('_AM_PUBLISHER_PERMISSIONS', 'Permissions');
-define('_AM_PUBLISHER_PERMISSIONS_APPLY_ON_ITEMS', "Apply read permissions on articles<span style='font-size: xx-small; font-weight: normal; display: block;'>Apply the above Read Permissions on all<br />articles within that category, overriding their<br />current permissions.<br /><strong>Please note that this is a one-time action only, and not a property</strong></span>");
-define('_AM_PUBLISHER_PERMISSIONS_CAT_READ', "Read permissions<span style='font-size: xx-small; font-weight: normal; display: block;'>Groups that will have permissions to see<br />this Category, as well as any articles<br />inside that category.</span>");
+define(
+    '_AM_PUBLISHER_PERMISSIONS_APPLY_ON_ITEMS',
+       "Apply read permissions on articles<span style='font-size: xx-small; font-weight: normal; display: block;'>Apply the above Read Permissions on all<br>articles within that category, overriding their<br>current permissions.<br><strong>Please note that this is a one-time action only, and not a property</strong></span>"
+);
+define('_AM_PUBLISHER_PERMISSIONS_CAT_READ', "Read permissions<span style='font-size: xx-small; font-weight: normal; display: block;'>Groups that will have permissions to see<br>this Category, as well as any articles<br>inside that category.</span>");
 define('_AM_PUBLISHER_PERMISSIONS_CAT_SUBMIT', 'Articles submission permissions');
 define('_AM_PUBLISHER_PERMISSIONS_CAT_SUBMIT_DSC', "Groups that will be allowed to submit articles within this category. Preference '[PERMISSIONS] User submissions' must be enabled.");
 define('_AM_PUBLISHER_PERMISSIONSVIEWMAN', 'Permissions to view categories');
@@ -258,7 +267,10 @@ define('_AM_PUBLISHER_REJECTED_EDIT', 'Edit this rejected article');
 define('_AM_PUBLISHER_REJECTED_ITEM', 'Rejected article');
 define('_AM_PUBLISHER_REJECTED_ITEM_EXP', '<strong>Rejected articles</strong>: articles that have been submitted by user, but rejected by a moderator. Rejected articles are not displayed in the user side.');
 define('_AM_PUBLISHER_RUSUREDELF', 'Are you sure you want to delete this file?');
-define('_AM_PUBLISHER_SCATEGORYNAME', "Create subcategories<br><br><span style='font-size: xx-small; font-weight: normal; display: block;'>Fill the text box with the names of sub categories to create.<br>Leave blank to not create subcategory. To create more, enter the how much more to create then press 'Add'</span>");
+define(
+    '_AM_PUBLISHER_SCATEGORYNAME',
+       "Create subcategories<br><br><span style='font-size: xx-small; font-weight: normal; display: block;'>Fill the text box with the names of sub categories to create.<br>Leave blank to not create subcategory. To create more, enter the how much more to create then press 'Add'</span>"
+);
 define('_AM_PUBLISHER_SEARCH', 'Search');
 define('_AM_PUBLISHER_SEARCH_PW', 'Only HTML, HTM or XHTML extensions are allowed');
 define('_AM_PUBLISHER_SELECT_SORT', 'Sort order');
@@ -301,7 +313,7 @@ define('_AM_PUBLISHER_VIEW_CATS', 'Select categories that each group can view');
 define('_AM_PUBLISHER_YES', 'Yes');
 //define('_AM_PUBLISHER_TOOLS','Tools');
 //define('_AM_PUBLISHER_CONFIGURE_READ_PERMISSIONS','Configure read permissions');
-//define('_AM_PUBLISHER_CONFIGURE_READ_PERMISSIONS_EXP','This tool allows you to quickly configure read permissions for ALL categories and ALL articles at once. ALl permissions will first be deleted and then replaced by the options your will have selected.<br /><br /><strong>Please use this tool with care!</strong>');
+//define('_AM_PUBLISHER_CONFIGURE_READ_PERMISSIONS_EXP','This tool allows you to quickly configure read permissions for ALL categories and ALL articles at once. ALl permissions will first be deleted and then replaced by the options your will have selected.<br><br><strong>Please use this tool with care!</strong>');
 //define('_AM_PUBLISHER_FULLACCESS','Categories and articles read permissions');
 //define('_AM_PUBLISHER_PERMISSIONS_UPDATED','Permissions updated.');
 define('_AM_PUBLISHER_ITEM_TAG', 'Tags');
@@ -318,15 +330,15 @@ define('_AM_PUBLISHER_CLONE', 'Clone');
 define('_AM_PUBLISHER_CLONE_DSC', 'Cloning a module has never been this easy! Just type in the name you want for it and hit submit button!');
 define('_AM_PUBLISHER_CLONE_TITLE', 'Clone %s');
 define('_AM_PUBLISHER_CLONE_NAME', 'Choose a name for the new module');
-define('_AM_PUBLISHER_CLONE_NAME_DSC', 'Do not use special characters! <br />Do not choose an existing module dirname or database table name!');
+define('_AM_PUBLISHER_CLONE_NAME_DSC', 'Do not use special characters! <br>Do not choose an existing module dirname or database table name!');
 define('_AM_PUBLISHER_CLONE_INVALIDNAME', 'ERROR: Invalid module name, please try another one!');
 define('_AM_PUBLISHER_CLONE_EXISTS', 'ERROR: Module name already taken, please try another one!');
-define('_AM_PUBLISHER_CLONE_CONGRAT', 'Congratulations! %s was sucessfully created!<br />You may want to make changes in language files.');
-define('_AM_PUBLISHER_CLONE_IMAGEFAIL', 'Attention, we failed creating the new module logo. Please consider modifying assets/images/module_logo.png manually!');
+define('_AM_PUBLISHER_CLONE_CONGRAT', 'Congratulations! %s was sucessfully created!<br>You may want to make changes in language files.');
+define('_AM_PUBLISHER_CLONE_IMAGEFAIL', 'Attention, we failed creating the new module logo. Please consider modifying assets/images/logo_module.png manually!');
 define('_AM_PUBLISHER_CLONE_FAIL', "Sorry, we failed in creating the new clone. Maybe you need to temporally set write permissions (CHMOD 777) to 'modules' folder and try again.");
 define('_AM_PUBLISHER_COMMENTS', 'Comments');
 define('_AM_PUBLISHER_CATEGORY_MODERATOR', 'Moderator');
-define('_AM_PUBLISHER_CATEGORY_MODERATOR_DSC', "A moderator can access and submit in this category even if he does not have groups permissions.<br />To moderate a sub category the user must have permissions to submit in the parent category.<br />Set to 'anonymous' if you do not need a moderator.");
+define('_AM_PUBLISHER_CATEGORY_MODERATOR_DSC', "A moderator can access and submit in this category even if he does not have groups permissions.<br>To moderate a sub category the user must have permissions to submit in the parent category.<br>Set to 'anonymous' if you do not need a moderator.");
 //03/05/2012
 define('_AM_PUBLISHER_PERMISSIONS_CAT_MODERATOR', 'Moderation permissions');
 define('_AM_PUBLISHER_PERMISSIONS_CAT_MODERATOR_DSC', "Groups that will be allowed to moderate articles within this category. Users on these groups will be able to edit/delete/clone articles. Don't forget to also set submit permissions on these groups!");
@@ -353,3 +365,20 @@ define('_AM_PUBLISHER_IMPORT_DONE', 'Done.');
 
 define('_AM_PUBLISHER_VOTES', 'Votes');
 define('_AM_PUBLISHER_COMMENTS_COUNT', 'Comments');
+//1.05
+define('_AM_PUBLISHER_UPGRADEFAILED0', "Update failed - couldn't rename field '%s'");
+define('_AM_PUBLISHER_UPGRADEFAILED1', "Update failed - couldn't add new fields");
+define('_AM_PUBLISHER_UPGRADEFAILED2', "Update failed - couldn't rename table '%s'");
+define('_AM_PUBLISHER_ERROR_COLUMN', 'Could not create column in database : %s');
+define('_AM_PUBLISHER_ERROR_BAD_XOOPS', 'This module requires XOOPS %s+ (%s installed)');
+define('_AM_PUBLISHER_ERROR_BAD_PHP', 'This module requires PHP version %s+ (%s installed)');
+define('_AM_PUBLISHER_ERROR_TAG_REMOVAL', 'Could not remove tags from Tag Module');
+
+//1.05 Beta 1
+define('_AM_PUBLISHER_AUTHOR', 'Author');
+define('_AM_PUBLISHER_SAMPLEDATA_SUCCESS', 'Sample Date uploaded successfully');
+
+//added 2017-05-16
+define('_AM_PUBLISHER_MIME_ACCESS_CONFIRM', 'Confirm');
+define('_AM_PUBLISHER_MIME_ACCESS_CONFIRM_ADMIN', 'Confirm change to admin access for %s');
+define('_AM_PUBLISHER_MIME_ACCESS_CONFIRM_USER', 'Confirm change to user access for %s');

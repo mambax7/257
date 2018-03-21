@@ -14,64 +14,48 @@
  * Description: XoopsPoll thunking class for backward compatibility.  This class should not be used
  * except by legacy modules (for example CBB(newbb) and xForum.
  *
- * @copyright ::  {@link http://xoops.org/ XOOPS Project}
+ * @copyright ::  {@link https://xoops.org/ XOOPS Project}
  * @license   ::  {@link http://www.fsf.org/copyleft/gpl.html GNU public license}
  * @package   ::  xoopspoll
  * @subpackage::  class
  * @since     ::  1.40
  * @author    ::  zyspec <owners@zyspec.com>
- * @version   ::  $Id: $
  */
-xoops_load('poll', 'xoopspoll');
+
+use XoopsModules\Xoopspoll;
+
+//xoops_load('poll', 'xoopspoll');
 
 /**
  * @deprecated
  */
-class Xoopspoll extends XoopspollPoll
+class Xoopspoll extends Xoopspoll\Poll
 {
     /**
      * @deprecated
      * @param null $id
      */
-    public function __construct(&$id = null)
+    public function __construct($id = null)
     {
-        $GLOBALS['xoopsLogger']->addDeprecated(__CLASS__ . '::' . __CLASS__ . ' is deprecated since Xoopspoll 1.40, please use XoopspollPoll and XoopspollPollHandler classes instead.');
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+        $GLOBALS['xoopsLogger']->addDeprecated(__CLASS__ . '::' . __CLASS__ . ' is deprecated since Xoopspoll 1.40, please use Poll and PollHandler classes instead.' . ". Called from {$trace[0]['file']}line {$trace[0]['line']}");
         parent::__construct($id);
-    }
-
-    /**
-     * @deprecated
-     * @param null $id
-     */
-    public function XoopsPoll(&$id = null)
-    {
-        $GLOBALS['xoopsLogger']->addDeprecated(__CLASS__ . '::' . __CLASS__ . ' is deprecated since Xoopspoll 1.40, please use XoopspollPoll and XoopspollPollHandler classes instead.');
-        $this->__construct($id);
     }
 }
 
 /**
  * @deprecated
  */
-class XoopsPollHandler extends XoopspollPollHandler
+class XoopsPollHandler extends Xoopspoll\PollHandler
 {
     /**
      * @deprecated
-     * @param mixed $db
+     * @param null|\XoopsDatabase $db
      */
-    public function __construct(&$db)
+    public function __construct(\XoopsDatabase $db)
     {
-        $GLOBALS['xoopsLogger']->addDeprecated(__CLASS__ . '::' . __CLASS__ . ' is deprecated since Xoopspoll 1.40, please use XoopspollPoll and XoopspollPollHandler classes instead.');
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+        $GLOBALS['xoopsLogger']->addDeprecated(__CLASS__ . '::' . __CLASS__ . ' is deprecated since Xoopspoll 1.40, please use Poll and PollHandler classes instead.' . ". Called from {$trace[0]['file']}line {$trace[0]['line']}");
         parent::__construct($db);
-    }
-
-    /**
-     * @deprecated
-     * @param $db
-     */
-    public function XoopsPollHandler(&$db)
-    {
-        $GLOBALS['xoopsLogger']->addDeprecated(__CLASS__ . '::' . __CLASS__ . ' is deprecated since Xoopspoll 1.40, please use XoopspollPoll and XoopspollPollHandler classes instead.');
-        $this->__construct($db);
     }
 }

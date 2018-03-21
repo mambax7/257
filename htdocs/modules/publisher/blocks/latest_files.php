@@ -17,12 +17,14 @@
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
  * @author          The SmartFactory <www.smartfactory.ca>
- * @version         $Id: latest_files.php 10374 2012-12-12 23:39:48Z trabis $
  */
 
-// defined("XOOPS_ROOT_PATH") || exit("XOOPS root path not defined");
+use XoopsModules\Publisher;
+use XoopsModules\Publisher\Constants;
 
-include_once dirname(__DIR__) . '/include/common.php';
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
+
+require_once __DIR__ . '/../include/common.php';
 
 /**
  * @param $options
@@ -31,7 +33,8 @@ include_once dirname(__DIR__) . '/include/common.php';
  */
 function publisher_latest_files_show($options)
 {
-    $publisher =& PublisherPublisher::getInstance();
+    $helper = Publisher\Helper::getInstance();
+
     /**
      * $options[0] : Category
      * $options[1] : Sort order - datesub | counter
@@ -39,23 +42,23 @@ function publisher_latest_files_show($options)
      * $oprions[3] : bool TRUE to link to the file download, FALSE to link to the article
      */
 
-    $block = array();
+    $block = [];
 
     $sort           = $options[1];
-    $order          = publisherGetOrderBy($sort);
+    $order          = Publisher\Utility::getOrderBy($sort);
     $limit          = $options[2];
     $directDownload = $options[3];
 
     // creating the files objects
-    $filesObj =& $publisher->getHandler('file')->getAllFiles(0, PublisherConstants::PUBLISHER_STATUS_FILE_ACTIVE, $limit, 0, $sort, $order, explode(',', $options[0]));
+    $filesObj = $helper->getHandler('File')->getAllFiles(0, Constants::PUBLISHER_STATUS_FILE_ACTIVE, $limit, 0, $sort, $order, explode(',', $options[0]));
     foreach ($filesObj as $fileObj) {
-        $aFile         = array();
+        $aFile         = [];
         $aFile['link'] = $directDownload ? $fileObj->getFileLink() : $fileObj->getItemLink();
-        if ($sort === 'datesub') {
+        if ('datesub' === $sort) {
             $aFile['new'] = $fileObj->getDatesub();
-        } elseif ($sort === 'counter') {
+        } elseif ('counter' === $sort) {
             $aFile['new'] = $fileObj->counter();
-        } elseif ($sort === 'weight') {
+        } elseif ('weight' === $sort) {
             $aFile['new'] = $fileObj->weight();
         }
         $block['files'][] = $aFile;
@@ -71,19 +74,20 @@ function publisher_latest_files_show($options)
  */
 function publisher_latest_files_edit($options)
 {
-    include_once PUBLISHER_ROOT_PATH . '/class/blockform.php';
+    // require_once PUBLISHER_ROOT_PATH . '/class/blockform.php';
     xoops_load('XoopsFormLoader');
 
-    $form = new PublisherBlockForm();
+    $form = new Publisher\BlockForm();
 
-    $catEle   = new XoopsFormLabel(_MB_PUBLISHER_SELECTCAT, publisherCreateCategorySelect($options[0], 0, true, 'options[0]'));
-    $orderEle = new XoopsFormSelect(_MB_PUBLISHER_ORDER, 'options[1]', $options[1]);
-    $orderEle->addOptionArray(array(
+    $catEle   = new \XoopsFormLabel(_MB_PUBLISHER_SELECTCAT, Publisher\Utility::createCategorySelect($options[0], 0, true, 'options[0]'));
+    $orderEle = new \XoopsFormSelect(_MB_PUBLISHER_ORDER, 'options[1]', $options[1]);
+    $orderEle->addOptionArray([
                                   'datesub' => _MB_PUBLISHER_DATE,
                                   'counter' => _MB_PUBLISHER_HITS,
-                                  'weight'  => _MB_PUBLISHER_WEIGHT));
-    $dispEle   = new XoopsFormText(_MB_PUBLISHER_DISP, 'options[2]', 10, 255, $options[2]);
-    $directEle = new XoopsFormRadioYN(_MB_PUBLISHER_DIRECTDOWNLOAD, 'options[3]', $options[3]);
+                                  'weight'  => _MB_PUBLISHER_WEIGHT
+                              ]);
+    $dispEle   = new \XoopsFormText(_MB_PUBLISHER_DISP, 'options[2]', 10, 255, $options[2]);
+    $directEle = new \XoopsFormRadioYN(_MB_PUBLISHER_DIRECTDOWNLOAD, 'options[3]', $options[3]);
 
     $form->addElement($catEle);
     $form->addElement($orderEle);

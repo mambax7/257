@@ -1,40 +1,33 @@
 <?php
-// $Id: headline.php 10523 2012-12-23 12:48:50Z beckmi $
-//  ------------------------------------------------------------------------ //
-//                XOOPS - PHP Content Management System                      //
-//                    Copyright (c) 2000 XOOPS.org                           //
-//                       <http://www.xoops.org/>                             //
-//  ------------------------------------------------------------------------ //
-//  This program is free software; you can redistribute it and/or modify     //
-//  it under the terms of the GNU General Public License as published by     //
-//  the Free Software Foundation; either version 2 of the License, or        //
-//  (at your option) any later version.                                      //
-//                                                                           //
-//  You may not change or alter any portion of this comment or credits       //
-//  of supporting developers from this source code or any supporting         //
-//  source code which is considered copyrighted (c) material of the          //
-//  original comment or credit authors.                                      //
-//                                                                           //
-//  This program is distributed in the hope that it will be useful,          //
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of           //
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            //
-//  GNU General Public License for more details.                             //
-//                                                                           //
-//  You should have received a copy of the GNU General Public License        //
-//  along with this program; if not, write to the Free Software              //
-//  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
-//  ------------------------------------------------------------------------ //
-// Author: Kazumi Ono (AKA onokazu)                                          //
-// URL: http://www.myweb.ne.jp/, http://www.xoops.org/, http://jp.xoops.org/ //
-// Project: The XOOPS Project                                                //
-// ------------------------------------------------------------------------- //
-if (!defined('XOOPS_ROOT_PATH')) {
-    die("XOOPS root path not defined");
-}
+/*
+ * You may not change or alter any portion of this comment or credits
+ * of supporting developers from this source code or any supporting source code
+ * which is considered copyrighted (c) material of the original comment or credit authors.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ */
 
+/**
+ * @copyright    XOOPS Project https://xoops.org/
+ * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @package
+ * @since
+ * @author       XOOPS Development Team, Kazumi Ono (AKA onokazu)
+ */
+
+defined('XOOPS_ROOT_PATH') || die('Restricted access');
+
+/**
+ * Class XoopsheadlineHeadline
+ */
 class XoopsheadlineHeadline extends XoopsObject
 {
 
+    /**
+     * XoopsheadlineHeadline constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -56,11 +49,9 @@ class XoopsheadlineHeadline extends XoopsObject
         $this->initVar('headline_updated', XOBJ_DTYPE_INT, 0, false);
     }
 
-    public function XoopsheadlineHeadline()
-    {
-        $this->__construct();
-    }
-
+    /**
+     * @return bool
+     */
     public function cacheExpired()
     {
         if (time() - $this->getVar('headline_updated') > $this->getVar('headline_cachetime')) {
@@ -71,14 +62,17 @@ class XoopsheadlineHeadline extends XoopsObject
     }
 }
 
+/**
+ * Class xoopsheadlineHeadlineHandler
+ */
 class xoopsheadlineHeadlineHandler extends XoopsPersistableObjectHandler
 {
-    public function xoopsheadlineHeadlineHandler(&$db)
-    {
-        $this->__construct($db);
-    }
 
-    public function __construct(&$db)
+    /**
+     * xoopsheadlineHeadlineHandler constructor.
+     * @param XoopsDatabase $db
+     */
+    public function __construct(\XoopsDatabase $db)
     {
         parent::__construct($db, 'xoopsheadline', 'xoopsheadline' . 'Headline', 'headline_id');
     }

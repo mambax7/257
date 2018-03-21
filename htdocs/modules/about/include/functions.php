@@ -1,8 +1,8 @@
 <?php
 
-if (!defined("XOOPS_ROOT_PATH")) {
-    exit();
-}
+use XoopsModules\About;
+
+defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 /**
  * @param       $dir
@@ -10,15 +10,15 @@ if (!defined("XOOPS_ROOT_PATH")) {
  * @param  bool $recursive
  * @return bool
  */
-function Aboutmkdirs($dir, $mode = 0777, $recursive = true)
+function aboutmkdirs($dir, $mode = 0777, $recursive = true)
 {
-    if (is_null($dir) || $dir === "") {
+    if ('' === $dir || null === $dir) {
         return $dir;
     }
-    if (is_dir($dir) || $dir === "/") {
+    if ('/' === $dir || is_dir($dir)) {
         return $dir;
     }
-    if (Aboutmkdirs(dirname($dir), $mode, $recursive)) {
+    if (aboutmkdirs(dirname($dir), $mode, $recursive)) {
         return mkdir($dir, $mode);
     }
 

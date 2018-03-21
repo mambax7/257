@@ -1,4 +1,5 @@
-<?php
+<?php namespace XoopsModules\Publisher;
+
 /*
  You may not change or alter any portion of this comment or credits
  of supporting developers from this source code or any supporting source code
@@ -15,22 +16,24 @@
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
  * @author          The SmartFactory <www.smartfactory.ca>
- * @version         $Id: metagen.php 10374 2012-12-12 23:39:48Z trabis $
  */
-// defined("XOOPS_ROOT_PATH") || exit("XOOPS root path not defined");
 
-include_once dirname(__DIR__) . '/include/common.php';
+use XoopsModules\Publisher;
+
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
+
+require_once __DIR__ . '/../include/common.php';
 
 /**
- * Class PublisherMetagen
+ * Class Metagen
  */
-class PublisherMetagen
+class Metagen
 {
     /**
-     * @var PublisherPublisher
+     * @var Publisher
      * @access public
      */
-    public $publisher;
+    public $helper;
 
     /**
      * @var MyTextSanitizer
@@ -76,12 +79,12 @@ class PublisherMetagen
      */
     public function __construct($title, $keywords = '', $description = '', $categoryPath = '')
     {
-        $this->publisher =& PublisherPublisher::getInstance();
-        $this->myts      = MyTextSanitizer::getInstance();
+        $this->helper = Publisher\Helper::getInstance();
+        $this->myts      = \MyTextSanitizer::getInstance();
         $this->setCategoryPath($categoryPath);
         $this->setTitle($title);
         $this->setDescription($description);
-        if ($keywords == '') {
+        if ('' == $keywords) {
             $keywords = $this->createMetaKeywords();
         }
         $this->setKeywords($keywords);
@@ -94,23 +97,23 @@ class PublisherMetagen
     {
         $this->title         = $this->html2text($title);
         $this->originalTitle = $this->title;
-        $titleTag            = array();
-        $titleTag['module']  = $this->publisher->getModule()->getVar('name');
-        if (isset($this->title) && ($this->title != '') && (strtoupper($this->title) != strtoupper($titleTag['module']))) {
+        $titleTag            = [];
+        $titleTag['module']  = $this->helper->getModule()->getVar('name');
+        if (isset($this->title) && ('' != $this->title) && (strtoupper($this->title) != strtoupper($titleTag['module']))) {
             $titleTag['title'] = $this->title;
         }
-        if (isset($this->categoryPath) && ($this->categoryPath != '')) {
+        if (isset($this->categoryPath) && ('' != $this->categoryPath)) {
             $titleTag['category'] = $this->categoryPath;
         }
         $ret = isset($titleTag['title']) ? $titleTag['title'] : '';
-        if (isset($titleTag['category']) && $titleTag['category'] != '') {
-            if ($ret != '') {
+        if (isset($titleTag['category']) && '' != $titleTag['category']) {
+            if ('' != $ret) {
                 $ret .= ' - ';
             }
             $ret .= $titleTag['category'];
         }
-        if (isset($titleTag['module']) && $titleTag['module'] != '') {
-            if ($ret != '') {
+        if (isset($titleTag['module']) && '' != $titleTag['module']) {
+            if ('' != $ret) {
                 $ret .= ' - ';
             }
             $ret .= $titleTag['module'];
@@ -184,7 +187,7 @@ class PublisherMetagen
      */
     public function findMetaKeywords($text, $minChar)
     {
-        $keywords         = array();
+        $keywords         = [];
         $text             = $this->purifyText($text);
         $text             = $this->html2text($text);
         $originalKeywords = explode(' ', $text);
@@ -208,8 +211,8 @@ class PublisherMetagen
     public function createMetaKeywords()
     {
         $keywords       = $this->findMetaKeywords($this->originalTitle . ' ' . $this->description, $this->minChar);
-        $moduleKeywords = $this->publisher->getConfig('seo_meta_keywords');
-        if ($moduleKeywords != '') {
+        $moduleKeywords = $this->helper->getConfig('seo_meta_keywords');
+        if ('' != $moduleKeywords) {
             $moduleKeywords = explode(',', $moduleKeywords);
             $keywords       = array_merge($keywords, array_map('trim', $moduleKeywords));
         }
@@ -241,13 +244,13 @@ class PublisherMetagen
     public function createMetaTags()
     {
         global $xoopsTpl, $xoTheme;
-        if ($this->keywords != '') {
+        if ('' != $this->keywords) {
             $xoTheme->addMeta('meta', 'keywords', $this->keywords);
         }
-        if ($this->description != '') {
+        if ('' != $this->description) {
             $xoTheme->addMeta('meta', 'description', $this->description);
         }
-        if ($this->title != '') {
+        if ('' != $this->title) {
             $xoopsTpl->assign('xoops_pagetitle', $this->title);
         }
     }
@@ -256,10 +259,10 @@ class PublisherMetagen
      * Return true if the string is length > 0
      *
      * @credit psylove
-     * @var    string  $string Chaine de caractère
+     * @var    string $string Chaine de caractère
      * @return boolean
      */
-    public function emptyString($var)
+    public static function emptyString($var)
     {
         return (strlen($var) > 0);
     }
@@ -280,18 +283,63 @@ class PublisherMetagen
         // Codage de la chaine afin d'éviter les erreurs 500 en cas de caractères imprévus
         $title = rawurlencode(strtolower($title));
         // Transformation des ponctuations
-        //                 Tab     Space      !        "        #        %        &        '        (        )        ,        /        :        ;        <        =        >        ?        @        [        \        ]        ^        {        |        }        ~       .
-        $pattern = array('/%09/', '/%20/', '/%21/', '/%22/', '/%23/', '/%25/', '/%26/', '/%27/', '/%28/', '/%29/', '/%2C/', '/%2F/', '/%3A/', '/%3B/', '/%3C/', '/%3D/', '/%3E/', '/%3F/', '/%40/', '/%5B/', '/%5C/', '/%5D/', '/%5E/', '/%7B/', '/%7C/', '/%7D/', '/%7E/', "/\./");
-        $repPat  = array('-', '-', '-', '-', '-', '-100', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-at-', '-', '-', '-', '-', '-', '-', '-', '-', '-');
-        $title   = preg_replace($pattern, $repPat, $title);
+
+        $pattern = [
+            '/%09/', // Tab
+            '/%20/', // Space
+            '/%21/', // !
+            '/%22/', // "
+            '/%23/', // #
+            '/%25/', // %
+            '/%26/', // &
+            '/%27/', // '
+            '/%28/', // (
+            '/%29/', // )
+            '/%2C/', // ,
+            '/%2F/', // /
+            '/%3A/', // :
+            '/%3B/', // ;
+            '/%3C/', // <
+            '/%3D/', // =
+            '/%3E/', // >
+            '/%3F/', // ?
+            '/%40/', // @
+            '/%5B/', // [
+            '/%5C/', // \
+            '/%5D/', // ]
+            '/%5E/', // ^
+            '/%7B/', // {
+            '/%7C/', // |
+            '/%7D/', // }
+            '/%7E/', // ~
+            "/\./" // .
+        ];
+        $repPat  = ['-', '-', '-', '-', '-', '-100', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-at-', '-', '-', '-', '-', '-', '-', '-', '-', '-'];
+        $title   = str_replace($pattern, $repPat, $title);
         // Transformation des caractères accentués
-        //                  °        è        é        ê        ë        ç        à        â        ä        î        ï        ù        ü        û        ô        ö
-        $pattern = array('/%B0/', '/%E8/', '/%E9/', '/%EA/', '/%EB/', '/%E7/', '/%E0/', '/%E2/', '/%E4/', '/%EE/', '/%EF/', '/%F9/', '/%FC/', '/%FB/', '/%F4/', '/%F6/');
-        $repPat  = array('-', 'e', 'e', 'e', 'e', 'c', 'a', 'a', 'a', 'i', 'i', 'u', 'u', 'u', 'o', 'o');
-        $title   = preg_replace($pattern, $repPat, $title);
-        $tableau = explode('-', $title); // Transforme la chaine de caractères en tableau
-        $tableau = array_filter($tableau, array('PublisherMetagen', 'emptyString')); // Supprime les chaines vides du tableau
-        $title   = implode('-', $tableau); // Transforme un tableau en chaine de caractères séparé par un tiret
+        $pattern = [
+            '/%B0/', // °
+            '/%E8/', // è
+            '/%E9/', // é
+            '/%EA/', // ê
+            '/%EB/', // ë
+            '/%E7/', // ç
+            '/%E0/', // à
+            '/%E2/', // â
+            '/%E4/', // ä
+            '/%EE/', // î
+            '/%EF/', // ï
+            '/%F9/', // ù
+            '/%FC/', // ü
+            '/%FB/', // û
+            '/%F4/', // ô
+            '/%F6/', // ö
+        ];
+        $repPat  = ['-', 'e', 'e', 'e', 'e', 'c', 'a', 'a', 'a', 'i', 'i', 'u', 'u', 'u', 'o', 'o'];
+        $title   = str_replace($pattern, $repPat, $title);
+        $tableau = explode('-', $title); // Transforms the string in table //Transforme la chaine de caractères en tableau
+        $tableau = array_filter($tableau, ['Metagen', 'emptyString']); // Remove empty strings of the table //Supprime les chaines vides du tableau
+        $title   = implode('-', $tableau); // Transforms a character string in table separated by a hyphen //Transforme un tableau en chaine de caractères séparé par un tiret
         if (count($title) > 0) {
             if ($withExt) {
                 $title .= '.html';
@@ -311,9 +359,9 @@ class PublisherMetagen
      */
     public function purifyText($text, $keyword = false)
     {
-        //        $text = str_replace(['&nbsp;', ' '], ['<br />', ' '], $text); //for php 5.4
+        //        $text = str_replace(['&nbsp;', ' '], ['<br>', ' '], $text); //for php 5.4
         $text = str_replace('&nbsp;', ' ', $text);
-        $text = str_replace('<br />', ' ', $text);
+        $text = str_replace('<br>', ' ', $text);
         $text = strip_tags($text);
         $text = html_entity_decode($text);
         $text = $this->myts->undoHtmlSpecialChars($text);
@@ -356,10 +404,10 @@ class PublisherMetagen
         // and white space. It will also convert some
         // common HTML entities to their text equivalent.
         // Credits : newbb2
-        $search = array(
-            "'<script[^>]*?>.*?</script>'si", // Strip out javascript<?php
-            "'<img.*?/>'si", // Strip out img tags
-            "'<[\/\!]*?[^<>]*?>'si", // Strip out HTML tags<?php
+        $search = [
+            "'<script[^>]*?>.*?</script>'si", // Strip out javascript
+            "'<img.*?>'si", // Strip out img tags
+            "'<[\/\!]*?[^<>]*?>'si", // Strip out HTML tags
             "'([\r\n])[\s]+'", // Strip out white space
             "'&(quot|#34);'i", // Replace HTML entities
             "'&(amp|#38);'i",
@@ -369,15 +417,15 @@ class PublisherMetagen
             "'&(iexcl|#161);'i",
             "'&(cent|#162);'i",
             "'&(pound|#163);'i",
-            "'&(copy|#169);'i",//"'&#(\d+);'e"
-        );
-        // evaluate as php
-        $replace = array(
+            "'&(copy|#169);'i"
+        ]; // evaluate as php
+
+        $replace = [
             '',
             '',
             '',
             "\\1",
-            "\"",
+            '"',
             '&',
             '<',
             '>',
@@ -385,9 +433,14 @@ class PublisherMetagen
             chr(161),
             chr(162),
             chr(163),
-            chr(169),//"chr(\\1)"
-        );
-        $text    = preg_replace($search, $replace, $document);
+            chr(169)
+        ];
+
+        $text = preg_replace($search, $replace, $document);
+
+        preg_replace_callback('/&#(\d+);/', function ($matches) {
+            return chr($matches[1]);
+        }, $document);
 
         return $text;
     }

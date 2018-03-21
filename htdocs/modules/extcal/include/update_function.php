@@ -1,39 +1,57 @@
 <?php
+/*
+ * You may not change or alter any portion of this comment or credits
+ * of supporting developers from this source code or any supporting source code
+ * which is considered copyrighted (c) material of the original comment or credit authors.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ */
 
 /**
- * @param      $xoopsModule
- * @param null $oldVersion
+ * @copyright    {@link https://xoops.org/ XOOPS Project}
+ * @license      {@link http://www.gnu.org/licenses/gpl-2.0.html GNU GPL 2 or later}
+ * @package      extcal
+ * @since
+ * @author       XOOPS Development Team,
+ *
+ */
+
+/**
+ * @param XoopsModule $xoopsModule
+ * @param null        $previousVersion
  *
  * @return bool
  */
-function xoops_module_update_extcal(&$xoopsModule, $oldVersion = null)
+function xoops_module_update_extcal(\XoopsModule $xoopsModule, $previousVersion = null)
 {
     $newVersion = $xoopsModule->getVar('version') * 100;
-    if ($newVersion == $oldVersion) {
+    if ($newVersion == $previousVersion) {
         return true;
     }
 
     //----------------------------------------------------------
     // Create eXtCal upload directory
-    $indexFile = XOOPS_ROOT_PATH . "/modules/extcal/include/index.html";
+    $indexFile = __DIR__ . '/index.html';
 
-    $dir = XOOPS_ROOT_PATH . "/uploads/extcal";
+    $dir = XOOPS_ROOT_PATH . '/uploads/extcal';
     if (!is_dir($dir)) {
         mkdir($dir, 0777);
-        copy($indexFile, $dir . "/index.html");
+        copy($indexFile, $dir . '/index.html');
     }
 
-    $dir = XOOPS_ROOT_PATH . "/uploads/extcal/etablissement";
+    $dir = XOOPS_ROOT_PATH . '/uploads/extcal/etablissement';
     if (!is_dir($dir)) {
         mkdir($dir, 0777);
-        copy($indexFile, $dir . "/index.html");
+        copy($indexFile, $dir . '/index.html');
     }
     //------------------------------------------------------------
 
-    $fld = XOOPS_ROOT_PATH . '/modules/' . $xoopsModule->getVar('dirname') . "/versions/";
-    $cls = "extcal_%1\$s";
+    $fld = XOOPS_ROOT_PATH . '/modules/' . $xoopsModule->getVar('dirname') . '/versions/';
+    $cls = 'extcal_%1$s';
 
-    $version = array(
+    $version = [
         '2_04' => 204,
         '2_15' => 215,
         '2_21' => 221,
@@ -42,25 +60,26 @@ function xoops_module_update_extcal(&$xoopsModule, $oldVersion = null)
         '2_33' => 233,
         '2_34' => 234,
         '2_35' => 235,
-        '2_37' => 237
-    );
+        '2_37' => 237,
+    ];
 
-    while (list($key, $val) = each($version)) {
-        if ($oldVersion < $val) {
+    //    while (list($key, $val) = each($version)) {
+    foreach ($version as $key => $val) {
+        if ($previousVersion < $val) {
             $name = sprintf($cls, $key);
             $f    = $fld . $name . '.php';
             //ext_echo ("<hr>{$f}<hr>");
             if (is_readable($f)) {
-                echo "mise à jour version : {$key} = {$val}<br />";
-                include_once($f);
-                $cl = new $name($xoopsModule, array('oldVersion' => $oldVersion));
+                echo "mise à jour version : {$key} = {$val}<br>";
+                require_once $f;
+                $cl = new $name($xoopsModule, ['previousVersion' => $previousVersion]);
             }
         }
     }
 
     /*
-        //$db =& Database::getInstance();
-        $xoopsDB =& XoopsDatabaseFactory::getDatabaseConnection();
+        //$db = \XoopsDatabaseFactory::getDatabaseConnection();
+        $xoopsDB = \XoopsDatabaseFactory::getDatabaseConnection();
 
         $sql = "ALTER TABLE `".$db->prefix('extcal_event')."` ADD `event_organisateur` varchar( 255 ) NOT NULL AFTER `event_desc` ;";
         $db->query($sql);

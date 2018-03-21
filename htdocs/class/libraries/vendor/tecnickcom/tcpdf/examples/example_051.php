@@ -30,6 +30,7 @@ require_once('tcpdf_include.php');
 
 // Extend the TCPDF class to create custom Header and Footer
 class MYPDF extends TCPDF {
+<<<<<<< HEAD
 	//Page header
 	public function Header() {
 		// get the current page break margin
@@ -46,6 +47,24 @@ class MYPDF extends TCPDF {
 		// set the starting point for the page content
 		$this->setPageMark();
 	}
+=======
+    //Page header
+    public function Header() {
+        // get the current page break margin
+        $bMargin = $this->getBreakMargin();
+        // get current auto-page-break mode
+        $auto_page_break = $this->AutoPageBreak;
+        // disable auto-page-break
+        $this->SetAutoPageBreak(false, 0);
+        // set bacground image
+        $img_file = K_PATH_IMAGES.'image_demo.jpg';
+        $this->Image($img_file, 0, 0, 210, 297, '', '', '', false, 300, '', false, false, 0);
+        // restore auto-page-break status
+        $this->SetAutoPageBreak($auto_page_break, $bMargin);
+        // set the starting point for the page content
+        $this->setPageMark();
+    }
+>>>>>>> 258
 }
 
 // create new PDF document
@@ -80,8 +99,13 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 // set some language-dependent strings (optional)
 if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+<<<<<<< HEAD
 	require_once(dirname(__FILE__).'/lang/eng.php');
 	$pdf->setLanguageArray($l);
+=======
+    require_once(dirname(__FILE__).'/lang/eng.php');
+    $pdf->setLanguageArray($l);
+>>>>>>> 258
 }
 
 // ---------------------------------------------------------

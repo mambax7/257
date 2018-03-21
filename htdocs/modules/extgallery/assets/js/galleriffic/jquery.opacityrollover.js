@@ -5,15 +5,15 @@
  * Licensed under the MIT License:
  *   http://www.opensource.org/licenses/mit-license.php
  */
-;(function($) {
+;(function ($) {
     var defaults = {
-        mouseOutOpacity:   0.67,
-        mouseOverOpacity:  1.0,
-        fadeSpeed:         'fast',
+        mouseOutOpacity: 0.67,
+        mouseOverOpacity: 1.0,
+        fadeSpeed: 'fast',
         exemptionSelector: '.selected'
     };
 
-    $.fn.opacityrollover = function(settings) {
+    $.fn.opacityrollover = function (settings) {
         // Initialize the effect
         $.extend(this, defaults, settings);
 

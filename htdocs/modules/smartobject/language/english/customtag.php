@@ -1,14 +1,11 @@
 <?php
 
 /**
- * $Id: customtag.php 159 2007-12-17 16:44:05Z malanciault $
  * Module: SmartContent
  * Author: The SmartFactory <www.smartfactory.ca>
  * Licence: GNU
  */
-if (!defined("XOOPS_ROOT_PATH")) {
-    die("XOOPS root path not defined");
-}
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 define('_AM_SOBJECT_CUSTOMTAGS', 'Custom tags');
 define('_AM_SOBJECT_CUSTOMTAGS_DSC', 'Here is a list of the custom tags available in the system.');
@@ -37,4 +34,3 @@ define('_CO_SOBJECT_CUSTOMTAG_PERMISSION_VIEW', 'View permission');
 define('_CO_SOBJECT_CUSTOMTAG_PERMISSION_VIEW_DSC', 'Only the selected groups will be able to see the content of this tag');
 
 define('_CO_SOBJECT_CUSTOMTAG_CLONE', 'Clone');
-?>

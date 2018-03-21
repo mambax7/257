@@ -24,8 +24,8 @@ registerCommands('followscroll,followscrollrefresh');
 // changed on your html page or through an overLIB call.
 ////////
 // Default value for scroll is not to scroll (0)
-if (typeof ol_followscroll=='undefined') var ol_followscroll=0;
-if (typeof ol_followscrollrefresh=='undefined') var ol_followscrollrefresh=100;
+if (typeof ol_followscroll == 'undefined') var ol_followscroll = 0;
+if (typeof ol_followscrollrefresh == 'undefined') var ol_followscrollrefresh = 100;
 
 ////////
 // END OF CONFIGURATION
@@ -33,49 +33,49 @@ if (typeof ol_followscrollrefresh=='undefined') var ol_followscrollrefresh=100;
 ////////
 
 
-
-
-
-
-
 ////////
 // INIT
 ////////
 // Runtime variables init. Don't change for config!
-var o3_followscroll=0;
-var o3_followscrollrefresh=100;
+var o3_followscroll = 0;
+var o3_followscrollrefresh = 100;
 
 
 ////////
 // PLUGIN FUNCTIONS
 ////////
 function setScrollVariables() {
-    o3_followscroll=ol_followscroll;
-    o3_followscrollrefresh=ol_followscrollrefresh;
+    o3_followscroll = ol_followscroll;
+    o3_followscrollrefresh = ol_followscrollrefresh;
 }
 
 // Parses Shadow and Scroll commands
-function parseScrollExtras(pf,i,ar) {
-    var k=i,v;
+function parseScrollExtras(pf, i, ar) {
+    var k = i, v;
     if (k < ar.length) {
-        if (ar[k]==FOLLOWSCROLL) { eval(pf +'followscroll=('+pf+'followscroll==0)? 1 : 0'); return k; }
-        if (ar[k]==FOLLOWSCROLLREFRESH) { eval(pf+'followscrollrefresh='+ar[++k]); return k; }
+        if (ar[k] == FOLLOWSCROLL) {
+            eval(pf + 'followscroll=(' + pf + 'followscroll==0)? 1 : 0');
+            return k;
+        }
+        if (ar[k] == FOLLOWSCROLLREFRESH) {
+            eval(pf + 'followscrollrefresh=' + ar[++k]);
+            return k;
+        }
     }
     return -1;
 }
 
 
-
 // Function to support scroll feature (overloads default)
 function scroll_placeLayer() {
     var placeX, placeY, widthFix = 0;
-    var hasAnchor=(typeof o3_anchor != 'undefined' && o3_anchor);
+    var hasAnchor = (typeof o3_anchor != 'undefined' && o3_anchor);
 
     // HORIZONTAL PLACEMENT
-    if (eval('o3_frame.'+docRoot) && eval("typeof o3_frame."+docRoot+".clientWidth=='number'") && eval('o3_frame.'+docRoot+'.clientWidth')) {
-        iwidth = eval('o3_frame.'+docRoot+'.clientWidth');
+    if (eval('o3_frame.' + docRoot) && eval("typeof o3_frame." + docRoot + ".clientWidth=='number'") && eval('o3_frame.' + docRoot + '.clientWidth')) {
+        iwidth = eval('o3_frame.' + docRoot + '.clientWidth');
     } else if (typeof(o3_frame.innerWidth) == 'number') {
-        widthFix = Math.ceil(1.2*(o3_frame.outerWidth - o3_frame.innerWidth));
+        widthFix = Math.ceil(1.2 * (o3_frame.outerWidth - o3_frame.innerWidth));
         iwidth = o3_frame.innerWidth;
     }
 
@@ -84,12 +84,12 @@ function scroll_placeLayer() {
         placeY = rmrkPosition[1];
     } else {
         // Horizontal scroll offset
-        winoffset=(olIe4)? eval('o3_frame.'+docRoot+'.scrollLeft') : o3_frame.pageXOffset;
+        winoffset = (olIe4) ? eval('o3_frame.' + docRoot + '.scrollLeft') : o3_frame.pageXOffset;
         var parsedWidth = parseInt(o3_width);
 
         if (o3_fixx > -1 || o3_relx != null) {
             // Fixed position
-            placeX=(o3_relx != null? ( o3_relx < 0? winoffset +o3_relx+ iwidth - parsedWidth - widthFix : winoffset+o3_relx) : o3_fixx);
+            placeX = (o3_relx != null ? ( o3_relx < 0 ? winoffset + o3_relx + iwidth - parsedWidth - widthFix : winoffset + o3_relx) : o3_fixx);
         } else {
             // If HAUTO, decide what to use.
             if (o3_hauto == 1) {
@@ -102,21 +102,21 @@ function scroll_placeLayer() {
 
             // From mouse
             if (o3_hpos == CENTER) { // Center
-                placeX = o3_x+o3_offsetx-(parsedWidth/2);
+                placeX = o3_x + o3_offsetx - (parsedWidth / 2);
 
                 if (placeX < winoffset) placeX = winoffset;
             }
 
             if (o3_hpos == RIGHT) { // Right
-                placeX = o3_x+o3_offsetx;
+                placeX = o3_x + o3_offsetx;
 
-                if ((placeX+parsedWidth) > (winoffset+iwidth - widthFix)) {
-                    placeX = iwidth+winoffset - parsedWidth - widthFix;
+                if ((placeX + parsedWidth) > (winoffset + iwidth - widthFix)) {
+                    placeX = iwidth + winoffset - parsedWidth - widthFix;
                     if (placeX < 0) placeX = 0;
                 }
             }
             if (o3_hpos == LEFT) { // Left
-                placeX = o3_x-o3_offsetx-parsedWidth;
+                placeX = o3_x - o3_offsetx - parsedWidth;
                 if (placeX < winoffset) placeX = winoffset;
             }
 
@@ -125,10 +125,10 @@ function scroll_placeLayer() {
                 var snapping = placeX % o3_snapx;
 
                 if (o3_hpos == LEFT) {
-                    placeX = placeX - (o3_snapx+snapping);
+                    placeX = placeX - (o3_snapx + snapping);
                 } else {
                     // CENTER and RIGHT
-                    placeX = placeX+(o3_snapx - snapping);
+                    placeX = placeX + (o3_snapx - snapping);
                 }
 
                 if (placeX < winoffset) placeX = winoffset;
@@ -136,23 +136,23 @@ function scroll_placeLayer() {
         }
 
         // VERTICAL PLACEMENT
-        if (eval('o3_frame.'+docRoot) && eval("typeof o3_frame."+docRoot+".clientHeight=='number'") && eval('o3_frame.'+docRoot+'.clientHeight')) {
-            iheight = eval('o3_frame.'+docRoot+'.clientHeight');
-        } else if (typeof(o3_frame.innerHeight)=='number') {
+        if (eval('o3_frame.' + docRoot) && eval("typeof o3_frame." + docRoot + ".clientHeight=='number'") && eval('o3_frame.' + docRoot + '.clientHeight')) {
+            iheight = eval('o3_frame.' + docRoot + '.clientHeight');
+        } else if (typeof(o3_frame.innerHeight) == 'number') {
             iheight = o3_frame.innerHeight;
         }
 
         // Vertical scroll offset
-        scrolloffset=(olIe4)? eval('o3_frame.'+docRoot+'.scrollTop') : o3_frame.pageYOffset;
-        var parsedHeight=(o3_aboveheight? parseInt(o3_aboveheight) : (olNs4? over.clip.height : over.offsetHeight));
+        scrolloffset = (olIe4) ? eval('o3_frame.' + docRoot + '.scrollTop') : o3_frame.pageYOffset;
+        var parsedHeight = (o3_aboveheight ? parseInt(o3_aboveheight) : (olNs4 ? over.clip.height : over.offsetHeight));
 
         if (o3_fixy > -1 || o3_rely != null) {
             // Fixed position
-            placeY=(o3_rely != null? (o3_rely < 0? scrolloffset+o3_rely+iheight - parsedHeight : scrolloffset+o3_rely) : o3_fixy);
+            placeY = (o3_rely != null ? (o3_rely < 0 ? scrolloffset + o3_rely + iheight - parsedHeight : scrolloffset + o3_rely) : o3_fixy);
         } else {
             // If VAUTO, decide what to use.
             if (o3_vauto == 1) {
-                if ((o3_y - scrolloffset) > (iheight/2)) {
+                if ((o3_y - scrolloffset) > (iheight / 2)) {
                     o3_vpos = ABOVE;
                 } else {
                     o3_vpos = BELOW;
@@ -163,11 +163,11 @@ function scroll_placeLayer() {
             if (o3_vpos == ABOVE) {
                 if (o3_aboveheight == 0) o3_aboveheight = parsedHeight;
 
-                placeY = o3_y - (o3_aboveheight+o3_offsety);
+                placeY = o3_y - (o3_aboveheight + o3_offsety);
                 if (placeY < scrolloffset) placeY = scrolloffset;
             } else {
                 // BELOW
-                placeY = o3_y+o3_offsety;
+                placeY = o3_y + o3_offsety;
             }
 
             // Snapping!
@@ -175,9 +175,9 @@ function scroll_placeLayer() {
                 var snapping = placeY % o3_snapy;
 
                 if (o3_aboveheight > 0 && o3_vpos == ABOVE) {
-                    placeY = placeY - (o3_snapy+snapping);
+                    placeY = placeY - (o3_snapy + snapping);
                 } else {
-                    placeY = placeY+(o3_snapy - snapping);
+                    placeY = placeY + (o3_snapy - snapping);
                 }
 
                 if (placeY < scrolloffset) placeY = scrolloffset;
@@ -186,13 +186,12 @@ function scroll_placeLayer() {
     }
 
     // Actually move the object.
-    repositionTo(over,placeX,placeY);
+    repositionTo(over, placeX, placeY);
 
     if (o3_followscroll && o3_sticky && (o3_relx || o3_rely) && (typeof o3_draggable == 'undefined' || !o3_draggable)) {
-        if (typeof over.scroller=='undefined' || over.scroller.canScroll) over.scroller = new Scroller(placeX-winoffset,placeY-scrolloffset,o3_followscrollrefresh);
+        if (typeof over.scroller == 'undefined' || over.scroller.canScroll) over.scroller = new Scroller(placeX - winoffset, placeY - scrolloffset, o3_followscrollrefresh);
     }
 }
-
 
 
 ///////
@@ -200,12 +199,12 @@ function scroll_placeLayer() {
 ///////
 
 // Scroller constructor
-function Scroller(X,Y,refresh) {
-    this.canScroll=0;
-    this.refresh=refresh;
-    this.x=X;
-    this.y=Y;
-    this.timer=setTimeout("repositionOver()",this.refresh);
+function Scroller(X, Y, refresh) {
+    this.canScroll = 0;
+    this.refresh = refresh;
+    this.x = X;
+    this.y = Y;
+    this.timer = setTimeout("repositionOver()", this.refresh);
 }
 
 // Removes the timer to stop replacing the layer.
@@ -215,19 +214,19 @@ function cancelScroll() {
 
     if (over.scroller.timer) {
         clearTimeout(over.scroller.timer);
-        over.scroller.timer=null;
+        over.scroller.timer = null;
     }
 }
 
 // Find out how much we've scrolled.
-    function getPageScrollY() {
+function getPageScrollY() {
     if (o3_frame.pageYOffset) return o3_frame.pageYOffset;
     if (eval(docRoot)) return eval('o3_frame.' + docRoot + '.scrollTop');
     return -1;
 }
 function getPageScrollX() {
     if (o3_frame.pageXOffset) return o3_frame.pageXOffset;
-    if (eval(docRoot)) return eval('o3_frame.'+docRoot+'.scrollLeft');
+    if (eval(docRoot)) return eval('o3_frame.' + docRoot + '.scrollLeft');
     return -1;
 }
 
@@ -248,10 +247,10 @@ function repositionOver() {
     var X, Y, pgLeft, pgTop;
     pgTop = getPageScrollY();
     pgLeft = getPageScrollX();
-    X = getLayerLeft(over)-pgLeft;
-    Y = getLayerTop(over)-pgTop;
+    X = getLayerLeft(over) - pgLeft;
+    Y = getLayerTop(over) - pgTop;
 
-    if (X != over.scroller.x || Y != over.scroller.y) repositionTo(over, pgLeft+over.scroller.x, pgTop+over.scroller.y);
+    if (X != over.scroller.x || Y != over.scroller.y) repositionTo(over, pgLeft + over.scroller.x, pgTop + over.scroller.y);
     over.scroller.timer = setTimeout("repositionOver()", over.scroller.refresh);
 }
 
@@ -260,6 +259,6 @@ function repositionOver() {
 ////////
 registerRunTimeFunction(setScrollVariables);
 registerCmdLineFunction(parseScrollExtras);
-registerHook("hideObject",cancelScroll,FAFTER);
-registerHook("placeLayer",scroll_placeLayer,FREPLACE);
+registerHook("hideObject", cancelScroll, FAFTER);
+registerHook("placeLayer", scroll_placeLayer, FREPLACE);
 //end

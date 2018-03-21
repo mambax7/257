@@ -16,9 +16,8 @@
  * @subpackage      Action
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
- * @version         $Id: view.tag.php 10374 2012-12-12 23:39:48Z trabis $
  */
 
 //todo: check this file
-include_once __DIR__ . '/header.php';
-include_once $GLOBALS['xoops']->path('modules/tag/view.tag.php');
+require_once __DIR__ . '/header.php';
+require_once $GLOBALS['xoops']->path('modules/tag/view.tag.php');

@@ -10,10 +10,10 @@ function fillInitialDestList() {
     for (var count = destList.options.length - 1; count >= 0; count--) {
         destList.options[count] = null;
     }
-    for(var i = 0; i < srcList.options.length; i++) {
+    for (var i = 0; i < srcList.options.length; i++) {
         if (srcList.options[i] != null)
-        destList.options[i] = new Option(srcList.options[i].text);
-   }
+            destList.options[i] = new Option(srcList.options[i].text);
+    }
 }
 
 // Add the selected items from the source to destination list
@@ -21,12 +21,12 @@ function addSrcToDestList() {
     destList = window.document.forms[0].destList;
     srcList = window.document.forms[0].srcList;
     var len = destList.length;
-    for(var i = 0; i < srcList.length; i++) {
+    for (var i = 0; i < srcList.length; i++) {
         if ((srcList.options[i] != null) && (srcList.options[i].selected)) {
             //Check if this value already exist in the destList or not
             //if not then add it otherwise do not add it.
             var found = false;
-            for(var count = 0; count < len; count++) {
+            for (var count = 0; count < len; count++) {
                 if (destList.options[count] != null) {
                     if (srcList.options[i].text == destList.options[count].text) {
                         found = true;
@@ -44,9 +44,9 @@ function addSrcToDestList() {
 
 // Deletes from the destination list.
 function deleteFromDestList() {
-    var destList  = window.document.forms[0].destList;
+    var destList = window.document.forms[0].destList;
     var len = destList.options.length;
-    for(var i = (len-1); i >= 0; i--) {
+    for (var i = (len - 1); i >= 0; i--) {
         if ((destList.options[i] != null) && (destList.options[i].selected == true)) {
             destList.options[i] = null;
         }
@@ -57,28 +57,28 @@ function deleteFromDestList() {
 function small_window(myurl, w, h) {
     // La ventana se llama "Add_from_Src_to_Dest"
     var newWindow;
-    LeftPosition = (screen.width)? (screen.width-w)/2 : 0;
-    TopPosition = (screen.height)? (screen.height-h)/2 : 0;
-    newWindow = window.open(myurl, "Add_from_Src_to_Dest", 'left='+LeftPosition+',top='+TopPosition+',width='+w+', height='+h+',scrollBars=yes,resizable=yes,toolbar=no,menubar=no,location=no,directories=no');
+    LeftPosition = (screen.width) ? (screen.width - w) / 2 : 0;
+    TopPosition = (screen.height) ? (screen.height - h) / 2 : 0;
+    newWindow = window.open(myurl, "Add_from_Src_to_Dest", 'left=' + LeftPosition + ',top=' + TopPosition + ',width=' + w + ', height=' + h + ',scrollBars=yes,resizable=yes,toolbar=no,menubar=no,location=no,directories=no');
 }
 
 // Adds the list of selected items selected in the child
 // window to its list. It is called by child window to do so.
 function addToParentList(sourceList) {
     destinationList = window.document.forms[0].elements['moderators[]'];
-    for(var count = destinationList.options.length - 1; count >= 0; count--) {
+    for (var count = destinationList.options.length - 1; count >= 0; count--) {
         destinationList.options[count] = null;
     }
-    for(var i = 0; i < sourceList.options.length; i++) {
+    for (var i = 0; i < sourceList.options.length; i++) {
         if (sourceList.options[i] != null)
-            destinationList.options[i] = new Option(sourceList.options[i].text, sourceList.options[i].value );
+            destinationList.options[i] = new Option(sourceList.options[i].text, sourceList.options[i].value);
     }
 }
 
 // Marks all the items as selected for the submit button.
 function selectList(sourceList) {
     sourceList = window.document.forms[0].elements['moderators[]'];
-    for(var i = 0; i < sourceList.options.length; i++) {
+    for (var i = 0; i < sourceList.options.length; i++) {
         if (sourceList.options[i] != null)
             sourceList.options[i].selected = true;
     }
@@ -88,7 +88,7 @@ function selectList(sourceList) {
 // Deletes the selected items of supplied list.
 function deleteSelectedItemsFromList(sourceList) {
     var maxCnt = sourceList.options.length;
-    for(var i = maxCnt - 1; i >= 0; i--) {
+    for (var i = maxCnt - 1; i >= 0; i--) {
         if ((sourceList.options[i] != null) && (sourceList.options[i].selected == true)) {
             sourceList.options[i] = null;
         }

@@ -1,15 +1,35 @@
-=> Version 1.51 Beta 2 (2013-07-24)
+<h5>1.52 Beta 1  [NOT RELEASED]</h5>  Dev: Xoops 2.5.9, PHP 7.2.3
+<hr>
+- namespaces, autoloading (mamba)
+WORK IN PROGRESS
+
+1.51 Final        2016-07-10
+===================================
+- moved all images, CSS, and JS files to /assets (mamba)
+- renamed .html Smarty templates to .tpl (mamba)
+- removed @version (mamba)
+- code cosmetics (mamba)
+- addNavigation(basename(__FILE__))  (mamba)
+- dirname(__FILE__) to __DIR__ (mamba)
+- XOOPS 2.5.8, PHP 7 (mamba)
+- replaced < b /> with < b > (mamba)
+- Unnecessary double quotes (mamba)
+- reference mismatch (mamba)
+- Hardening to type safe (mamba)
+- update Help (mamba)
+
+1.51 Beta 2 (2013-07-24)
 ===================================
 - updated to use any directory, with /rwbanner as the default directory
 - added preloads for header.php (mamba)
-- standardized language prefixes
-- converted several files to UTF-8
+- standardized language prefixes (mamba)
+- converted several files to UTF-8 (mamba)
 
-=> Version 1.51 Beta 1 (2012-08-12)
+1.51 Beta 1 (2012-08-12)
 ===================================
 - updated to XOOPS 2.5.x Admin GUI (mamba)
 
-=> Version 1.5 (10/09/2006)
+1.5 (10/09/2006)
 ===================================
 - Finally, the counting problem for the flash banner was solved. Each action script of the banner module was rewritten
   and the bugs corrected.
@@ -26,16 +46,16 @@
 - 2 new blocks with DHTML effects were added, Drop-in Banner and LightBox Banner. Now you can give a new highlight to
   your banners.
 
-=> Version 1.4 RC (02/04/2006)
+1.4 RC (02/04/2006)
 ===================================
 - New block added. Ajax Banner: this block creates a table with the selected banners based on the configuration criterias and change the shown banners form x to x seconds. The time is also defined in the configurations.
 - Templates for all the blocks were created. Now it's much easier to change the exibition format within the blocks.
 
-=> Version 1.3.2 RC1 (23/02/2006)
+1.3.2 RC1 (23/02/2006)
 ===================================
 New block added. DHTML Banner: this block creates a floating area that closes automatically in X seconds and it has the option to select background and border color, how many banners will be shown, in how many columns, show the banner once each X reloads, among other features.
 
-=> Version 1.3.2 RC (05/02/2006)
+1.3.2 RC (05/02/2006)
 ===================================
 - The click counting bug for flash banners was corrected.
 - The screen for adding and editing banners was changed as well as the screen for adding and editing the categories. Now these screens are using the xoops form class.
@@ -43,14 +63,14 @@ New block added. DHTML Banner: this block creates a floating area that closes au
 - Bugs corrected in the user's side in the module: now the site users that are banner clients can see the statistics of their banners through this area.
 - Added the option to acquire a banner per clicks. When the total of clicks acquired is reached, the banner becomes inactive and is not shown anymore.
 
-=> Version 1.3 RC (18/09/2005)
+1.3 RC (18/09/2005)
 ===================================
 - The banner exhibition function in the header and in the templates was changed. There was an option added to show one category in one particular module.
 - Due to this change in the function, there was added another option in the registration forms and by the editing of categories. With this new option the module administrator is able to link a category to a specific module bringing the banners for this category to be shown in the linked module.
 - The language constants were created.
 - A bug remains and I couldn't solve the click counting problem yet for flash banners and HTML code.
 
-=> Version 1.1 RC (14/09/2005)
+1.1 RC (14/09/2005)
 ==================================
 - Many bugs were corrected in the previous version.
 - Added an option to add banners for a particular client.
@@ -58,6 +78,6 @@ New block added. DHTML Banner: this block creates a floating area that closes au
 - Added a new block, client statistics, that shows the client the main statistics of his banners.
 - Created an area for the client where he has access to the statistics of his banners, possiblity to change the url of the banners and, further, the submission of the statistics per e-mail.
 
-=> Version 0.9 Beta 1 (11/09/2005)
+0.9 Beta 1 (11/09/2005)
 ==================================
 Public Release of the first test version.

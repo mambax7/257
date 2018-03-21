@@ -1,101 +1,112 @@
 <?php
-// $Id: xoops_version.php 10523 2012-12-23 12:48:50Z beckmi $
-//  ------------------------------------------------------------------------ //
-//                XOOPS - PHP Content Management System                      //
-//                    Copyright (c) 2000 XOOPS.org                           //
-//                       <http://www.xoops.org/>                             //
-//  ------------------------------------------------------------------------ //
-//  This program is free software; you can redistribute it and/or modify     //
-//  it under the terms of the GNU General Public License as published by     //
-//  the Free Software Foundation; either version 2 of the License, or        //
-//  (at your option) any later version.                                      //
-//                                                                           //
-//  You may not change or alter any portion of this comment or credits       //
-//  of supporting developers from this source code or any supporting         //
-//  source code which is considered copyrighted (c) material of the          //
-//  original comment or credit authors.                                      //
-//                                                                           //
-//  This program is distributed in the hope that it will be useful,          //
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of           //
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            //
-//  GNU General Public License for more details.                             //
-//                                                                           //
-//  You should have received a copy of the GNU General Public License        //
-//  along with this program; if not, write to the Free Software              //
-//  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
-//  ------------------------------------------------------------------------ //
+/*
+ * You may not change or alter any portion of this comment or credits
+ * of supporting developers from this source code or any supporting source code
+ * which is considered copyrighted (c) material of the original comment or credit authors.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ */
 
-defined('XOOPS_ROOT_PATH') or die('Restricted access');
-$xhlDirName = basename(dirname(__FILE__)) ;
+/**
+ * @copyright    {@link https://xoops.org/ XOOPS Project}
+ * @license      {@link http://www.gnu.org/licenses/gpl-2.0.html GNU GPL 2 or later}
+ * @package
+ * @since
+ * @author       XOOPS Development Team
+ */
 
-$modversion = array('name' => _MI_HEADLINES_NAME,
-                    'description' => _MI_HEADLINES_DESC,
-                    'version' => 1.10,
-                    'module_status' => "Final",
-                    'official' => 1,    // maintained by XOOPS Module Development Team
-                    'author' => 'Kazumi Ono ( http://www.xoops.org/ http://www.myweb.ne.jp/ )',
-                    'credits' => 'The Xoops Module Development Team',
-                    'license' => 'GNU GPL 2.0',
-                    'license_url' => "www.gnu.org/licenses/gpl-2.0.html/",
-                    'help' => 'page=help',
-                    'image' => 'images/headline_slogo.png',
-                    'dirname' => $xhlDirName,
+defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
-                    //about
-                    'author_website_url' => "http://xoops.org",
-                    'author_website_name' => "XOOPS",
-                    'module_website_url' => "http://xoops.org",
-                    'module_website_name' => "XOOPS",
-                    'release_date' => '2012/12/22',
-                    'min_php' => '5.2.0',
-                    'min_xoops' => '2.5.5',
-                    'min_db' => array('mysql'=>'5.0.7', 'mysqli'=>'5.0.7'),
-                    'min_admin' => '1.1',
-                    'dirmoduleadmin' => '/Frameworks/moduleclasses/moduleadmin',
-                    'icons16' => '../../Frameworks/moduleclasses/icons/16',
-                    'icons32' => '../../Frameworks/moduleclasses/icons/32'
-                    );
+require_once __DIR__ . '/preloads/autoloader.php';
+
+$xhlDirName = basename(__DIR__);
+
+$modversion = [
+    'version'             => 1.12,
+    'module_status'       => 'Beta 1',
+    'release_date'        => '2017/07/20',
+    'name'                => _MI_HEADLINES_NAME,
+    'description'         => _MI_HEADLINES_DESC,
+    'official'            => 1,    // maintained by XOOPS Module Development Team
+    'author'              => 'Kazumi Ono ( https://xoops.org/ http://www.myweb.ne.jp/ )',
+    'credits'             => 'The Xoops Module Development Team',
+    'license'             => 'GNU GPL 2.0',
+    'license_url'         => 'www.gnu.org/licenses/gpl-2.0.html/',
+    'help'                => 'page=help',
+    'image'               => 'assets/images/logoModule.png',
+    'dirname'             => $xhlDirName,
+    //about
+    'author_website_url'  => 'https://xoops.org',
+    'author_website_name' => 'XOOPS',
+    'module_website_url'  => 'https://xoops.org',
+    'module_website_name' => 'XOOPS',
+    'min_php'             => '5.5',
+    'min_xoops'           => '2.5.9',
+    'min_db'              => ['mysql' => '5.5'],
+    'min_admin'           => '1.1',
+    //    'dirmoduleadmin'      => '/Frameworks/moduleclasses/moduleadmin',
+    //    'icons16'             => '../../Frameworks/moduleclasses/icons/16',
+    //    'icons32'             => '../../Frameworks/moduleclasses/icons/32'
+    // Local path icons
+    'modicons16'          => 'assets/images/icons/16',
+    'modicons32'          => 'assets/images/icons/32',
+];
 
 // Sql file (must contain sql generated by phpMyAdmin or phpPgAdmin)
 // All tables should not have any prefix!
-$modversion['sqlfile']['mysql'] = "sql/mysql.sql";
+$modversion['sqlfile']['mysql'] = 'sql/mysql.sql';
 //$modversion['sqlfile']['mysqli'] = "sql/mysql.sql";
 //$modversion['sqlfile']['postgresql'] = "sql/pgsql.sql";
 
 // Tables created by sql file (without prefix!)
-$modversion['tables'][0] = "xoopsheadline";
+$modversion['tables'][0] = 'xoopsheadline';
 
 // Config Options
-$modversion['config'][1] = array(
-                            'name'        => 'sortby',
-                            'title'       => '_MI_HEADLINES_SORTORDER',
-                            'description' => '_MI_HEADLINES_SORTORDERDSC',
-                            'formtype'    => 'select',
-                            'valuetype'   => 'text',
-                            'default'     => 4,
-                            'options'     => array('_MI_HEADLINES_SORT1' => 1, '_MI_HEADLINES_SORT2' => 2, '_MI_HEADLINES_SORT3' => 3, '_MI_HEADLINES_SORT4' => 4)
-                          );
+$modversion['config'][1] = [
+    'name'        => 'sortby',
+    'title'       => '_MI_HEADLINES_SORTORDER',
+    'description' => '_MI_HEADLINES_SORTORDERDSC',
+    'formtype'    => 'select',
+    'valuetype'   => 'text',
+    'default'     => 4,
+    'options'     => [
+        '_MI_HEADLINES_SORT1' => 1,
+        '_MI_HEADLINES_SORT2' => 2,
+        '_MI_HEADLINES_SORT3' => 3,
+        '_MI_HEADLINES_SORT4' => 4
+    ]
+];
 
 // Admin
-$modversion['hasAdmin'] = 1;
-$modversion['adminindex'] = "admin/index.php";
-$modversion['adminmenu'] = "admin/menu.php";
+$modversion['hasAdmin']   = 1;
+$modversion['adminindex'] = 'admin/index.php';
+$modversion['adminmenu']  = 'admin/menu.php';
 
 // Set to 1 if you want to display menu generated by system module
 $modversion['system_menu'] = 1;
 
+// ------------------- Help files ------------------- //
+$modversion['helpsection'] = [
+    ['name' => _MI_HEADLINES_OVERVIEW, 'link' => 'page=help'],
+    ['name' => _MI_HEADLINES_DISCLAIMER, 'link' => 'page=disclaimer'],
+    ['name' => _MI_HEADLINES_LICENSE, 'link' => 'page=license'],
+    ['name' => _MI_HEADLINES_SUPPORT, 'link' => 'page=support'],
+];
+
 // Blocks
-$modversion['blocks'][1]['file'] = "headline.php";
-$modversion['blocks'][1]['name'] = _MI_HEADLINES_BNAME;
-$modversion['blocks'][1]['description'] = "Shows headline news via RDF/RSS news feed";
-$modversion['blocks'][1]['show_func'] = 'b_xoopsheadline_show';
-$modversion['blocks'][1]['template'] = 'xoopsheadline_block_rss.html';
+$modversion['blocks'][1]['file']        = 'headline.php';
+$modversion['blocks'][1]['name']        = _MI_HEADLINES_BNAME;
+$modversion['blocks'][1]['description'] = 'Shows headline news via RDF/RSS news feed';
+$modversion['blocks'][1]['show_func']   = 'b_xoopsheadline_show';
+$modversion['blocks'][1]['template']    = 'xoopsheadline_block_rss.tpl';
 
 // Menu
 $modversion['hasMain'] = 1;
 
 // Templates
-$modversion['templates'][1]['file'] = 'xoopsheadline_index.html';
+$modversion['templates'][1]['file']        = 'xoopsheadline_index.tpl';
 $modversion['templates'][1]['description'] = '';
-$modversion['templates'][2]['file'] = 'xoopsheadline_feed.html';
+$modversion['templates'][2]['file']        = 'xoopsheadline_feed.tpl';
 $modversion['templates'][2]['description'] = '';

@@ -1,11 +1,11 @@
 <?php
 // init addon
-$REX['ADDON']['name']['magnific_popup'] = 'Magnific Popup';
-$REX['ADDON']['page']['magnific_popup'] = 'magnific_popup';
-$REX['ADDON']['version']['magnific_popup'] = '1.1.2';
-$REX['ADDON']['author']['magnific_popup'] = 'RexDude';
+$REX['ADDON']['name']['magnific_popup']        = 'Magnific Popup';
+$REX['ADDON']['page']['magnific_popup']        = 'magnific_popup';
+$REX['ADDON']['version']['magnific_popup']     = '1.1.2';
+$REX['ADDON']['author']['magnific_popup']      = 'RexDude';
 $REX['ADDON']['supportpage']['magnific_popup'] = 'forum.redaxo.de';
-$REX['ADDON']['perm']['magnific_popup'] = 'magnific_popup[]';
+$REX['ADDON']['perm']['magnific_popup']        = 'magnific_popup[]';
 
 // permissions
 $REX['PERM'][] = 'magnific_popup[]';

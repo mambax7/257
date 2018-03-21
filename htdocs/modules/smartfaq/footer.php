@@ -1,21 +1,28 @@
 <?php
 
 /**
-* $Id: footer.php,v 1.13 2005/08/15 16:51:58 fx2024 Exp $
-* Module: SmartFAQ
-* Author: The SmartFactory <www.smartfactory.ca>
-* Licence: GNU
-*/
+ * Module: SmartFAQ
+ * Author: The SmartFactory <www.smartfactory.ca>
+ * Licence: GNU
+ */
+
+use XoopsModules\Smartfaq;
 
 global $xoopsTpl, $xoopsModule, $xoopsModuleConfig;
 
-$uid = ($xoopsUser)? ($xoopsUser->getVar("uid")) : 0;
-$isAdmin = (sf_userIsAdmin() || sf_moderator());
+$uid     = $xoopsUser ? $xoopsUser->getVar('uid') : 0;
+$isAdmin = (Smartfaq\Utility::userIsAdmin() || Smartfaq\Utility::hasModerator());
 
-$xoopsTpl->assign("sf_adminpage", "<a href='" . XOOPS_URL . "/modules/smartfaq/admin/index.php'>" . _MD_SF_ADMIN_PAGE . "</a>");
-$xoopsTpl->assign("isAdmin", $isAdmin);
+$xoopsTpl->assign('sf_adminpage', "<a href='" . XOOPS_URL . "/modules/smartfaq/admin/index.php'>" . _MD_SF_ADMIN_PAGE . '</a>');
+$xoopsTpl->assign('isAdmin', $isAdmin);
 
-$xoopsTpl->assign(array('lang_on' => _MD_SF_ON, 'lang_postedby' => _MD_SF_POSTEDBY, 'lang_faq' => _MD_SF_QUESTION, 'lang_datesub' => _MD_SF_DATESUB, 'lang_hits' => _MD_SF_HITS));
+$xoopsTpl->assign([
+                      'lang_on'       => _MD_SF_ON,
+                      'lang_postedby' => _MD_SF_POSTEDBY,
+                      'lang_faq'      => _MD_SF_QUESTION,
+                      'lang_datesub'  => _MD_SF_DATESUB,
+                      'lang_hits'     => _MD_SF_HITS
+                  ]);
 $xoopsTpl->assign('sectionname', $myts->displayTarea($xoopsModule->getVar('name')));
 
 $xoopsTpl->assign('modulename', $xoopsModule->dirname());
@@ -25,8 +32,8 @@ $xoopsTpl->assign('displaycollaps', $xoopsModuleConfig['displaycollaps']);
 $xoopsTpl->assign('display_date_col', $xoopsModuleConfig['display_date_col']);
 $xoopsTpl->assign('display_hits_col', $xoopsModuleConfig['display_hits_col']);
 
-$xoopsTpl->assign("displaytopcatdsc", $xoopsModuleConfig['displaytopcatdsc']);
+$xoopsTpl->assign('displaytopcatdsc', $xoopsModuleConfig['displaytopcatdsc']);
 
-$xoopsTpl->assign("ref_smartfaq", "SmartFAQ is developed by The SmartFactory (http://www.smartfactory.ca), a division of InBox Solutions (http://www.inboxsolutions.net)");
+$xoopsTpl->assign('ref_smartfaq', 'SmartFAQ is developed by The SmartFactory (http://www.smartfactory.ca), a division of InBox Solutions (http://www.inboxsolutions.net)');
 
-$xoopsTpl->assign("xoops_module_header", "<link rel='stylesheet' type='text/css' href='" . XOOPS_URL . "/modules/smartfaq/smartfaq.css'/>");
+$xoopsTpl->assign('xoops_module_header', "<link rel='stylesheet' type='text/css' href='" . XOOPS_URL . "/modules/smartfaq/assets/css/smartfaq.css'>");

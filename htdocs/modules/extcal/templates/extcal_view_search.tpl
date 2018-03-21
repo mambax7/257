@@ -1,7 +1,7 @@
 <{include file="db:extcal_navbar.tpl"}>
 
 <form action="<{$navigSelectBox.action}>" method="post">
-
+    <{securityToken}><{*//mb*}>
     <table class="outer" style="border-top: none;">
         <tr>
             <th align='center' colspan='2'>
@@ -52,11 +52,11 @@
         </tr>
 
         <input type="hidden" name="num_tries" value="<{$num_tries}>">
-
         <tr class="even">
             <td colspan='2' align='center'>
                 <input type="submit" style='width:150px;' value="<{$smarty.const._MD_EXTCAL_SEARCH}>" name="B1">
-                <input type="button" style='width:150px;' value="<{$smarty.const._MD_CLEAR_CRITERIA}>" name="B2" onclick="extcal_clear_criteres();">
+                <input type="button" style='width:150px;' value="<{$smarty.const._MD_CLEAR_CRITERIA}>" name="B2"
+                       onclick="extcal_clear_criteres();">
                 <input type="button" style='width:50px;visibility:hidden;' value="" name="B0">
 
             </td>
@@ -83,8 +83,8 @@
 
 <div style="text-align:right;"><a
             href="<{$xoops_url}>/modules/extcal/rss.php?cat=<{$selectedCat}>"><img
-                src="assets/images/icons/rss.gif" alt="RSS Feed"/></a></div>
-<{include file='db:system_notification_select.html'}>
+                src="assets/images/icons/rss.gif" alt="RSS Feed"></a></div>
+<{include file='db:system_notification_select.tpl'}>
 
 
 <script type="text/javascript">

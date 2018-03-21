@@ -1,8 +1,23 @@
-1.02 Beta 1         NOT RELEASED
+1.02 Final        2016-07-10
+=================================
+- code cosmetics (mamba)
+- removed @version (mamba)
+- addNavigation(basename(__FILE__))  (mamba)
+- dirname(__FILE__) to __DIR__ (mamba)
+- XOOPS 2.5.8, PHP 7 (mamba)
+- replaced < b /> with < b > (mamba)
+- Unnecessary double quotes (mamba)
+- reference mismatch (mamba)
+- Hardening to type safe (mamba)
+- update Help (mamba)
+- updated Prototype.js to 1.7.3
+
+1.02 RC 1         2016-03-27
 =================================
 - moved all images, CSS, and JS files to /assets (mamba)
 - added tab for bulk Updates (mamba)
 - added patches for Core files, required for "bulk Update" to work, located in /extras (mamba)
+- XOOPS 2.5.8 and PHP 7 (mamba)
 
 1.01 Beta 1         2014-03-18
 =================================

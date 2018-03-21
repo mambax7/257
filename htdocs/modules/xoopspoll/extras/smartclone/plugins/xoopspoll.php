@@ -2,9 +2,8 @@
 
 /**
  * @package:: SmartClone
- * @author::  {@link http://www.smartfactory.ca The SmartFactory}
+ * @author ::  {@link http://www.smartfactory.ca The SmartFactory}
  * @license:: {@link http://www.gnu.org/licenses/gpl-2.0.html GNU Public License}
- * @version:: $Id: $
  */
 
 /**
@@ -71,28 +70,28 @@
  * SmartClone plugin for Xoopspoll
  */
 
-$i = 0;
-$pluginPatterns[$i]['key'] = '_XOOPSPOLL_';
+$i                                 = 0;
+$pluginPatterns[$i]['key']         = '_XOOPSPOLL_';
 $pluginPatterns[$i]['replacement'] = 'CONSTANT';
-$pluginPatterns[$i]['prefix'] = '_';
-$pluginPatterns[$i]['suffix'] = '_';
+$pluginPatterns[$i]['prefix']      = '_';
+$pluginPatterns[$i]['suffix']      = '_';
 
 ++$i;
-$pluginPatterns[$i]['key'] = 'XoopsPoll';
+$pluginPatterns[$i]['key']         = 'XoopsPoll';
 $pluginPatterns[$i]['replacement'] = 'ModuleName';
 
 ++$i;
-$pluginPatterns[$i]['key'] = 'Xoopspoll';
+$pluginPatterns[$i]['key']         = 'Xoopspoll';
 $pluginPatterns[$i]['replacement'] = 'Modulename';
 
 ++$i;
-$pluginPatterns[$i]['key'] = 'xoopspoll';
+$pluginPatterns[$i]['key']         = 'xoopspoll';
 $pluginPatterns[$i]['replacement'] = 'modulename';
 
 ++$i;
-$pluginPatterns[$i]['key'] = 'voted_polls';
+$pluginPatterns[$i]['key']         = 'voted_polls';
 $pluginPatterns[$i]['replacement'] = 'CUSTOM';
-$pluginPatterns[$i]['function'] = 'buildCookieName';
+$pluginPatterns[$i]['function']    = 'buildCookieName';
 
 /**
  * @return string

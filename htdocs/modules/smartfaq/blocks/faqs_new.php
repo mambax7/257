@@ -1,95 +1,108 @@
 <?php
 
 /**
-* $Id: faqs_new.php,v 1.13 2005/08/16 15:39:45 fx2024 Exp $
-* Module: SmartFAQ
-* Author: The SmartFactory <www.smartfactory.ca>
-* Licence: GNU
-*/
-// defined("XOOPS_ROOT_PATH") || exit("XOOPS root path not defined");
+ * Module: SmartFAQ
+ * Author: The SmartFactory <www.smartfactory.ca>
+ * Licence: GNU
+ * @param $options
+ * @return array
+ */
 
+use XoopsModules\Smartfaq;
+
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
+
+/**
+ * @param $options
+ * @return array
+ */
 function b_faqs_new_show($options)
 {
-    include_once(XOOPS_ROOT_PATH."/modules/smartfaq/include/functions.php");
+//    require_once XOOPS_ROOT_PATH . '/modules/smartfaq/include/functions.php';
 
-    $block = array();
+    $block = [];
 
-    if ($options[0] == 0) {
+    if (0 == $options[0]) {
         $categoryid = -1;
     } else {
         $categoryid = $options[0];
     }
 
-    $sort = $options[1];
-    $limit = $options[2];
+    $sort              = $options[1];
+    $limit             = $options[2];
     $maxQuestionLength = $options[3];
 
     // Creating the faq handler object
-    $faq_handler =& sf_gethandler('faq');
+    /** @var \XoopsModules\Smartfaq\FaqHandler $faqHandler */
+    $faqHandler = \XoopsModules\Smartfaq\Helper::getInstance()->getHandler('Faq');
     // creating the FAQ objects that belong to the selected category
-    $faqsObj = $faq_handler->getAllPublished($limit, 0, $categoryid, $sort);
-    $totalfaqs = count($faqsObj);
+    $faqsObj   = $faqHandler->getAllPublished($limit, 0, $categoryid, $sort);
+
     if ($faqsObj) {
-        for ($i = 0; $i < $totalfaqs; ++$i) {
-            $newfaqs = array();
-            $newfaqs['linktext'] = $faqsObj[$i]->question($maxQuestionLength);
-            $newfaqs['id'] = $faqsObj[$i]->faqid();
-            if ($sort == "datesub") {
-                $newfaqs['new'] = $faqsObj[$i]->datesub();
-            } elseif ($sort == "counter") {
-                $newfaqs['new'] = $faqsObj[$i]->counter();
-            } elseif ($sort == "weight") {
-                $newfaqs['new'] = $faqsObj[$i]->weight();
+        foreach ($faqsObj as $iValue) {
+            $newfaqs             = [];
+            $newfaqs['linktext'] = $iValue->question($maxQuestionLength);
+            $newfaqs['id']       = $iValue->faqid();
+            if ('datesub' === $sort) {
+                $newfaqs['new'] = $iValue->datesub();
+            } elseif ('counter' === $sort) {
+                $newfaqs['new'] = $iValue->counter();
+            } elseif ('weight' === $sort) {
+                $newfaqs['new'] = $iValue->weight();
             }
             $newfaqs['show_date'] = $options[4];
-            $block['newfaqs'][] = $newfaqs;
+            $block['newfaqs'][]   = $newfaqs;
         }
     }
 
     return $block;
 }
 
+/**
+ * @param $options
+ * @return string
+ */
 function b_faqs_new_edit($options)
 {
     global $xoopsDB, $xoopsModule, $xoopsUser;
-    include_once(XOOPS_ROOT_PATH."/modules/smartfaq/include/functions.php");
+//    require_once XOOPS_ROOT_PATH . '/modules/smartfaq/include/functions.php';
 
-    $form = sf_createCategorySelect($options[0]);
+    $form = Smartfaq\Utility::createCategorySelect($options[0]);
 
-    $form .= "&nbsp;<br>" . _MB_SF_ORDER . "&nbsp;<select name='options[]'>";
+    $form .= '&nbsp;<br>' . _MB_SF_ORDER . "&nbsp;<select name='options[]'>";
 
     $form .= "<option value='datesub'";
-    if ($options[1] == "datesub") {
-        $form .= " selected='selected'";
+    if ('datesub' === $options[1]) {
+        $form .= ' selected';
     }
-    $form .= ">" . _MB_SF_DATE . "</option>\n";
+    $form .= '>' . _MB_SF_DATE . "</option>\n";
 
     $form .= "<option value='counter'";
-    if ($options[1] == "counter") {
-        $form .= " selected='selected'";
+    if ('counter' === $options[1]) {
+        $form .= ' selected';
     }
-    $form .= ">" . _MB_SF_HITS . "</option>\n";
+    $form .= '>' . _MB_SF_HITS . "</option>\n";
 
     $form .= "<option value='weight'";
-    if ($options[1] == "weight") {
-        $form .= " selected='selected'";
+    if ('weight' === $options[1]) {
+        $form .= ' selected';
     }
-    $form .= ">" . _MB_SF_WEIGHT . "</option>\n";
+    $form .= '>' . _MB_SF_WEIGHT . "</option>\n";
 
     $form .= "</select>\n";
 
-    $form .= "&nbsp;" . _MB_SF_DISP . "&nbsp;<input type='text' name='options[]' value='" . $options[2] . "' />&nbsp;" . _MB_SF_FAQS . "";
-    $form .= "&nbsp;<br>" . _MB_SF_CHARS . "&nbsp;<input type='text' name='options[]' value='" . $options[3] . "' />&nbsp;" . _MB_SF_LENGTH . "";
+    $form .= '&nbsp;' . _MB_SF_DISP . "&nbsp;<input type='text' name='options[]' value='" . $options[2] . "'>&nbsp;" . _MB_SF_FAQS . '';
+    $form .= '&nbsp;<br>' . _MB_SF_CHARS . "&nbsp;<input type='text' name='options[]' value='" . $options[3] . "'>&nbsp;" . _MB_SF_LENGTH . '';
 
-    $form .= "<br />"._MB_SF_SHOW_DATE."&nbsp;<input type='radio' id='options[]' name='options[]' value='1'";
-    if ($options[4] == 1) {
-        $form .= " checked='checked'";
+    $form .= '<br>' . _MB_SF_SHOW_DATE . "&nbsp;<input type='radio' id='options[]' name='options[]' value='1'";
+    if (1 == $options[4]) {
+        $form .= ' checked';
     }
-    $form .= " />&nbsp;"._YES."<input type='radio' id='options[]' name='options[]' value='0'";
-    if ($options[4] == 0) {
-        $form .= " checked='checked'";
+    $form .= '>&nbsp;' . _YES . "<input type='radio' id='options[]' name='options[]' value='0'";
+    if (0 == $options[4]) {
+        $form .= ' checked';
     }
-    $form .= " />&nbsp;"._NO."";
+    $form .= '>&nbsp;' . _NO . '';
 
     return $form;
 }

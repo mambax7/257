@@ -12,12 +12,11 @@
 /**
  * XOOPS tag management module
  *
- * @package        tag
+ * @package         tag
  * @copyright       {@link http://sourceforge.net/projects/xoops/ The XOOPS Project}
  * @license         {@link http://www.fsf.org/copyleft/gpl.html GNU public license}
  * @author          Taiwen Jiang <phppp@users.sourceforge.net>
  * @since           1.00
- * @version         $Id: plugin.php 12898 2014-12-08 22:05:21Z zyspec $
  *
  * @todo            There should be an option for admin to choose a category to store subcategories and articles
  */
@@ -26,7 +25,7 @@
 /*
  * Add customized configs, variables or functions
  */
-$customConfig = array();
+$customConfig = [];
 
 /*
  * Due to the difference of word boundary for different languages, delimiters also depend on languages
@@ -37,13 +36,14 @@ $customConfig = array();
  *
  * Tips:
  * For English sites, you can set as array(",", ";", " ", "|")
- * For Chinese sites, you can set as array(",", ";", " ", "|", "£¬")
+ * For Chinese sites, you can set as array(",", ";", " ", "|", "ï¿½ï¿½")
  *
  */
-$customConfig = array("tag_delimiter" => array(",", " ", "|", ";"),
-                          "limit_tag" => 100,
-                           "font_max" => 150,
-                           "font_min" => 80
-);
+$customConfig = [
+    'tag_delimiter' => [',', ' ', '|', ';'],
+    'limit_tag'     => 100,
+    'font_max'      => 150,
+    'font_min'      => 80
+];
 
 return $customConfig;

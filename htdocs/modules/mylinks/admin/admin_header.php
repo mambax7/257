@@ -9,36 +9,38 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright::  The XOOPS Project http://sourceforge.net/projects/xoops/
- * @license::    {@link http://www.gnu.org/licenses/gpl-2.0.html GNU Public License}
- * @package::    mylinks
+ * @copyright ::  XOOPS Project (https://xoops.org)
+ * @license   ::    {@link http://www.gnu.org/licenses/gpl-2.0.html GNU Public License}
+ * @package   ::    mylinks
  * @subpackage:: admin
- * @since::      2.5.0
- * @author::     Magic.Shao <magic.shao@gmail.com> - Susheng Yang <ezskyyoung@gmail.com>
- * @version::    $Id $
-**/
+ * @since     ::      2.5.0
+ * @author    ::     Magic.Shao <magic.shao@gmail.com> - Susheng Yang <ezskyyoung@gmail.com>
+ **/
 
-$path = dirname(dirname(dirname(dirname(__FILE__))));
-include_once $path . '/mainfile.php';
-include_once $path . '/include/cp_functions.php';
-require_once $path . '/include/cp_header.php';
+use XoopsModules\Mylinks;
 
-global $xoopsModule;
+require_once __DIR__ . '/../../../include/cp_header.php';
+require_once $GLOBALS['xoops']->path('www/class/xoopsformloader.php');
 
-$thisModuleDir = $GLOBALS['xoopsModule']->getVar('dirname');
-$thisModulePath = dirname(dirname(__FILE__));
+// require_once __DIR__ . '/../class/Utility.php';
+//require_once __DIR__ . '/../include/common.php';
+
+$moduleDirName = basename(dirname(__DIR__));
+$helper = Mylinks\Helper::getInstance();
+$adminObject = \Xmf\Module\Admin::getInstance();
+
+$pathIcon16    = \Xmf\Module\Admin::iconUrl('', 16);
+$pathIcon32    = \Xmf\Module\Admin::iconUrl('', 32);
+$pathModIcon32 = $helper->getModule()->getInfo('modicons32');
 
 // Load language files
-xoops_loadLanguage('admin', $thisModuleDir);
-xoops_loadLanguage('modinfo', $thisModuleDir);
-xoops_loadLanguage('main', $thisModuleDir);
+$helper->loadLanguage('admin');
+$helper->loadLanguage('modinfo');
+$helper->loadLanguage('main');
 
-$pathIcon16 = '../'.$xoopsModule->getInfo('icons16');
-$pathIcon32 = '../'.$xoopsModule->getInfo('icons32');
-$pathModuleAdmin = $xoopsModule->getInfo('dirmoduleadmin');
+$myts = \MyTextSanitizer::getInstance();
 
-if (file_exists($GLOBALS['xoops']->path($pathModuleAdmin.'/moduleadmin.php'))) {
-    include_once $GLOBALS['xoops']->path($pathModuleAdmin.'/moduleadmin.php');
-} else {
-    redirect_header("../../../admin.php", 5, _AM_MODULEADMIN_MISSING, false);
+if (!isset($GLOBALS['xoopsTpl']) || !($GLOBALS['xoopsTpl'] instanceof XoopsTpl)) {
+    require_once $GLOBALS['xoops']->path('class/template.php');
+    $xoopsTpl = new \XoopsTpl();
 }

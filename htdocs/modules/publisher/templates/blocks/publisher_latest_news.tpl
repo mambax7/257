@@ -1,13 +1,18 @@
-<{if $block.template == 'normal'}><{if $block.latestnews_scroll }>
-    <marquee behavior='scroll' align='center' direction='<{$block.scrolldir}>' height='<{$block.scrollheight}>' scrollamount='3' scrolldelay='<{$block.scrollspeed}>' onmouseover='this.stop()' onmouseout='this.start()'>
-<{/if}> <{section name=i loop=$block.columns}>
-    <ul>
-        <{foreach item=item from=$block.columns[i]}>
-            <li><{if $item.posttime }>[ <{$item.posttime}> ]:<{/if}> <{$item.topic_title}> <{$item.title}></li>
-        <{/foreach}>
-    </ul>
-<{/section}> <{if $block.latestnews_scroll }>
-    </marquee><{/if}><{/if}>
+<{if $block.template == 'normal'}>
+    <{if $block.latestnews_scroll }>
+        <marquee behavior='scroll' align='center' direction='<{$block.scrolldir}>' height='<{$block.scrollheight}>' scrollamount='3' scrolldelay='<{$block.scrollspeed}>' onmouseover='this.stop()' onmouseout='this.start()'>
+    <{/if}>
+    <{section name=i loop=$block.columns}>
+        <ul>
+            <{foreach item=item from=$block.columns[i]}>
+                <li><{if $item.posttime }>[ <{$item.posttime}> ]:<{/if}> <{$item.topic_title}> <{$item.title}></li>
+            <{/foreach}>
+        </ul>
+    <{/section}>
+    <{if $block.latestnews_scroll }>
+        </marquee>
+    <{/if}>
+<{/if}>
 
 <{if $block.template == 'extended'}>
 
@@ -55,13 +60,15 @@
     <div><{$block.morelink}><{$block.topiclink}><{$block.archivelink}><{$block.submitlink}></div><{/if}>
 
 <{if $block.template == 'ticker'}>
-<marquee behavior='scroll' align='middle' direction='<{$block.scrolldir}>' height='<{$block.scrollheight}>' scrollamount='3' scrolldelay='<{$block.scrollspeed}>' onmouseover='this.stop()' onmouseout='this.start()'>
-    <{section name=i loop=$block.columns}>
-        <div style="padding:10px;">
-            <{foreach item=item from=$block.columns[i]}> &nbsp;<{$item.title}>&nbsp; <{/foreach}>
-        </div>
-    <{/section}>
-    </marquee><{/if}>
+    <marquee behavior='scroll' align='middle' direction='<{$block.scrolldir}>' height='<{$block.scrollheight}>' scrollamount='3' scrolldelay='<{$block.scrollspeed}>' onmouseover='this.stop()'
+             onmouseout='this.start()'>
+        <{section name=i loop=$block.columns}>
+            <div style="padding:10px;">
+                <{foreach item=item from=$block.columns[i]}> &nbsp;<{$item.title}>&nbsp; <{/foreach}>
+            </div>
+        <{/section}>
+    </marquee>
+<{/if}>
 
 <{if $block.template == 'slider1'}>
 
@@ -147,7 +154,7 @@
         <ul class="pub_slideshow1">
         <{foreach item=item from=$block.columns[i]}>
             <li>
-                <a href="<{$item.itemurl}>"><img src="<{$item.item_image}>" width="100%" height="<{$block.imgheight}>" title="<{$item.alt}>" alt="<{$item.text}>"/></a>
+                <a href="<{$item.itemurl}>"><img src="<{$item.item_image}>" width="100%" height="<{$block.imgheight}>" title="<{$item.alt}>" alt="<{$item.text}>"></a>
             </li>
         <{/foreach}>
         </ul><{/section}>
@@ -180,7 +187,7 @@
                 <ul class="lof-main-wapper">
                     <{foreach item=item from=$block.columns[i]}>
                         <li>
-                            <img src="<{$item.item_image}>" alt="<{$item.alt}>" width="<{$block.imgwidth}>" height="<{$block.imgheight}>"/>
+                            <img src="<{$item.item_image}>" alt="<{$item.alt}>" width="<{$block.imgwidth}>" height="<{$block.imgheight}>">
                         </li>
                     <{/foreach}>
                 </ul>
@@ -191,7 +198,7 @@
                     <{foreach item=item from=$block.columns[i]}>
                         <li>
                             <div>
-                                <img src="<{$item.item_image}>" alt="" width="60" height="60"/>
+                                <img src="<{$item.item_image}>" alt="" width="60" height="60">
 
                                 <h3><a href="<{$item.itemurl}>"> <{$item.alt}> </a></h3>
                             </div>

@@ -3,6 +3,13 @@ LANGUAGE DIFFERENCES
 
 Below are language differences from a version to next version.
 
+5.0 Alpha-1
+----------------
+main.php
+----------
+define('_MD_NEWBB_FORUMDESCRIPTION', 'Forum Description:');
+
+===========================================
 Version 4.3 rev.9992
 ----------------
 admin.php
@@ -68,10 +75,10 @@ define('_MD_SELECT_LENGTH','Length of selected text');
 define('_MD_SELECT_HTML','Strip all html from result?');
 define('_MD_SELECT_EXCLUDE','Exclude these tags:');
 define('_MD_SELECT_TAG','Tag');
-define("_MD_CAN_PDF","You <strong>can</strong> create pdf.<br />");
-define("_MD_CANNOT_PDF","You <strong>cannot</strong> create pdf.<br />");
-define("_MD_CAN_PRINT","You <strong>can</strong> get print page.<br />");
-define("_MD_CANNOT_PRINT","You <strong>cannot</strong> get print page.<br />");
+define("_MD_CAN_PDF","You <strong>can</strong> create pdf.<br>");
+define("_MD_CANNOT_PDF","You <strong>cannot</strong> create pdf.<br>");
+define("_MD_CAN_PRINT","You <strong>can</strong> get print page.<br>");
+define("_MD_CANNOT_PRINT","You <strong>cannot</strong> get print page.<br>");
 define('_MD_NORIGHTTOPDF','You don\'t have the right to create pdf in this forum.');
 define('_MD_NORIGHTTOPRINT','You don\'t have the right to get print in this forum.');
 define('_MD_TOPICHASNOTPOLL','Topic hasnot poll');
@@ -114,3 +121,4 @@ define("_MB_NEWBB_CRITERIA_ORDER","Order by");
 define("_MB_NEWBB_TITLE_LENGTH_DESC","Length of topic title excerpt in block. 0 for show the whole title and no excerpt.");
 define("_MB_NEWBB_POST_EXCERPT","Post text excerpt in block");
 define("_MB_NEWBB_POST_EXCERPT_DESC","Length of post text excerpt by mouse over on topic title in block. 0 for dont show post text.");
+

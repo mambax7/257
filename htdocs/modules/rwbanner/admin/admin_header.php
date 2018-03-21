@@ -8,60 +8,59 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright    The XOOPS Project (http://www.xoops.org)
+ * @copyright    XOOPS Project (https://xoops.org)
  * @license      {@link http://www.gnu.org/licenses/gpl-2.0.html GNU Public License}
  * @author       XOOPS Development Team
- * @version      $Id $
  **/
 
-$path = dirname(dirname(dirname(dirname(__FILE__))));
-include_once $path . '/mainfile.php';
-include_once $path . '/header.php';
-include_once $path . '/include/cp_functions.php';
-require_once $path . '/include/cp_header.php';
+use XoopsModules\Rwbanner;
 
-include_once $path . "/kernel/module.php";
-include_once $path . "/class/xoopstree.php";
-include_once $path . "/class/xoopslists.php";
-include_once $path . "/class/xoopsformloader.php";
-include_once $path . '/class/pagenav.php';
+require_once __DIR__ . '/../../../include/cp_header.php';
 
-$dirname        = basename(dirname(dirname(__FILE__)));
-$module_handler = xoops_gethandler('module');
-$module         = $module_handler->getByDirname($dirname);
+$path = dirname(dirname(dirname(__DIR__)));
+//require_once $path . '/mainfile.php';
+//
+//require_once $path . '/header.php';
+//require_once $path . '/include/cp_functions.php';
+//require_once $path . '/include/cp_header.php';
+//
+//require_once $path . '/kernel/module.php';
+//require_once $path . '/class/xoopstree.php';
+//require_once $path . '/class/xoopslists.php';
+//require_once $path . '/class/xoopsformloader.php';
+require_once $path . '/class/pagenav.php';
+
+// require_once __DIR__ . '/../class/Utility.php';
+require_once __DIR__ . '/../include/functions.php';
+require_once __DIR__ . '/../include/common.php';
+
+$moduleDirName = basename(dirname(__DIR__));
+$helper = Rwbanner\Helper::getInstance();
+$adminObject = \Xmf\Module\Admin::getInstance();
 
 if (is_object($xoopsUser)) {
-    $xoopsModule = XoopsModule::getByDirname($dirname);
+    $xoopsModule = XoopsModule::getByDirname($moduleDirName);
     if (!$xoopsUser->isAdmin($xoopsModule->mid())) {
-        redirect_header(XOOPS_URL . "/", 1, _MD_RWBANNER_NOPERM);
-        exit();
+        redirect_header(XOOPS_URL . '/', 1, _MD_RWBANNER_NOPERM);
     }
 } else {
-    redirect_header(XOOPS_URL . "/", 1, _MD_RWBANNER_NOPERM);
-    exit();
+    redirect_header(XOOPS_URL . '/', 1, _MD_RWBANNER_NOPERM);
 }
 
-global $xoopsModule;
-
-//$thisModuleDir = $GLOBALS['xoopsModule']->getVar('dirname');
-
-//if functions.php file exist
-require_once dirname(dirname(__FILE__)) . '/include/functions.php';
-$myts =& MyTextSanitizer::getInstance();
-
-//$xoopsTpl->assign('module_dir', $module->getVar('dirname'));
+$pathIcon16    = \Xmf\Module\Admin::iconUrl('', 16);
+$pathIcon32    = \Xmf\Module\Admin::iconUrl('', 32);
+$pathModIcon32 = $helper->getModule()->getInfo('modicons32');
 
 // Load language files
-xoops_loadLanguage('admin', $dirname);
-xoops_loadLanguage('modinfo', $dirname);
-xoops_loadLanguage('main', $dirname);
+$helper->loadLanguage('admin');
+$helper->loadLanguage('modinfo');
+$helper->loadLanguage('main');
 
-$pathIcon16      = '../' . $xoopsModule->getInfo('icons16');
-$pathIcon32      = '../' . $xoopsModule->getInfo('icons32');
-$pathModuleAdmin = $xoopsModule->getInfo('dirmoduleadmin');
+//$myts = \MyTextSanitizer::getInstance();
+//
+//if (!isset($GLOBALS['xoopsTpl']) || !($GLOBALS['xoopsTpl'] instanceof XoopsTpl)) {
+//    require_once $GLOBALS['xoops']->path('class/template.php');
+//    $xoopsTpl = new \XoopsTpl();
+//}
 
-if (file_exists($GLOBALS['xoops']->path($pathModuleAdmin . '/moduleadmin.php'))) {
-    include_once $GLOBALS['xoops']->path($pathModuleAdmin . '/moduleadmin.php');
-} else {
-    redirect_header("../../../admin.php", 5, _AM_MODULEADMIN_MISSING, false);
-}
+//xoops_cp_header();

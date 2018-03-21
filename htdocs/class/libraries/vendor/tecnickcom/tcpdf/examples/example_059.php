@@ -32,6 +32,7 @@ require_once('tcpdf_include.php');
  */
 class TOC_TCPDF extends TCPDF {
 
+<<<<<<< HEAD
 	/**
  	 * Overwrite Header() method.
 	 * @public
@@ -59,6 +60,35 @@ class TOC_TCPDF extends TCPDF {
 			parent::Footer();
 		}
 	}
+=======
+    /**
+     * Overwrite Header() method.
+     * @public
+     */
+    public function Header() {
+        if ($this->tocpage) {
+            // *** replace the following parent::Header() with your code for TOC page
+            parent::Header();
+        } else {
+            // *** replace the following parent::Header() with your code for normal pages
+            parent::Header();
+        }
+    }
+
+    /**
+     * Overwrite Footer() method.
+     * @public
+     */
+    public function Footer() {
+        if ($this->tocpage) {
+            // *** replace the following parent::Footer() with your code for TOC page
+            parent::Footer();
+        } else {
+            // *** replace the following parent::Footer() with your code for normal pages
+            parent::Footer();
+        }
+    }
+>>>>>>> 258
 
 } // end of class
 
@@ -95,8 +125,13 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 // set some language-dependent strings (optional)
 if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+<<<<<<< HEAD
 	require_once(dirname(__FILE__).'/lang/eng.php');
 	$pdf->setLanguageArray($l);
+=======
+    require_once(dirname(__FILE__).'/lang/eng.php');
+    $pdf->setLanguageArray($l);
+>>>>>>> 258
 }
 
 // set font
@@ -133,9 +168,15 @@ $pdf->Cell(0, 10, 'Paragraph 1.3', 0, 1, 'L');
 
 // add some pages and bookmarks
 for ($i = 2; $i < 12; $i++) {
+<<<<<<< HEAD
 	$pdf->AddPage();
 	$pdf->Bookmark('Chapter '.$i, 0, 0, '', 'B', array(0,64,128));
 	$pdf->Cell(0, 10, 'Chapter '.$i, 0, 1, 'L');
+=======
+    $pdf->AddPage();
+    $pdf->Bookmark('Chapter '.$i, 0, 0, '', 'B', array(0,64,128));
+    $pdf->Cell(0, 10, 'Chapter '.$i, 0, 1, 'L');
+>>>>>>> 258
 }
 
 

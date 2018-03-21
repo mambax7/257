@@ -12,16 +12,17 @@
 /**
  * Contact module
  *
- * @copyright   The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright   XOOPS Project (https://xoops.org)
  * @license     http://www.fsf.org/copyleft/gpl.html GNU public license
  * @author      Kazumi Ono (aka Onokazu)
  * @author      Trabis <lusopoemas@gmail.com>
  * @author      Hossein Azizabadi (AKA Voltan)
- * @version     $Id: header.php 12159 2013-10-07 19:11:27Z beckmi $
  */
 
-include '../../mainfile.php';
-include XOOPS_ROOT_PATH."/modules/contact/class/contact.php";
-include_once XOOPS_ROOT_PATH."/class/xoopsformloader.php";
+$moduleDirName = basename(__DIR__);
+include __DIR__ . '/../../mainfile.php';
+include __DIR__ . '/class/contact.php';
+require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
-$contact_handler = & xoops_getModuleHandler('contact', 'contact');
+/** @var ContactContactHandler $contactHandler*/
+$contactHandler = Contact\Helper::getInstance()->getHandler('Contact');

@@ -12,23 +12,19 @@
 /**
  * Contact module
  *
- * @copyright   The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright   XOOPS Project (https://xoops.org)
  * @license     http://www.fsf.org/copyleft/gpl.html GNU public license
  * @author      Kazumi Ono (aka Onokazu)
  * @author      Trabis <lusopoemas@gmail.com>
  * @author      Hossein Azizabadi (AKA Voltan)
- * @version     $Id$
  */
 
 // Call header
-require dirname(__FILE__) . '/header.php';
-// Display Admin header
+require_once __DIR__ . '/admin_header.php';
 xoops_cp_header();
 
-$xoopsTpl->assign('navigation', $admin_class->addNavigation('about.php'));
-$xoopsTpl->assign('renderabout', $admin_class->renderabout('6KJ7RW5DR3VTJ', false));
+$adminObject->displayNavigation(basename(__FILE__));
+$adminObject::setPaypal('xoopsfoundation@gmail.com');
+$adminObject->displayAbout(false);
 
-// Call template file
-$xoopsTpl->display(XOOPS_ROOT_PATH . '/modules/contact/templates/admin/contact_about.html');
-// Call footer
-require dirname(__FILE__) . '/footer.php';
+require_once __DIR__ . '/admin_footer.php';

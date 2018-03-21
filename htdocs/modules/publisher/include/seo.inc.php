@@ -17,24 +17,25 @@
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
  * @author          Sudhaker Raj <http://xoops.biz>
- * @version         $Id: seo.inc.php 10374 2012-12-12 23:39:48Z trabis $
  */
 
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+use Xmf\Request;
+
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 //$seoOp = @$_GET['seoOp'];
-$seoOp = XoopsRequest::getString('seoOp', '', 'GET');
+$seoOp = Request::getString('seoOp', '', 'GET');
 
 //$seoArg = @$_GET['seoArg'];
-$seoArg = XoopsRequest::getString('seoArg', '', 'GET');
+$seoArg = Request::getString('seoArg', '', 'GET');
 
-if ('' == $seoOp && XoopsRequest::getString('PATH_INFO', '', 'SERVER')) {
+if ('' == $seoOp && Request::getString('PATH_INFO', '', 'SERVER')) {
     // SEO mode is path-info
     /*
     Sample URL for path-info
     http://localhost/modules/publisher/seo.php/item.2/can-i-turn-the-ads-off.html
     */
-    $data = explode('/', XoopsRequest::getString('PATH_INFO', '', 'SERVER'));
+    $data = explode('/', Request::getString('PATH_INFO', '', 'SERVER'));
 
     $seoParts = explode('.', $data[1]);
     $seoOp    = $seoParts[0];
@@ -43,16 +44,17 @@ if ('' == $seoOp && XoopsRequest::getString('PATH_INFO', '', 'SERVER')) {
     // $seoArg = substr($data[1], strlen($seoOp) + 1);
 }
 
-$seoMap = array(
+$seoMap = [
     'category' => 'category.php',
     'item'     => 'item.php',
-    'print'    => 'print.php');
+    'print'    => 'print.php'
+];
 
 if (!empty($seoOp) && isset($seoMap[$seoOp])) {
     // module specific dispatching logic, other module must implement as
     // per their requirements.
 
-    $url_arr = explode('/modules/', XoopsRequest::getString('PHP_SELF', '', 'SERVER'));
+    $url_arr = explode('/modules/', Request::getString('PHP_SELF', '', 'SERVER'));
     $newUrl  = $url_arr[0] . '/modules/' . PUBLISHER_DIRNAME . '/' . $seoMap[$seoOp];
 
     $_ENV['PHP_SELF']       = $newUrl;

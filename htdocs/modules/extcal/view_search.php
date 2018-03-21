@@ -1,16 +1,19 @@
 <?php
 
-include dirname(dirname(__DIR__)) . '/mainfile.php';
-include_once __DIR__ . '/include/constantes.php';
-$params                                  = array(
-    'view' => _EXTCAL_NAV_SEARCH,
-    'file' => _EXTCAL_FILE_SEARCH
-);
-$GLOBALS['xoopsOption']['template_main'] = "extcal_view_{$params['view']}.tpl";
-include_once __DIR__ . '/header.php';
+use XoopsModules\Extcal;
 
+include __DIR__ . '/../../mainfile.php';
+require_once __DIR__ . '/include/constantes.php';
+$params                                  = [
+    'view' => _EXTCAL_NAV_SEARCH,
+    'file' => _EXTCAL_FILE_SEARCH,
+];
+$GLOBALS['xoopsOption']['template_main'] = "extcal_view_{$params['view']}.tpl";
+require_once __DIR__ . '/header.php';
+
+$recurEventsArray = [];
 //needed to save the state of the form, so we don't show on the first time the list of available events
-$num_tries = (isset($_POST["num_tries"])) ? $_POST["num_tries"] + 1 : 0;
+$num_tries = isset($_POST['num_tries']) ? $_POST['num_tries'] + 1 : 0;
 
 /* ========================================================================== */
 /***************************************************************/
@@ -18,58 +21,58 @@ $num_tries = (isset($_POST["num_tries"])) ? $_POST["num_tries"] + 1 : 0;
 /***************************************************************/
 $searchExp = isset($_POST['searchExp']) ? $_POST['searchExp'] : '';
 $andor     = isset($_POST['andor']) ? $_POST['andor'] : '';
-$year      = isset($_POST['year']) ? intval($_POST['year']) : date('Y');
-$month     = isset($_POST['month']) ? intval($_POST['month']) : date('n');
-$day       = isset($_POST['day']) ? intval($_POST['day']) : 0;
-$cat       = isset($_POST['cat']) ? intval($_POST['cat']) : 0;
+$year      = isset($_POST['year']) ? (int)$_POST['year'] : date('Y');
+$month     = isset($_POST['month']) ? (int)$_POST['month'] : date('n');
+$day       = isset($_POST['day']) ? (int)$_POST['day'] : 0;
+$cat       = isset($_POST['cat']) ? (int)$_POST['cat'] : 0;
 $orderby1  = isset($_POST['orderby1']) ? $_POST['orderby1'] : 'cat_name ASC';
 $orderby2  = isset($_POST['orderby2']) ? $_POST['orderby2'] : 'event_title ASC';
 $orderby3  = isset($_POST['orderby3']) ? $_POST['orderby3'] : '';
 /* ========================================================================== */
 
-//$orderby = isset($_GET['orderby']) ? intval($_GET['orderby']) : 0;
+//$orderby = isset($_GET['orderby']) ? (int)($_GET['orderby']) : 0;
 
 //---------------------------------------------------------------
-$search              = array();
-$exp                 = new XoopsFormText(_MD_EXTCAL_EXPRESSION, 'searchExp', 80, 80, $searchExp);
+$search              = [];
+$exp                 = new \XoopsFormText(_MD_EXTCAL_EXPRESSION, 'searchExp', 80, 80, $searchExp);
 $search['searchExp'] = $exp->render();
-$search['andor']     = getListAndOr('andor', '', $andor)->render();
+$search['andor']     = Extcal\Utility::getListAndOr('andor', '', $andor)->render();
 //$search['year']  = getListYears($year,$xoopsModuleConfig['agenda_nb_years_before'],$xoopsModuleConfig['agenda_nb_years_after'], true)->render();
 $search['year']  = getListYears($year, 2, 5, true)->render();
 $search['month'] = getListMonths($month, true)->render();
 $search['day']   = getListDays($day, true)->render();
 
 //$search['cat']   = implode('', getCheckeCategories());
-$search['cat'] = getListCategories($cat, true, 'cat')->render();
+$search['cat'] = Extcal\Utility::getListCategories($cat, true, 'cat')->render();
 
-$search['orderby1'] = getListOrderBy('orderby1', '', $orderby1, false)->render();
-$search['orderby2'] = getListOrderBy('orderby2', '', $orderby2, true)->render();
-$search['orderby3'] = getListOrderBy('orderby3', '', $orderby3, true)->render();
+$search['orderby1'] = Extcal\Utility::getListOrderBy('orderby1', '', $orderby1, false)->render();
+$search['orderby2'] = Extcal\Utility::getListOrderBy('orderby2', '', $orderby2, true)->render();
+$search['orderby3'] = Extcal\Utility::getListOrderBy('orderby3', '', $orderby3, true)->render();
 
 //echoArray($search,true);
 $xoopsTpl->assign('search', $search);
 /***************************************************************/
 
-// $form = new XoopsSimpleForm('', 'navigSelectBox', $params['file'], 'get');
+// $form = new \XoopsSimpleForm('', 'navigSelectBox', $params['file'], 'get');
 // // $form->addElement(getListYears($year,$xoopsModuleConfig['agenda_nb_years_before'],$xoopsModuleConfig['agenda_nb_years_after'], true));
 // // $form->addElement(getListMonths($month, rtue));
 // $form->addElement(getListCategories($cat));
-// $form->addElement(getListOrderBy($orderby));
+// $form->addElement(Extcal\Utility::getListOrderBy($orderby));
 //
-// $form->addElement(new XoopsFormText(_MD_EXTCAL_SEARCH_EXP, 'searchExp', 80, 80, $searchExp));
+// $form->addElement( new \XoopsFormText(_MD_EXTCAL_SEARCH_EXP, 'searchExp', 80, 80, $searchExp));
 //
-// $form->addElement(new XoopsFormButton("", "", _SEND, "submit"));
+// $form->addElement( new \XoopsFormButton("", "", _SEND, "submit"));
 //
 // // Assigning the form to the template
 // $form->assign($xoopsTpl);
 
 // Retriving events
 //echoArray($_GET, false);
-$orderBy = array(
+$orderBy = [
     $orderby1,
     $orderby2,
-    $orderby3
-);
+    $orderby3,
+];
 $userId  = 0;
 $user    = '';
 //get all events for the date
@@ -90,7 +93,7 @@ $endMonth       = mktime(23, 59, 59, $month, $daysInTheMonth, $year);
 
 //echo "Start & End Month ===><br>{$startMonth}<br>{$endMonth}<br>";
 
-$eventsArray = array();
+$eventsArray = [];
 foreach ($events as $event) {
     if (!$event['event_isrecur']) {
         // Formating date
@@ -105,39 +108,40 @@ foreach ($events as $event) {
     }
 }
 
-$criteria = new CriteriaCompo();
-$criteria->add(new Criteria('event_isrecur', 1));
+$criteria = new \CriteriaCompo();
+$criteria->add(new \Criteria('event_isrecur', 1));
 
 if ($cat > 0) {
-    $criteria->add(new Criteria('cat_id', $cat));
+    $criteria->add(new \Criteria('cat_id', $cat));
 }
 
-//$criteria = new criteria('event_isrecur', 1);
+//$criteria =  new \Criteria('event_isrecur', 1);
 
 $recurrents = $eventHandler->getAllEvents($criteria, false);
-$catHandler = xoops_getmodulehandler(_EXTCAL_CLS_CAT, _EXTCAL_MODULE);
+//$catHandler = xoops_getModuleHandler(_EXTCAL_CLS_CAT, _EXTCAL_MODULE);
+$catHandler = Extcal\Helper::getInstance()->getHandler(_EXTCAL_CLN_CAT);
 
 //=========================================
-for ($h = 0, $count = count($recurrents); $h < $count; ++$h) {
+foreach ($recurrents as $h => $hValue) {
 
-//    $recurEvents = $eventHandler->getRecurEventToDisplay($event, $startMonth, $endMonth);
+    //    $recurEvents = $eventHandler->getRecurEventToDisplay($event, $startMonth, $endMonth);
     $recurEvents = $eventHandler->getRecurEventToDisplay($recurrents[$h], $startMonth, $endMonth);
 
     $categoryObject = $catHandler->getCat($recurrents[$h]['cat_id']);
 
-//    echo '------------ CATEGORY OBJECT ----------------------------';
-//    var_dump($categoryObject);
-//
-//    $recurEvents['cat']['cat_name']        = $categoryObject->vars['cat_name']['value'];
-//    $recurEvents['cat']['cat_color']       = $categoryObject->vars['cat_color']['value'];
-//    $recurEvents['cat']['cat_light_color'] = eclaircirCouleur($categoryObject->vars['cat_color']['value'], _EXTCAL_INFOBULLE_RGB_MIN, _EXTCAL_INFOBULLE_RGB_MAX);
+    //    echo '------------ CATEGORY OBJECT ----------------------------';
+    //    var_dump($categoryObject);
+    //
+    //    $recurEvents['cat']['cat_name']        = $categoryObject->vars['cat_name']['value'];
+    //    $recurEvents['cat']['cat_color']       = $categoryObject->vars['cat_color']['value'];
+    //    $recurEvents['cat']['cat_light_color'] = Extcal\Utility::getLighterColor($categoryObject->vars['cat_color']['value'], _EXTCAL_INFOBULLE_RGB_MIN, _EXTCAL_INFOBULLE_RGB_MAX);
 
     // Formating date
     $eventHandler->formatEventsDate($recurEvents, $xoopsModuleConfig['event_date_week']);
     foreach ($recurEvents as $val) {
         $val['cat']['cat_name']        = $categoryObject->vars['cat_name']['value'];
         $val['cat']['cat_color']       = $categoryObject->vars['cat_color']['value'];
-        $val['cat']['cat_light_color'] = eclaircirCouleur($categoryObject->vars['cat_color']['value'], _EXTCAL_INFOBULLE_RGB_MIN, _EXTCAL_INFOBULLE_RGB_MAX);
+        $val['cat']['cat_light_color'] = Extcal\Utility::getLighterColor($categoryObject->vars['cat_color']['value'], _EXTCAL_INFOBULLE_RGB_MIN, _EXTCAL_INFOBULLE_RGB_MAX);
         $recurEventsArray[]            = $val;
     }
 }
@@ -162,13 +166,13 @@ $xoopsTpl->assign('cats', $cats);
 // $nMonthCalObj = $monthCalObj->nextMonth('object');
 // $navig = array('prev' => array('uri' => 'year=' . $pMonthCalObj->thisYear()
 //                                       . '&amp;month=' . $pMonthCalObj->thisMonth(),
-//                                'name' => $extcalTimeHandler->getFormatedDate($xoopsModuleConfig['nav_date_month'], $pMonthCalObj->getTimestamp())),
+//                                'name' => $timeHandler->getFormatedDate($xoopsModuleConfig['nav_date_month'], $pMonthCalObj->getTimestamp())),
 //               'this' => array( 'uri'  => 'year=' . $monthCalObj->thisYear()
 //                                        . '&amp;month=' . $monthCalObj->thisMonth(),
-//                                'name' => $extcalTimeHandler->getFormatedDate($xoopsModuleConfig['nav_date_month'], $monthCalObj->getTimestamp())    ),
+//                                'name' => $timeHandler->getFormatedDate($xoopsModuleConfig['nav_date_month'], $monthCalObj->getTimestamp())    ),
 //               'next'  => array('uri' => 'year=' . $nMonthCalObj->thisYear()
 //                                       . '&amp;month=' . $nMonthCalObj->thisMonth(),
-//                                'name' => $extcalTimeHandler->getFormatedDate($xoopsModuleConfig['nav_date_month'], $nMonthCalObj->getTimestamp())    )
+//                                'name' => $timeHandler->getFormatedDate($xoopsModuleConfig['nav_date_month'], $nMonthCalObj->getTimestamp())    )
 //               );
 //
 // // Title of the page
@@ -194,13 +198,13 @@ $xoopsTpl->assign('num_tries', $num_tries);
 if ($xoopsUser) {
     $xoopsTpl->assign('isAdmin', $xoopsUser->isAdmin());
     $canEdit = false;
-    /* todo
-        $canEdit
-            =
-            $permHandler->isAllowed($xoopsUser, 'extcal_cat_edit', $event['cat']['cat_id'])
-                && $xoopsUser->getVar('uid') == $event['user']['uid'];
-        $xoopsTpl->assign('canEdit', $canEdit);
-    */
+/* todo
+    $canEdit
+        =
+        $permHandler->isAllowed($xoopsUser, 'extcal_cat_edit', $event['cat']['cat_id'])
+            && $xoopsUser->getVar('uid') == $event['user']['uid'];
+    $xoopsTpl->assign('canEdit', $canEdit);
+*/
 } else {
     $xoopsTpl->assign('isAdmin', false);
     $xoopsTpl->assign('canEdit', false);
@@ -215,22 +219,22 @@ $xoopsTpl->assign('list_position', -1);
 //---------------------------------------------------------------
 
 //mb missing for xBootstrap templates by Angelo
-$lang = array(
-    'start' => _MD_EXTCAL_START,
-    'end' => _MD_EXTCAL_END,
-    'calmonth' => _MD_EXTCAL_NAV_CALMONTH,
-    'calweek' => _MD_EXTCAL_NAV_CALWEEK,
-    'year' => _MD_EXTCAL_NAV_YEAR,
-    'month' => _MD_EXTCAL_NAV_MONTH,
-    'week' => _MD_EXTCAL_NAV_WEEK,
-    'day' => _MD_EXTCAL_NAV_DAY,
+$lang = [
+    'start'      => _MD_EXTCAL_START,
+    'end'        => _MD_EXTCAL_END,
+    'calmonth'   => _MD_EXTCAL_NAV_CALMONTH,
+    'calweek'    => _MD_EXTCAL_NAV_CALWEEK,
+    'year'       => _MD_EXTCAL_NAV_YEAR,
+    'month'      => _MD_EXTCAL_NAV_MONTH,
+    'week'       => _MD_EXTCAL_NAV_WEEK,
+    'day'        => _MD_EXTCAL_NAV_DAY,
     'agendaweek' => _MD_EXTCAL_NAV_AGENDA_WEEK,
-    'agendaday' => _MD_EXTCAL_NAV_AGENDA_DAY,
-    'search' => _MD_EXTCAL_NAV_SEARCH,
-    'newevent' => _MD_EXTCAL_NAV_NEW_EVENT
-);
+    'agendaday'  => _MD_EXTCAL_NAV_AGENDA_DAY,
+    'search'     => _MD_EXTCAL_NAV_SEARCH,
+    'newevent'   => _MD_EXTCAL_NAV_NEW_EVENT,
+];
 // Assigning language data to the template
 $xoopsTpl->assign('lang', $lang);
-$xoopsTpl->assign('view', "search");
+$xoopsTpl->assign('view', 'search');
 
 include XOOPS_ROOT_PATH . '/footer.php';

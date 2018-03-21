@@ -1,8 +1,9 @@
 <?php
+
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * Contains the Calendar_Decorator_Wrapper class
+ * Contains the Calendar_Decorator_Wrapper class.
  *
  * PHP versions 4 and 5
  *
@@ -28,102 +29,96 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @category  Date and Time
- * @package   Calendar
+ *
  * @author    Harry Fuecks <hfuecks@phppatterns.com>
  * @copyright 2003-2007 Harry Fuecks
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   CVS: $Id: Helper.php 1511 2011-09-01 20:56:07Z jjdai $
+ *
  * @link      http://pear.php.net/package/Calendar
  */
 
 /**
  * Used by Calendar_Month_Weekdays, Calendar_Month_Weeks and Calendar_Week to
- * help with building the calendar in tabular form
+ * help with building the calendar in tabular form.
  *
  * @category  Date and Time
- * @package   Calendar
+ *
  * @author    Harry Fuecks <hfuecks@phppatterns.com>
  * @copyright 2003-2007 Harry Fuecks
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @link      http://pear.php.net/package/Calendar
- * @access public
  */
 class Calendar_Table_Helper
 {
     /**
      * Instance of the Calendar object being helped.
+     *
      * @var object
-     * @access private
      */
     public $calendar;
 
     /**
-     * Instance of the Calendar_Engine
+     * Instance of the Calendar_Engine.
+     *
      * @var object
-     * @access private
      */
     public $cE;
 
     /**
-     * First day of the week
-     * @access private
+     * First day of the week.
+     *
      * @var string
      */
     public $firstDay;
 
     /**
-     * The seven days of the week named
-     * @access private
+     * The seven days of the week named.
+     *
      * @var array
      */
     public $weekDays;
 
     /**
-     * Days of the week ordered with $firstDay at the beginning
-     * @access private
+     * Days of the week ordered with $firstDay at the beginning.
+     *
      * @var array
      */
-    public $daysOfWeek = array();
+    public $daysOfWeek = [];
 
     /**
-     * Days of the month built from days of the week
-     * @access private
+     * Days of the month built from days of the week.
+     *
      * @var array
      */
-    public $daysOfMonth = array();
+    public $daysOfMonth = [];
 
     /**
-     * Number of weeks in month
+     * Number of weeks in month.
+     *
      * @var int
-     * @access private
      */
     public $numWeeks = null;
 
     /**
-     * Number of emtpy days before real days begin in month
+     * Number of emtpy days before real days begin in month.
+     *
      * @var int
-     * @access private
      */
     public $emptyBefore = 0;
 
     /**
-     * Constructs Calendar_Table_Helper
+     * Constructs Calendar_Table_Helper.
      *
      * @param object &$calendar Calendar_Month_Weekdays, Calendar_Month_Weeks, Calendar_Week
      * @param int    $firstDay  (optional) first day of the week e.g. 1 for Monday
-     *
-     * @access protected
      */
-    public function Calendar_Table_Helper(& $calendar, $firstDay=null)
+    public function __construct($calendar, $firstDay = null)
     {
-        $this->calendar = & $calendar;
-        $this->cE = & $calendar->getEngine();
+        $this->calendar = $calendar;
+        $this->cE       = $calendar->getEngine();
         if (is_null($firstDay)) {
-            $firstDay = $this->cE->getFirstDayOfWeek(
-                $this->calendar->thisYear(),
-                $this->calendar->thisMonth(),
-                $this->calendar->thisDay()
-            );
+            $firstDay = $this->cE->getFirstDayOfWeek($this->calendar->thisYear(), $this->calendar->thisMonth(), $this->calendar->thisDay());
         }
         $this->firstDay = $firstDay;
         $this->setFirstDay();
@@ -131,26 +126,19 @@ class Calendar_Table_Helper
     }
 
     /**
-     * Constructs $this->daysOfWeek based on $this->firstDay
-     *
-     * @return void
-     * @access private
+     * Constructs $this->daysOfWeek based on $this->firstDay.
      */
     public function setFirstDay()
     {
-        $weekDays = $this->cE->getWeekDays(
-            $this->calendar->thisYear(),
-            $this->calendar->thisMonth(),
-            $this->calendar->thisDay()
-        );
-        $endDays  = array();
-        $tmpDays  = array();
-        $begin = false;
+        $weekDays = $this->cE->getWeekDays($this->calendar->thisYear(), $this->calendar->thisMonth(), $this->calendar->thisDay());
+        $endDays  = [];
+        $tmpDays  = [];
+        $begin    = false;
         foreach ($weekDays as $day) {
             if ($begin) {
                 $endDays[] = $day;
             } elseif ($day === $this->firstDay) {
-                $begin = true;
+                $begin     = true;
                 $endDays[] = $day;
             } else {
                 $tmpDays[] = $day;
@@ -160,46 +148,32 @@ class Calendar_Table_Helper
     }
 
     /**
-     * Constructs $this->daysOfMonth
-     *
-     * @return void
-     * @access private
+     * Constructs $this->daysOfMonth.
      */
     public function setDaysOfMonth()
     {
         $this->daysOfMonth = $this->daysOfWeek;
-        $daysInMonth = $this->cE->getDaysInMonth(
-            $this->calendar->thisYear(), $this->calendar->thisMonth());
-        $firstDayInMonth = $this->cE->getFirstDayInMonth(
-            $this->calendar->thisYear(), $this->calendar->thisMonth());
-        $this->emptyBefore=0;
+        $daysInMonth       = $this->cE->getDaysInMonth($this->calendar->thisYear(), $this->calendar->thisMonth());
+        $firstDayInMonth   = $this->cE->getFirstDayInMonth($this->calendar->thisYear(), $this->calendar->thisMonth());
+        $this->emptyBefore = 0;
         foreach ($this->daysOfMonth as $dayOfWeek) {
             if ($firstDayInMonth == $dayOfWeek) {
                 break;
             }
-            $this->emptyBefore++;
+            ++$this->emptyBefore;
         }
-        $this->numWeeks = ceil(
-            ($daysInMonth + $this->emptyBefore)
-                /
-            $this->cE->getDaysInWeek(
-                $this->calendar->thisYear(),
-                $this->calendar->thisMonth(),
-                $this->calendar->thisDay()
-            )
-        );
-        for ($i=1; $i < $this->numWeeks; ++$i) {
-            $this->daysOfMonth =
-                array_merge($this->daysOfMonth, $this->daysOfWeek);
+        $this->numWeeks = ceil(($daysInMonth + $this->emptyBefore) / $this->cE->getDaysInWeek($this->calendar->thisYear(), $this->calendar->thisMonth(), $this->calendar->thisDay()));
+        for ($i = 1; $i < $this->numWeeks; ++$i) {
+            $this->daysOfMonth = array_merge($this->daysOfMonth, $this->daysOfWeek);
         }
     }
 
     /**
-     * Returns the first day of the month
+     * Returns the first day of the month.
      *
      * @return int
-     * @access protected
-     * @see Calendar_Engine_Interface::getFirstDayOfWeek()
+     *
+     * @see    Calendar_Engine_Interface::getFirstDayOfWeek()
      */
     public function getFirstDay()
     {
@@ -207,10 +181,9 @@ class Calendar_Table_Helper
     }
 
     /**
-     * Returns the order array of days in a week
+     * Returns the order array of days in a week.
      *
      * @return int
-     * @access protected
      */
     public function getDaysOfWeek()
     {
@@ -218,10 +191,9 @@ class Calendar_Table_Helper
     }
 
     /**
-     * Returns the number of tabular weeks in a month
+     * Returns the number of tabular weeks in a month.
      *
      * @return int
-     * @access protected
      */
     public function getNumWeeks()
     {
@@ -229,10 +201,9 @@ class Calendar_Table_Helper
     }
 
     /**
-     * Returns the number of real days + empty days
+     * Returns the number of real days + empty days.
      *
      * @return int
-     * @access protected
      */
     public function getNumTableDaysInMonth()
     {
@@ -240,10 +211,9 @@ class Calendar_Table_Helper
     }
 
     /**
-     * Returns the number of empty days before the real days begin
+     * Returns the number of empty days before the real days begin.
      *
      * @return int
-     * @access protected
      */
     public function getEmptyDaysBefore()
     {
@@ -251,44 +221,38 @@ class Calendar_Table_Helper
     }
 
     /**
-     * Returns the index of the last real day in the month
+     * Returns the index of the last real day in the month.
      *
-     * @todo Potential performance optimization with static
+     * @todo   Potential performance optimization with static
+     *
      * @return int
-     * @access protected
      */
     public function getEmptyDaysAfter()
     {
         // Causes bug when displaying more than one month
         //static $index;
         //if (!isset($index)) {
-            $index = $this->getEmptyDaysBefore() + $this->cE->getDaysInMonth(
-                $this->calendar->thisYear(), $this->calendar->thisMonth());
+        $index = $this->getEmptyDaysBefore() + $this->cE->getDaysInMonth($this->calendar->thisYear(), $this->calendar->thisMonth());
+
         //}
         return $index;
     }
 
     /**
      * Returns the index of the last real day in the month, relative to the
-     * beginning of the tabular week it is part of
+     * beginning of the tabular week it is part of.
      *
      * @return int
-     * @access protected
      */
     public function getEmptyDaysAfterOffset()
     {
         $eAfter = $this->getEmptyDaysAfter();
 
-        return $eAfter - (
-            $this->cE->getDaysInWeek(
-                $this->calendar->thisYear(),
-                $this->calendar->thisMonth(),
-                $this->calendar->thisDay()
-            ) * ($this->numWeeks-1));
+        return $eAfter - ($this->cE->getDaysInWeek($this->calendar->thisYear(), $this->calendar->thisMonth(), $this->calendar->thisDay()) * ($this->numWeeks - 1));
     }
 
     /**
-     * Returns the timestamp of the first day of the current week
+     * Returns the timestamp of the first day of the current week.
      *
      * @param int $y        year
      * @param int $m        month
@@ -297,19 +261,14 @@ class Calendar_Table_Helper
      *
      * @return int timestamp
      */
-    public function getWeekStart($y, $m, $d, $firstDay=1)
+    public function getWeekStart($y, $m, $d, $firstDay = 1)
     {
         $dow = $this->cE->getDayOfWeek($y, $m, $d);
         if ($dow > $firstDay) {
             $d -= ($dow - $firstDay);
         }
         if ($dow < $firstDay) {
-            $d -= (
-                $this->cE->getDaysInWeek(
-                    $this->calendar->thisYear(),
-                    $this->calendar->thisMonth(),
-                    $this->calendar->thisDay()
-                ) - $firstDay + $dow);
+            $d -= ($this->cE->getDaysInWeek($this->calendar->thisYear(), $this->calendar->thisMonth(), $this->calendar->thisDay()) - $firstDay + $dow);
         }
 
         return $this->cE->dateToStamp($y, $m, $d);

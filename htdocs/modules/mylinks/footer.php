@@ -1,37 +1,29 @@
 <?php
-// $Id: footer.php 11819 2013-07-09 18:21:40Z zyspec $
-//  ------------------------------------------------------------------------ //
-//                XOOPS - PHP Content Management System                      //
-//                    Copyright (c) 2000 XOOPS.org                           //
-//                       <http://www.xoops.org/>                             //
-//  ------------------------------------------------------------------------ //
-//  This program is free software; you can redistribute it and/or modify     //
-//  it under the terms of the GNU General Public License as published by     //
-//  the Free Software Foundation; either version 2 of the License, or        //
-//  (at your option) any later version.                                      //
-//                                                                           //
-//  You may not change or alter any portion of this comment or credits       //
-//  of supporting developers from this source code or any supporting         //
-//  source code which is considered copyrighted (c) material of the          //
-//  original comment or credit authors.                                      //
-//                                                                           //
-//  This program is distributed in the hope that it will be useful,          //
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of           //
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            //
-//  GNU General Public License for more details.                             //
-//                                                                           //
-//  You should have received a copy of the GNU General Public License        //
-//  along with this program; if not, write to the Free Software              //
-//  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
-//  ------------------------------------------------------------------------ //
+/*
+ * You may not change or alter any portion of this comment or credits
+ * of supporting developers from this source code or any supporting source code
+ * which is considered copyrighted (c) material of the original comment or credit authors.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ */
 
-defined('XOOPS_ROOT_PATH') or die('Restricted access');
+/**
+ * @copyright    {@link https://xoops.org/ XOOPS Project}
+ * @license      {@link http://www.gnu.org/licenses/gpl-2.0.html GNU GPL 2 or later}
+ * @package
+ * @since
+ * @author       XOOPS Development Team
+ */
 
-if (is_object($xoopsTpl) && ($mylinks_right_wide_theme === true)) {
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
+
+if (is_object($xoopsTpl) && (true === $mylinks_right_wide_theme)) {
     $xoopsTpl->assign('xoops_showrblock', 0);
-} elseif (is_object($xoopsTpl) && ($mylinks_left_wide_theme === true)) {
+} elseif (is_object($xoopsTpl) && (true === $mylinks_left_wide_theme)) {
     $xoopsTpl->assign('xoops_showlblock', 0);
-} elseif (is_object($xoopsTpl) && ($mylinks_both_wide_theme === true)) {
+} elseif (is_object($xoopsTpl) && (true === $mylinks_both_wide_theme)) {
     $xoopsTpl->assign('xoops_showrblock', 0);
     $xoopsTpl->assign('xoops_showlblock', 0);
 }
@@ -56,7 +48,7 @@ $can_bookmark = _MD_MYLINKS_DISALLOW;
 //print func
 switch ($mylinks_can_print) {
     case _MD_MYLINKS_MEMBERONLY:
-        $can_print = ($xoopsUser) ? _MD_MYLINKS_ALLOW : _MD_MYLINKS_DISALLOW;
+        $can_print = $xoopsUser ? _MD_MYLINKS_ALLOW : _MD_MYLINKS_DISALLOW;
         break;
     case _MD_MYLINKS_ALLOW:
         $can_print = _MD_MYLINKS_ALLOW;
@@ -76,7 +68,7 @@ if (_MD_MYLINKS_DISALLOW == $can_print) {
 //pdf function
 switch ($mylinks_can_pdf) {
     case _MD_MYLINKS_MEMBERONLY:
-        $can_pdf = ($xoopsUser) ? _MD_MYLINKS_ALLOW : _MD_MYLINKS_DISALLOW;
+        $can_pdf = $xoopsUser ? _MD_MYLINKS_ALLOW : _MD_MYLINKS_DISALLOW;
         break;
     case _MD_MYLINKS_ALLOW:
         $can_pdf = _MD_MYLINKS_ALLOW;
@@ -95,7 +87,7 @@ if (_MD_MYLINKS_DISALLOW == $can_pdf) {
 //qrcode func
 switch ($mylinks_can_qrcode) {
     case _MD_MYLINKS_MEMBERONLY:
-        $can_qrcode = ($xoopsUser) ? _MD_MYLINKS_ALLOW : _MD_MYLINKS_DISALLOW;
+        $can_qrcode = $xoopsUser ? _MD_MYLINKS_ALLOW : _MD_MYLINKS_DISALLOW;
         break;
     case _MD_MYLINKS_ALLOW:
         $can_qrcode = _MD_MYLINKS_ALLOW;
@@ -115,7 +107,7 @@ if (_MD_MYLINKS_DISALLOW == $can_qrcode) {
 //bookmark func
 switch ($mylinks_can_bookmark) {
     case _MD_MYLINKS_MEMBERONLY:
-        $can_bookmark = ($xoopsUser) ? _MD_MYLINKS_ALLOW : _MD_MYLINKS_DISALLOW;
+        $can_bookmark = $xoopsUser ? _MD_MYLINKS_ALLOW : _MD_MYLINKS_DISALLOW;
         break;
     case _MD_MYLINKS_ALLOW:
         $can_bookmark = _MD_MYLINKS_ALLOW;
@@ -155,9 +147,9 @@ $xoopsTpl->assign('lang_pdafeed_cat', _MD_MYLINKS_PDAFEED_CAT);
 //ver2.5
 $xoopsTpl->assign('mylinks_weburl', XOOPSMYLINKURL);
 if (file_exists(XOOPSMYLINKIMGPATH . "/{$mylinks_theme}")) {
-    $xoopsTpl->assign('mylinks_imgurl', XOOPSMYLINKIMGURL."/{$mylinks_theme}");
+    $xoopsTpl->assign('mylinks_imgurl', XOOPSMYLINKIMGURL . "/{$mylinks_theme}");
 } else {
     $xoopsTpl->assign('mylinks_imgurl', XOOPSMYLINKIMGURL);
 }
 
-include_once XOOPS_ROOT_PATH . '/footer.php';
+require_once XOOPS_ROOT_PATH . '/footer.php';

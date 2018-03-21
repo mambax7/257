@@ -18,10 +18,11 @@
  * @author         Taiwen Jiang <phppp@users.sourceforge.net>
  * @author         ZySpec <owners@zyspec.com>
  * @since          2.33
- * @version        $Id: $
  */
 
-defined('XOOPS_ROOT_PATH') || exit('Restricted access');
+use XoopsModules\Randomquote\Constants;
+
+defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 XoopsLoad::load('XoopsFilterInput');
 
@@ -36,35 +37,36 @@ XoopsLoad::load('XoopsFilterInput');
  **/
 function randomquote_tag_iteminfo(&$items)
 {
-    xoops_load('constants', 'randomquote');
-
-    $items_id = array();
-    $cats_id = array();
+    $items_id = [];
+    $cats_id  = [];
 
     foreach (array_keys($items) as $cat_id) {
-        $cats_id[] = intval($cat_id);
+        $cats_id[] = (int)$cat_id;
         foreach (array_keys($items[$cat_id]) as $item_id) {
-            $items_id[] = intval($item_id);
+            $items_id[] = (int)$item_id;
         }
     }
 
-    $criteria = new CriteriaCompo();
-    $criteria->add(new Criteria("id", "(" . implode(",", $items_id) . ")", "IN"));
-    $criteria->add(new Criteria('quote_status', RandomquoteConstants::STATUS_ONLINE));
+    $criteria = new \CriteriaCompo();
+    $criteria->add(new \Criteria('id', '(' . implode(',', $items_id) . ')', 'IN'));
+    $criteria->add(new \Criteria('quote_status', Constants::STATUS_ONLINE));
 
-    $quote_handler =& xoops_getmodulehandler('quotes', 'randomquote');
-    $quoteObjs = $quote_handler->getObjects($criteria, true);
+    /** @var \ \XoopsModules\Randomquote\Helper $quoteHandler */
+    $quoteHandler = \XoopsModules\Randomquote\Helper::getInstance()->getHandler('Quotes');
+
+    $quoteObjs    =& $quoteHandler->getObjects($criteria, true);
 
     foreach ($cats_id as $cat_id) {
         foreach ($items_id as $item_id) {
-            $quoteObj = $quoteObjs[$item_id];
-            $items[$cat_id][$item_id] = array("title" => $quoteObj,
-//                                                "uid" => $quoteObj->getVar("uid"),
-                                               "link" => "index.php?id={$item_id}",
-                                               "time" => strtotime($quoteObj->getVar("create_date")),
-//                                               "tags" => tag_parse_tag($quoteObj->getVar("item_tag", "n")), // optional
-                                            "content" => "",
-            );
+            $quoteObj                 = $quoteObjs[$item_id];
+            $items[$cat_id][$item_id] = [
+                'title'   => $quoteObj,
+                //                                                "uid" => $quoteObj->getVar("uid"),
+                'link'    => "index.php?id={$item_id}",
+                'time'    => strtotime($quoteObj->getVar('create_date')),
+                //                                               "tags" => tag_parse_tag($quoteObj->getVar("item_tag", "n")), // optional
+                'content' => ''
+            ];
         }
     }
 
@@ -76,38 +78,41 @@ function randomquote_tag_iteminfo(&$items)
 /**
  * Remove orphan tag-item links
  *
- *  @param int $mid module ID
+ * @param  int $mid module ID
+ * @return bool
  */
-function mymodule_tag_synchronization($mid)
+function randomquote_tag_synchronization($mid)
 {
-    xoops_load('constants', 'randomquote');
-    $item_handler =& xoops_getmodulehandler('quotes', 'randomquote');
-    $link_handler =& xoops_getmodulehandler('link', 'tag');
+    /** @var \ \XoopsModules\Randomquote\Helper $itemHandler */
+    $itemHandler = \XoopsModules\Randomquote\Helper::getInstance()->getHandler('Quotes');
+    /** @var \XoopsModules\Tag\LinkHandler $itemHandler */
+    $linkHandler = \XoopsModules\Tag\Helper::getInstance()->getHandler('Link');
 
-    if (!$item_handler || !$link_handler) {
+    if (!$itemHandler || !$linkHandler) {
         $result = false;
     } else {
-        $mid = XoopsFilterInput::clean($mid, 'INT');
-        $module_handler =& xoops_gethandler('module');
-        $rqModule       =& XoopsModule::getByDirname('randomquote');
+        $mid           = XoopsFilterInput::clean($mid, 'INT');
+        $moduleHandler = xoops_getHandler('module');
+        $rqModule      = XoopsModule::getByDirname('randomquote');
 
         // check to make sure module is active and trying to sync randomquote
-        if (($rqModule instanceof XoopsModule) && ($rqModule->isactive()) && ($rqModule->mid() == $mid)) {
+        if (($rqModule instanceof XoopsModule) && $rqModule->isactive() && ($rqModule->mid() == $mid)) {
             // clear tag-item links
-            $sql = "DELETE FROM {$link_handler->table}"
-                 . " WHERE tag_modid = {$mid}"
-                 . "    AND "
-                 . "    (tag_itemid NOT IN "
-                 . "        (SELECT DISTINCT {$item_handler->keyName} "
-                 . "           FROM {$item_handler->table} "
-                 . "           WHERE {$item_handler->table}.quote_status = " . RandomquoteConstants::STATUS_ONLINE
-                 . "        )"
-                 . "    )";
-            $result = $link_handler->db->queryF($sql);
+            $sql    = "DELETE FROM {$linkHandler->table}"
+                      . " WHERE tag_modid = {$mid}"
+                      . '    AND '
+                      . '    (tag_itemid NOT IN '
+                      . "        (SELECT DISTINCT {$itemHandler->keyName} "
+                      . "           FROM {$itemHandler->table} "
+                      . "           WHERE {$itemHandler->table}.quote_status = "
+                      .Constants::STATUS_ONLINE
+                      . '        )'
+                      . '    )';
+            $result = $linkHandler->db->queryF($sql);
         } else {
             $result = false;
         }
     }
 
-    return ($result) ? true : false;
+    return $result ? true : false;
 }

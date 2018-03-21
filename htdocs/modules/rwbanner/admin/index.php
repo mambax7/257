@@ -8,20 +8,21 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright    The XOOPS Project (http://www.xoops.org)
- * @license   {@link http://www.gnu.org/licenses/gpl-2.0.html GNU Public License}
- * @author     XOOPS Development Team
- * @version    $Id $
+ * @copyright    XOOPS Project (https://xoops.org)
+ * @license      {@link http://www.gnu.org/licenses/gpl-2.0.html GNU Public License}
+ * @author       XOOPS Development Team
  **/
 
-require_once dirname(dirname(dirname(dirname(__FILE__)))) . '/include/cp_header.php';
-include_once dirname(__FILE__) . '/admin_header.php';
+use  XoopsModules\Rwbanner;
+
+require_once __DIR__ . '/../../../include/cp_header.php';
+require_once __DIR__ . '/admin_header.php';
 
 xoops_cp_header();
 
-    $indexAdmin = new ModuleAdmin();
+$adminObject = \Xmf\Module\Admin::getInstance();
 
-    echo $indexAdmin->addNavigation('index.php');
-    echo $indexAdmin->renderIndex();
+$adminObject->displayNavigation(basename(__FILE__));
+$adminObject->displayIndex();
 
-include "admin_footer.php";
+require_once __DIR__ . '/admin_footer.php';

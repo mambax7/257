@@ -1,31 +1,31 @@
 <?php
 
 /**
-* $Id: faq.php,v 1.31 2006/09/29 18:49:10 malanciault Exp $
-* Module: SmartFAQ
-* Author: The SmartFactory <www.smartfactory.ca>
-* Licence: GNU
-*/
+ * Module: SmartFAQ
+ * Author: The SmartFactory <www.smartfactory.ca>
+ * Licence: GNU
+ */
 
-include_once __DIR__ . '/header.php';
+use XoopsModules\Smartfaq;
 
-$faqid = isset($_GET['faqid']) ? intval($_GET['faqid']) : 0;
+require_once __DIR__ . '/header.php';
 
-if ($faqid == 0) {
-    redirect_header("javascript:history.go(-1)", 1, _MD_SF_NOFAQSELECTED);
-    exit();
+$faqid = isset($_GET['faqid']) ? (int)$_GET['faqid'] : 0;
+
+if (0 == $faqid) {
+    redirect_header('javascript:history.go(-1)', 1, _MD_SF_NOFAQSELECTED);
 }
 
 // Creating the FAQ handler object
-$faq_handler =& sf_gethandler('faq');
+/** @var \XoopsModules\Smartfaq\FaqHandler $faqHandler */
+$faqHandler = \XoopsModules\Smartfaq\Helper::getInstance()->getHandler('Faq');
 
 // Creating the FAQ object for the selected FAQ
-$faqObj = new sfFaq($faqid);
+$faqObj = new Smartfaq\Faq($faqid);
 
 // If the selected FAQ was not found, exit
 if ($faqObj->notLoaded()) {
-    redirect_header("javascript:history.go(-1)", 1, _MD_SF_NOFAQSELECTED);
-    exit();
+    redirect_header('javascript:history.go(-1)', 1, _MD_SF_NOFAQSELECTED);
 }
 
 // Creating the category object that holds the selected FAQ
@@ -35,19 +35,20 @@ $categoryObj = $faqObj->category();
 $answerObj = $faqObj->answer();
 
 // Check user permissions to access that category of the selected FAQ
-$faqAccessGrantedResult = faqAccessGranted($faqObj);
+$faqAccessGrantedResult = Smartfaq\Utility::faqAccessGranted($faqObj);
 if ($faqAccessGrantedResult < 0) {
-    redirect_header("javascript:history.go(-1)", 1, _NOPERM);
-    exit;
+    redirect_header('javascript:history.go(-1)', 1, _NOPERM);
 }
 
 // Update the read counter of the selected FAQ
-if (!$xoopsUser || ($xoopsUser->isAdmin($xoopsModule->mid()) && $xoopsModuleConfig['adminhits'] == 1) || ($xoopsUser && !$xoopsUser->isAdmin($xoopsModule->mid()))) {
+if (!$xoopsUser || ($xoopsUser->isAdmin($xoopsModule->mid()) && 1 == $xoopsModuleConfig['adminhits'])
+    || ($xoopsUser
+        && !$xoopsUser->isAdmin($xoopsModule->mid()))) {
     $faqObj->updateCounter();
 }
-$xoopsOption['template_main'] = 'smartfaq_faq.tpl';
-include_once(XOOPS_ROOT_PATH . "/header.php");
-include_once __DIR__ . '/footer.php';
+$GLOBALS['xoopsOption']['template_main'] = 'smartfaq_faq.tpl';
+require_once XOOPS_ROOT_PATH . '/header.php';
+require_once __DIR__ . '/footer.php';
 
 $faq = $faqObj->toArray(null, $categoryObj, false);
 
@@ -64,16 +65,16 @@ $faq['comments'] = $faqObj->comments();
 $faq['cancomment'] = $faqObj->cancomment();
 */
 $faq['categoryPath'] = $categoryObj->getCategoryPath(true);
-$faq['answer'] = $answerObj->answer();
+$faq['answer']       = $answerObj->answer();
 
 // Check to see if we need to display partial answer. This should probably be in a the FAQ class...
-if ($faqAccessGrantedResult == 0) {
+if (0 == $faqAccessGrantedResult) {
     $faq['answer'] = xoops_substr($faq['answer'], 0, 150);
 }
 
 $faq['who_when'] = $faqObj->getWhoAndWhen();
 
-$faq['adminlink'] = sf_getAdminLinks($faqObj->faqid());
+$faq['adminlink'] = Smartfaq\Utility::getAdminLinks($faqObj->faqid());
 
 $faq['comments'] = $faqObj->comments();
 
@@ -102,15 +103,15 @@ $xoopsTpl->assign('xoops_pagetitle', $module_name . ' - ' . $categoryObj->name()
 // End Page Title Hack by marcan
 
 // Include the comments if the selected FAQ supports comments
-if ($faqObj->cancomment() == 1) {
-    include_once XOOPS_ROOT_PATH . "/include/comment_view.php";
+if (1 == $faqObj->cancomment()) {
+    require_once XOOPS_ROOT_PATH . '/include/comment_view.php';
 }
 
 //code to include smartie
 if (file_exists(XOOPS_ROOT_PATH . '/modules/smarttie/smarttie_links.php')) {
-    include_once XOOPS_ROOT_PATH . '/modules/smarttie/smarttie_links.php';
+    require_once XOOPS_ROOT_PATH . '/modules/smarttie/smarttie_links.php';
     $xoopsTpl->assign('smarttie', 1);
 }
 //end code for smarttie
 
-include_once XOOPS_ROOT_PATH . '/footer.php';
+require_once XOOPS_ROOT_PATH . '/footer.php';

@@ -12,29 +12,28 @@
 /**
  * Xoopspoll install functions.php
  *
- * @copyright:: {@link http://xoops.org/ XOOPS Project}
+ * @copyright:: {@link https://xoops.org/ XOOPS Project}
  * @license  ::   {@link http://www.fsf.org/copyleft/gpl.html GNU public license}
  * @package  ::   xoopspoll
  * @since    ::     1.40
  * @author   ::    zyspec <owners@zyspec.com>
- * @version  ::   $Id: $
- * @param $xoopsModule
+ * @param  \XoopsModule $module
  * @return bool
  */
 
-function xoops_module_pre_install_xoopspoll(&$xoopsModule)
+function xoops_module_pre_install_xoopspoll(\XoopsModule $module)
 {
-    //    $db =& XoopsDatabaseFactory::getDatabaseConnection();
+    //    $db = \XoopsDatabaseFactory::getDatabaseConnection();
     $retVal = true;
 
     return $retVal;
 }
 
 /**
- * @param $xoopsModule
+ * @param  \XoopsModule $module
  * @return bool
  */
-function xoops_module_install_xoopspoll(&$xoopsModule)
+function xoops_module_install_xoopspoll(\XoopsModule $module)
 {
     $retVal = true;
 

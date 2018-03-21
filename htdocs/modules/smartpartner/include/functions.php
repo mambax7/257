@@ -1,24 +1,19 @@
 <?php
 
 /**
- * $Id: functions.php 9889 2012-07-16 12:08:42Z beckmi $
+ *
  * Module: SmartPartner
  * Author: The SmartFactory <www.smartfactory.ca>
  * Licence: GNU
  */
-if (!defined("XOOPS_ROOT_PATH")) {
-    die("XOOPS root path not defined");
-}
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 function smartpartner_xoops_cp_header()
 {
-    xoops_cp_header();
-
-    ?>
+    xoops_cp_header(); ?>
     <script type='text/javascript' src='funcs.js'></script>
     <script type='text/javascript' src='cookies.js'></script>
     <?php
-
 }
 
 /**
@@ -34,10 +29,11 @@ function smartpartner_TableExists($table)
 {
     $bRetVal = false;
     //Verifies that a MySQL table exists
-    $xoopsDB =& Database::getInstance();
+    $xoopsDB  = \XoopsDatabaseFactory::getDatabaseConnection();
     $realname = $xoopsDB->prefix($table);
-    $ret = mysql_list_tables(XOOPS_DB_NAME, $xoopsDB->conn);
-    while (list($m_table) = $xoopsDB->fetchRow($ret)) {
+    $sql      = 'SHOW TABLES FROM ' . XOOPS_DB_NAME;
+    $ret      = $xoopsDB->queryF($sql);
+    while (false !== (list($m_table) = $xoopsDB->fetchRow($ret))) {
         if ($m_table == $realname) {
             $bRetVal = true;
             break;
@@ -45,7 +41,7 @@ function smartpartner_TableExists($table)
     }
     $xoopsDB->freeRecordSet($ret);
 
-    return ($bRetVal);
+    return $bRetVal;
 }
 
 /**
@@ -59,9 +55,9 @@ function smartpartner_TableExists($table)
  */
 function smartpartner_GetMeta($key)
 {
-    $xoopsDB =& Database::getInstance();
-    $sql = sprintf("SELECT metavalue FROM %s WHERE metakey=%s", $xoopsDB->prefix('smartpartner_meta'), $xoopsDB->quoteString($key));
-    $ret = $xoopsDB->query($sql);
+    $xoopsDB = \XoopsDatabaseFactory::getDatabaseConnection();
+    $sql     = sprintf('SELECT metavalue FROM %s WHERE metakey=%s', $xoopsDB->prefix('smartpartner_meta'), $xoopsDB->quoteString($key));
+    $ret     = $xoopsDB->query($sql);
     if (!$ret) {
         $value = false;
     } else {
@@ -83,11 +79,11 @@ function smartpartner_GetMeta($key)
  */
 function smartpartner_SetMeta($key, $value)
 {
-    $xoopsDB =& Database::getInstance();
+    $xoopsDB = \XoopsDatabaseFactory::getDatabaseConnection();
     if ($ret = smartpartner_GetMeta($key)) {
-        $sql = sprintf("UPDATE %s SET metavalue = %s WHERE metakey = %s", $xoopsDB->prefix('smartpartner_meta'), $xoopsDB->quoteString($value), $xoopsDB->quoteString($key));
+        $sql = sprintf('UPDATE %s SET metavalue = %s WHERE metakey = %s', $xoopsDB->prefix('smartpartner_meta'), $xoopsDB->quoteString($value), $xoopsDB->quoteString($key));
     } else {
-        $sql = sprintf("INSERT INTO %s (metakey, metavalue) VALUES (%s, %s)", $xoopsDB->prefix('smartpartner_meta'), $xoopsDB->quoteString($key), $xoopsDB->quoteString($value));
+        $sql = sprintf('INSERT INTO %s (metakey, metavalue) VALUES (%s, %s)', $xoopsDB->prefix('smartpartner_meta'), $xoopsDB->quoteString($key), $xoopsDB->quoteString($value));
     }
     $ret = $xoopsDB->queryF($sql);
     if (!$ret) {
@@ -97,31 +93,47 @@ function smartpartner_SetMeta($key, $value)
     return true;
 }
 
+/**
+ * @param $matches
+ * @return string
+ */
 function smartpartner_highlighter($matches)
 {
     //$color=getmoduleoption('highlightcolor');
-    $smartConfig =& smartpartner_getModuleConfig();
-    $color = $smartConfig['highlight_color'];
-    if (substr($color, 0, 1) != '#') {
+    $smartConfig = smartpartner_getModuleConfig();
+    $color       = $smartConfig['highlight_color'];
+    if (0 !== strpos($color, '#')) {
         $color = '#' . $color;
     }
 
     return '<span style="font-weight: bolder; background-color: ' . $color . ';">' . $matches[0] . '</span>';
 }
 
+/**
+ * @return array
+ */
 function smartpartner_getAllowedImagesTypes()
 {
-    return array('jpg/jpeg', 'image/bmp', 'image/gif', 'image/jpeg', 'image/jpg', 'image/x-png', 'image/png', 'image/pjpeg');
+    return [
+        'jpg/jpeg',
+        'image/bmp',
+        'image/gif',
+        'image/jpeg',
+        'image/jpg',
+        'image/x-png',
+        'image/png',
+        'image/pjpeg'
+    ];
 }
 
 /**
  * Copy a file, or a folder and its contents
  *
  * @author      Aidan Lister <aidan@php.net>
- * @version     1.0.0
  * @param  string $source The source
  * @param  string $dest   The destination
  * @return bool   Returns true on success, false on failure
+ * @throws
  */
 function smartpartner_copyr($source, $dest)
 {
@@ -132,19 +144,22 @@ function smartpartner_copyr($source, $dest)
 
     // Make destination directory
     if (!is_dir($dest)) {
-        mkdir($dest);
+        //        mkdir($dest);
+        if (!@mkdir($dest) && !is_dir($dest)) {
+            throw new Exception("Couldn't create this directory: " . $dest);
+        }
     }
 
     // Loop through the folder
     $dir = dir($source);
     while (false !== $entry = $dir->read()) {
         // Skip pointers
-        if ($entry == '.' || $entry == '..') {
+        if ('.' === $entry || '..' === $entry) {
             continue;
         }
 
         // Deep copy directories
-        if (is_dir("$source/$entry") && ($dest !== "$source/$entry")) {
+        if (is_dir("$source/$entry") && ("$source/$entry" !== $dest)) {
             copyr("$source/$entry", "$dest/$entry");
         } else {
             copy("$source/$entry", "$dest/$entry");
@@ -157,33 +172,39 @@ function smartpartner_copyr($source, $dest)
     return true;
 }
 
+/**
+ * @return string
+ */
 function smartpartner_getHelpPath()
 {
-    $smartConfig =& smartpartner_getModuleConfig();
+    $smartConfig = smartpartner_getModuleConfig();
     switch ($smartConfig['helppath_select']) {
-        case 'docs.xoops.org' :
+        case 'docs.xoops.org':
             return 'http://docs.xoops.org/help/spartnerh/index.htm';
             break;
 
-        case 'inside' :
-            return SMARTPARTNER_URL . "doc/";
+        case 'inside':
+            return SMARTPARTNER_URL . 'doc/';
             break;
 
-        case 'custom' :
+        case 'custom':
             return $smartConfig['helppath_custom'];
             break;
     }
 }
 
-function &smartpartner_getModuleInfo()
+/**
+ * @return mixed|null
+ */
+function smartpartner_getModuleInfo()
 {
     static $smartModule;
     if (!isset($smartModule)) {
         global $xoopsModule;
-        if (isset($xoopsModule) && is_object($xoopsModule) && $xoopsModule->getVar('dirname') == SMARTPARTNER_DIRNAME) {
-            $smartModule =& $xoopsModule;
+        if (isset($xoopsModule) && is_object($xoopsModule) && SMARTPARTNER_DIRNAME == $xoopsModule->getVar('dirname')) {
+            $smartModule = $xoopsModule;
         } else {
-            $hModule = &xoops_gethandler('module');
+            $hModule     = xoops_getHandler('module');
             $smartModule = $hModule->getByDirname(SMARTPARTNER_DIRNAME);
         }
     }
@@ -191,17 +212,20 @@ function &smartpartner_getModuleInfo()
     return $smartModule;
 }
 
-function &smartpartner_getModuleConfig()
+/**
+ * @return mixed
+ */
+function smartpartner_getModuleConfig()
 {
     static $smartConfig;
     if (!$smartConfig) {
         global $xoopsModule;
-        if (isset($xoopsModule) && is_object($xoopsModule) && $xoopsModule->getVar('dirname') == SMARTPARTNER_DIRNAME) {
+        if (isset($xoopsModule) && is_object($xoopsModule) && SMARTPARTNER_DIRNAME == $xoopsModule->getVar('dirname')) {
             global $xoopsModuleConfig;
-            $smartConfig =& $xoopsModuleConfig;
+            $smartConfig = $xoopsModuleConfig;
         } else {
-            $smartModule =& smartpartner_getModuleInfo();
-            $hModConfig = &xoops_gethandler('config');
+            $smartModule = smartpartner_getModuleInfo();
+            $hModConfig  = xoops_getHandler('config');
             $smartConfig = $hModConfig->getConfigsByCat(0, $smartModule->getVar('mid'));
         }
     }
@@ -209,34 +233,45 @@ function &smartpartner_getModuleConfig()
     return $smartConfig;
 }
 
+/**
+ * @param $src
+ * @param $maxWidth
+ * @param $maxHeight
+ * @return array
+ */
 function smartpartner_imageResize($src, $maxWidth, $maxHeight)
 {
-    $width = '';
+    $width  = '';
     $height = '';
-    $type = '';
-    $attr = '';
+    $type   = '';
+    $attr   = '';
 
     if (file_exists($src)) {
         list($width, $height, $type, $attr) = getimagesize($src);
         if ($width > $maxWidth) {
             $originalWidth = $width;
-            $width = $maxWidth;
-            $height = $width * $height / $originalWidth;
+            $width         = $maxWidth;
+            $height        = $width * $height / $originalWidth;
         }
 
         if ($height > $maxHeight) {
             $originalHeight = $height;
-            $height = $maxHeight;
-            $width = $height * $width / $originalHeight;
+            $height         = $maxHeight;
+            $width          = $height * $width / $originalHeight;
         }
 
         $attr = " width='$width' height='$height'";
     }
 
-    return array($width, $height, $type, $attr);
+    return [$width, $height, $type, $attr];
 }
 
-function &smartpartner_gethandler($name, $optional = false)
+/**
+ * @param       $name
+ * @param  bool $optional
+ * @return bool
+ */
+function smartpartner_gethandler($name, $optional = false)
 {
     static $handlers;
     $name = strtolower(trim($name));
@@ -244,13 +279,13 @@ function &smartpartner_gethandler($name, $optional = false)
         if (file_exists($hnd_file = SMARTPARTNER_ROOT_PATH . 'class/' . $name . '.php')) {
             require_once $hnd_file;
         }
-        $class = "Smartpartner" . ucfirst($name) . 'Handler';
+        $class = 'Smartpartner' . ucfirst($name) . 'Handler';
         if (class_exists($class)) {
             $handlers[$name] = new $class($GLOBALS['xoopsDB']);
         }
     }
     if (!isset($handlers[$name]) && !$optional) {
-        trigger_error('Class <b>' . $class . '</b> does not exist<br />Handler Name: ' . $name . ' | Module path : ' . SMARTPARTNER_ROOT_PATH, E_USER_ERROR);
+        trigger_error('Class <b>' . $class . '</b> does not exist<br>Handler Name: ' . $name . ' | Module path: ' . SMARTPARTNER_ROOT_PATH, E_USER_ERROR);
     }
     $ret = isset($handlers[$name]) ? $handlers[$name] : false;
 
@@ -262,104 +297,45 @@ function &smartpartner_gethandler($name, $optional = false)
  *
  * smartpartner_userIsAdmin()
  *
- * @return boolean : array with userids and uname
+ * @return boolean: array with userids and uname
  */
 function smartpartner_userIsAdmin()
 {
     global $xoopsUser;
 
-    $result = false;
+    $result      = false;
     $smartModule = smartpartner_getModuleInfo();
-    $module_id = $smartModule->getVar('mid');
+    $module_id   = $smartModule->getVar('mid');
 
     if (!empty($xoopsUser)) {
         $groups = $xoopsUser->getGroups();
-        $result = (in_array(XOOPS_GROUP_ADMIN, $groups)) || ($xoopsUser->isAdmin($module_id));
+        $result = in_array(XOOPS_GROUP_ADMIN, $groups) || $xoopsUser->isAdmin($module_id);
     }
 
     return $result;
 }
 
-function smartpartner_adminMenu($currentoption = 0, $breadcrumb = '')
-{
-
-    /* Nice buttons styles */
-    echo "
-        <style type='text/css'>
-        #buttontop { float:left; width:100%; background: #e7e7e7; font-size:93%; line-height:normal; border-top: 1px solid black; border-left: 1px solid black; border-right: 1px solid black; margin: 0; }
-        #buttonbar { float:left; width:100%; background: #e7e7e7 url('" . SMARTPARTNER_URL . "/images/bg.gif') repeat-x left bottom; font-size:93%; line-height:normal; border-left: 1px solid black; border-right: 1px solid black; margin-bottom: 12px; }
-        #buttonbar ul { margin:0; margin-top: 15px; padding:10px 10px 0; list-style:none; }
-        #buttonbar li { display:inline; margin:0; padding:0; }
-        #buttonbar a { float:left; background:url('" . SMARTPARTNER_URL . "/images/left_both.gif') no-repeat left top; margin:0; padding:0 0 0 9px; border-bottom:1px solid #000; text-decoration:none; }
-        #buttonbar a span { float:left; display:block; background:url('" . SMARTPARTNER_URL . "images/right_both.gif') no-repeat right top; padding:5px 15px 4px 6px; font-weight:bold; color:#765; }
-        /* Commented Backslash Hack hides rule from IE5-Mac \*/
-        #buttonbar a span {float:none;}
-        /* End IE5-Mac hack */
-        #buttonbar a:hover span { color:#333; }
-        #buttonbar #current a { background-position:0 -150px; border-width:0; }
-        #buttonbar #current a span { background-position:100% -150px; padding-bottom:5px; color:#333; }
-        #buttonbar a:hover { background-position:0% -150px; }
-        #buttonbar a:hover span { background-position:100% -150px; }
-        </style>
-    ";
-    // global $xoopsDB, $xoopsModule, $xoopsConfig, $xoopsModuleConfig;
-    global $xoopsModule, $xoopsConfig;
-    $myts = &MyTextSanitizer::getInstance();
-
-    $tblColors = array();
-    $tblColors[0] = $tblColors[1] = $tblColors[2] = $tblColors[3] = $tblColors[4] = $tblColors[5] = $tblColors[6] = $tblColors[7] = $tblColors[8] = '';
-    $tblColors[$currentoption] = 'current';
-
-    //echo SMARTPARTNER_ROOT_PATH . 'language/' . $xoopsConfig['language'] . '/modinfo.php';
-
-    if (file_exists(SMARTPARTNER_ROOT_PATH . 'language/' . $xoopsConfig['language'] . '/modinfo.php')) {
-        include_once SMARTPARTNER_ROOT_PATH . 'language/' . $xoopsConfig['language'] . '/modinfo.php';
-    } else {
-        include_once SMARTPARTNER_ROOT_PATH . 'language/english/modinfo.php';
-    }
-
-    if (file_exists(SMARTPARTNER_ROOT_PATH . 'language/' . $xoopsConfig['language'] . '/admin.php')) {
-        include_once SMARTPARTNER_ROOT_PATH . 'language/' . $xoopsConfig['language'] . '/admin.php';
-    } else {
-        include_once SMARTPARTNER_ROOT_PATH . 'language/english/admin.php';
-    }
-
-    include 'menu.php';
-    echo '<div id="buttontop">';
-    echo '<table style="width: 100%; padding: 0;" cellspacing="0"><tr>';
-    echo '<td style="font-size: 10px; text-align: left; color: #2F5376; padding: 0 6px; line-height: 18px;">';
-    for ($i = 0; $i < count($headermenu); $i++) {
-        echo '<a class="nobutton" href="' . $headermenu[$i]['link'] . '">' . $headermenu[$i]['title'] . '</a> ';
-
-        if ($i < count($headermenu) - 1) {
-            echo "| ";
-        }
-    }
-    echo '</td>';
-    echo '<td style="font-size: 10px; text-align: right; color: #2F5376; padding: 0 6px; line-height: 18px;">' . $breadcrumb . '</td>';
-    echo '</tr></table>';
-    echo '</div>';
-
-    echo '<div id="buttonbar">';
-    echo "<ul>";
-
-    for ($i = 0; $i < count($adminmenu); $i++) {
-        echo '<li id="' . $tblColors[$i] . '"><a href="' . SMARTPARTNER_URL . $adminmenu[$i]['link'] . '"><span>' . $adminmenu[$i]['title'] . '</span></a></li>';
-    }
-    echo '</ul></div>';
-}
-
+/**
+ * @param string $tablename
+ * @param string $iconname
+ * @param string $tabletitle
+ * @param string $tabledsc
+ */
 function smartpartner_collapsableBar($tablename = '', $iconname = '', $tabletitle = '', $tabledsc = '')
 {
     global $xoopsModule;
     echo "<h3 style=\"color: #2F5376; font-weight: bold; font-size: 14px; margin: 6px 0 0 0; \"><a href='javascript:;' onclick=\"toggle('" . $tablename . "'); toggleIcon('" . $iconname . "')\";>";
-    echo "<img id='$iconname' src=" . XOOPS_URL . "/modules/" . $xoopsModule->dirname() . "/images/icon/close12.gif alt='' /></a>&nbsp;" . $tabletitle . "</h3>";
+    echo "<img id='$iconname' src=" . XOOPS_URL . '/modules/' . $xoopsModule->dirname() . "/assets/images/icon/close12.gif alt=''></a>&nbsp;" . $tabletitle . '</h3>';
     echo "<div id='$tablename'>";
-    if ($tabledsc != '') {
-        echo "<span style=\"color: #567; margin: 3px 0 12px 0; font-size: small; display: block; \">" . $tabledsc . "</span>";
+    if ('' != $tabledsc) {
+        echo '<span style="color: #567; margin: 3px 0 12px 0; font-size: small; display: block; ">' . $tabledsc . '</span>';
     }
 }
 
+/**
+ * @param $name
+ * @param $icon
+ */
 function smartpartner_openclose_collapsable($name, $icon)
 {
     $urls = smartpartner_getCurrentUrls();
@@ -367,9 +343,9 @@ function smartpartner_openclose_collapsable($name, $icon)
 
     $cookie_name = $path . '_smartpartner_collaps_' . $name;
     $cookie_name = str_replace('.', '_', $cookie_name);
-    $cookie = smartpartner_getCookieVar($cookie_name, '');
+    $cookie      = smartpartner_getCookieVar($cookie_name, '');
 
-    if ($cookie == 'none') {
+    if ('none' === $cookie) {
         echo '
         <script type="text/javascript"><!--
         toggle("' . $name . '"); toggleIcon("' . $icon . '");
@@ -379,53 +355,73 @@ function smartpartner_openclose_collapsable($name, $icon)
     }
 }
 
+/**
+ * @param $name
+ * @param $icon
+ */
 function smartpartner_close_collapsable($name, $icon)
 {
-    echo "</div>";
+    echo '</div>';
     smartpartner_openclose_collapsable($name, $icon);
 }
 
+/**
+ * @param     $name
+ * @param     $value
+ * @param int $time
+ */
 function smartpartner_setCookieVar($name, $value, $time = 0)
 {
-    if ($time == 0) {
+    if (0 == $time) {
         $time = time() + 3600 * 24 * 365;
         //$time = '';
     }
     setcookie($name, $value, $time, '/');
 }
 
+/**
+ * @param         $name
+ * @param  string $default
+ * @return string
+ */
 function smartpartner_getCookieVar($name, $default = '')
 {
-    if ((isset($_COOKIE[$name])) && ($_COOKIE[$name] > '')) {
+    if (isset($_COOKIE[$name]) && ($_COOKIE[$name] > '')) {
         return $_COOKIE[$name];
     } else {
         return $default;
     }
 }
 
+/**
+ * @return array
+ */
 function smartpartner_getCurrentUrls()
 {
-    $http = ((strpos(XOOPS_URL, "https://")) === false) ? ("http://") : ("https://");
-    $phpself = $_SERVER['PHP_SELF'];
-    $httphost = $_SERVER['HTTP_HOST'];
+    $http        = (false === strpos(XOOPS_URL, 'https://')) ? 'http://' : 'https://';
+    $phpself     = $_SERVER['PHP_SELF'];
+    $httphost    = $_SERVER['HTTP_HOST'];
     $querystring = $_SERVER['QUERY_STRING'];
 
-    if ($querystring != '') {
+    if ('' != $querystring) {
         $querystring = '?' . $querystring;
     }
 
     $currenturl = $http . $httphost . $phpself . $querystring;
 
-    $urls = array();
-    $urls['http'] = $http;
-    $urls['httphost'] = $httphost;
-    $urls['phpself'] = $phpself;
+    $urls                = [];
+    $urls['http']        = $http;
+    $urls['httphost']    = $httphost;
+    $urls['phpself']     = $phpself;
     $urls['querystring'] = $querystring;
-    $urls['full'] = $currenturl;
+    $urls['full']        = $currenturl;
 
     return $urls;
 }
 
+/**
+ * @return mixed
+ */
 function smartpartner_getCurrentPage()
 {
     $urls = smartpartner_getCurrentUrls();
@@ -437,26 +433,34 @@ function smartpartner_modFooter()
 {
     global $xoopsUser, $xoopsDB, $xoopsConfig;
 
-    $hModule = &xoops_gethandler('module');
-    $hModConfig = &xoops_gethandler('config');
+    $hModule    = xoops_getHandler('module');
+    $hModConfig = xoops_getHandler('config');
 
-    $smartModule = &$hModule->getByDirname('smartpartner');
-    $module_id = $smartModule->getVar('mid');
+    $smartModule =& $hModule->getByDirname('smartpartner');
+    $module_id   = $smartModule->getVar('mid');
 
     $module_name = $smartModule->getVar('dirname');
-    $smartConfig = &$hModConfig->getConfigsByCat(0, $smartModule->getVar('mid'));
+    $smartConfig =& $hModConfig->getConfigsByCat(0, $smartModule->getVar('mid'));
 
     $module_id = $smartModule->getVar('mid');
 
-    $versioninfo = &$hModule->get($smartModule->getVar('mid'));
-    $modfootertxt = "Module " . $versioninfo->getInfo('name') . " - Version " . $versioninfo->getInfo('version') . "";
+    $versioninfo  =& $hModule->get($smartModule->getVar('mid'));
+    $modfootertxt = 'Module ' . $versioninfo->getInfo('name') . ' - Version ' . $versioninfo->getInfo('version') . '';
     if (!defined('_AM_SPARTNER_XOOPS_PRO')) {
-        define("_AM_SPARTNER_XOOPS_PRO", "Do you need help with this module ?<br />Do you need new features not yet availale ?");
+        define('_AM_SPARTNER_XOOPS_PRO', 'Do you need help with this module ?<br>Do you need new features not yet availale?');
     }
 
-    echo "<div style='padding-top: 8px; padding-bottom: 10px; text-align: center;'><a href='" . $versioninfo->getInfo('support_site_url') . "' target='_blank'><img src='" . XOOPS_URL . "/modules/smartpartner/images/spcssbutton.gif' title='" . $modfootertxt . "' alt='" . $modfootertxt . "'/></a></div>";
-    echo '<div style="border: 2px solid #C2CDD6">';
-    echo '<div style="font-weight:bold; padding-top: 5px; text-align: center;">' . _AM_SPARTNER_XOOPS_PRO . '<br /><a href="http://inboxinternational.com/modules/smartcontent/page.php?pageid=10"><img src="http://inboxinternational.com/images/INBOXsign150_noslogan.gif" alt="Need XOOPS Professional Services?" title="Need XOOPS Professional Services?"></a>
+    echo "<div style='padding-top: 8px; padding-bottom: 10px; text-align: center;'><a href='"
+         . $versioninfo->getInfo('support_site_url')
+         . "' target='_blank'><img src='"
+         . XOOPS_URL
+         . "/modules/smartpartner/assets/images/spcssbutton.gif' title='"
+         . $modfootertxt
+         . "' alt='"
+         . $modfootertxt
+         . "'></a></div>";
+    echo '<div style="border: 2px solid #C2CDD6;">';
+    echo '<div style="font-weight:bold; padding-top: 5px; text-align: center;">' . _AM_SPARTNER_XOOPS_PRO . '<br><a href="http://inboxinternational.com/modules/smartcontent/page.php?pageid=10"><img src="http://inboxinternational.com/images/INBOXsign150_noslogan.gif" alt="Need XOOPS Professional Services?" title="Need XOOPS Professional Services?"></a>
 <a href="http://inboxinternational.com/modules/smartcontent/page.php?pageid=10"><img src="http://inboxinternational.com/images/xoops_services_pro_english.gif" alt="Need XOOPS Professional Services?" title="Need XOOPS Professional Services?"></a>
 </div>';
     echo '</div>';
@@ -464,10 +468,13 @@ function smartpartner_modFooter()
 
 /**
  * Thanks to the NewBB2 Development Team
+ * @param             $item
+ * @param  bool       $getStatus
+ * @return int|string
  */
-function &smartpartner_admin_getPathStatus($item, $getStatus = false)
+function smartpartner_admin_getPathStatus($item, $getStatus = false)
 {
-    if ($item == 'root') {
+    if ('root' === $item) {
         $path = '';
     } else {
         $path = $item;
@@ -480,13 +487,13 @@ function &smartpartner_admin_getPathStatus($item, $getStatus = false)
     }
     if (@is_writable($thePath)) {
         $pathCheckResult = 1;
-        $path_status = _AM_SPARTNER_AVAILABLE;
+        $path_status     = _AM_SPARTNER_AVAILABLE;
     } elseif (!@is_dir($thePath)) {
         $pathCheckResult = -1;
-        $path_status = _AM_SPARTNER_NOTAVAILABLE . " <a href=index.php?op=createdir&amp;path=$item>" . _AM_SPARTNER_CREATETHEDIR . '</a>';
+        $path_status     = _AM_SPARTNER_NOTAVAILABLE . " <a href=index.php?op=createdir&amp;path=$item>" . _AM_SPARTNER_CREATETHEDIR . '</a>';
     } else {
         $pathCheckResult = -2;
-        $path_status = _AM_SPARTNER_NOTWRITABLE . " <a href=index.php?op=setperm&amp;path=$item>" . _AM_SCS_SETMPERM . '</a>';
+        $path_status     = _AM_SPARTNER_NOTWRITABLE . " <a href=index.php?op=setperm&amp;path=$item>" . _AM_SCS_SETMPERM . '</a>';
     }
     if (!$getStatus) {
         return $path_status;
@@ -497,6 +504,8 @@ function &smartpartner_admin_getPathStatus($item, $getStatus = false)
 
 /**
  * Thanks to the NewBB2 Development Team
+ * @param $target
+ * @return bool
  */
 function smartpartner_admin_mkdir($target)
 {
@@ -514,24 +523,33 @@ function smartpartner_admin_mkdir($target)
             return mkdir($target);
         }
     } // crawl back up & create dir tree
+
     return true;
 }
 
 /**
  * Thanks to the NewBB2 Development Team
+ * @param       $target
+ * @param  int  $mode
+ * @return bool
  */
 function smartpartner_admin_chmod($target, $mode = 0777)
 {
     return @chmod($target, $mode);
 }
 
+/**
+ * @param  bool $local
+ * @param  bool $item
+ * @return string
+ */
 function smartpartner_getUploadDir($local = true, $item = false)
 {
     if ($item) {
-        if ($item == 'root') {
+        if ('root' === $item) {
             $item = '';
         } else {
-            $item = $item . '/';
+            $item .= '/';
         }
     } else {
         $item = '';
@@ -544,6 +562,11 @@ function smartpartner_getUploadDir($local = true, $item = false)
     }
 }
 
+/**
+ * @param  string $item
+ * @param  bool   $local
+ * @return string
+ */
 function smartpartner_getImageDir($item = '', $local = true)
 {
     if ($item) {
@@ -555,25 +578,35 @@ function smartpartner_getImageDir($item = '', $local = true)
     return smartpartner_getUploadDir($local, $item);
 }
 
-function smartpartner_formatErrors($errors = array())
+/**
+ * @param  array $errors
+ * @return string
+ */
+function smartpartner_formatErrors($errors = [])
 {
     $ret = '';
     foreach ($errors as $key => $value) {
-        $ret .= "<br /> - " . $value;
+        $ret .= '<br> - ' . $value;
     }
 
     return $ret;
 }
 
-function smartpartner_upload_file($another = false, $withRedirect = true, &$itemObj)
+/**
+ * @param  bool   $another
+ * @param  bool   $withRedirect
+ * @param  object $itemObj
+ * @return bool|string
+ */
+function smartpartner_upload_file($another = false, $withRedirect = true, $itemObj)
 {
-    include_once(SMARTPARTNER_ROOT_PATH . "class/uploader.php");
+    require_once SMARTPARTNER_ROOT_PATH . 'class/uploader.php';
 
-    global $smartpartner_isAdmin, $xoopsModuleConfig, $smartpartner_partner_handler, $smartpartner_file_handler, $xoopsUser;
+    global $smartPartnerIsAdmin, $xoopsModuleConfig, $smartPartnerPartnerHandler, $smartPartnerFileHandler, $xoopsUser;
 
-    $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
-    $uid = is_object($xoopsUser) ? $xoopsUser->uid() : 0;
-    $session = SmartpartnerSession::singleton();
+    $id      = isset($_POST['id']) ? (int)$_POST['id'] : 0;
+    $uid     = is_object($xoopsUser) ? $xoopsUser->uid() : 0;
+    $session = SmartpartnerSession::getInstance();
     $session->set('smartpartner_file_filename', isset($_POST['name']) ? $_POST['name'] : '');
     $session->set('smartpartner_file_description', isset($_POST['description']) ? $_POST['description'] : '');
     $session->set('smartpartner_file_status', $_POST['file_status']);
@@ -581,36 +614,36 @@ function smartpartner_upload_file($another = false, $withRedirect = true, &$item
     $session->set('smartpartner_file_id', $id);
 
     if (!is_object($itemObj)) {
-        $itemObj = $smartpartner_partner_handler->get($id);
+        $itemObj = $smartPartnerPartnerHandler->get($id);
     }
 
     $max_size = $xoopsModuleConfig['maximum_filesize'];
 
-    $fileObj = $smartpartner_file_handler->create();
+    $fileObj = $smartPartnerFileHandler->create();
     $fileObj->setVar('name', isset($_POST['name']) ? $_POST['name'] : '');
     $fileObj->setVar('description', isset($_POST['description']) ? $_POST['description'] : '');
-    $fileObj->setVar('status', isset($_POST['file_status']) ? intval($_POST['file_status']) : 1);
+    $fileObj->setVar('status', isset($_POST['file_status']) ? (int)$_POST['file_status'] : 1);
     $fileObj->setVar('uid', $uid);
     $fileObj->setVar('id', $itemObj->getVar('id'));
     $allowed_mimetypes = '';
-    $errors = '';
+    $errors            = '';
     // Get available mimetypes for file uploading
-/*    $hMime =& xoops_getmodulehandler('mimetype');
-    if ($smartpartner_isAdmin) {
-        $crit = new Criteria('mime_admin', 1);
-    } else {
-        $crit = new Criteria('mime_user', 1);
-    }
-    $mimetypes =& $hMime->getObjects($crit);
-    // TODO : display the available mimetypes to the user
-    */
+    /*    $hMime = xoops_getModuleHandler('mimetype');
+        if ($smartPartnerIsAdmin) {
+            $crit = new \Criteria('mime_admin', 1);
+        } else {
+            $crit = new \Criteria('mime_user', 1);
+        }
+        $mimetypes = $hMime->getObjects($crit);
+        // TODO: display the available mimetypes to the user
+        */
     if (is_uploaded_file($_FILES['userfile']['tmp_name'])) {
         if (!$ret = $fileObj->checkUpload('userfile', $allowed_mimetypes, $errors)) {
-            $errorstxt = implode('<br />', $errors);
+            $errorstxt = implode('<br>', $errors);
 
             $message = sprintf(_SMARTPARTNER_MESSAGE_FILE_ERROR, $errorstxt);
             if ($withRedirect) {
-                redirect_header("file.php?op=mod&id=" . $id, 5, $message);
+                redirect_header('file.php?op=mod&id=' . $id, 5, $message);
             } else {
                 return $message;
             }
@@ -620,20 +653,23 @@ function smartpartner_upload_file($another = false, $withRedirect = true, &$item
     // Storing the file
     if (!$fileObj->store($allowed_mimetypes)) {
         if ($withRedirect) {
-            redirect_header("file.php?op=mod&id=" . $fileObj->id(), 3, _AM_SPARTNER_FILEUPLOAD_ERROR . smartpartner_formatErrors($fileObj->getErrors()));
-            exit;
+            redirect_header('file.php?op=mod&id=' . $fileObj->id(), 3, _AM_SPARTNER_FILEUPLOAD_ERROR . smartpartner_formatErrors($fileObj->getErrors()));
         } else {
             return _AM_SPARTNER_FILEUPLOAD_ERROR . smartpartner_formatErrors($fileObj->getErrors());
         }
     }
     if ($withRedirect) {
         $redirect_page = $another ? 'file.php' : 'partner.php';
-        redirect_header($redirect_page . "?op=mod&id=" . $fileObj->id(), 2, _AM_SPARTNER_FILEUPLOAD_SUCCESS);
+        redirect_header($redirect_page . '?op=mod&id=' . $fileObj->id(), 2, _AM_SPARTNER_FILEUPLOAD_SUCCESS);
     } else {
         return true;
     }
 }
 
+/**
+ * @param $dirname
+ * @return bool
+ */
 function smartpartner_deleteFile($dirname)
 {
     // Simple delete for a file
@@ -644,10 +680,8 @@ function smartpartner_deleteFile($dirname)
 
 function smartpartner_create_upload_folders()
 {
-    $hanlder =& xoops_getmodulehandler('offer', 'smartpartner');
-    smart_admin_mkdir($hanlder->getImagePath());
+    $handler = xoops_getModuleHandler('offer', 'smartpartner');
+    smart_admin_mkdir($handler->getImagePath());
 
     smart_admin_mkdir(XOOPS_ROOT_PATH . '/uploads/smartpartner/images/category');
 }
-
-?>

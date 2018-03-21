@@ -1,8 +1,9 @@
 <?php
+
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * Contains the Calendar_Hour class
+ * Contains the Calendar_Hour class.
  *
  * PHP versions 4 and 5
  *
@@ -28,16 +29,17 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @category  Date and Time
- * @package   Calendar
+ *
  * @author    Harry Fuecks <hfuecks@phppatterns.com>
  * @copyright 2003-2007 Harry Fuecks
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   CVS: $Id: Hour.php 1511 2011-09-01 20:56:07Z jjdai $
+ *
  * @link      http://pear.php.net/package/Calendar
  */
 
 /**
- * Allows Calendar include path to be redefined
+ * Allows Calendar include path to be redefined.
+ *
  * @ignore
  */
 if (!defined('CALENDAR_ROOT')) {
@@ -45,63 +47,57 @@ if (!defined('CALENDAR_ROOT')) {
 }
 
 /**
- * Load Calendar base class
+ * Load Calendar base class.
  */
-require_once CALENDAR_ROOT.'Calendar.php';
+require_once CALENDAR_ROOT . 'Calendar.php';
 
 /**
  * Represents an Hour and builds Minutes
  * <code>
- * require_once 'Calendar/Hour.php';
+ * require_once __DIR__ . '/Calendar/Hour.php';
  * $Hour = new Calendar_Hour(2003, 10, 21, 15); // Oct 21st 2003, 3pm
  * $Hour->build(); // Build Calendar_Minute objects
- * while ($Minute = & $Hour->fetch()) {
- *     echo $Minute->thisMinute().'<br />';
+ * while ($Minute = $Hour->fetch()) {
+ *     echo $Minute->thisMinute().'<br>';
  * }
- * </code>
+ * </code>.
  *
  * @category  Date and Time
- * @package   Calendar
+ *
  * @author    Harry Fuecks <hfuecks@phppatterns.com>
  * @copyright 2003-2007 Harry Fuecks
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @link      http://pear.php.net/package/Calendar
- * @access    public
  */
 class Calendar_Hour extends Calendar
 {
     /**
-     * Constructs Calendar_Hour
+     * Constructs Calendar_Hour.
      *
      * @param int $y year e.g. 2003
      * @param int $m month e.g. 5
      * @param int $d day e.g. 11
      * @param int $h hour e.g. 13
-     *
-     * @access public
      */
-    public function Calendar_Hour($y, $m, $d, $h)
+    public function __construct($y, $m, $d, $h)
     {
-        parent::Calendar($y, $m, $d, $h);
+        parent::__construct($y, $m, $d, $h);
     }
 
     /**
-     * Builds the Minutes in the Hour
+     * Builds the Minutes in the Hour.
      *
      * @param array $sDates (optional) Calendar_Minute objects representing selected dates
      *
-     * @return boolean
-     * @access public
+     * @return bool
      */
-    public function build($sDates = array())
+    public function build($sDates = [])
     {
-        include_once CALENDAR_ROOT.'Minute.php';
-        $mIH = $this->cE->getMinutesInHour($this->year, $this->month, $this->day,
-                           $this->hour);
-        for ($i=0; $i < $mIH; ++$i) {
-            $this->children[$i] =
-                new Calendar_Minute($this->year, $this->month, $this->day,
-                           $this->hour, $i);
+        require_once CALENDAR_ROOT . 'Minute.php';
+        $mIH = $this->cE->getMinutesInHour($this->year, $this->month, $this->day, $this->hour);
+        for ($i = 0; $i < $mIH; ++$i) {
+            $this->children[$i] = new Calendar_Minute($this->year, $this->month, $this->day, $this->hour, $i);
         }
         if (count($sDates) > 0) {
             $this->setSelection($sDates);
@@ -111,21 +107,18 @@ class Calendar_Hour extends Calendar
     }
 
     /**
-     * Called from build()
+     * Called from build().
      *
      * @param array $sDates Calendar_Minute objects representing selected dates
-     *
-     * @return void
-     * @access private
+     * @return bool|void
      */
     public function setSelection($sDates)
     {
         foreach ($sDates as $sDate) {
-            if ($this->year == $sDate->thisYear()
-                && $this->month == $sDate->thisMonth()
+            if ($this->year == $sDate->thisYear() && $this->month == $sDate->thisMonth()
                 && $this->day == $sDate->thisDay()
                 && $this->hour == $sDate->thisHour()) {
-                $key = (int) $sDate->thisMinute();
+                $key = (int)$sDate->thisMinute();
                 if (isset($this->children[$key])) {
                     $sDate->setSelected();
                     $this->children[$key] = $sDate;

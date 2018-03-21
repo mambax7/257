@@ -65,14 +65,14 @@
         $patterns[] = "/j{$c}a{$c}v{$c}a{$c}s{$c}c{$c}r{$c}i{$c}p{$c}t{$c}:/si";
         $replacements[] = "(script removed)";
         $patterns[] = "/a{$c}b{$c}o{$c}u{$c}t{$c}:/si";
-        $replacements[] = "about :";
+        $replacements[] = "about:";
         #######################################################################################
         #### Hack by rw-banner
         #### Permite a exibição de banners randomicos em qualquer módulo que aceite bbcodes
         #######################################################################################
-        $mod = XoopsModule::getByDirname(basename(dirname(dirname(__FILE__))));
+        $mod = XoopsModule::getByDirname(basename(dirname(__DIR__)));
         if ($mod){
-          include(dirname(dirname(__FILE__)) .'/include/bbcode.php');
+          include(dirname(__DIR__) .'/include/bbcode.php');
         }
         #######################################################################################
         #### Fim do Hack by rw-banner

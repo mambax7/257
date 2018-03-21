@@ -60,8 +60,13 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 // set some language-dependent strings (optional)
 if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+<<<<<<< HEAD
 	require_once(dirname(__FILE__).'/lang/eng.php');
 	$pdf->setLanguageArray($l);
+=======
+    require_once(dirname(__FILE__).'/lang/eng.php');
+    $pdf->setLanguageArray($l);
+>>>>>>> 258
 }
 
 // set font
@@ -71,6 +76,7 @@ $pdf->SetFont('helvetica', '', 20);
 
 // set page format (read source code documentation for further information)
 $page_format = array(
+<<<<<<< HEAD
 	'MediaBox' => array ('llx' => 0, 'lly' => 0, 'urx' => 210, 'ury' => 297),
 	'CropBox' => array ('llx' => 0, 'lly' => 0, 'urx' => 210, 'ury' => 297),
 	'BleedBox' => array ('llx' => 5, 'lly' => 5, 'urx' => 205, 'ury' => 292),
@@ -85,6 +91,22 @@ $page_format = array(
 	),
 	'Rotate' => 90,
 	'PZ' => 1,
+=======
+    'MediaBox' => array ('llx' => 0, 'lly' => 0, 'urx' => 210, 'ury' => 297),
+    'CropBox' => array ('llx' => 0, 'lly' => 0, 'urx' => 210, 'ury' => 297),
+    'BleedBox' => array ('llx' => 5, 'lly' => 5, 'urx' => 205, 'ury' => 292),
+    'TrimBox' => array ('llx' => 10, 'lly' => 10, 'urx' => 200, 'ury' => 287),
+    'ArtBox' => array ('llx' => 15, 'lly' => 15, 'urx' => 195, 'ury' => 282),
+    'Dur' => 3,
+    'trans' => array(
+        'D' => 1.5,
+        'S' => 'Split',
+        'Dm' => 'V',
+        'M' => 'O'
+    ),
+    'Rotate' => 90,
+    'PZ' => 1,
+>>>>>>> 258
 );
 
 // Check the example n. 29 for viewer preferences

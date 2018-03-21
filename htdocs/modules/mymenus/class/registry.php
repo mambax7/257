@@ -10,15 +10,14 @@
  */
 
 /**
- * @copyright       The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright       XOOPS Project (https://xoops.org)
  * @license         http://www.gnu.org/licenses/gpl-2.0.html GNU Public License
  * @package         Mymenus
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
- * @version         $Id: registry.php 12944 2015-01-23 13:05:09Z beckmi $
  */
 
-defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 /**
  * Class MymenusRegistry
@@ -33,18 +32,18 @@ class MymenusRegistry
      */
     protected function __construct()
     {
-        $this->entries = array();
-        $this->locks   = array();
+        $this->entries = [];
+        $this->locks   = [];
     }
 
     /**
-     * @return object MymenusRegistry
+     * @return MymenusRegistry
      */
     public static function getInstance()
     {
-        static $instance = false;
-        if (!$instance) {
-            $instance = new self();
+        static $instance;
+        if (null === $instance) {
+            $instance = new static();
         }
 
         return $instance;
@@ -60,7 +59,7 @@ class MymenusRegistry
      */
     public function setEntry($key, $item)
     {
-        if ($this->isLocked($key) === true) {
+        if (true === $this->isLocked($key)) {
             trigger_error("Unable to set entry `{$key}`. Entry is locked.", E_USER_WARNING);
 
             return false;
@@ -135,7 +134,7 @@ class MymenusRegistry
 
     public function unsetAll()
     {
-        $this->entries = array();
-        $this->locks   = array();
+        $this->entries = [];
+        $this->locks   = [];
     }
 }

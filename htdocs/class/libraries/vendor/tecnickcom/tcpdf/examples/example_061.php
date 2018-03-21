@@ -60,8 +60,13 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 // set some language-dependent strings (optional)
 if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+<<<<<<< HEAD
 	require_once(dirname(__FILE__).'/lang/eng.php');
 	$pdf->setLanguageArray($l);
+=======
+    require_once(dirname(__FILE__).'/lang/eng.php');
+    $pdf->setLanguageArray($l);
+>>>>>>> 258
 }
 
 // ---------------------------------------------------------
@@ -87,6 +92,7 @@ $pdf->AddPage();
 $html = <<<EOF
 <!-- EXAMPLE OF CSS STYLE -->
 <style>
+<<<<<<< HEAD
 	h1 {
 		color: navy;
 		font-family: times;
@@ -147,6 +153,68 @@ $html = <<<EOF
 	.capitalize {
 		text-transform: capitalize;
 	}
+=======
+    h1 {
+        color: navy;
+        font-family: times;
+        font-size: 24pt;
+        text-decoration: underline;
+    }
+    p.first {
+        color: #003300;
+        font-family: helvetica;
+        font-size: 12pt;
+    }
+    p.first span {
+        color: #006600;
+        font-style: italic;
+    }
+    p#second {
+        color: rgb(00,63,127);
+        font-family: times;
+        font-size: 12pt;
+        text-align: justify;
+    }
+    p#second > span {
+        background-color: #FFFFAA;
+    }
+    table.first {
+        color: #003300;
+        font-family: helvetica;
+        font-size: 8pt;
+        border-left: 3px solid red;
+        border-right: 3px solid #FF00FF;
+        border-top: 3px solid green;
+        border-bottom: 3px solid blue;
+        background-color: #ccffcc;
+    }
+    td {
+        border: 2px solid blue;
+        background-color: #ffffee;
+    }
+    td.second {
+        border: 2px dashed green;
+    }
+    div.test {
+        color: #CC0000;
+        background-color: #FFFF66;
+        font-family: helvetica;
+        font-size: 10pt;
+        border-style: solid solid solid solid;
+        border-width: 2px 2px 2px 2px;
+        border-color: green #FF00FF blue red;
+        text-align: center;
+    }
+    .lowercase {
+        text-transform: lowercase;
+    }
+    .uppercase {
+        text-transform: uppercase;
+    }
+    .capitalize {
+        text-transform: capitalize;
+    }
+>>>>>>> 258
 </style>
 
 <h1 class="title">Example of <i style="color:#990000">XHTML + CSS</i></h1>
