@@ -1,13 +1,13 @@
 <?php
 /**
- * Description: client for the SOAP Calendar Server
+ * Description: client for the SOAP Calendar Server.
  */
-if (version_compare(phpversion(), '5.0.0', '>')) {
+if (version_compare(PHP_VERSION, '5.0.0', '>')) {
     die('PHP 5 has problems with PEAR::SOAP Client (8.0RC3)
         - remove @ before include below to see why');
 }
 
-if (!@include('SOAP/Client.php')) {
+if (!@include 'SOAP/Client.php') {
     die('You must have PEAR::SOAP installed');
 }
 
@@ -26,7 +26,7 @@ if (!isset($_GET['m'])) {
 
 $wsdl = new SOAP_WSDL($url);
 
-echo('<pre>' . $wsdl->generateProxyCode() . '</pre>');
+echo '<pre>' . $wsdl->generateProxyCode() . '</pre>';
 
 $calendarClient = $wsdl->getProxy();
 
@@ -44,7 +44,7 @@ if (PEAR::isError($month)) {
 <body>
 <h1>Calendar Over the Wire (featuring PEAR::SOAP)</h1>
 <table>
-    <caption style="font-weight: bold;"><b><?php echo($month->monthname); ?></b></caption>
+    <caption style="font-weight: bold;"><b><?php echo $month->monthname; ?></b></caption>
     <tr>
         <th>M</th>
         <th>T</th>
@@ -56,25 +56,25 @@ if (PEAR::isError($month)) {
     </tr>
     <?php
     foreach ($month->days as $day) {
-        if ($day->isFirst === 1) {
-            echo("<tr>\n");
+        if (1 === $day->isFirst) {
+            echo "<tr>\n";
         }
-        if ($day->isEmpty === 1) {
-            echo('<td></td>');
+        if (1 === $day->isEmpty) {
+            echo '<td></td>';
         } else {
-            echo('<td>' . $day->day . '</td>');
+            echo '<td>' . $day->day . '</td>';
         }
-        if ($day->isLast === 1) {
-            echo("</tr>\n");
+        if (1 === $day->isLast) {
+            echo "</tr>\n";
         }
     }
     ?>
     <tr>
 </table>
 <p>Enter Year and Month to View:</p>
-<form action="<?php echo($_SERVER['PHP_SELF']); ?>" method="get">
-    Year: <input type="text" size="4" name="y" value="<?php echo($_GET['y']); ?>">&nbsp;
-    Month: <input type="text" size="2" name="m" value="<?php echo($_GET['m']); ?>">&nbsp;
+<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
+    Year: <input type="text" size="4" name="y" value="<?php echo $_GET['y']; ?>">&nbsp;
+    Month: <input type="text" size="2" name="m" value="<?php echo $_GET['m']; ?>">&nbsp;
     <input type="submit" value="Fetch Calendar">
 </form>
 </body>

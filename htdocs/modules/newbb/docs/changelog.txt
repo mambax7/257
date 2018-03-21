@@ -1,4 +1,33 @@
-4.33 RC 11                   (NOT RELEASED)
+5.00 Alpha (XOOPS 2.5.8.1+)  (NOT RELEASED)
+===========================================
+- Remove use of Art framework (geekwright)
+- standardize names of classes, tables and constants to include "newbb" (geekwright)
+- Use XMF whenever practical (geekwright)
+- Simplify database migration strategy (geekwright)
+- lots of warning/error cleanup (geekwright)
+- extra code updates (mamba)
+- Short syntax in array literals (mamba)
+- added forumDescription to viewforum.php (aerograf/mamba)
+- namespaces, autoload (mamba)
+- RGB to HEX (mamba)
+- changed exit() to die() (mamba)
+- assignment in Condition (mamba)
+
+
+
+4.33 RC 13  (XOOPS 2.5.8)      (NOT RELEASED)
+===========================================
+- code cosmetics (mamba)
+- standardize br tags (mamba)
+
+4.33 RC 12  (XOOPS 2.5.8)      (2016-04-03)
+===========================================
+- removed @version (mamba)
+- added auto-creation of /upload folders (aitor/mamba)
+- added admin_footer.php (mamba)
+- removed code for manual admin tabs (mamba)
+
+4.33 RC 11  (XOOPS 2.5.8)      (2016-03-14)
 ===========================================
 - issue 14: SEO images (slider84/montuy337513)
 - issue 18: Array to string (cesagonchu/mamba)
@@ -32,16 +61,16 @@
 - fixed .htaccess (Trabis)
 - Changing TYPE to ENGINE (mamba)
 - bug fix: Prune function (mamba)
-- New topic list block using NewbbTopicRenderer class, fix topic type and prune system
+- New topic list block using TopicRenderer class, fix topic type and prune system
 - bug fix: undefined forumCookie in footer
 - bug fix: dont show topic title in list.topic.php
 - enhance the advance block add more sorts lastposttime, lastposter, lastpostmsgicon . add more display mode: attachment, read, pagenav
 - bug fix: read topics do not show for readmode = 1
 - improve: add multi topic poster and multi last poster
-- fix: multi status and multi display header in NewbbTopicRenderer class
+- fix: multi status and multi display header in TopicRenderer class
 - delete user.php from italian language
-- improve: add anon users to topic poster and last poster in NewbbTopicRenderer class (used in block and list.topic.php)
-- newbb/class/topic.renderer.php, newbb/xoops_version.php,
+- improve: add anon users to topic poster and last poster in TopicRenderer class (used in block and list.topic.php)
+- newbb/class/TopicRenderer.php, newbb/xoops_version.php,
 - newbb/list.topic.php, newbb/blocks/list_topic.php
 - bug fix: should not ban the user in forum who is moderator of that forum. in newbb/include/form.post.php and newbb/class/moderate.php
 - bug fix: uid=0 for anonymous users in newbb/class/moderate.php
@@ -78,8 +107,8 @@
 - fix: in topic merge: update vote data instead of deleting them in newbb/topicmanager.php
 - improve: add deletePoll function to 'Topic' class to use with ease in newbb/class/topic.php, newbb/class/post.php, newbb/topicmanager.php
 - add: better poll module display link and version in admin index. in newbb/admin/index.php
-- add: findPollModule function to 'NewbbTopicHandler' class to find poll module that is in used in the current newbb installtion. in newbb/class/topic.php
-- improve: add getActivePolls function to 'NewbbTopicHandler' class  to get all active poll modules in the current xoops installtion. in newbb/class/topic.php
+- add: findPollModule function to 'TopicHandler' class to find poll module that is in used in the current newbb installtion. in newbb/class/topic.php
+- improve: add getActivePolls function to 'TopicHandler' class  to get all active poll modules in the current xoops installtion. in newbb/class/topic.php
 - add: add getPoll function to 'Topic' class to get a poll object from a poll module. in newbb/class/topic.php
 - enhance: add a $pollModule dirname of the poll module to loadOldPoll function in 'Topic' class to Load functions needed for old poll module. in newbb/class/topic.php
 - add: special check to find and save the used poll module on the newbb update process. in newbb/xoops_version.pp

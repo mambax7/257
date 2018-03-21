@@ -1,8 +1,9 @@
 <?php
+
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * Contains the Calendar_Validator class
+ * Contains the Calendar_Validator class.
  *
  * PHP versions 4 and 5
  *
@@ -28,16 +29,16 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @category  Date and Time
- * @package   Calendar
+ *
  * @author    Harry Fuecks <hfuecks@phppatterns.com>
  * @copyright 2003-2007 Harry Fuecks
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   CVS: $Id: Validator.php 1511 2011-09-01 20:56:07Z jjdai $
+ *
  * @link      http://pear.php.net/package/Calendar
  */
 
 /**
- * Validation Error Messages
+ * Validation Error Messages.
  */
 if (!defined('CALENDAR_VALUE_TOOSMALL')) {
     define('CALENDAR_VALUE_TOOSMALL', 'Too small: min = ');
@@ -48,68 +49,66 @@ if (!defined('CALENDAR_VALUE_TOOLARGE')) {
 
 /**
  * Used to validate any given Calendar date object. Instances of this class
- * can be obtained from any data object using the getValidator method
+ * can be obtained from any data object using the getValidator method.
  *
  * @category  Date and Time
- * @package   Calendar
+ *
  * @author    Harry Fuecks <hfuecks@phppatterns.com>
  * @copyright 2003-2007 Harry Fuecks
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @link      http://pear.php.net/package/Calendar
  * @see       Calendar::getValidator()
- * @access    public
  */
 class Calendar_Validator
 {
     /**
-     * Instance of the Calendar date object to validate
+     * Instance of the Calendar date object to validate.
+     *
      * @var object
-     * @access private
      */
     public $calendar;
 
     /**
-     * Instance of the Calendar_Engine
+     * Instance of the Calendar_Engine.
+     *
      * @var object
-     * @access private
      */
     public $cE;
 
     /**
-     * Array of errors for validation failures
+     * Array of errors for validation failures.
+     *
      * @var array
-     * @access private
      */
-    public $errors = array();
+    public $errors = [];
 
     /**
-     * Constructs Calendar_Validator
+     * Constructs Calendar_Validator.
      *
      * @param object &$calendar subclass of Calendar
-     *
-     * @access public
      */
     public function __construct(&$calendar)
     {
         $this->calendar =& $calendar;
-        $this->cE       = &$calendar->getEngine();
+        $this->cE       =& $calendar->getEngine();
     }
 
     /**
-     * Calls all the other isValidXXX() methods in the validator
+     * Calls all the other isValidXXX() methods in the validator.
      *
-     * @return boolean
-     * @access public
+     * @return bool
      */
     public function isValid()
     {
-        $checks = array(
+        $checks = [
             'isValidYear',
             'isValidMonth',
             'isValidDay',
             'isValidHour',
             'isValidMinute',
-            'isValidSecond');
+            'isValidSecond',
+        ];
         $valid  = true;
         foreach ($checks as $check) {
             if (!$this->{$check}()) {
@@ -121,10 +120,9 @@ class Calendar_Validator
     }
 
     /**
-     * Check whether this is a valid year
+     * Check whether this is a valid year.
      *
-     * @return boolean
-     * @access public
+     * @return bool
      */
     public function isValidYear()
     {
@@ -146,10 +144,9 @@ class Calendar_Validator
     }
 
     /**
-     * Check whether this is a valid month
+     * Check whether this is a valid month.
      *
-     * @return boolean
-     * @access public
+     * @return bool
      */
     public function isValidMonth()
     {
@@ -171,10 +168,9 @@ class Calendar_Validator
     }
 
     /**
-     * Check whether this is a valid day
+     * Check whether this is a valid day.
      *
-     * @return boolean
-     * @access public
+     * @return bool
      */
     public function isValidDay()
     {
@@ -196,10 +192,9 @@ class Calendar_Validator
     }
 
     /**
-     * Check whether this is a valid hour
+     * Check whether this is a valid hour.
      *
-     * @return boolean
-     * @access public
+     * @return bool
      */
     public function isValidHour()
     {
@@ -221,10 +216,9 @@ class Calendar_Validator
     }
 
     /**
-     * Check whether this is a valid minute
+     * Check whether this is a valid minute.
      *
-     * @return boolean
-     * @access public
+     * @return bool
      */
     public function isValidMinute()
     {
@@ -246,10 +240,9 @@ class Calendar_Validator
     }
 
     /**
-     * Check whether this is a valid second
+     * Check whether this is a valid second.
      *
-     * @return boolean
-     * @access public
+     * @return bool
      */
     public function isValidSecond()
     {
@@ -271,10 +264,9 @@ class Calendar_Validator
     }
 
     /**
-     * Iterates over any validation errors
+     * Iterates over any validation errors.
      *
      * @return mixed either Calendar_Validation_Error or false
-     * @access public
      */
     public function fetch()
     {
@@ -290,48 +282,46 @@ class Calendar_Validator
 }
 
 /**
- * For Validation Error messages
+ * For Validation Error messages.
  *
  * @category  Date and Time
- * @package   Calendar
+ *
  * @author    Harry Fuecks <hfuecks@phppatterns.com>
  * @copyright 2003-2007 Harry Fuecks
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @link      http://pear.php.net/package/Calendar
  * @see       Calendar::fetch()
- * @access    public
  */
 class Calendar_Validation_Error
 {
     /**
-     * Date unit (e.g. month,hour,second) which failed test
+     * Date unit (e.g. month,hour,second) which failed test.
+     *
      * @var string
-     * @access private
      */
     public $unit;
 
     /**
-     * Value of unit which failed test
+     * Value of unit which failed test.
+     *
      * @var int
-     * @access private
      */
     public $value;
 
     /**
-     * Validation error message
+     * Validation error message.
+     *
      * @var string
-     * @access private
      */
     public $message;
 
     /**
-     * Constructs Calendar_Validation_Error
+     * Constructs Calendar_Validation_Error.
      *
      * @param string $unit    Date unit (e.g. month,hour,second)
-     * @param int $value      Value of unit which failed test
+     * @param int    $value   Value of unit which failed test
      * @param string $message Validation error message
-     *
-     * @access protected
      */
     public function __construct($unit, $value, $message)
     {
@@ -341,10 +331,9 @@ class Calendar_Validation_Error
     }
 
     /**
-     * Returns the Date unit
+     * Returns the Date unit.
      *
      * @return string
-     * @access public
      */
     public function getUnit()
     {
@@ -352,10 +341,9 @@ class Calendar_Validation_Error
     }
 
     /**
-     * Returns the value of the unit
+     * Returns the value of the unit.
      *
      * @return int
-     * @access public
      */
     public function getValue()
     {
@@ -363,10 +351,9 @@ class Calendar_Validation_Error
     }
 
     /**
-     * Returns the validation error message
+     * Returns the validation error message.
      *
      * @return string
-     * @access public
      */
     public function getMessage()
     {
@@ -374,10 +361,9 @@ class Calendar_Validation_Error
     }
 
     /**
-     * Returns a string containing the unit, value and error message
+     * Returns a string containing the unit, value and error message.
      *
      * @return string
-     * @access public
      */
     public function toString()
     {

@@ -17,34 +17,35 @@
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
  * @author          The SmartFactory <www.smartfactory.ca>
- * @version         $Id: backend.php 10374 2012-12-12 23:39:48Z trabis $
  */
 
-include_once __DIR__ . '/header.php';
+use Xmf\Request;
+
+require_once __DIR__ . '/header.php';
 //xoops_load('XoopsLocal'); //mb
 
 error_reporting(0);
 $GLOBALS['xoopsLogger']->activated = false;
 
-include_once $GLOBALS['xoops']->path('class/template.php');
+require_once $GLOBALS['xoops']->path('class/template.php');
 if (function_exists('mb_http_output')) {
     mb_http_output('pass');
 }
 
-$categoryid = XoopsRequest::getInt('categoryid', -1, 'GET');
+$categoryid = Request::getInt('categoryid', -1, 'GET');
 
 if ($categoryid != -1) {
-    $categoryObj = $publisher->getHandler('category')->get($categoryid);
+    $categoryObj = $helper->getHandler('Category')->get($categoryid);
 }
 
 header('Content-Type:text/xml; charset=' . _CHARSET);
-$tpl = new XoopsTpl();
-$tpl->xoops_setCaching(2);
+$tpl          = new \XoopsTpl();
+$tpl->caching = 2;
 $tpl->xoops_setCacheTime(0);
-$myts = MyTextSanitizer::getInstance();
+$myts = \MyTextSanitizer::getInstance();
 if (!$tpl->is_cached('db:publisher_rss.tpl')) {
     //    xoops_load('XoopsLocal');
-    $channel_category = $publisher->getModule()->name();
+    $channel_category = $helper->getModule()->name();
     // Check if ML Hack is installed, and if yes, parse the $content in formatForML
     if (method_exists($myts, 'formatForML')) {
         $GLOBALS['xoopsConfig']['sitename'] = $myts->formatForML($GLOBALS['xoopsConfig']['sitename']);
@@ -65,7 +66,7 @@ if (!$tpl->is_cached('db:publisher_rss.tpl')) {
     }
 
     $tpl->assign('channel_category', htmlspecialchars($channel_category));
-    $tpl->assign('channel_generator', $publisher->getModule()->name());
+    $tpl->assign('channel_generator', $helper->getModule()->name());
     $tpl->assign('channel_language', _LANGCODE);
     $tpl->assign('image_url', XOOPS_URL . '/images/logo.gif');
     $dimention = getimagesize($GLOBALS['xoops']->path('images/logo.gif'));
@@ -79,17 +80,18 @@ if (!$tpl->is_cached('db:publisher_rss.tpl')) {
     }
     $tpl->assign('image_width', $width);
     $tpl->assign('image_height', $height);
-    $sarray = $publisher->getHandler('item')->getAllPublished(10, 0, $categoryid);
+    $sarray = $helper->getHandler('Item')->getAllPublished(10, 0, $categoryid);
     if (!empty($sarray) && is_array($sarray)) {
         $count = $sarray;
         foreach ($sarray as $item) {
-            $tpl->append('items', array(
+            $tpl->append('items', [
                 'title'       => htmlspecialchars($item->getTitle(), ENT_QUOTES),
                 'link'        => $item->getItemUrl(),
                 'guid'        => $item->getItemUrl(),
                 //mb                'pubdate'     => XoopsLocal::formatTimestamp($item->getVar('datesub'), 'rss'),
                 'pubdate'     => formatTimestamp($item->getVar('datesub'), 'rss'),
-                'description' => htmlspecialchars($item->getBlockSummary(300, true), ENT_QUOTES)));
+                'description' => htmlspecialchars($item->getBlockSummary(300, true), ENT_QUOTES)
+            ]);
         }
         //        unset($item);
     }

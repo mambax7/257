@@ -1,53 +1,61 @@
 <?php
+/*
+ * You may not change or alter any portion of this comment or credits
+ * of supporting developers from this source code or any supporting source code
+ * which is considered copyrighted (c) material of the original comment or credit authors.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ */
 
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+/**
+ * @copyright    {@link https://xoops.org/ XOOPS Project}
+ * @license      {@link http://www.gnu.org/licenses/gpl-2.0.html GNU GPL 2 or later}
+ * @package      extcal
+ * @since
+ * @author       XOOPS Development Team,
+ */
 
-$path = dirname(dirname(dirname(__DIR__)));
-include_once $path . '/mainfile.php';
+use XoopsModules\Extcal;
 
-$dirname         = basename(dirname(__DIR__));
-$module_handler  = xoops_getHandler('module');
-$module          = $module_handler->getByDirname($dirname);
-$pathIcon32      = $module->getInfo('icons32');
-$pathModuleAdmin = $module->getInfo('dirmoduleadmin');
-$pathLanguage    = $path . $pathModuleAdmin;
+// require_once __DIR__ . '/../class/Helper.php';
+//require_once __DIR__ . '/../include/common.php';
+$helper = Extcal\Helper::getInstance();
 
-if (!file_exists($fileinc = $pathLanguage . '/language/' . $GLOBALS['xoopsConfig']['language'] . '/' . 'main.php')) {
-    $fileinc = $pathLanguage . '/language/english/main.php';
-}
+$pathIcon32    = \Xmf\Module\Admin::menuIconPath('');
+$pathModIcon32 = $helper->getModule()->getInfo('modicons32');
 
-include_once $fileinc;
+$adminmenu[] = [
+    'title' => _MI_EXTCAL_INDEX,
+    'link'  => 'admin/index.php',
+    'icon'  => $pathIcon32 . '/home.png'
+];
 
-$adminmenu = array();
+$adminmenu[] = [
+    'title' => _MI_EXTCAL_CATEGORY,
+    'link'  => 'admin/cat.php',
+    'icon'  => $pathIcon32 . '/category.png'
+];
 
-$i                      = 1;
-$adminmenu[$i]['title'] = _MI_EXTCAL_INDEX;
-$adminmenu[$i]['link']  = 'admin/index.php';
-$adminmenu[$i]['icon']  = $pathIcon32 . '/home.png';
-++$i;
-$adminmenu[$i]['title'] = _MI_EXTCAL_CATEGORY;
-$adminmenu[$i]['link']  = 'admin/cat.php';
-$adminmenu[$i]['icon']  = $pathIcon32 . '/category.png';
-++$i;
-$adminmenu[$i]['title'] = _MI_EXTCAL_EVENT;
-$adminmenu[$i]['link']  = 'admin/event.php';
-$adminmenu[$i]['icon']  = $pathIcon32 . '/event.png';
-++$i;
-$adminmenu[$i]['title'] = _MI_EXTCAL_ETABLISSEMENTS;
-$adminmenu[$i]['link']  = 'admin/etablissement.php';
-//$adminmenu[$i]["icon"] = '../../'.$pathImageAdmin.'/etablissement.png';
-$adminmenu[$i]['icon'] = 'assets/images/icons/32/etablissement.png';
-//echo $adminmenu[$i]["icon"]."<br>";
+$adminmenu[] = [
+    'title' => _MI_EXTCAL_EVENT,
+    'link'  => 'admin/event.php',
+    'icon'  => $pathIcon32 . '/event.png'
+];
+$adminmenu[] = [
+    'title' => _MI_EXTCAL_ETABLISSEMENTS,
+    'link'  => 'admin/etablissement.php',
+    'icon'  => $pathModIcon32 . '/etablissement.png'
+];
+$adminmenu[] = [
+    'title' => _MI_EXTCAL_PERMISSIONS,
+    'link'  => 'admin/permissions.php',
+    'icon'  => $pathIcon32 . '/permissions.png'
+];
 
-++$i;
-$adminmenu[$i]['title'] = _MI_EXTCAL_PERMISSIONS;
-$adminmenu[$i]['link']  = 'admin/permissions.php';
-$adminmenu[$i]['icon']  = $pathIcon32 . '/permissions.png';
-//++$i;
-//$adminmenu[$i]['title'] = _MI_EXTCAL_PRUNING;
-//$adminmenu[$i]['link'] = "admin/prune.php";
-//$adminmenu[$i]["icon"] = "assets/images/admin/about.png";
-++$i;
-$adminmenu[$i]['title'] = _MI_EXTCAL_ABOUT;
-$adminmenu[$i]['link']  = 'admin/about.php';
-$adminmenu[$i]['icon']  = $pathIcon32 . '/about.png';
+$adminmenu[] = [
+    'title' => _MI_EXTCAL_ABOUT,
+    'link'  => 'admin/about.php',
+    'icon'  => $pathIcon32 . '/about.png'
+];

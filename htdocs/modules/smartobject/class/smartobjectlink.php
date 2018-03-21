@@ -1,9 +1,9 @@
 <?php
-// $Id: smartobjectlink.php 159 2007-12-17 16:44:05Z malanciault $
+//
 // ------------------------------------------------------------------------ //
 //               XOOPS - PHP Content Management System                      //
-//                   Copyright (c) 2000 XOOPS.org                           //
-//                      <http://www.xoops.org/>                             //
+//                   Copyright (c) 2000-2016 XOOPS.org                           //
+//                      <https://xoops.org>                             //
 // ------------------------------------------------------------------------ //
 // This program is free software; you can redistribute it and/or modify     //
 // it under the terms of the GNU General Public License as published by     //
@@ -23,19 +23,25 @@
 // along with this program; if not, write to the Free Software              //
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
 // ------------------------------------------------------------------------ //
-// URL: http://www.xoops.org/                                               //
-// Project: The XOOPS Project                                               //
+// URL: https://xoops.org/                                               //
+// Project: XOOPS Project                                               //
 // -------------------------------------------------------------------------//
 
-if (!defined("XOOPS_ROOT_PATH")) {
-    die("XOOPS root path not defined");
-}
-include_once XOOPS_ROOT_PATH."/modules/smartobject/class/smartobject.php";
-class SmartobjectLink extends SmartObject {
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
+require_once XOOPS_ROOT_PATH . '/modules/smartobject/class/smartobject.php';
 
-    function SmartobjectLink() {
+/**
+ * Class SmartobjectLink
+ */
+class SmartobjectLink extends SmartObject
+{
+    /**
+     * SmartobjectLink constructor.
+     */
+    public function __construct()
+    {
         $this->initVar('linkid', XOBJ_DTYPE_INT, '', true);
-        $this->initVar('date', XOBJ_DTYPE_INT, 0, false, null,'', false, _CO_SOBJECT_LINK_DATE, '', true, true, false);
+        $this->initVar('date', XOBJ_DTYPE_INT, 0, false, null, '', false, _CO_SOBJECT_LINK_DATE, '', true, true, false);
         $this->initVar('from_uid', XOBJ_DTYPE_INT, '', false, null, '', false, _CO_SOBJECT_LINK_FROM_UID, _CO_SOBJECT_LINK_FROM_UID_DSC);
         $this->initVar('from_email', XOBJ_DTYPE_TXTBOX, '', true, 255, '', false, _CO_SOBJECT_LINK_FROM_EMAIL, _CO_SOBJECT_LINK_FROM_EMAIL_DSC, true);
         $this->initVar('from_name', XOBJ_DTYPE_TXTBOX, '', true, 255, '', false, _CO_SOBJECT_LINK_FROM_NAME, _CO_SOBJECT_LINK_FROM_NAME_DSC, true);
@@ -49,55 +55,89 @@ class SmartobjectLink extends SmartObject {
         $this->initVar('mid_name', XOBJ_DTYPE_TXTBOX, '', false, 255, '', false, _CO_SOBJECT_LINK_MID_NAME, _CO_SOBJECT_LINK_MID_NAME_DSC, true);
     }
 
-
     /**
-    * returns a specific variable for the object in a proper format
-    *
-    * @access public
-    * @param string $key key of the object's variable to be returned
-    * @param string $format format to use for the output
-    * @return mixed formatted value of the variable
-    */
-    function getVar($key, $format = 's') {
-        if ($format == 's' && in_array($key, array('from_uid', 'to_uid', 'date', 'link'))) {
-            return call_user_func(array($this,$key));
+     * returns a specific variable for the object in a proper format
+     *
+     * @access public
+     * @param  string $key    key of the object's variable to be returned
+     * @param  string $format format to use for the output
+     * @return mixed  formatted value of the variable
+     */
+    public function getVar($key, $format = 's')
+    {
+        if ('s' === $format && in_array($key, ['from_uid', 'to_uid', 'date', 'link'])) {
+            //            return call_user_func(array($this, $key));
+            return $this->{$key}();
         }
+
         return parent::getVar($key, $format);
     }
 
-    function from_uid() {
+    /**
+     * @return string
+     */
+    public function from_uid()
+    {
         $ret = smart_getLinkedUnameFromId($this->getVar('from_uid', 'e'), 1, null, true);
+
         return $ret;
     }
 
-    function to_uid($withContact=false) {
+    /**
+     * @param  bool $withContact
+     * @return string
+     */
+    public function to_uid($withContact = false)
+    {
         $ret = smart_getLinkedUnameFromId($this->getVar('to_uid', 'e'), 1, null, true);
+
         return $ret;
     }
 
-    function date() {
-        $ret = formatTimestamp($this->getVar('date','e'));
+    /**
+     * @return string
+     */
+    public function date()
+    {
+        $ret = formatTimestamp($this->getVar('date', 'e'));
+
         return $ret;
     }
 
-    function link($full=false) {
-        $ret = $this->getVar('link','e');
+    /**
+     * @param  bool $full
+     * @return mixed|string
+     */
+    public function link($full = false)
+    {
+        $ret = $this->getVar('link', 'e');
         if ($full) {
-            $myts = MyTextSanitizer::getInstance();
-            $ret = $myts->displayTarea($ret);
+            $myts = \MyTextSanitizer::getInstance();
+            $ret  = $myts->displayTarea($ret);
+
             return $ret;
         } else {
-            $ret = '<a href="' . $ret . '" alt="' . $this->getVar('link','e') . '" title="' . $this->getVar('link','e') . '">' .  _AM_SOBJECT_SENT_LINKS_GOTO . '</a>';
+            $ret = '<a href="' . $ret . '" alt="' . $this->getVar('link', 'e') . '" title="' . $this->getVar('link', 'e') . '">' . _AM_SOBJECT_SENT_LINKS_GOTO . '</a>';
+
             return $ret;
         }
     }
 
-    function getViewItemLink() {
-        $ret = '<a href="' . SMARTOBJECT_URL . 'admin/link.php?op=view&linkid=' . $this->getVar('linkid') . '"><img src="' . SMARTOBJECT_IMAGES_ACTIONS_URL . 'mail_find.png" alt="' . _AM_SOBJECT_SENT_LINK_VIEW . '" title="' . _AM_SOBJECT_SENT_LINK_VIEW . '" /></a>';
+    /**
+     * @return string
+     */
+    public function getViewItemLink()
+    {
+        $ret = '<a href="' . SMARTOBJECT_URL . 'admin/link.php?op=view&linkid=' . $this->getVar('linkid') . '"><img src="' . SMARTOBJECT_IMAGES_ACTIONS_URL . 'mail_find.png" alt="' . _AM_SOBJECT_SENT_LINK_VIEW . '" title="' . _AM_SOBJECT_SENT_LINK_VIEW . '"></a>';
+
         return $ret;
     }
 
-    function getFromInfo() {
+    /**
+     * @return string
+     */
+    public function getFromInfo()
+    {
         // check if from_uid represent a user
 
         if ($this->getVar('from_uid')) {
@@ -110,18 +150,26 @@ class SmartobjectLink extends SmartObject {
         }
 
         return $user;
-
     }
 
-    function toArray() {
-        $ret = parent::toArray();
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $ret             = parent::toArray();
         $ret['fromInfo'] = $this->getFromInfo();
-        $ret['toInfo'] = $this->getToInfo();
+        $ret['toInfo']   = $this->getToInfo();
         $ret['fullLink'] = $this->link(true);
+
         return $ret;
     }
 
-    function getToInfo() {
+    /**
+     * @return string
+     */
+    public function getToInfo()
+    {
         // check if from_uid represent a user
 
         if ($this->getVar('to_uid')) {
@@ -134,14 +182,20 @@ class SmartobjectLink extends SmartObject {
         }
 
         return $user;
-
     }
 }
-class SmartobjectLinkHandler extends SmartPersistableObjectHandler {
-    function SmartobjectLinkHandler($db) {
 
-        $this->SmartPersistableObjectHandler($db, 'link', 'linkid', 'subject', 'body', 'smartobject');
+/**
+ * Class SmartobjectLinkHandler
+ */
+class SmartobjectLinkHandler extends SmartPersistableObjectHandler
+{
+    /**
+     * SmartobjectLinkHandler constructor.
+     * @param XoopsDatabase $db
+     */
+    public function __construct(\XoopsDatabase $db)
+    {
+        parent::__construct($db, 'link', 'linkid', 'subject', 'body', 'smartobject');
     }
-
 }
-?>

@@ -1,23 +1,23 @@
-<?php
+<?php namespace XoopsModules\Newbb;
+
 /**
  * NewBB, XOOPS forum module
  *
- * @copyright      XOOPS Project (http://xoops.org)
- * @license        http://www.fsf.org/copyleft/gpl.html GNU public license
+ * @copyright      XOOPS Project (https://xoops.org)
+ * @license        GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
  * @author         Taiwen Jiang (phppp or D.J.) <phppp@users.sourceforge.net>
  * @since          4.00
- * @version        $Id $
  * @package        module::newbb
  */
 
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
-include_once $GLOBALS['xoops']->path('class/uploader.php');
+require_once $GLOBALS['xoops']->path('class/uploader.php');
 
 /**
- * Class NewbbUploader
+ * Class Uploader
  */
-class NewbbUploader extends XoopsMediaUploader
+class Uploader extends \XoopsMediaUploader
 {
     /**
      * No admin check for uploads
@@ -25,24 +25,24 @@ class NewbbUploader extends XoopsMediaUploader
     /**
      * Constructor
      *
-     * @param string    $uploadDir
-     * @param array|int $allowedMimeTypes
-     * @param int       $maxFileSize
-     * @param int       $maxWidth
-     * @param int       $maxHeight
+     * @param string           $uploadDir
+     * @param array|int|string $allowedMimeTypes
+     * @param int              $maxFileSize
+     * @param int              $maxWidth
+     * @param int              $maxHeight
      */
     public function __construct($uploadDir, $allowedMimeTypes = 0, $maxFileSize = 0, $maxWidth = 0, $maxHeight = 0)
     {
         //        $this->XoopsMediaUploader($uploadDir, $allowedMimeTypes, $maxFileSize, $maxWidth, $maxHeight);
 
         if (!is_array($allowedMimeTypes)) {
-            if (empty($allowedMimeTypes) || $allowedMimeTypes === '*') {
-                $allowedMimeTypes = array();
+            if (empty($allowedMimeTypes) || '*' === $allowedMimeTypes) {
+                $allowedMimeTypes = [];
             } else {
                 $allowedMimeTypes = array_filter(array_map('trim', explode('|', strtolower($allowedMimeTypes))));
             }
         }
-        $_allowedMimeTypes = array();
+        $_allowedMimeTypes = [];
         $extensionToMime   = include $GLOBALS['xoops']->path('include/mimetypes.inc.php');
         foreach ($allowedMimeTypes as $type) {
             if (isset($extensionToMime[$type])) {

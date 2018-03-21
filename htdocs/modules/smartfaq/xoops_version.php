@@ -5,36 +5,40 @@
  * Author: The SmartFactory <www.smartfactory.ca>
  * Licence: GNU
  */
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
 
-$modversion['name']        = _MI_SF_MD_NAME;
-$modversion['version']     = 1.12;
-$modversion['description'] = _MI_SF_MD_DESC;
-$modversion['author']      = 'The SmartFactory | Xuups';
-$modversion['credits']     = 'w4z004, hsalazar, Carnuke, Mariuss, Mithrandir, phppp, Predator, GIJOE, outch, rowdie, Xvitry, Xavier & Catzwolf, trabis';
-$modversion['help']        = 'page=help';
-$modversion['license']     = 'GNU GPL 2.0 or later';
-$modversion['license_url'] = 'www.gnu.org/licenses/gpl-2.0.html';
-$modversion['official']    = 1; //1 indicates supported by XOOPS Dev Team, 0 means 3rd party supported
-$modversion['image']       = 'assets/images/logo_module.png';
-$modversion['dirname']     = basename(__DIR__);
+use XoopsModules\Smartfaq\Constants;
 
-$modversion['dirmoduleadmin'] = '/Frameworks/moduleclasses/moduleadmin';
-$modversion['icons16']        = '../../Frameworks/moduleclasses/icons/16';
-$modversion['icons32']        = '../../Frameworks/moduleclasses/icons/32';
-//about
-$modversion['module_status']       = 'RC 1';
-$modversion['release_date']        = '2016/03/28';
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
+
+require_once __DIR__ . '/preloads/autoloader.php';
+
+$moduleDirName = basename(__DIR__);
+
+$modversion['version']       = 1.20;
+$modversion['module_status'] = 'Beta 1';
+$modversion['release_date']  = '2018/03/12';
+$modversion['name']          = _MI_SF_MD_NAME;
+$modversion['description']   = _MI_SF_MD_DESC;
+$modversion['author']        = 'The SmartFactory | Xuups';
+$modversion['credits']       = 'w4z004, hsalazar, Carnuke, Mariuss, Mithrandir, phppp, Predator, GIJOE, outch, rowdie, Xvitry, Xavier & Catzwolf, trabis';
+$modversion['help']          = 'page=help';
+$modversion['license']       = 'GNU GPL 2.0 or later';
+$modversion['license_url']   = 'www.gnu.org/licenses/gpl-2.0.html';
+$modversion['official']      = 1; //1 indicates supported by XOOPS Dev Team, 0 means 3rd party supported
+$modversion['image']         = 'assets/images/logoModule.png';
+$modversion['dirname']       = basename(__DIR__);
+//$modversion['dirmoduleadmin']      = '/Frameworks/moduleclasses/moduleadmin';
+//$modversion['icons16']             = '../../Frameworks/moduleclasses/icons/16';
+//$modversion['icons32']             = '../../Frameworks/moduleclasses/icons/32';
+$modversion['modicons16']          = 'assets/images/icons/16';
+$modversion['modicons32']          = 'assets/images/icons/32';
 $modversion['release_file']        = XOOPS_URL . '/modules/' . $modversion['dirname'] . '/docs/changelog.txt';
 $modversion['module_website_url']  = 'www.xoops.org';
 $modversion['module_website_name'] = 'XOOPS';
 $modversion['min_php']             = '5.5';
-$modversion['min_xoops']           = '2.5.8';
-$modversion['min_admin']           = '1.1';
-$modversion['min_db']              = array(
-    'mysql'  => '5.0.7',
-    'mysqli' => '5.0.7'
-);
+$modversion['min_xoops']           = '2.5.9';
+$modversion['min_admin']           = '1.2';
+$modversion['min_db']              = ['mysql' => '5.5'];
 
 // Added by marcan for the About page in admin section
 $modversion['developer_lead']         = 'marcan [Marc-André Lanciault]';
@@ -42,9 +46,9 @@ $modversion['developer_contributor']  = 'w4z004, hsalazar, Carnuke, Mariuss, Mit
 $modversion['developer_website_url']  = 'http://www.xuups.com';
 $modversion['developer_website_name'] = 'Xuups';
 $modversion['developer_email']        = 'lusopoemas@gmail.com';
-$modversion['status_version']         = 'Final';
-$modversion['status']                 = 'Final';
-$modversion['date']                   = '2010-09-20';
+$modversion['status_version']         = 'RC 2';
+$modversion['status']                 = 'RC 2';
+$modversion['date']                   = '2017-02-25';
 
 $modversion['warning'] = _MI_SF_WARNING_FINAL;
 
@@ -56,35 +60,35 @@ $modversion['submit_bug']        = 'http://www.xuups.com/modules/xhelp';
 $modversion['submit_feature']    = 'http://www.xuups.com/modules/xhelp';
 
 $modversion['author_word'] = "
-<B>SmartFAQ</B> is the result of multiple ideas from multiple people and a work of outstanding
+<b>SmartFAQ</b> is the result of multiple ideas from multiple people and a work of outstanding
 collaboration. It all began with Herko talking to me about a 'contextual help system' for XOOPS,
 inspired by the one on the Developers Forge. I found that idea more than brilliant, so I decided
 to start coding the thing !
-<BR><BR>As I was new in the developers world, I had to look for quality ideas that had already been
+<br><br>As I was new in the developers world, I had to look for quality ideas that had already been
 established and represented the best in Xoops programming. I chose the Soapbox module by hsalazar
 (Horacio Salazar) which I had found absolutely amazing ! So, many thanks to Horacio, as his work offered
 considerable inspiration. I would also like to thank him for helping me establish the workflow of
 the SmartFAQ module, as well as for helping me in all the development process.
-<BR><BR>When about half the coding was done, I met a special Xoopser who would become an important
+<br><br>When about half the coding was done, I met a special Xoopser who would become an important
 player in this project : w4z004 (Sergio Kohl). Many thanks to you w4z004, as you multiplied many
 times the possibilities and potential of this module. By testing it over and over again, by
 submitting the code to be checked by security experts and other advanced developers, by suggesting
 more features, by encouraging me when things were not going the way I wanted and by doing a thousand
 other things for this project. Thank you, thank you, thank you !
-<BR><BR>Special thanks also to Mithrandir (Jan Pedersen) for all the 'little' answers to my 'little'
+<br><br>Special thanks also to Mithrandir (Jan Pedersen) for all the 'little' answers to my 'little'
 questions (lol). You made my life so much easier by helping me see things more clearly !
-<BR><BR>I would also like to thank Mariuss (Marius Scurtescu) for adapting <B>FAQ for New Xoopsers
-</B> for SmartFAQ, for developing the import scripts, for teaching me the CVS (lol) as well as for
+<br><br>I would also like to thank Mariuss (Marius Scurtescu) for adapting <b>FAQ for New Xoopsers
+</b> for SmartFAQ, for developing the import scripts, for teaching me the CVS (lol) as well as for
 suggesting a lot of interesting improvements along the way.
-<BR><BR>Another special thank-you to Carnuke (Richard Strauss) for writing such impressive
+<br><br>Another special thank-you to Carnuke (Richard Strauss) for writing such impressive
 documentation for this module. You have now set up a new quality standard for XOOPS module
 documentation. I'm confident that all the Xoopsers of the world are gratefull for this :-) !
-<BR><BR>Finally, thanks to all the people who made this module possible : Herko, phppp, Solo71,
+<br><br>Finally, thanks to all the people who made this module possible : Herko, phppp, Solo71,
 Yoyo2021, Christian, Hervé and so many others ! Also, a final thank to Zabou who has been
 really understanding during all the hours I spent behind my laptop developing SmartFAQ.
-<BR><BR>So I guess this is it, I could thank the Academy, my Mother and Father but that would be
+<br><br>So I guess this is it, I could thank the Academy, my Mother and Father but that would be
 pushing it I think ! (lol)
-<BR><BR>Enjoy <b>SmartFAQ</b> (by marcan)!
+<br><br>Enjoy <b>SmartFAQ</b> (by marcan)!
 ";
 
 // Admin things
@@ -92,14 +96,17 @@ $modversion['hasAdmin']    = 1;
 $modversion['system_menu'] = 1;
 $modversion['adminindex']  = 'admin/index.php';
 $modversion['adminmenu']   = 'admin/menu.php';
-// Sql file (must contain sql generated by phpMyAdmin or phpPgAdmin)
-// All tables should not have any prefix!
+
+// ------------------- Mysql ------------------- //
 $modversion['sqlfile']['mysql'] = 'sql/mysql.sql';
+
 // Tables created by sql file (without prefix!)
-$modversion['tables'][0] = 'smartfaq_categories';
-$modversion['tables'][1] = 'smartfaq_faq';
-$modversion['tables'][2] = 'smartfaq_answers';
-//$modversion['tables'][3] = "smartfaq_moderators";
+$modversion['tables'] = [
+    $moduleDirName . '_' . 'categories',
+    $moduleDirName . '_' . 'faq',
+    $moduleDirName . '_' . 'answers'
+];
+
 // Search
 $modversion['hasSearch']      = 1;
 $modversion['search']['file'] = 'include/search.inc.php';
@@ -109,6 +116,14 @@ $modversion['hasMain'] = 1;
 
 $modversion['onInstall'] = 'include/onupdate.inc.php';
 $modversion['onUpdate']  = 'include/onupdate.inc.php';
+
+// ------------------- Help files ------------------- //
+$modversion['helpsection'] = [
+    ['name' => _MI_SF_OVERVIEW, 'link' => 'page=help'],
+    ['name' => _MI_SF_DISCLAIMER, 'link' => 'page=disclaimer'],
+    ['name' => _MI_SF_LICENSE, 'link' => 'page=license'],
+    ['name' => _MI_SF_SUPPORT, 'link' => 'page=support'],
+];
 
 global $xoopsModule;
 
@@ -123,22 +138,31 @@ if (isset($xoopsModule) && is_object($xoopsModule) && $xoopsModule->getVar('dirn
     if ($smartModule = $xoopsModule) {
         $smartConfig = $xoopsModuleConfig;
         // Add the Submit new faq button
-        if ($isAdmin || (isset($smartConfig['allowsubmit']) && $smartConfig['allowsubmit'] == 1 && (is_object($xoopsUser) || (isset($smartConfig['anonpost']) && $smartConfig['anonpost'] == 1)))) {
+        if ($isAdmin
+            || (isset($smartConfig['allowsubmit']) && 1 == $smartConfig['allowsubmit']
+                && (is_object($xoopsUser)
+                    || (isset($smartConfig['anonpost'])
+                        && 1 == $smartConfig['anonpost'])))) {
             $modversion['sub'][1]['name'] = _MI_SF_SUB_SMNAME1;
             $modversion['sub'][1]['url']  = 'submit.php?op=add';
         }
         // Add the Request new faq
-        if ($isAdmin || (isset($smartConfig['allowrequest']) && $smartConfig['allowrequest'] == 1 && (is_object($xoopsUser) || (isset($smartConfig['anonpost']) && $smartConfig['anonpost'] == 1)))) {
+        if ($isAdmin
+            || (isset($smartConfig['allowrequest']) && 1 == $smartConfig['allowrequest']
+                && (is_object($xoopsUser)
+                    || (isset($smartConfig['anonpost'])
+                        && 1 == $smartConfig['anonpost'])))) {
             $modversion['sub'][2]['name'] = _MI_SF_SUB_SMNAME2;
             $modversion['sub'][2]['url']  = 'request.php?op=add';
         }
 
-        include_once XOOPS_ROOT_PATH . '/modules/smartfaq/include/functions.php';
+//        require_once XOOPS_ROOT_PATH . '/modules/smartfaq/include/functions.php';
 
         // Creating the FAQ handler object
-        $faqHandler = sf_gethandler('faq');
+        /** @var \XoopsModules\Smartfaq\FaqHandler $faqHandler */
+        $faqHandler = \XoopsModules\Smartfaq\Helper::getInstance()->getHandler('Faq');
 
-        if ($faqHandler->getFaqsCount(-1, _SF_STATUS_OPENED) > 0) {
+        if ($faqHandler->getFaqsCount(-1, Constants::SF_STATUS_OPENED) > 0) {
             $modversion['sub'][3]['name'] = _MI_SF_SUB_SMNAME3;
             $modversion['sub'][3]['url']  = 'open_index.php';
         }
@@ -282,7 +306,10 @@ $modversion['config'][$i]['title']       = '_MI_SF_DISPLAYTYPE';
 $modversion['config'][$i]['description'] = '_MI_SF_DISPLAYTYPEDSC';
 $modversion['config'][$i]['formtype']    = 'select';
 $modversion['config'][$i]['valuetype']   = 'text';
-$modversion['config'][$i]['options']     = array(_MI_SF_DISPLAYTYPE_SUMMARY => 'summary', _MI_SF_DISPLAYTYPE_FULL => 'full');
+$modversion['config'][$i]['options']     = [
+    _MI_SF_DISPLAYTYPE_SUMMARY => 'summary',
+    _MI_SF_DISPLAYTYPE_FULL    => 'full'
+];
 $modversion['config'][$i]['default']     = 'full';
 ++$i;
 $modversion['config'][$i]['name']        = 'displaylastfaq';
@@ -403,7 +430,15 @@ $modversion['config'][$i]['description'] = '_MI_SF_CATPERPAGEDSC';
 $modversion['config'][$i]['formtype']    = 'select';
 $modversion['config'][$i]['valuetype']   = 'int';
 $modversion['config'][$i]['default']     = 5;
-$modversion['config'][$i]['options']     = array('5' => 5, '10' => 10, '15' => 15, '20' => 20, '25' => 25, '30' => 30, '50' => 50);
+$modversion['config'][$i]['options']     = [
+    '5'  => 5,
+    '10' => 10,
+    '15' => 15,
+    '20' => 20,
+    '25' => 25,
+    '30' => 30,
+    '50' => 50
+];
 ++$i;
 $modversion['config'][$i]['name']        = 'perpage';
 $modversion['config'][$i]['title']       = '_MI_SF_PERPAGE';
@@ -411,7 +446,15 @@ $modversion['config'][$i]['description'] = '_MI_SF_PERPAGEDSC';
 $modversion['config'][$i]['formtype']    = 'select';
 $modversion['config'][$i]['valuetype']   = 'int';
 $modversion['config'][$i]['default']     = 5;
-$modversion['config'][$i]['options']     = array('5' => 5, '10' => 10, '15' => 15, '20' => 20, '25' => 25, '30' => 30, '50' => 50);
+$modversion['config'][$i]['options']     = [
+    '5'  => 5,
+    '10' => 10,
+    '15' => 15,
+    '20' => 20,
+    '25' => 25,
+    '30' => 30,
+    '50' => 50
+];
 ++$i;
 $modversion['config'][$i]['name']        = 'indexperpage';
 $modversion['config'][$i]['title']       = '_MI_SF_PERPAGEINDEX';
@@ -419,7 +462,15 @@ $modversion['config'][$i]['description'] = '_MI_SF_PERPAGEINDEXDSC';
 $modversion['config'][$i]['formtype']    = 'select';
 $modversion['config'][$i]['valuetype']   = 'int';
 $modversion['config'][$i]['default']     = 5;
-$modversion['config'][$i]['options']     = array('5' => 5, '10' => 10, '15' => 15, '20' => 20, '25' => 25, '30' => 30, '50' => 50);
+$modversion['config'][$i]['options']     = [
+    '5'  => 5,
+    '10' => 10,
+    '15' => 15,
+    '20' => 20,
+    '25' => 25,
+    '30' => 30,
+    '50' => 50
+];
 ++$i;
 $modversion['config'][$i]['name']        = 'indexwelcomemsg';
 $modversion['config'][$i]['title']       = '_MI_SF_INDEXWELCOMEMSG';
@@ -463,7 +514,7 @@ $modversion['config'][$i]['title']       = '_MI_SF_HELP_PATH_SELECT';
 $modversion['config'][$i]['description'] = '_MI_SF_HELP_PATH_SELECT_DSC';
 $modversion['config'][$i]['formtype']    = 'select';
 $modversion['config'][$i]['valuetype']   = 'text';
-$modversion['config'][$i]['options']     = array(_MI_SF_HELP_INSIDE => 'inside', _MI_SF_HELP_CUSTOM => 'custom');
+$modversion['config'][$i]['options']     = [_MI_SF_HELP_INSIDE => 'inside', _MI_SF_HELP_CUSTOM => 'custom'];
 $modversion['config'][$i]['default']     = 'docs.xoops.org';
 ++$i;
 $modversion['config'][$i]['name']        = 'helppath_custom';
@@ -477,7 +528,7 @@ xoops_load('XoopsEditorHandler');
 $editorHandler = XoopsEditorHandler::getInstance();
 $editorList    = array_flip($editorHandler->getList());
 
-$modversion['config'][$i] = array(
+$modversion['config'][$i] = [
     'name'        => 'form_editorOptions',
     'title'       => '_MI_SF_EDITOR',
     'description' => '_MI_SF_EDITORCHOICE',
@@ -485,10 +536,10 @@ $modversion['config'][$i] = array(
     'valuetype'   => 'text',
     'options'     => $editorList,
     'default'     => 'dhtmltextarea'
-);
+];
 
 ++$i;
-$modversion['config'][$i] = array(
+$modversion['config'][$i] = [
     'name'        => 'form_editorOptionsUser',
     'title'       => '_MI_SF_EDITORUSER',
     'description' => '_MI_SF_EDITORCHOICEUSER',
@@ -496,145 +547,145 @@ $modversion['config'][$i] = array(
     'valuetype'   => 'text',
     'options'     => $editorList,
     'default'     => 'dhtmltextarea'
-);
+];
 //mb------------ START ---------------------
 
 define('_MI_SF_SHOTWIDTH2', '<span style="color:#FF0000; font-size:12px;"><b>Upload Files/Images</b></span> ');
 
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'logfile',
     'title'       => '_MI_SF_SHOTWIDTH2',
     'description' => '_MI_SF_USERLOG_CONFCAT_LOGFILE_DSC',
     'formtype'    => 'line_break',
     'valuetype'   => 'textbox',
     'default'     => 'odd'
-);
+];
 
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'attach_ext',
     'title'       => '_AM_SF_ALLOWED_EXTENSIONS',
     'description' => '_AM_SF_ALLOWED_EXTENSIONS_DESC',
     'formtype'    => 'textbox',
     'valuetype'   => 'text',
     'default'     => 'zip|jpg|gif|png'
-);
+];
 
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'dir_attachments',
     'title'       => '_MI_SF_DIR_ATTACHMENT',
     'description' => '_MI_SF_DIR_ATTACHMENT_DESC',
     'formtype'    => 'textbox',
     'valuetype'   => 'text',
     'default'     => 'uploads/smartfaq'
-);
+];
 
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'media_allowed',
     'title'       => '_MI_SF_MEDIA_ENABLE',
     'description' => '_MI_SF_MEDIA_ENABLE_DESC',
     'formtype'    => 'yesno',
     'valuetype'   => 'int',
     'default'     => 1
-);
+];
 
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'path_magick',
     'title'       => '_MI_SF_PATH_MAGICK',
     'description' => '_MI_SF_PATH_MAGICK_DESC',
     'formtype'    => 'textbox',
     'valuetype'   => 'text',
     'default'     => '/usr/bin/X11'
-);
+];
 
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'path_netpbm',
     'title'       => '_MI_SF_PATH_NETPBM',
     'description' => '_MI_SF_PATH_NETPBM_DESC',
     'formtype'    => 'textbox',
     'valuetype'   => 'text',
     'default'     => '/usr/bin'
-);
+];
 
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'image_lib',
     'title'       => '_MI_SF_IMAGELIB',
     'description' => '_MI_SF_IMAGELIB_DESC',
     'formtype'    => 'select',
     'valuetype'   => 'int',
     'default'     => 0,
-    'options'     => array(
+    'options'     => [
         _MI_SF_AUTO   => 0,
         _MI_SF_MAGICK => 1,
         _MI_SF_NETPBM => 2,
         _MI_SF_GD1    => 3,
         _MI_SF_GD2    => 4
-    )
-);
+    ]
+];
 
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'show_userattach',
     'title'       => '_MI_SF_USERATTACH_ENABLE',
     'description' => '_MI_SF_USERATTACH_ENABLE_DESC',
     'formtype'    => 'yesno',
     'valuetype'   => 'int',
     'default'     => 1
-);
+];
 
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'max_img_width',
     'title'       => '_MI_SF_MAX_IMG_WIDTH',
     'description' => '_MI_SF_MAX_IMG_WIDTH_DESC',
     'formtype'    => 'textbox',
     'valuetype'   => 'int',
     'default'     => 800
-);
+];
 
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'max_img_height',
     'title'       => '_MI_SF_MAX_IMG_HEIGHT',
     'description' => '_MI_SF_MAX_IMG_HEIGHT_DESC',
     'formtype'    => 'textbox',
     'valuetype'   => 'int',
     'default'     => 640
-);
+];
 
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'max_image_width',
     'title'       => '_MI_SF_MAX_IMAGE_WIDTH',
     'description' => '_MI_SF_MAX_IMAGE_WIDTH_DESC',
     'formtype'    => 'textbox',
     'valuetype'   => 'int',
     'default'     => 150
-);
+];
 
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'max_image_height',
     'title'       => '_MI_SF_MAX_IMAGE_HEIGHT',
     'description' => '_MI_SF_MAX_IMAGE_HEIGHT_DESC',
     'formtype'    => 'textbox',
     'valuetype'   => 'int',
     'default'     => 150
-);
+];
 
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'max_image_size',
     'title'       => '_MI_SF_MAX_IMAGE_SIZE',
     'description' => '_MI_SF_MAX_IMAGE_SIZE_DESC',
     'formtype'    => 'textbox',
     'valuetype'   => 'int',
     'default'     => 1024
-);
+];
 
 define('_MI_XDIR_SHOTWIDTH3', '<span style="color:#FF0000; font-size:12px;"><b>Comments/Notifications</b></span> ');
 
-$modversion['config'][] = array(
+$modversion['config'][] = [
     'name'        => 'logfile',
     'title'       => '_MI_XDIR_SHOTWIDTH3',
     'description' => '_MI_USERLOG_CONFCAT_LOGFILE_DSC',
     'formtype'    => 'line_break',
     'valuetype'   => 'textbox',
     'default'     => 'odd'
-);
+];
 
 //mb ------------- end --------------------------
 
@@ -654,36 +705,36 @@ $modversion['notification']['lookup_func'] = 'smartfaq_notify_iteminfo';
 $modversion['notification']['category'][1]['name']           = 'global_faq';
 $modversion['notification']['category'][1]['title']          = _MI_SF_GLOBAL_FAQ_NOTIFY;
 $modversion['notification']['category'][1]['description']    = _MI_SF_GLOBAL_FAQ_NOTIFY_DSC;
-$modversion['notification']['category'][1]['subscribe_from'] = array('index.php', 'category.php', 'faq.php');
+$modversion['notification']['category'][1]['subscribe_from'] = ['index.php', 'category.php', 'faq.php'];
 
 $modversion['notification']['category'][2]['name']           = 'category_faq';
 $modversion['notification']['category'][2]['title']          = _MI_SF_CATEGORY_FAQ_NOTIFY;
 $modversion['notification']['category'][2]['description']    = _MI_SF_CATEGORY_FAQ_NOTIFY_DSC;
-$modversion['notification']['category'][2]['subscribe_from'] = array('index.php', 'category.php', 'faq.php');
+$modversion['notification']['category'][2]['subscribe_from'] = ['index.php', 'category.php', 'faq.php'];
 $modversion['notification']['category'][2]['item_name']      = 'categoryid';
 $modversion['notification']['category'][2]['allow_bookmark'] = 1;
 
 $modversion['notification']['category'][3]['name']           = 'faq';
 $modversion['notification']['category'][3]['title']          = _MI_SF_FAQ_NOTIFY;
 $modversion['notification']['category'][3]['description']    = _MI_SF_FAQ_NOTIFY_DSC;
-$modversion['notification']['category'][3]['subscribe_from'] = array('faq.php');
+$modversion['notification']['category'][3]['subscribe_from'] = ['faq.php'];
 $modversion['notification']['category'][3]['item_name']      = 'faqid';
 $modversion['notification']['category'][3]['allow_bookmark'] = 1;
 
 $modversion['notification']['category'][4]['name']           = 'global_question';
 $modversion['notification']['category'][4]['title']          = _MI_SF_GLOBAL_QUESTION_NOTIFY;
 $modversion['notification']['category'][4]['description']    = _MI_SF_GLOBAL_QUESTION_NOTIFY_DSC;
-$modversion['notification']['category'][4]['subscribe_from'] = array('open_index.php');
+$modversion['notification']['category'][4]['subscribe_from'] = ['open_index.php'];
 
 $modversion['notification']['category'][5]['name']           = 'category_question';
 $modversion['notification']['category'][5]['title']          = _MI_SF_CATEGORY_QUESTION_NOTIFY;
 $modversion['notification']['category'][5]['description']    = _MI_SF_CATEGORY_QUESTION_NOTIFY_DSC;
-$modversion['notification']['category'][5]['subscribe_from'] = array('open_index.php, open_category.php');
+$modversion['notification']['category'][5]['subscribe_from'] = ['open_index.php, open_category.php'];
 
 $modversion['notification']['category'][6]['name']           = 'question';
 $modversion['notification']['category'][6]['title']          = _MI_SF_QUESTION_NOTIFY;
 $modversion['notification']['category'][6]['description']    = _MI_SF_QUESTION_NOTIFY_DSC;
-$modversion['notification']['category'][6]['subscribe_from'] = array('open_index.php');
+$modversion['notification']['category'][6]['subscribe_from'] = ['open_index.php'];
 
 $modversion['notification']['event'][1]['name']          = 'category_created';
 $modversion['notification']['event'][1]['category']      = 'global_faq';

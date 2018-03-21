@@ -17,39 +17,53 @@
  * @author          Bandit-X
  * @author          trabis <lusopoemas@gmail.com>
  * @author          Xoops Modules Dev Team
- * @version         $Id: archive.php 10645 2013-01-03 19:31:21Z trabis $
  */
 ######################################################################
 # Original version:
 # [11-may-2001] Kenneth Lee - http://www.nexgear.com/
 ######################################################################
 
-include_once __DIR__ . '/header.php';
-$xoopsOption['template_main'] = 'publisher_archive.tpl';
+use Xmf\Request;
 
-include_once $GLOBALS['xoops']->path('header.php');
-include_once PUBLISHER_ROOT_PATH . '/footer.php';
+require_once __DIR__ . '/header.php';
+$GLOBALS['xoopsOption']['template_main'] = 'publisher_archive.tpl';
+
+require_once $GLOBALS['xoops']->path('header.php');
+require_once PUBLISHER_ROOT_PATH . '/footer.php';
 xoops_loadLanguage('calendar');
 //mb xoops_load('XoopsLocal');
 
 $lastyear    = 0;
 $lastmonth   = 0;
-$monthsArray = array(1 => _CAL_JANUARY, 2 => _CAL_FEBRUARY, 3 => _CAL_MARCH, 4 => _CAL_APRIL, 5 => _CAL_MAY, 6 => _CAL_JUNE, 7 => _CAL_JULY, 8 => _CAL_AUGUST, 9 => _CAL_SEPTEMBER, 10 => _CAL_OCTOBER, 11 => _CAL_NOVEMBER, 12 => _CAL_DECEMBER);
-$fromyear    = XoopsRequest::getInt('year');
-$frommonth   = XoopsRequest::getInt('month');
+$monthsArray = [
+    1  => _CAL_JANUARY,
+    2  => _CAL_FEBRUARY,
+    3  => _CAL_MARCH,
+    4  => _CAL_APRIL,
+    5  => _CAL_MAY,
+    6  => _CAL_JUNE,
+    7  => _CAL_JULY,
+    8  => _CAL_AUGUST,
+    9  => _CAL_SEPTEMBER,
+    10 => _CAL_OCTOBER,
+    11 => _CAL_NOVEMBER,
+    12 => _CAL_DECEMBER
+];
+$fromyear    = Request::getInt('year');
+$frommonth   = Request::getInt('month');
 
 $pgtitle = '';
 if ($fromyear && $frommonth) {
     $pgtitle = sprintf(' - %d - %d', $fromyear, $frommonth);
 }
 
-$dateformat = $publisher->getConfig('format_date');
+$dateformat = $helper->getConfig('format_date');
 
-if ($dateformat == '') {
+if ('' === $dateformat) {
     $dateformat = 'm';
 }
 
-$myts = MyTextSanitizer::getInstance();
+$myts = \MyTextSanitizer::getInstance();
 $xoopsTpl->assign('xoops_pagetitle', $myts->htmlSpecialChars(_MD_PUBLISHER_ARCHIVES) . $pgtitle . ' - ' . $myts->htmlSpecialChars($GLOBALS['xoopsModule']->name()));
 
 $useroffset = '';
@@ -62,24 +76,26 @@ if (is_object($GLOBALS['xoopsUser'])) {
     }
 }
 
-$criteria = new CriteriaCompo();
-$criteria->add(new Criteria('status', 2), 'AND');
-$criteria->add(new Criteria('datesub', time(), '<='), 'AND');
+$criteria = new \CriteriaCompo();
+$criteria->add(new \Criteria('status', 2), 'AND');
+$criteria->add(new \Criteria('datesub', time(), '<='), 'AND');
+$categoriesGranted = $helper->getHandler('Permission')->getGrantedItems('category_read');
+$criteria->add(new \Criteria('categoryid', '(' . implode(',', $categoriesGranted) . ')', 'IN'));
 $criteria->setSort('datesub');
 $criteria->setOrder('DESC');
 //Get all articles dates as an array to save memory
-$items      = $publisher->getHandler('item')->getAll($criteria, array('datesub'), false);
+$items      = $helper->getHandler('Item')->getAll($criteria, ['datesub'], false);
 $itemsCount = count($items);
 
 if (!($itemsCount > 0)) {
     redirect_header(XOOPS_URL, 2, _MD_PUBLISHER_NO_TOP_PERMISSIONS);
-    //mb    exit;
+//mb    exit;
 } else {
-    $years  = array();
-    $months = array();
+    $years  = [];
+    $months = [];
     $i      = 0;
     foreach ($items as $item) {
-        //mb        $time = XoopsLocal::formatTimestamp($item['datesub'], 'mysql', $useroffset);
+        //mb        $time = \XoopsLocal::formatTimestamp($item['datesub'], 'mysql', $useroffset);
         $time = formatTimestamp($item['datesub'], 'mysql', $useroffset);
         if (preg_match('/(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2})/', $time, $datetime)) {
             $thisYear  = (int)$datetime[1];
@@ -91,7 +107,7 @@ if (!($itemsCount > 0)) {
                 $articlesThisMonth = 0;
             }
             //first month of the year reset
-            if ($lastmonth == 0) {
+            if (0 == $lastmonth) {
                 $lastmonth                    = $thisMonth;
                 $months[$lastmonth]['string'] = $monthsArray[$lastmonth];
                 $months[$lastmonth]['number'] = $lastmonth;
@@ -105,7 +121,7 @@ if (!($itemsCount > 0)) {
 
                 $years[$i]['articlesYearCount'] = $articlesThisYear;
 
-                $months            = array();
+                $months            = [];
                 $lastmonth         = 0;
                 $lastyear          = $thisYear;
                 $articlesThisYear  = 0;
@@ -138,7 +154,7 @@ if (!($itemsCount > 0)) {
 }
 unset($items);
 
-if ($fromyear != 0 && $frommonth != 0) {
+if (0 != $fromyear && 0 != $frommonth) {
     $xoopsTpl->assign('show_articles', true);
     $xoopsTpl->assign('lang_articles', _MD_PUBLISHER_ITEM);
     $xoopsTpl->assign('currentmonth', $monthsArray[$frommonth]);
@@ -155,19 +171,19 @@ if ($fromyear != 0 && $frommonth != 0) {
 
     $count = 0;
 
-    $itemHandler               = $publisher->getHandler('item');
-    $itemHandler->table_link   = $GLOBALS['xoopsDB']->prefix('publisher_categories');
+    $itemHandler               = $helper->getHandler('Item');
+    $itemHandler->table_link   = $GLOBALS['xoopsDB']->prefix($helper->getDirname() . '_categories');
     $itemHandler->field_link   = 'categoryid';
     $itemHandler->field_object = 'categoryid';
     // Categories for which user has access
-    $categoriesGranted = $publisher->getHandler('permission')->getGrantedItems('category_read');
-    $grantedCategories = new Criteria('l.categoryid', '(' . implode(',', $categoriesGranted) . ')', 'IN');
-    $criteria          = new CriteriaCompo();
+    $categoriesGranted = $helper->getHandler('Permission')->getGrantedItems('category_read');
+    $grantedCategories = new \Criteria('l.categoryid', '(' . implode(',', $categoriesGranted) . ')', 'IN');
+    $criteria          = new \CriteriaCompo();
     $criteria->add($grantedCategories, 'AND');
-    $criteria->add(new Criteria('o.status', 2), 'AND');
-    $critdatesub = new CriteriaCompo();
-    $critdatesub->add(new Criteria('o.datesub', $monthstart, '>'), 'AND');
-    $critdatesub->add(new Criteria('o.datesub', $monthend, '<='), 'AND');
+    $criteria->add(new \Criteria('o.status', 2), 'AND');
+    $critdatesub = new \CriteriaCompo();
+    $critdatesub->add(new \Criteria('o.datesub', $monthstart, '>'), 'AND');
+    $critdatesub->add(new \Criteria('o.datesub', $monthend, '<='), 'AND');
     $criteria->add($critdatesub);
     $criteria->setSort('o.datesub');
     $criteria->setOrder('DESC');
@@ -177,7 +193,7 @@ if ($fromyear != 0 && $frommonth != 0) {
     $count = count($storyarray);
     if (is_array($storyarray) && $count > 0) {
         foreach ($storyarray as $item) {
-            $story               = array();
+            $story               = [];
             $htmltitle           = '';
             $story['title']      = "<a href='" . XOOPS_URL . '/modules/' . PUBLISHER_DIRNAME . '/category.php?categoryid=' . $item->categoryid() . "'>" . $item->getCategoryName() . "</a>: <a href='" . $item->getItemUrl() . "'" . $htmltitle . '>' . $item->getTitle() . '</a>';
             $story['counter']    = $item->counter();
@@ -198,4 +214,4 @@ if ($fromyear != 0 && $frommonth != 0) {
 
 $xoopsTpl->assign('lang_newsarchives', _MD_PUBLISHER_ARCHIVES);
 
-include_once $GLOBALS['xoops']->path('footer.php');
+require_once $GLOBALS['xoops']->path('footer.php');

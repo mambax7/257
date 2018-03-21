@@ -1,12 +1,12 @@
 <?php
 /**
- * Description: shows how to perform validation with PEAR::Calendar
+ * Description: shows how to perform validation with PEAR::Calendar.
  */
 function getmicrotime()
 {
     list($usec, $sec) = explode(' ', microtime());
 
-    return ((float)$usec + (float)$sec);
+    return (float)$usec + (float)$sec;
 }
 
 $start = getmicrotime();
@@ -41,23 +41,24 @@ echo '<p><b>Result:</b> ' . $Unit->thisYear() . '-' . $Unit->thisMonth() . '-' .
 if ($Unit->isValid()) {
     echo ' is valid!</p>';
 } else {
-    $V = &$Unit->getValidator();
+    $V =& $Unit->getValidator();
     echo ' is invalid:</p>';
     while ($error = $V->fetch()) {
-        echo $error->toString() . '<br />';
+        echo $error->toString() . '<br>';
     }
 }
 ?>
     <p>Enter a date / time to validate:</p>
     <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
-        Year: <input type="text" name="y" value="2039"><br/>
-        Month: <input type="text" name="m" value="13"><br/>
-        Day: <input type="text" name="d" value="32"><br/>
-        Hour: <input type="text" name="h" value="24"><br/>
-        Minute: <input type="text" name="i" value="-1"><br/>
-        Second: <input type="text" name="s" value="_EXTCAL_TS_MINUTE"><br/>
+        Year: <input type="text" name="y" value="2039"><br>
+        Month: <input type="text" name="m" value="13"><br>
+        Day: <input type="text" name="d" value="32"><br>
+        Hour: <input type="text" name="h" value="24"><br>
+        Minute: <input type="text" name="i" value="-1"><br>
+        Second: <input type="text" name="s" value="_EXTCAL_TS_MINUTE"><br>
         <input type="submit" value="Validate">
     </form>
-    <p><b>Note:</b> Error messages can be controlled with the constants <code>CALENDAR_VALUE_TOOSMALL</code> and <code>CALENDAR_VALUE_TOOLARGE</code> - see <code>Calendar_Validator.php</code></p>
+    <p><b>Note:</b> Error messages can be controlled with the constants <code>CALENDAR_VALUE_TOOSMALL</code> and <code>CALENDAR_VALUE_TOOLARGE</code>
+        - see <code>Calendar_Validator.php</code></p>
 
 <?php echo '<p><b>Took: ' . (getmicrotime() - $start) . ' seconds</b></p>';

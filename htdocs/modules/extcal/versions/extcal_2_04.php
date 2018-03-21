@@ -1,35 +1,37 @@
 <?php
-/**
- * extcal module
- *
+/*
  * You may not change or alter any portion of this comment or credits
  * of supporting developers from this source code or any supporting source code
  * which is considered copyrighted (c) material of the original comment or credit authors.
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ */
+
+/**
+ * @copyright    {@link https://xoops.org/ XOOPS Project}
+ * @license      {@link http://www.gnu.org/licenses/gpl-2.0.html GNU GPL 2 or later}
+ * @package      extcal
+ * @since
+ * @author       XOOPS Development Team,
+ * @author       JJDai <http://xoops.kiolo.com>
  *
- * @copyright           XOOPS Project (http://xoops.org)
- * @license             http://www.fsf.org/copyleft/gpl.html GNU public license
- * @package             extcal
- * @since               2.2
- * @author              JJDai <http://xoops.kiolo.com>
- * @version             $Id$
- **/
+ */
 //----------------------------------------------------
-class extcal_2_04
+class Extcal_2_04
 {
     //----------------------------------------------------
 
     /**
-     * @param $module
-     * @param $options
+     * @param XoopsModule $module
+     * @param             $options
      */
-    public function __construct(& $module, $options)
+    public function __construct(\XoopsModule $module, $options)
     {
         global $xoopsDB;
 
-        $sql = 'ALTER TABLE `' . $xoopsDB->prefix('extcal_event') . "` ADD `event_nbmember` tinyint(4) NOT NULL default '0' AFTER `event_submitdate` ;";
+        $sql = 'ALTER TABLE `' . $xoopsDB->prefix('extcal_event') . "` ADD `event_nbmember` TINYINT(4) NOT NULL DEFAULT '0' AFTER `event_submitdate` ;";
         $xoopsDB->query($sql);
     }
 

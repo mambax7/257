@@ -14,7 +14,7 @@ class MetaFlexSlider extends MetaSlider
      * Constructor
      *
      * @param integer $id slideshow ID
-     * @param $shortcode_settings
+     * @param         $shortcode_settings
      */
     public function __construct($id, $shortcode_settings)
     {
@@ -31,14 +31,14 @@ class MetaFlexSlider extends MetaSlider
     /**
      * Adjust the slider parameters so they're comparible with the carousel mode
      *
-     * @param  array $options
+     * @param  array   $options
      * @param  integer $slider_id
      * @return array   $options
      */
     public function enable_carousel_mode($options, $slider_id)
     {
         if (isset($options['carouselMode'])) {
-            if ($options['carouselMode'] === 'true') {
+            if ('true' === $options['carouselMode']) {
                 $options['itemWidth']  = $this->get_setting('width');
                 $options['animation']  = "'slide'";
                 $options['direction']  = "'horizontal'";
@@ -58,7 +58,7 @@ class MetaFlexSlider extends MetaSlider
     /**
      * Ensure CSS transitions are disabled when easing is enabled.
      *
-     * @param  array $options
+     * @param  array   $options
      * @param  integer $slider_id
      * @return array   $options
      */
@@ -77,8 +77,8 @@ class MetaFlexSlider extends MetaSlider
     /**
      * Add a 'nav-hidden' class to slideshows where the navigation is hidden.
      *
-     * @param $class
-     * @param $id
+     * @param        $class
+     * @param        $id
      * @param  array $settings
      * @return string $css
      * @internal param string $css
@@ -86,7 +86,7 @@ class MetaFlexSlider extends MetaSlider
      */
     public function remove_bottom_margin($class, $id, $settings)
     {
-        if (isset($settings['navigation']) && $settings['navigation'] === 'false') {
+        if (isset($settings['navigation']) && 'false' === $settings['navigation']) {
             return $class .= ' nav-hidden';
         }
 
@@ -99,14 +99,14 @@ class MetaFlexSlider extends MetaSlider
     /**
      * Return css to ensure our slides are rendered correctly in the carousel
      *
-     * @param  string $css
-     * @param  array $settings
+     * @param  string  $css
+     * @param  array   $settings
      * @param  integer $slider_id
      * @return string  $css
      */
     public function get_carousel_css($css, $settings, $slider_id)
     {
-        if (isset($settings['carouselMode']) && $settings['carouselMode'] === 'true') {
+        if (isset($settings['carouselMode']) && 'true' === $settings['carouselMode']) {
             $css .= "\n        #metaslider_{$slider_id}.flexslider li {margin-right: {$this->carousel_item_margin}px;}";
         }
 
@@ -137,7 +137,8 @@ class MetaFlexSlider extends MetaSlider
             'links'          => 'directionNav',
             'carouselMode'   => 'carouselMode',
             'easing'         => 'easing',
-            'autoPlay'       => 'slideshow');
+            'autoPlay'       => 'slideshow'
+        );
 
         if (isset($params[$param])) {
             return $params[$param];
@@ -153,7 +154,7 @@ class MetaFlexSlider extends MetaSlider
     {
         parent::enqueue_scripts();
 
-        if ($this->get_setting('printJs') === 'true') {
+        if ('true' === $this->get_setting('printJs')) {
             wp_enqueue_script('metaslider-easing', METASLIDER_ASSETS_URL . 'easing/jQuery.easing.min.js', array('jquery'), METASLIDER_VERSION);
         }
     }
@@ -165,7 +166,7 @@ class MetaFlexSlider extends MetaSlider
      */
     protected function get_html()
     {
-        $class = $this->get_setting('noConflict') === 'true' ? '' : ' class="flexslider"';
+        $class = 'true' === $this->get_setting('noConflict') ? '' : ' class="flexslider"';
 
         $return_value = '<div id="' . $this->get_identifier() . '"' . $class . '>';
         $return_value .= "\n            <ul class=\"slides\">";
@@ -174,7 +175,7 @@ class MetaFlexSlider extends MetaSlider
             // backwards compatibility with older versions of Meta Slider Pro (< v2.0)
             // MS Pro < 2.0 does not include the <li>
             // MS Pro 2.0+ returns the <li>
-            if (strpos($slide, '<li') === 0) {
+            if (0 === strpos($slide, '<li')) {
                 $return_value .= "\n                " . $slide;
             } else {
                 $return_value .= "\n                <li style=\"display: none;\">" . $slide . '</li>';

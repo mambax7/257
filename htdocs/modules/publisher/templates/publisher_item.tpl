@@ -1,5 +1,13 @@
 <{include file='db:publisher_header.tpl'}>
 
+<script src="<{xoAppUrl browse.php?Frameworks/jquery/jquery.js}>"></script>
+<script src="<{$publisher_url}>/assets/js/jquery.popeye-2.1.js"></script>
+<script src="<{$publisher_url}>/assets/js/publisher.js"></script>
+
+<link rel="stylesheet" type="text/css" href="<{$publisher_url}>/assets/css/jquery.popeye.css">
+<link rel="stylesheet" type="text/css" href="<{$publisher_url}>/assets/css/jquery.popeye.style.css">
+<link rel="stylesheet" type="text/css" href="<{$publisher_url}>/assets/css/publisher.css">
+
 <div class="item">
     <h2><{$item.title}></h2>
     <{if $show_subtitle && $item.subtitle}>
@@ -9,28 +17,28 @@
     <{/if}>
     <div class="itemBody">
 
-            <{*<{if $item.posterAvatar != 'blank.gif'}>*}>
-            <{*<img class="publisher_item_image" src="<{$xoops_url}>/uploads/<{$item.posterAvatar}>"  align="right" alt="<{$item.posterName}>" title="<{$item.posterName}>" />*}>
-            <{*<{/if}>*}>
+        <{*<{if $item.posterAvatar != 'blank.gif'}>*}>
+        <{*<img class="publisher_item_image" src="<{$xoops_url}>/uploads/<{$item.posterAvatar}>"  align="right" alt="<{$item.posterName}>" title="<{$item.posterName}>">*}>
+        <{*<{/if}>*}>
 
         <{if $pagenav}>
-        <div class="publisher_pagenav_top"><{$smarty.const._MD_PUBLISHER_PAGE}>: <{$pagenav}></div>
+            <div class="publisher_pagenav_top"><{$smarty.const._MD_PUBLISHER_PAGE}>: <{$pagenav}></div>
         <{/if}>
         <div class="itemText">
             <{if $item.image_path || $item.images}>
-                <div class="ppy" id="ppy1">
+                <div class="ppy" id="ppy3">
                     <ul class="ppy-imglist">
                         <{if $item.image_path}>
                             <li>
                                 <a href="<{$item.image_path}>">
-                                    <img src="<{$item.image_thumb}>" alt="<{$item.image_name}>"/>
+                                    <img src="<{$item.image_thumb}>" alt="<{$item.image_name}>">
                                 </a>
                             </li>
                         <{/if}>
                         <{foreach item=image from=$item.images}>
                             <li>
                                 <a href="<{$image.path}>">
-                                    <img src="<{$image.thumb}>" alt="<{$image.name}>"/>
+                                    <img src="<{$image.thumb}>" alt="<{$image.name}>">
                                 </a>
                             </li>
                         <{/foreach}>
@@ -83,9 +91,7 @@
             <{else}>
                 <span style="float: left;">&nbsp;</span>
             <{/if}> <{if $perm_author_items && $item.uid != 0}>
-                <span style="float: left; margin-left: 5px;">
-          <a href="<{$moduleUrl}>/author_items.php?uid=<{$item.uid}>"><{$smarty.const._MD_PUBLISHER_ITEMS_SAME_AUTHOR}></a>
-        </span>
+                <span style="float: left; margin-left: 5px;"><a href="<{$publisher_url}>/author_items.php?uid=<{$item.uid}>"><{$smarty.const._MD_PUBLISHER_ITEMS_SAME_AUTHOR}></a></span>
             <{/if}>
             <span style="float: right; text-align: right;"><{$item.adminlink}></span>
 
@@ -93,7 +99,7 @@
         </div>
     </div>
 </div>
-<br/>
+<br>
 
 <{if $item.files}>
     <table border="0" width="90%" cellspacing="1" cellpadding="0" align="center" class="outer">
@@ -114,13 +120,14 @@
         <tr>
             <td class="odd" align="left">
                 <{if $file.mod}>
-                    <a href="<{$moduleUrl}>/file.php?op=mod&fileid=<{$file.fileid}>">
-                        <img src="<{$moduleUrl}>/assets/images/links/edit.gif" title="<{$smarty.const._CO_PUBLISHER_EDITFILE}>" alt="<{$smarty.const._CO_PUBLISHER_EDITFILE}>"/></a>
-                    <a href="<{$moduleUrl}>/file.php?op=del&fileid=<{$file.fileid}>">
-                        <img src="<{$moduleUrl}>/assets/images/links/delete.png" title="<{$smarty.const._CO_PUBLISHER_DELETEFILE}>" alt="<{$smarty.const._CO_PUBLISHER_DELETEFILE}>"/></a>
+                    <a href="<{$publisher_url}>/file.php?op=mod&fileid=<{$file.fileid}>">
+                        <img src="<{$publisher_url}>/assets/images/links/edit.gif" title="<{$smarty.const._CO_PUBLISHER_EDITFILE}>" alt="<{$smarty.const._CO_PUBLISHER_EDITFILE}>"></a>
+                    <a href="<{$publisher_url}>/file.php?op=del&fileid=<{$file.fileid}>">
+                        <img src="<{$publisher_url}>/assets/images/links/delete.png" title="<{$smarty.const._CO_PUBLISHER_DELETEFILE}>" alt="<{$smarty.const._CO_PUBLISHER_DELETEFILE}>"></a>
                 <{/if}>
-                <a href="<{$moduleUrl}>/visit.php?fileid=<{$file.fileid}>" target="_blank">
-                    <img src="<{$moduleUrl}>/assets/images/links/file.gif" title="<{$smarty.const._MD_PUBLISHER_DOWNLOAD_FILE}>" alt="<{$smarty.const._MD_PUBLISHER_DOWNLOAD_FILE}>"/>&nbsp;<strong><{$file.name}></strong>
+                <a href="<{$publisher_url}>/visit.php?fileid=<{$file.fileid}>" target="_blank">
+                    <img src="<{$publisher_url}>/assets/images/links/file.gif" title="<{$smarty.const._MD_PUBLISHER_DOWNLOAD_FILE}>"
+                         alt="<{$smarty.const._MD_PUBLISHER_DOWNLOAD_FILE}>">&nbsp;<strong><{$file.name}></strong>
                 </a>
 
                 <div><{$file.description}></div>
@@ -130,7 +137,7 @@
         </tr>
         <{/foreach}> <!-- END DYNAMIC BLOCK -->
     </table>
-    <br/>
+    <br>
 <{/if}>
 
 <{if $other_items == "previous_next"}><{if $previousItemLink || $nextItemLink}>
@@ -143,13 +150,15 @@
         <td class="odd" width="50%" align="left">
             <{if $previousItemLink}>
                 <a href="<{$previousItemUrl}>">
-                    <img style="vertical-align: middle;" src="<{$publisherImagesUrl}>/links/previous.gif" title="<{$smarty.const._MD_PUBLISHER_PREVIOUS_ITEM}>" alt="<{$smarty.const._MD_PUBLISHER_PREVIOUS_ITEM}>"/>
+                    <img style="vertical-align: middle;" src="<{$publisherImagesUrl}>/links/previous.gif" title="<{$smarty.const._MD_PUBLISHER_PREVIOUS_ITEM}>"
+                         alt="<{$smarty.const._MD_PUBLISHER_PREVIOUS_ITEM}>">
                 </a>
                 <{$previousItemLink}> <{/if}>
         </td>
         <td class="odd" width="50%" align="right">
             <{if $nextItemLink}> <{$nextItemLink}>
-                <a href="<{$nextItemUrl}>"><img style="vertical-align: middle;" src="<{$publisherImagesUrl}>/links/next.gif" title="<{$smarty.const._MD_PUBLISHER_NEXT_ITEM}>" alt="<{$smarty.const._MD_PUBLISHER_NEXT_ITEM}>"/></a>
+                <a href="<{$nextItemUrl}>"><img style="vertical-align: middle;" src="<{$publisherImagesUrl}>/links/next.gif" title="<{$smarty.const._MD_PUBLISHER_NEXT_ITEM}>"
+                                                alt="<{$smarty.const._MD_PUBLISHER_NEXT_ITEM}>"></a>
             <{/if}>
         </td>
     </tr>
@@ -180,17 +189,18 @@
         <{/if}>
     </tr>
     <{/foreach}> <!-- End item loop -->
-    </table><{/if}><{if $rating_enabled}>
-    <small><{$item.ratingbar}></small><{/if}><{include file='db:publisher_footer.tpl'}>
-
+    </table><{/if}>
+    <{if $rating_enabled}>
+    <small><{$item.ratingbar}></small><{/if}>
+    <{include file='db:publisher_footer.tpl'}>
 <script type="text/javascript">
     <!--//<![CDATA[
-    $publisher(document).ready(function () {
+    $helper(document).ready(function () {
         var options = {
             caption: 'permanent'
         };
 
-        $publisher('#ppy1').popeye(options);
+        $helper('#ppy3').popeye(options);
     });
     //]]>-->
 </script>

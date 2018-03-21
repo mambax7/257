@@ -1,4 +1,4 @@
-<form name="search" action="<{$block.moduleUrl}>/search.php" method="post">
+<form name="search" action="<{$block.publisher_url}>/search.php" method="post">
     <table class="outer" border="0" cellpadding="1" cellspacing="0" align="center" width="95%">
         <tr>
             <td class="even"><strong><{$smarty.const._SR_KEYWORDS}></strong>
@@ -6,7 +6,7 @@
         </tr>
         <tr>
             <td class="odd">
-                <input type="text" name="term" title="term" value="<{$block.search_term}>" size="15"/>
+                <input type="text" name="term" title="term" value="<{$block.search_term}>" size="15">
             </td>
         </tr>
         <!-- <tr>
@@ -30,7 +30,7 @@
         </tr>
         <tr>
             <td class="odd">
-                <input type="text" name="uname" title="uname" value="<{$block.search_user}>" size="15"/>
+                <input type="text" name="uname" title="uname" value="<{$block.search_user}>" size="15">
             </td>
         </tr>
         <!-- <tr>
@@ -47,7 +47,7 @@
         <{/if}>
         <tr>
             <td class="odd">
-                <input type="submit" name="submit" value="<{$smarty.const._SEARCH}>"/>
+                <input type="submit" name="submit" value="<{$smarty.const._SEARCH}>">
             </td>
         </tr>
     </table>

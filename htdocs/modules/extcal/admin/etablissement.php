@@ -1,41 +1,44 @@
 <?php
-/**
- * ****************************************************************************
- *  - TDMAds By TDM   - TEAM DEV MODULE FOR XOOPS
- *  - Licence PRO Copyright (c)  (http://www.tdmxoops.net)
+/*
+ * You may not change or alter any portion of this comment or credits
+ * of supporting developers from this source code or any supporting source code
+ * which is considered copyrighted (c) material of the original comment or credit authors.
  *
- * Cette licence, contient des limitations!!!
- *
- * 1. Vous devez posséder une permission d'exécuter le logiciel, pour n'importe quel usage.
- * 2. Vous ne devez pas l' étudier,
- * 3. Vous ne devez pas le redistribuer ni en faire des copies,
- * 4. Vous n'avez pas la liberté de l'améliorer et de rendre publiques les modifications
- *
- * @license       TDMFR PRO license
- * @author        TDMFR ; TEAM DEV MODULE
- *
- * ****************************************************************************
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 
+/**
+ * @copyright    {@link https://xoops.org/ XOOPS Project}
+ * @license      {@link http://www.gnu.org/licenses/gpl-2.0.html GNU GPL 2 or later}
+ * @package      extcal
+ * @since
+ * @author       XOOPS Development Team,
+ */
+
+use XoopsModules\Extcal;
+
 // Include xoops admin header
-include_once dirname(dirname(dirname(__DIR__))) . '/include/cp_header.php';
-include_once XOOPS_ROOT_PATH . '/modules/extcal/class/ExtcalPersistableObjectHandler.php';
-include_once(XOOPS_ROOT_PATH . '/kernel/module.php');
-include_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
-include_once XOOPS_ROOT_PATH . '/class/tree.php';
-include_once XOOPS_ROOT_PATH . '/class/xoopslists.php';
-include_once XOOPS_ROOT_PATH . '/modules/extcal/class/etablissement.php';
-include_once XOOPS_ROOT_PATH . '/modules/extcal/include/constantes.php';
-include_once XOOPS_ROOT_PATH . '/class/pagenav.php';
-include_once XOOPS_ROOT_PATH . '/class/xoopsform/grouppermform.php';
-include_once(XOOPS_ROOT_PATH . '/class/uploader.php');
-include_once __DIR__ . '/admin_header.php';
+require_once __DIR__ . '/../../../include/cp_header.php';
+// require_once __DIR__ . '/../class/ExtcalPersistableObjectHandler.php';
+require_once __DIR__ . '/../../../kernel/module.php';
+require_once __DIR__ . '/../../../class/xoopsformloader.php';
+require_once __DIR__ . '/../../../class/tree.php';
+require_once __DIR__ . '/../../../class/xoopslists.php';
+require_once __DIR__ . '/../../../class/pagenav.php';
+require_once __DIR__ . '/../../../class/xoopsform/grouppermform.php';
+require_once __DIR__ . '/../../../class/uploader.php';
+// require_once __DIR__ . '/../class/etablissement.php';
+require_once __DIR__ . '/../include/constantes.php';
+
+require_once __DIR__ . '/admin_header.php';
 
 //include_once("functions.php");
 //include_once("../include/functions.php");
 
 if ($xoopsUser) {
-    $xoopsModule = XoopsModule::getByDirname('extcal');
+    $xoopsModule = \XoopsModule::getByDirname('extcal');
     if (!$xoopsUser->isAdmin($xoopsModule->mid())) {
         redirect_header(XOOPS_URL . '/', 3, _NOPERM);
     }
@@ -45,12 +48,12 @@ if ($xoopsUser) {
 
 // Include language file
 xoops_loadLanguage('admin', 'system');
-xoops_loadLanguage('admin', $xoopsModule->getVar('dirname', 'e'));
-xoops_loadLanguage('modinfo', $xoopsModule->getVar('dirname', 'e'));
-$myts = MyTextSanitizer::getInstance();
+Extcal\Helper::getInstance()->loadLanguage('admin');
+Extcal\Helper::getInstance()->loadLanguage('modinfo');
+$myts = \MyTextSanitizer::getInstance();
 
 //appel des class
-$etablissementHandler = xoops_getModuleHandler(_EXTCAL_CLS_ETABLISSEMENT, _EXTCAL_MODULE);
+$etablissementHandler = Extcal\Helper::getInstance()->getHandler(_EXTCAL_CLN_ETABLISSEMENT);
 
 xoops_cp_header();
 
@@ -63,7 +66,7 @@ if (isset($_REQUEST['op'])) {
 // if ( !is_readable(XOOPS_ROOT_PATH . "/Frameworks/art/functions.admin.php")) {
 // adminmenu(4, _MI_EXTCAL_ETABLISSEMENT);
 // } else {
-// include_once XOOPS_ROOT_PATH.'/Frameworks/art/functions.admin.php';
+// require_once XOOPS_ROOT_PATH.'/Frameworks/art/functions.admin.php';
 // loadModuleAdminMenu (4, _MI_EXTCAL_ETABLISSEMENT);
 // }
 
@@ -71,14 +74,13 @@ if (isset($_REQUEST['op'])) {
 switch ($op) {
     // Vue liste
     case 'liste':
-
         // @author   JJDAI
         //***************************************************************************************
-        $etablissementAdmin = new ModuleAdmin();
-        echo $etablissementAdmin->addNavigation(basename(__FILE__));
+        $adminObject = \Xmf\Module\Admin::getInstance();
+        $adminObject->displayNavigation(basename(__FILE__));
         //***************************************************************************************
 
-        $criteria = new CriteriaCompo();
+        $criteria = new \CriteriaCompo();
         if (isset($_REQUEST['limit'])) {
             $criteria->setLimit($_REQUEST['limit']);
             $limit = $_REQUEST['limit'];
@@ -98,7 +100,7 @@ switch ($op) {
         $etablissement_arr = $etablissementHandler->getObjects($criteria);
         $numrows           = $etablissementHandler->getCount($criteria);
         if ($numrows > $limit) {
-            $pagenav = new XoopsPageNav($numrows, $limit, $start, 'start', 'op=liste&limit=' . $limit);
+            $pagenav = new \XoopsPageNav($numrows, $limit, $start, 'start', 'op=liste&limit=' . $limit);
             $pagenav = $pagenav->renderNav(4);
         } else {
             $pagenav = '';
@@ -115,7 +117,7 @@ switch ($op) {
             echo '</tr>';
             $class = 'odd';
             foreach (array_keys($etablissement_arr) as $i) {
-                $class                   = ($class === 'even') ? 'odd' : 'even';
+                $class                   = ('even' === $class) ? 'odd' : 'even';
                 $etablissement_id        = $etablissement_arr[$i]->getVar('id');
                 $etablissement_nom       = $etablissement_arr[$i]->getVar('nom');
                 $etablissement_adresse   = $etablissement_arr[$i]->getVar('adresse');
@@ -132,8 +134,8 @@ switch ($op) {
                 echo '<a href="etablissement.php?op=delete_etablissement&etablissement_id=' . $etablissement_id . '"><img src=' . $pathIcon16 . '/delete.png alt="' . _AM_EXTCAL_ETABLISSEMENT_FORM_DELETE . '" title="' . _AM_EXTCAL_ETABLISSEMENT_FORM_DELETE . '"></a> ';
                 echo '</td>';
             }
-            echo '</table><br />';
-            echo '<br /><div align=right>' . $pagenav . '</div><br />';
+            echo '</table><br>';
+            echo '<br><div align=right>' . $pagenav . '</div><br>';
         } else {
             echo '<div class="errorMsg" style="text-align: center;">' . _AM_EXTCAL_ERREUR_NO_ETABLISSEMENT . '</div>';
         }
@@ -146,7 +148,7 @@ switch ($op) {
     // permet de suprimmer le rapport de téléchargment brisé
     case 'delete_etablissement':
         $obj = $etablissementHandler->get($_REQUEST['etablissement_id']);
-        if (isset($_REQUEST['ok']) && $_REQUEST['ok'] == 1) {
+        if (isset($_REQUEST['ok']) && 1 == $_REQUEST['ok']) {
             if (!$GLOBALS['xoopsSecurity']->check()) {
                 redirect_header('etablissement.php', 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
             }
@@ -154,15 +156,19 @@ switch ($op) {
                 redirect_header('etablissement.php', 1, _AM_EXTCAL_REDIRECT_DELOK);
             }
         } else {
-            xoops_confirm(array('ok' => 1, 'etablissement_id' => $_REQUEST['etablissement_id'], 'op' => 'delete_etablissement'), $_SERVER['REQUEST_URI'], _AM_EXTCAL_ETABLISSEMENT_SURDEL . '<br>');
+            xoops_confirm([
+                              'ok'               => 1,
+                              'etablissement_id' => $_REQUEST['etablissement_id'],
+                              'op'               => 'delete_etablissement',
+                          ], $_SERVER['REQUEST_URI'], _AM_EXTCAL_ETABLISSEMENT_SURDEL . '<br>');
         }
         break;
 
     case 'edit_etablissement':
         // @author   JJDAI
         //***************************************************************************************
-        $etablissementAdmin = new ModuleAdmin();
-        echo $etablissementAdmin->addNavigation(basename(__FILE__));
+        $adminObject = \Xmf\Module\Admin::getInstance();
+        $adminObject->displayNavigation(basename(__FILE__));
         //***************************************************************************************
         //Affichage du formulaire de création des téléchargements
         $obj  = $etablissementHandler->get($_REQUEST['etablissement_id']);
@@ -174,9 +180,9 @@ switch ($op) {
             redirect_header('etablissement.php', 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
         }
         if (isset($_REQUEST['etablissement_id'])) {
-            $obj =& $etablissementHandler->get($_REQUEST['etablissement_id']);
+            $obj = $etablissementHandler->get($_REQUEST['etablissement_id']);
         } else {
-            $obj =& $etablissementHandler->create();
+            $obj = $etablissementHandler->create();
         }
 
         $obj->setVar('nom', $_REQUEST['nom']);
@@ -201,8 +207,14 @@ switch ($op) {
 
         $delimg = @$_REQUEST['delimg'];
         $delimg = isset($delimg) ? (int)$delimg : 0;
-        if ($delimg == 0 && !empty($_REQUEST['xoops_upload_file'][0])) {
-            $upload = new XoopsMediaUploader($uploaddir_etablissement, array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/x-png', 'image/png'), 3145728, null, null);
+        if (0 == $delimg && !empty($_REQUEST['xoops_upload_file'][0])) {
+            $upload = new \XoopsMediaUploader($uploaddir_etablissement, [
+                'image/gif',
+                'image/jpeg',
+                'image/pjpeg',
+                'image/x-png',
+                'image/png',
+            ], 3145728, null, null);
             if ($upload->fetchMedia($_REQUEST['xoops_upload_file'][0])) {
                 $upload->setPrefix('etablissement_');
                 $upload->fetchMedia($_REQUEST['xoops_upload_file'][0]);
@@ -237,4 +249,4 @@ switch ($op) {
         break;
 }
 
-include_once __DIR__ . '/admin_footer.php';
+require_once __DIR__ . '/admin_footer.php';

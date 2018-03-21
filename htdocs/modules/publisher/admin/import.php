@@ -16,31 +16,33 @@
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
  * @author          The SmartFactory <www.smartfactory.ca>
- * @version         $Id: import.php 12825 2014-10-31 02:42:34Z zyspec $
  */
 
-include_once __DIR__ . '/admin_header.php';
+use Xmf\Request;
+use XoopsModules\Publisher;
 
-$op = XoopsRequest::getString('op', XoopsRequest::getString('op', 'none', 'GET'), 'POST');
+require_once __DIR__ . '/admin_header.php';
+
+$op = Request::getString('op', Request::getString('op', 'none', 'GET'), 'POST');
 
 switch ($op) {
     case 'importExecute':
-        $importfile      = XoopsRequest::getString('importfile', 'nonselected', 'POST');
-        $importfile_path = $GLOBALS['xoops']->path('modules/' . $publisher->getModule()->dirname() . '/admin/import/' . $importfile . '.php');
-        include_once $importfile_path;
+        $importfile      = Request::getString('importfile', 'nonselected', 'POST');
+        $importfile_path = $GLOBALS['xoops']->path('modules/' . $helper->getModule()->dirname() . '/admin/import/' . $importfile . '.php');
+        require_once $importfile_path;
         break;
 
     case 'default':
     default:
         $importfile = 'none';
 
-        publisherCpHeader();
+        Publisher\Utility::cpHeader();
         //publisher_adminMenu(-1, _AM_PUBLISHER_IMPORT);
 
-        publisherOpenCollapsableBar('import', 'importicon', _AM_PUBLISHER_IMPORT_TITLE, _AM_PUBLISHER_IMPORT_INFO);
+        Publisher\Utility::openCollapsableBar('import', 'importicon', _AM_PUBLISHER_IMPORT_TITLE, _AM_PUBLISHER_IMPORT_INFO);
 
         xoops_load('XoopsFormLoader');
-
+        /* @var  $moduleHandler XoopsModuleHandler */
         $moduleHandler = xoops_getHandler('module');
 
         // WF-Section
@@ -132,38 +134,38 @@ switch ($op) {
         } */
 
         if (isset($importfile_select_array) && count($importfile_select_array) > 0) {
-            $sform = new XoopsThemeForm(_AM_PUBLISHER_IMPORT_SELECTION, 'op', xoops_getenv('PHP_SELF'));
+            $sform = new \XoopsThemeForm(_AM_PUBLISHER_IMPORT_SELECTION, 'op', xoops_getenv('PHP_SELF'), 'post', true);
             $sform->setExtra('enctype="multipart/form-data"');
 
             // Partners to import
-            $importfile_select = new XoopsFormSelect('', 'importfile', $importfile);
+            $importfile_select = new \XoopsFormSelect('', 'importfile', $importfile);
             $importfile_select->addOptionArray($importfile_select_array);
-            $importfile_tray = new XoopsFormElementTray(_AM_PUBLISHER_IMPORT_SELECT_FILE, '&nbsp;');
+            $importfile_tray = new \XoopsFormElementTray(_AM_PUBLISHER_IMPORT_SELECT_FILE, '&nbsp;');
             $importfile_tray->addElement($importfile_select);
             $importfile_tray->setDescription(_AM_PUBLISHER_IMPORT_SELECT_FILE_DSC);
             $sform->addElement($importfile_tray);
 
             // Buttons
-            $button_tray = new XoopsFormElementTray('', '');
-            $hidden      = new XoopsFormHidden('op', 'importExecute');
+            $button_tray = new \XoopsFormElementTray('', '');
+            $hidden      = new \XoopsFormHidden('op', 'importExecute');
             $button_tray->addElement($hidden);
 
-            $butt_import = new XoopsFormButton('', '', _AM_PUBLISHER_IMPORT, 'submit');
+            $butt_import = new \XoopsFormButton('', '', _AM_PUBLISHER_IMPORT, 'submit');
             $butt_import->setExtra('onclick="this.form.elements.op.value=\'importExecute\'"');
             $button_tray->addElement($butt_import);
 
-            $butt_cancel = new XoopsFormButton('', '', _AM_PUBLISHER_CANCEL, 'button');
+            $butt_cancel = new \XoopsFormButton('', '', _AM_PUBLISHER_CANCEL, 'button');
             $butt_cancel->setExtra('onclick="history.go(-1)"');
             $button_tray->addElement($butt_cancel);
 
             $sform->addElement($button_tray);
-            /*$sform->addElement(new XoopsFormHidden('xfs_version', $xfs_version));
-             $sform->addElement(new XoopsFormHidden('wfs_version', $wfs_version));*/
-            $sform->addElement(new XoopsFormHidden('news_version', $news_version));
-            $sform->addElement(new XoopsFormHidden('xnews_version', $xnews_version));
-            $sform->addElement(new XoopsFormHidden('ams_version', $ams_version));
-            $sform->addElement(new XoopsFormHidden('cjaycontent_version', $cjaycontent_version));
-            $sform->addElement(new XoopsFormHidden('smartsection_version', $smartsection_version));
+            /*$sform->addElement(new \XoopsFormHidden('xfs_version', $xfs_version));
+             $sform->addElement(new \XoopsFormHidden('wfs_version', $wfs_version));*/
+            $sform->addElement(new \XoopsFormHidden('news_version', $news_version));
+            $sform->addElement(new \XoopsFormHidden('xnews_version', $xnews_version));
+            $sform->addElement(new \XoopsFormHidden('ams_version', $ams_version));
+            $sform->addElement(new \XoopsFormHidden('cjaycontent_version', $cjaycontent_version));
+            $sform->addElement(new \XoopsFormHidden('smartsection_version', $smartsection_version));
             $sform->display();
             unset($hidden);
         } else {
@@ -172,10 +174,10 @@ switch ($op) {
 
         // End of collapsable bar
 
-        publisherCloseCollapsableBar('import', 'importicon');
+        Publisher\Utility::closeCollapsableBar('import', 'importicon');
 
         break;
 }
 
 //xoops_cp_footer();
-include_once __DIR__ . '/admin_footer.php';
+require_once __DIR__ . '/admin_footer.php';

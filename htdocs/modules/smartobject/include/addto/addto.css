@@ -1,14 +1,15 @@
-/* AddToBookmarks Style Sheet */ /* <license>
-    Script: Add To Bookmarks
-    Version: 1.1
-    Homepage: http://www.AddToBookmarks.com
-    Author: Gideon Marken
-    Author Blog: http://www.gideonmarken.com/
-    Author Work: http://www.markenmedia.com/
-    Author Work: http://www.webandaudio.com/
-    Date: July 18, 2007
-    License: Mozilla Public License 1.1 http://www.mozilla.org/MPL/MPL-1.1.html
-    </license>
+/* AddToBookmarks Style Sheet */
+/* <license>
+   Script: Add To Bookmarks
+   Version: 1.1
+   Homepage: http://www.AddToBookmarks.com
+   Author: Gideon Marken
+   Author Blog: http://www.gideonmarken.com/
+   Author Work: http://www.markenmedia.com/
+   Author Work: http://www.webandaudio.com/
+   Date: July 18, 2007
+   License: Mozilla Public License 1.1 http://www.mozilla.org/MPL/MPL-1.1.html
+   </license>
 */
 .addToContent {
     text-align: center;
@@ -116,7 +117,7 @@
     cursor: pointer;
 }
 
-.addToV dl,.addToVNoImg dl {
+.addToV dl, .addToVNoImg dl {
     background-color: #fbfbfb;
     color: #000000;
     margin: 0px;
@@ -124,7 +125,7 @@
     font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
-.addToV dd,.addToVNoImg dd {
+.addToV dd, .addToVNoImg dd {
     list-style: none;
     padding: 1px;
     margin: 0px;

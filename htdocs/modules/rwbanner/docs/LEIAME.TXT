@@ -118,9 +118,9 @@ acrescente, antes de } ?>, o código abaixo:
 #### Hack by rw-banner
 #### Cria variáveis smarty para exibir banner no tema do site e nos templates
 #######################################################################################
-$mod = XoopsModule::getByDirname("rw_banner");
+$mod = XoopsModule::getByDirname("rwbanner");
 if ($mod){
-  include_once (dirname(dirname(__FILE__)) .'/include/maketags.php');
+  include_once (dirname(__DIR__) .'/include/maketags.php');
 }
 #######################################################################################
 #### Fim do Hack by rw-banner
@@ -143,9 +143,9 @@ e procure pela função xoopsCodeDecode, no final dela você deverá colocar o c
 #### Hack by rw-banner
 #### Permite a exibição de banners randomicos em qualquer módulo que aceite bbcodes
 #######################################################################################
-$mod = XoopsModule::getByDirname("rw_banner");
+$mod = XoopsModule::getByDirname("rwbanner");
 if ($mod){
-  include(dirname(dirname(__FILE__)) .'/include/bbcode.php');
+  include(dirname(__DIR__) .'/include/bbcode.php');
 }
 #######################################################################################
 #### Fim do Hack by rw-banner
@@ -196,7 +196,7 @@ coloque no lugar a pasta da nova versão.
 Faça login no site como administrador.
 
 Se você utiliza o hack no header.php, comente-o primeiro, acesse via browser o endereço
-"dirname(dirname(__FILE__)) .'/admin/upgrade.php" que o script  fará  a  atualização  das
+"dirname(__DIR__) .'/admin/upgrade.php" que o script  fará  a  atualização  das
 tabelas automaticamente sem que você perca as configurações e banners já cadastrados.
 
 Siga os passos do script e seu módulo estará atualizado.

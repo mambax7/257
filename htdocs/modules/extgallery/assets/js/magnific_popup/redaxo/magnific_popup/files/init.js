@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     // german localization
     $.extend(true, $.magnificPopup.defaults, {
         tClose: 'Schließen',
@@ -29,7 +29,7 @@ $(document).ready(function() {
     });
 
     // gallery images
-    $('div.magnific-popup-gallery').each(function() {
+    $('div.magnific-popup-gallery').each(function () {
         $(this).magnificPopup({
             delegate: 'a',
             type: 'image',

@@ -1,7 +1,5 @@
 <?php
-/**
- * ****************************************************************************
- * Module généré par TDMCreate de la TDM "http://www.tdmxoops.net"
+/*
  * ****************************************************************************
  * xsitemap - MODULE FOR XOOPS CMS
  * Copyright (c) Urbanspaceman (http://www.takeaweb.it)
@@ -13,55 +11,71 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright       Urbanspaceman (http://www.takeaweb.it)
- * @license         GPL
- * @package         xsitemap
- * @author          Urbanspaceman (http://www.takeaweb.it)
+ */
+/**
+ * Module: xsitemap
  *
- * Version : 1.00:
- * ****************************************************************************
+ * @package         module\Xsitemap\admin
+ * @author          XOOPS Module Development Team
+ * @author          Urbanspaceman (http://www.takeaweb.it)
+ * @copyright       Urbanspaceman (http://www.takeaweb.it)
+ * @copyright       XOOPS Project (https://xoops.org)
+ * @license         http://www.fsf.org/copyleft/gpl.html GNU public license
+ * @link            https://xoops.org XOOPS
+ * @since           1.00
  */
 
-include '../../../include/cp_header.php';
+use XoopsModules\Xsitemap;
 
-//xoops_cp_header();
-include 'admin_header.php';
+include __DIR__ . '/admin_header.php';
+
+$moduleDirName = basename(dirname(__DIR__));
+
 xoops_cp_header();
 
-$index_admin = new ModuleAdmin();
+require_once $GLOBALS['xoops']->path('class/tree.php');
+require_once $GLOBALS['xoops']->path('modules/' . $moduleDirName . '/class/plugin.php');
+//require_once $GLOBALS['xoops']->path('modules/' . $moduleDirName . '/class/Utility.php');
+require_once $GLOBALS['xoops']->path('modules/' . $moduleDirName . '/class/DummyObject.php');
 
-include_once(XOOPS_ROOT_PATH . "/class/tree.php");
-include_once XOOPS_ROOT_PATH."/modules/xsitemap/class/plugin.php";
-include_once XOOPS_ROOT_PATH."/modules/xsitemap/include/functions.php";
-include_once(XOOPS_ROOT_PATH . "/modules/xsitemap/class/xsitemap_class.php");
+$adminObject = \Xmf\Module\Admin::getInstance();
+$adminObject->displayNavigation(basename(__FILE__));
 
-echo $index_admin->addNavigation('xml.php');
+$xmlfile     = $GLOBALS['xoops']->path('xsitemap.xml');
+$xmlfile_loc = $GLOBALS['xoops']->url('xsitemap.xml');
 
-$xmlfile = XOOPS_ROOT_PATH."/xsitemap.xml";
-$stat = stat($xmlfile);
-$last_mod = date("d-m-Y H:i:s", $stat['mtime']);
-//if ( is_readable( $xmlfile ) ){
+if (isset($_POST['update'])) {
+    if (!$GLOBALS['xoopsSecurity']->check()) {
+        $helper->redirect('admin/xml.php', 3, $GLOBALS['xoopsSecurity']->getErrors(true));
+    }
 
-echo "<div style=\"padding: 8px;\">";
+    echo "<div class='pad7 width80'>\n";
+    $utility = new Xsitemap\Utility();
+    $xsitemap_show = $utility::generateSitemap();
+    $update = _AM_XSITEMAP_XML_ERROR_UPDATE;
+    if (!empty($xsitemap_show)) {
+        $retVal = $utility::saveSitemap($xsitemap_show);
+        if (false !== $retVal) {
+            $update = sprintf(_AM_XSITEMAP_BYTES_WRITTEN, $retVal) . "\n";
+        }
+    }
+    echo "<p style='margin-bottom: 2em;'>{$update}</p>\n" . "</div>\n" . "<div class='clear'></div>\n";
+}
 
-                echo ""._AM_XSITEMAP_XML_LASTUPD." ".$last_mod;
-                echo "<br/>";
-                echo "<br/>";
-                echo ""._AM_XSITEMAP_UPDATE_XML."";
-                echo "<br/>";
-                echo "<br/>";
-                echo "<form action=xml.php method=post>
-                        <input type=submit name=update value="._AM_XSITEMAP_MANAGER_UPDATE.">
-                    </form><br/>";
-                if (isset($_POST['update'])) {
-                    xsitemap_xml_admin();
-                }
-            echo "</div>
-    <br clear=\"all\" />";
-/*
-$site_url = UrlEncode(XOOPS_URL."/modules/xsitemap/xsitemap.xml");
-echo "<div>";
-echo "invia la sitemap a google <a href='http://www.google.com/webmasters/tools/ping?sitemap=".$site_url."'>CLICCA</a>";
-echo "</div>";*/
-//}
-include 'admin_footer.php';
+if (file_exists($xmlfile)) {
+    $stat     = stat($xmlfile);
+    $last_mod = date(_DATESTRING, $stat['mtime']);
+
+    echo "<div class='pad7 width80'>\n" . "<div class='bold floatleft width15'>\n" . "<p style='margin-bottom: 2em;'>" . _AM_XSITEMAP_XML_LOCATION . ":</p>\n" . "<p style='margin-bottom: 2em;'>"
+         . _AM_XSITEMAP_XML_LASTUPD . ":</p>\n" . "<p style='margin-bottom: 2em;'>" . _AM_XSITEMAP_XML_FILE_SIZE . ":</p>\n" . "</div>\n" . "<div class='pad7 floatleft width20'>\n"
+         . "<p style='margin-bottom: 2em;'>" . htmlentities($xmlfile_loc) . "</p>\n" . "<p style='margin-bottom: 2em;'>{$last_mod}</p>\n" . "<p style='margin-bottom: 2em;'>{$stat['size']}</p>\n"
+         . "</div></div>\n" . "<div class='clear'></div>" . "<div class='pad7 width80'>\n" . "<br><br>\n" . "<form action=xml.php method=post>\n"
+         . "  <input type='hidden' name='XOOPS_TOKEN_REQUEST' value='" . $GLOBALS['xoopsSecurity']->createToken() . "'>\n" . "  <input id='viewbtn' type='button' value='" . _AM_XSITEMAP_XML_VIEW_XML
+         . "' onclick='window.location.href =\"" . $GLOBALS['xoops']->url('www/xsitemap.xml') . "\"'>\n" . "  <input style='margin-left: 3em;' type='submit' name='update' value='"
+         . _AM_XSITEMAP_MANAGER_UPDATE . "'>\n" . "</form>\n" . "<br>\n";
+} else {
+    echo "<div class='pad7'>\n" . "Create XML file.\n" . "<br>\n" . "<br>\n" . "<form action='xml.php' method='post'>\n" . "  <input type='hidden' name='XOOPS_TOKEN_REQUEST' value='"
+         . $GLOBALS['xoopsSecurity']->createToken() . "'>\n" . "  <input type='submit' name='update' value='" . _AM_XSITEMAP_CREATE . "'>\n" . "</form>\n" . "<br>\n";
+}
+echo "</div>\n" . "<br class='clear'>\n";
+include __DIR__ . '/admin_footer.php';

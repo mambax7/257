@@ -1,5 +1,5 @@
 ==================
-  XOOPSTUBE 1.06
+  XOOPSTUBE 1.07
 ==================
 
 1. INSTALLING XOOPSTUBE

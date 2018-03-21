@@ -9,152 +9,79 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 */
 
+use Xmf\Request;
+
 /**
  * Contact module
  *
- * @copyright   The XOOPS Project http://sourceforge.net/projects/xoops/
- * @license     http://www.fsf.org/copyleft/gpl.html GNU public license
- * @author      Kazumi Ono (aka Onokazu)
- * @author      Trabis <lusopoemas@gmail.com>
- * @author      Hossein Azizabadi (AKA Voltan)
- * @version     $Id$
+ * @copyright     XOOPS Project (https://xoops.org)
+ * @license       http://www.fsf.org/copyleft/gpl.html GNU public license
+ * @author        Kazumi Ono (aka Onokazu)
+ * @author        Trabis <lusopoemas@gmail.com>
+ * @author        Hossein Azizabadi (AKA Voltan)
+ * @author        Mirza (AKA Bleekk)
  */
 
-if (!defined("XOOPS_ROOT_PATH")) {
-    die("XOOPS root path not defined");
-}
+defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
-class contact extends XoopsObject
+/**
+ * Class contact
+ */
+class Contact extends XoopsObject
 {
+    private $db;
+    private $table;
 
+    /**
+     * contact constructor.
+     */
     public function __construct()
     {
-        $this->XoopsObject();
-        $this->initVar("contact_id", XOBJ_DTYPE_INT, null, false, 11);
-        $this->initVar("contact_uid", XOBJ_DTYPE_INT, null, false, 11);
-        $this->initVar("contact_cid", XOBJ_DTYPE_INT, null, false, 11);
-        $this->initVar("contact_name", XOBJ_DTYPE_TXTBOX, null, false);
-        $this->initVar("contact_subject", XOBJ_DTYPE_TXTBOX, null, false);
-        $this->initVar("contact_mail", XOBJ_DTYPE_EMAIL, null, false);
-        $this->initVar("contact_url", XOBJ_DTYPE_TXTBOX, null, false);
-        $this->initVar("contact_create", XOBJ_DTYPE_INT, null, false);
-        $this->initVar("contact_icq", XOBJ_DTYPE_TXTBOX, null, false);
-        $this->initVar("contact_company", XOBJ_DTYPE_TXTBOX, null, false);
-        $this->initVar("contact_location", XOBJ_DTYPE_TXTBOX, null, false);
-        $this->initVar("contact_phone", XOBJ_DTYPE_TXTBOX, null, false);
-        $this->initVar("contact_department", XOBJ_DTYPE_TXTBOX, null, false);
-        $this->initVar("contact_ip", XOBJ_DTYPE_TXTBOX, null, false);
-        $this->initVar("contact_message", XOBJ_DTYPE_TXTAREA, null, false);
-        $this->initVar("contact_address", XOBJ_DTYPE_TXTAREA, null, false);
-        $this->initVar("contact_reply", XOBJ_DTYPE_INT, null, false, 1);
-        $this->initVar("contact_platform", XOBJ_DTYPE_ENUM, null, false, '', '', array('Android', 'Ios', 'Web'));
-        $this->initVar("contact_type", XOBJ_DTYPE_ENUM, null, false, '', '', array('Contact', 'Phone', 'Mail'));
+        // parent::__construct();
+        $this->initVar('contact_id', XOBJ_DTYPE_INT, null, false, 11);
+        $this->initVar('contact_uid', XOBJ_DTYPE_INT, null, false, 11);
+        $this->initVar('contact_cid', XOBJ_DTYPE_INT, null, false, 11);
+        $this->initVar('contact_name', XOBJ_DTYPE_TXTBOX, null, false);
+        $this->initVar('contact_subject', XOBJ_DTYPE_TXTBOX, null, false);
+        $this->initVar('contact_mail', XOBJ_DTYPE_EMAIL, null, false);
+        $this->initVar('contact_url', XOBJ_DTYPE_TXTBOX, null, false);
+        $this->initVar('contact_create', XOBJ_DTYPE_INT, null, false);
+        $this->initVar('contact_icq', XOBJ_DTYPE_TXTBOX, null, false);
+        $this->initVar('contact_company', XOBJ_DTYPE_TXTBOX, null, false);
+        $this->initVar('contact_location', XOBJ_DTYPE_TXTBOX, null, false);
+        $this->initVar('contact_phone', XOBJ_DTYPE_TXTBOX, null, false);
+        $this->initVar('contact_department', XOBJ_DTYPE_TXTBOX, null, false);
+        $this->initVar('contact_ip', XOBJ_DTYPE_TXTBOX, null, false);
+        $this->initVar('contact_message', XOBJ_DTYPE_TXTAREA, null, false);
+        $this->initVar('contact_address', XOBJ_DTYPE_TXTAREA, null, false);
+        $this->initVar('contact_reply', XOBJ_DTYPE_INT, null, false, 1);
+        $this->initVar('contact_platform', XOBJ_DTYPE_ENUM, null, false, '', '', ['Android', 'Ios', 'Web']);
+        $this->initVar('contact_type', XOBJ_DTYPE_ENUM, null, false, '', '', ['Contact', 'Phone', 'Mail']);
 
         $this->db    = $GLOBALS ['xoopsDB'];
         $this->table = $this->db->prefix('contact');
     }
 
-    public function Contact_ContactForm($department)
+    /**
+     * @return XoopsThemeForm
+     */
+    public function contactReplyForm()
     {
-        global $xoopsConfig, $xoopsOption, $xoopsUser, $xoopsUserIsAdmin, $xoopsModuleConfig;
-        if ($this->isNew()) {
-            if (!empty($xoopsUser)) {
-                $contact_uid      = $xoopsUser->getVar('uid');
-                $contact_name     = $xoopsUser->getVar('uname');
-                $contact_mail     = $xoopsUser->getVar('email');
-                $contact_url      = $xoopsUser->getVar('url');
-                $contact_icq      = $xoopsUser->getVar('user_icq');
-                $contact_location = $xoopsUser->getVar('user_from');
-            } else {
-                $contact_uid      = 0;
-                $contact_name     = '';
-                $contact_mail     = '';
-                $contact_url      = '';
-                $contact_icq      = '';
-                $contact_location = '';
-            }
-        } else {
-            $contact_uid      = $this->getVar('contact_uid');
-            $contact_name     = $this->getVar('contact_name');
-            $contact_mail     = $this->getVar('contact_mail');
-            $contact_url      = $this->getVar('contact_url');
-            $contact_icq      = $this->getVar('contact_icq');
-            $contact_location = $this->getVar('contact_location');
-        }
-
-        $form = new XoopsThemeForm(_MD_CONTACT_FORM, 'save', 'index.php', 'post', true);
+        //        global $xoopsConfig;
+        $form = new \XoopsThemeForm(_AM_CONTACT_REPLY, 'doreply', 'main.php', 'post', true);
         $form->setExtra('enctype="multipart/form-data"');
-        $form->addElement(new XoopsFormHidden('op', 'save'));
-        $form->addElement(new XoopsFormHidden('contact_id', $this->getVar('contact_id', 'e')));
-        $form->addElement(new XoopsFormHidden('contact_uid', $contact_uid));
-        $form->addElement(new XoopsFormText(_MD_CONTACT_NAME, 'contact_name', 50, 255, $contact_name), true);
-        $form->addElement(new XoopsFormText(_MD_CONTACT_MAIL, 'contact_mail', 50, 255, $contact_mail), true);
-
-        if (xoops_getModuleOption('form_url', 'contact')) {
-            $form->addElement(new XoopsFormText(_MD_CONTACT_URL, 'contact_url', 50, 255, $contact_url), false);
-        }
-        if (xoops_getModuleOption('form_icq', 'contact')) {
-            $form->addElement(new XoopsFormText(_MD_CONTACT_ICQ, 'contact_icq', 50, 255, $contact_icq), false);
-        }
-        if (xoops_getModuleOption('form_company', 'contact')) {
-            $form->addElement(new XoopsFormText(_MD_CONTACT_COMPANY, 'contact_company', 50, 255, $this->getVar('contact_company')), false);
-        }
-        if (xoops_getModuleOption('form_location', 'contact')) {
-            $form->addElement(new XoopsFormText(_MD_CONTACT_LOCATION, 'contact_location', 50, 255, $contact_location), false);
-        }
-        if (xoops_getModuleOption('form_phone', 'contact')) {
-            $form->addElement(new XoopsFormText(_MD_CONTACT_PHONE, 'contact_phone', 50, 255, $this->getVar('contact_phone')), false);
-        }
-        if (xoops_getModuleOption('form_address', 'contact')) {
-            $form->addElement(new XoopsFormTextArea(_MD_CONTACT_ADDRESS, 'contact_address', $this->getVar('contact_address', 'e'), 3, 60), false);
-        }
-        if (xoops_getModuleOption('form_dept', 'contact')) {
-            // show a drop down with the correct departments listed
-            $departmentlist = new XoopsFormSelect(_MD_CONTACT_DEPARTMENT, 'contact_department');
-            $departments    = xoops_getModuleOption('contact_dept', 'contact');
-            foreach ($departments as $val) {
-                $valexplode = explode(',', $val);
-                $departmentlist->addOption($valexplode[0]);
-            }
-            $form->addElement($departmentlist);
-        }
-
-        $form->addElement(new XoopsFormText(_MD_CONTACT_SUBJECT, 'contact_subject', 50, 255, $this->getVar('contact_subject')), true);
-        $form->addElement(new XoopsFormTextArea(_MD_CONTACT_MESSAGE, 'contact_message', $this->getVar('contact_message', 'e'), 5, 60), true);
-
-            // check captcha
-            if ((!$xoopsUser && $xoopsModuleConfig['captchaAnonymous'])
-                || ($xoopsUser && !$xoopsUserIsAdmin && $xoopsModuleConfig['captchaRegistered'])
-            ) {
-                xoops_load('XoopsFormCaptcha');
-                $form->addElement(new XoopsFormCaptcha('', '', false), true);
-            }
-
-        $form->addElement(new XoopsFormButton('', 'submit', _SUBMIT, 'submit'));
-
-        return $form;
-    }
-
-    public function Contact_ReplyForm()
-    {
-        global $xoopsConfig;
-        $form = new XoopsThemeForm(_AM_CONTACT_REPLY, 'doreply', 'contact.php', 'post', true);
-        $form->setExtra('enctype="multipart/form-data"');
-        $form->addElement(new XoopsFormHidden('op', 'doreply'));
-        $form->addElement(new XoopsFormHidden('contact_id', $this->getVar('contact_id', 'e')));
-        $form->addElement(new XoopsFormHidden('contact_uid', $this->getVar('contact_uid', 'e')));
-        $form->addElement(new XoopsFormLabel(_AM_CONTACT_FROM, '', ''));
-        $form->addElement(
-            new XoopsFormText(_AM_CONTACT_NAMEFROM, 'contact_name', 50, 255, XoopsUser::getUnameFromId($this->getVar('contact_uid'))),
-            true
-        );
-        $form->addElement(new XoopsFormText(_AM_CONTACT_MAILFROM, 'contact_mail', 50, 255, $xoopsConfig['adminmail']), true);
-        $form->addElement(new XoopsFormLabel(_AM_CONTACT_TO, '', ''));
-        $form->addElement(new XoopsFormText(_AM_CONTACT_NAMETO, 'contact_nameto', 50, 255, $this->getVar('contact_name')), true);
-        $form->addElement(new XoopsFormText(_AM_CONTACT_MAILTO, 'contact_mailto', 50, 255, $this->getVar('contact_mail')), true);
-        $form->addElement(new XoopsFormText(_AM_CONTACT_SUBJECT, 'contact_subject', 50, 255, _RE . $this->getVar('contact_subject')), true);
-        $form->addElement(new XoopsFormTextArea(_AM_CONTACT_MESSAGE, 'contact_message', '', 5, 60), true);
-        $form->addElement(new XoopsFormButton('', 'submit', _SUBMIT, 'submit'));
+        $form->addElement(new \XoopsFormHidden('op', 'doreply'));
+        $form->addElement(new \XoopsFormHidden('contact_id', $this->getVar('contact_id', 'e')));
+        $form->addElement(new \XoopsFormHidden('contact_uid', $this->getVar('contact_uid', 'e')));
+        $form->addElement(new \XoopsFormLabel(_AM_CONTACT_FROM, '', ''));
+        $form->addElement(new \XoopsFormText(_AM_CONTACT_NAMEFROM, 'contact_name', 50, 255, XoopsUser::getUnameFromId($GLOBALS['xoopsUser']->uid())), true);
+        $form->addElement(new \XoopsFormText(_AM_CONTACT_MAILFROM, 'contact_mail', 50, 255, $GLOBALS['xoopsUser']->getVar('email')), true);
+        $form->addElement(new \XoopsFormLabel(_AM_CONTACT_TO, '', ''));
+        $form->addElement(new \XoopsFormText(_AM_CONTACT_NAMETO, 'contact_nameto', 50, 255, $this->getVar('contact_name')), true);
+        $form->addElement(new \XoopsFormText(_AM_CONTACT_MAILTO, 'contact_mailto', 50, 255, $this->getVar('contact_mail')), true);
+        $form->addElement(new \XoopsFormText(_AM_CONTACT_SUBJECT, 'contact_subject', 50, 255, _RE . $this->getVar('contact_subject')), true);
+        $form->addElement(new \XoopsFormTextArea(_AM_CONTACT_MESSAGE, 'contact_message', '', 5, 60), true);
+        $form->addElement(new \XoopsFormButton('', 'submit', _SUBMIT, 'submit'));
 
         return $form;
     }
@@ -166,8 +93,8 @@ class contact extends XoopsObject
      **/
     public function toArray()
     {
-        $ret  = array();
-        $vars = $this->getVars();
+        $ret  = [];
+        $vars =& $this->getVars();
         foreach (array_keys($vars) as $i) {
             $ret [$i] = $this->getVar($i);
         }
@@ -176,55 +103,66 @@ class contact extends XoopsObject
     }
 }
 
+/**
+ * Class ContactContactHandler
+ */
 class ContactContactHandler extends XoopsPersistableObjectHandler
 {
-    public function __construct(&$db)
+    /**
+     * ContactContactHandler constructor.
+     * @param null|\XoopsDatabase $db
+     */
+    public function __construct(\XoopsDatabase $db)
     {
-        parent::__construct($db, "contact", 'contact', 'contact_id', 'contact_mail');
+        parent::__construct($db, 'contact', 'Contact', 'contact_id', 'contact_mail');
     }
 
     /**
      * Get variables passed by GET or POST method
-     *
+     * @param        $global
+     * @param        $key
+     * @param string $default
+     * @param string $type
+     * @return false|int|mixed|string
      */
-    public function Contact_CleanVars(&$global, $key, $default = '', $type = 'int')
+    /*
+    public function contactCleanVars(&$global, $key, $default = '', $type = 'int')
     {
         switch ($type) {
             case 'array':
                 $ret = (isset($global[$key]) && is_array($global[$key])) ? $global[$key] : $default;
                 break;
             case 'date':
-                $ret = (isset($global[$key])) ? strtotime($global[$key]) : $default;
+                $ret = isset($global[$key]) ? strtotime($global[$key]) : $default;
                 break;
             case 'string':
-                $ret = (isset($global[$key])) ? filter_var($global[$key], FILTER_SANITIZE_MAGIC_QUOTES) : $default;
+                $ret = isset($global[$key]) ? filter_var($global[$key], FILTER_SANITIZE_MAGIC_QUOTES) : $default;
                 break;
             case 'mail':
-                $ret = (isset($global[$key])) ? filter_var($global[$key], FILTER_VALIDATE_EMAIL) : $default;
+                $ret = isset($global[$key]) ? filter_var($global[$key], FILTER_VALIDATE_EMAIL) : $default;
                 break;
             case 'url':
-                $ret = (isset($global[$key])) ? filter_var($global[$key], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED) : $default;
+                $ret = isset($global[$key]) ? filter_var($global[$key], FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED) : $default;
                 break;
             case 'ip':
-                $ret = (isset($global[$key])) ? filter_var($global[$key], FILTER_VALIDATE_IP) : $default;
+                $ret = isset($global[$key]) ? filter_var($global[$key], FILTER_VALIDATE_IP) : $default;
                 break;
             case 'amp':
-                $ret = (isset($global[$key])) ? filter_var($global[$key], FILTER_FLAG_ENCODE_AMP) : $default;
+                $ret = isset($global[$key]) ? filter_var($global[$key], FILTER_FLAG_ENCODE_AMP) : $default;
                 break;
             case 'text':
-                $ret = (isset($global[$key])) ? htmlentities($global[$key], ENT_QUOTES, 'UTF-8') : $default;
+                $ret = isset($global[$key]) ? htmlentities($global[$key], ENT_QUOTES, 'UTF-8') : $default;
                 break;
             case 'platform':
-                $ret = (isset($global[$key])) ? $this->Contact_Platform($global[$key]) : $this->Contact_Platform($default);
+                $ret = isset($global[$key]) ? $this->contactPlatform($global[$key]) : $this->contactPlatform($default);
                 break;
             case 'type':
-                $ret = (isset($global[$key])) ? $this->Contact_Type($global[$key]) : $this->Contact_Type($default);
+                $ret = isset($global[$key]) ? $this->contactType($global[$key]) : $this->contactType($default);
                 break;
             case 'int':
             default:
-                $ret = (isset($global[$key])) ? filter_var($global[$key], FILTER_SANITIZE_NUMBER_INT) : $default;
+                $ret = isset($global[$key]) ? filter_var($global[$key], FILTER_SANITIZE_NUMBER_INT) : $default;
                 break;
-
         }
         if ($ret === false) {
             return $default;
@@ -232,41 +170,55 @@ class ContactContactHandler extends XoopsPersistableObjectHandler
 
         return $ret;
     }
+*/
 
-    public function Contact_InfoProcessing($global)
+    /**
+     * @return array
+     */
+    public function contactInfoProcessing()
     {
-        $contact                       = array();
-        $contact['contact_cid']        = $this->Contact_CleanVars($_POST, 'contact_id', '', 'int');
-        $contact['contact_uid']        = $this->Contact_CleanVars($_POST, 'contact_uid', '', 'int');
-        $contact['contact_name']       = $this->Contact_CleanVars($_POST, 'contact_name', '', 'string');
-        $contact['contact_nameto']     = $this->Contact_CleanVars($_POST, 'contact_nameto', '', 'string');
-        $contact['contact_subject']    = $this->Contact_CleanVars($_POST, 'contact_subject', '', 'string');
-        $contact['contact_mail']       = $this->Contact_CleanVars($_POST, 'contact_mail', '', 'mail');
-        $contact['contact_mailto']     = $this->Contact_CleanVars($_POST, 'contact_mailto', '', 'mail');
-        $contact['contact_url']        = $this->Contact_CleanVars($_POST, 'contact_url', '', 'url');
+        $contact                       = [];
+        $contact['contact_cid']        = Request::getInt('contact_id', 0, 'POST');
+        $contact['contact_uid']        = Request::getInt('contact_uid', 0, 'POST');
+        $contact['contact_name']       = Request::getString('contact_name', '', 'POST');
+        $contact['contact_nameto']     = Request::getString('contact_nameto', '', 'POST');
+        $contact['contact_subject']    = Request::getString('contact_subject', '', 'POST');
+        $contact['contact_mail']       = Request::getString('contact_mail', '', 'POST');
+        $contact['contact_mailto']     = Request::getEmail('contact_mailto', '', 'POST');
+        $contact['contact_url']        = Request::getUrl('contact_url', '', 'POST');
         $contact['contact_create']     = time();
-        $contact['contact_icq']        = $this->Contact_CleanVars($_POST, 'contact_icq', '', 'string');
-        $contact['contact_company']    = $this->Contact_CleanVars($_POST, 'contact_company', '', 'string');
-        $contact['contact_location']   = $this->Contact_CleanVars($_POST, 'contact_location', '', 'text');
-        $contact['contact_phone']      = $this->Contact_CleanVars($_POST, 'contact_phone', '', 'int');
-        $contact['contact_department'] = $this->Contact_CleanVars($_POST, 'contact_department', _MD_CONTACT_DEFULTDEP, 'string');
-        $contact['contact_ip']         = getenv("REMOTE_ADDR");
-        $contact['contact_message']    = $this->Contact_CleanVars($_POST, 'contact_message', '', 'text');
-        $contact['contact_address']    = $this->Contact_CleanVars($_POST, 'contact_address', '', 'text');
-        $contact['contact_platform']   = $this->Contact_CleanVars($_POST, 'contact_platform', 'Web', 'platform');
-        $contact['contact_type']       = $this->Contact_CleanVars($_POST, 'contact_type', 'Contact', 'type');
+        $contact['contact_icq']        = Request::getString('contact_icq', '', 'POST');
+        $contact['contact_company']    = Request::getString('contact_company', '', 'POST');
+        $contact['contact_location']   = Request::getString('contact_location', '', 'POST');
+        $contact['contact_phone']      = Request::getString('contact_phone', '', 'int');
+        $contact['contact_department'] = Request::getString('contact_department', _MD_CONTACT_DEFULTDEP, 'POST');
+        $contact['contact_ip']         = getenv('REMOTE_ADDR');
+        $contact['contact_message']    = Request::getText('contact_message', '', 'POST');
+        $contact['contact_address']    = Request::getString('contact_address', '', 'POST');
+        $contact['contact_platform']   = Request::getString('contact_platform', 'Web', 'POST');
+        $contact['contact_type']       = Request::getString('contact_type', 'Contact', 'POST');
+        $contact['contact_reply']      = Request::getInt('contact_reply', 0, 'POST');
 
         return $contact;
     }
 
-    public function Contact_SendMail($contact)
+    /**
+     * @param $contact
+     * @return string
+     */
+    public function contactSendMail($contact)
     {
         $xoopsMailer = xoops_getMailer();
         $xoopsMailer->useMail();
-        $xoopsMailer->setToEmails($this->Contact_ToEmails($contact['contact_department']));
+        $xoopsMailer->setToEmails($this->contactToEmails($contact['contact_department']));
         $xoopsMailer->setFromEmail($contact['contact_mail']);
-        $xoopsMailer->setFromName($contact['contact_name']);
-        $xoopsMailer->setSubject($contact['contact_subject']);
+        $xoopsMailer->setFromName(html_entity_decode($contact['contact_name'], ENT_QUOTES, 'UTF-8'));
+
+        $subjectPrefix = '';
+        if ($GLOBALS['xoopsModuleConfig']['form_dept'] && $GLOBALS['xoopsModuleConfig']['subject_prefix'] && $GLOBALS['xoopsModuleConfig']['contact_dept']) {
+            $subjectPrefix = '[' . $GLOBALS['xoopsModuleConfig']['prefix_text'] . ' ' . $contact['contact_department'] . ']: ';
+        }
+        $xoopsMailer->setSubject($subjectPrefix . html_entity_decode($contact['contact_subject'], ENT_QUOTES, 'UTF-8'));
         $xoopsMailer->setBody(html_entity_decode($contact['contact_message'], ENT_QUOTES, 'UTF-8'));
         if ($xoopsMailer->send()) {
             $message = _MD_CONTACT_MES_SEND;
@@ -277,7 +229,37 @@ class ContactContactHandler extends XoopsPersistableObjectHandler
         return $message;
     }
 
-    public function Contact_ReplyMail($contact)
+    /**
+     * @param $contact
+     * @return string
+     */
+    public function contactSendMailConfirm($contact)
+    {
+        $xoopsMailer = xoops_getMailer();
+        $xoopsMailer->useMail();
+        $xoopsMailer->setToEmails($contact['contact_mail']);
+        $xoopsMailer->setFromEmail($this->contactToEmails($contact['contact_department']));
+        $xoopsMailer->setFromName(html_entity_decode($GLOBALS['xoopsConfig']['sitename'], ENT_QUOTES, 'UTF-8'));
+
+        $xoopsMailer->setSubject(_MD_CONTACT_MAILCONFIRM_SUBJECT);
+        $body = str_replace('{NAME}', html_entity_decode($contact['contact_name'], ENT_QUOTES, 'UTF-8'), _MD_CONTACT_MAILCONFIRM_BODY);
+        $body = str_replace('{SUBJECT}', html_entity_decode($contact['contact_subject'], ENT_QUOTES, 'UTF-8'), $body);
+        $body = str_replace('{BODY}', html_entity_decode($contact['contact_message'], ENT_QUOTES, 'UTF-8'), $body);
+        $xoopsMailer->setBody($body);
+        if ($xoopsMailer->send()) {
+            $message = _MD_CONTACT_MES_SEND;
+        } else {
+            $message = $xoopsMailer->getErrors();
+        }
+
+        return $message;
+    }
+
+    /**
+     * @param $contact
+     * @return string
+     */
+    public function contactReplyMail($contact)
     {
         $xoopsMailer = xoops_getMailer();
         $xoopsMailer->useMail();
@@ -295,10 +277,14 @@ class ContactContactHandler extends XoopsPersistableObjectHandler
         return $message;
     }
 
-    public function Contact_ToEmails($department = null)
+    /**
+     * @param null $department
+     * @return array
+     */
+    public function contactToEmails($department = null)
     {
-        global $xoopsConfig;
-        $department_mail[] = $xoopsConfig['adminmail'];
+        //        global $xoopsConfig;
+        $department_mail[] = xoops_getModuleOption('contact_recipient_std', 'contact');
         if (!empty($department)) {
             $departments = xoops_getModuleOption('contact_dept', 'contact');
             foreach ($departments as $vals) {
@@ -312,7 +298,11 @@ class ContactContactHandler extends XoopsPersistableObjectHandler
         return $department_mail;
     }
 
-    public function Contact_AddReply($contact_id)
+    /**
+     * @param $contact_id
+     * @return bool
+     */
+    public function contactAddReply($contact_id)
     {
         $obj = $this->get($contact_id);
         $obj->setVar('contact_reply', 1);
@@ -323,42 +313,53 @@ class ContactContactHandler extends XoopsPersistableObjectHandler
         return true;
     }
 
-    public function Contact_GetReply($contact_id)
+    /**
+     * @param $contact_id
+     * @return array|bool
+     */
+    public function contactGetReply($contact_id)
     {
-        $criteria = new CriteriaCompo();
-        $criteria->add(new Criteria('contact_cid', $contact_id));
-        $criteria->add(new Criteria('contact_type', 'Contact'));
-        $contacts = $this->getObjects($criteria, false);
+        $ret      = false;
+
+        $criteria = new \CriteriaCompo();
+        $criteria->add(new \Criteria('contact_cid', $contact_id));
+        $criteria->add(new \Criteria('contact_type', 'Contact'));
+        $contacts =& $this->getObjects($criteria, false);
         if ($contacts) {
-            $ret = array();
+            $ret = [];
+            /** @var Contact $root */
             foreach ($contacts as $root) {
-                $tab                   = array();
+                $tab                   = [];
                 $tab                   = $root->toArray();
                 $tab['contact_owner']  = XoopsUser::getUnameFromId($root->getVar('contact_uid'));
                 $tab['contact_create'] = formatTimestamp($root->getVar('contact_create'), _MEDIUMDATESTRING);
                 $ret []                = $tab;
             }
-
-            return $ret;
-        } else {
-            return false;
         }
+
+        return $ret;
     }
 
-    public function Contact_GetAdminList($contact, $id)
+    /**
+     * @param $contact
+     * @param $id
+     * @return array
+     */
+    public function contactGetAdminList($contact, $id)
     {
-        $ret      = array();
-        $criteria = new CriteriaCompo();
-        $criteria->add(new Criteria($id, '0'));
-        $criteria->add(new Criteria('contact_type', 'Contact'));
+        $ret      = [];
+        $criteria = new \CriteriaCompo();
+        $criteria->add(new \Criteria($id, '0'));
+        $criteria->add(new \Criteria('contact_type', 'Contact'));
         $criteria->setSort($contact['sort']);
         $criteria->setOrder($contact['order']);
         $criteria->setStart($contact['start']);
         $criteria->setLimit($contact['limit']);
-        $contacts = $this->getObjects($criteria, false);
+        $contacts =& $this->getObjects($criteria, false);
         if ($contacts) {
+            /** @var Contact $root */
             foreach ($contacts as $root) {
-                $tab                   = array();
+                $tab                   = [];
                 $tab                   = $root->toArray();
                 $tab['contact_owner']  = XoopsUser::getUnameFromId($root->getVar('contact_uid'));
                 $tab['contact_create'] = formatTimestamp($root->getVar('contact_create'), _MEDIUMDATESTRING);
@@ -371,12 +372,14 @@ class ContactContactHandler extends XoopsPersistableObjectHandler
 
     /**
      * Get file Count
+     * @param $id
+     * @return int
      */
-    public function Contact_GetCount($id)
+    public function contactGetCount($id)
     {
-        $criteria = new CriteriaCompo();
-        $criteria->add(new Criteria($id, '0'));
-        $criteria->add(new Criteria('contact_type', 'Contact'));
+        $criteria = new \CriteriaCompo();
+        $criteria->add(new \Criteria($id, '0'));
+        $criteria->add(new \Criteria('contact_type', 'Contact'));
 
         return $this->getCount($criteria);
     }
@@ -391,13 +394,16 @@ class ContactContactHandler extends XoopsPersistableObjectHandler
 
     /**
      * Contact Prune Count
+     * @param $timestamp
+     * @param $onlyreply
+     * @return int
      */
-    public function Contact_PruneCount($timestamp, $onlyreply)
+    public function contactPruneCount($timestamp, $onlyreply)
     {
-        $criteria = new CriteriaCompo();
-        $criteria->add(new Criteria('contact_create', $timestamp, '<='));
+        $criteria = new \CriteriaCompo();
+        $criteria->add(new \Criteria('contact_create', $timestamp, '<='));
         if ($onlyreply) {
-            $criteria->add(new Criteria('contact_reply', 1));
+            $criteria->add(new \Criteria('contact_reply', 1));
         }
 
         return $this->getCount($criteria);
@@ -405,21 +411,25 @@ class ContactContactHandler extends XoopsPersistableObjectHandler
 
     /**
      * Contact Delete Before Date
+     * @param $timestamp
+     * @param $onlyreply
      */
-    public function Contact_DeleteBeforeDate($timestamp, $onlyreply)
+    public function contactDeleteBeforeDate($timestamp, $onlyreply)
     {
-        $criteria = new CriteriaCompo();
-        $criteria->add(new Criteria('contact_create', $timestamp, '<='));
+        $criteria = new \CriteriaCompo();
+        $criteria->add(new \Criteria('contact_create', $timestamp, '<='));
         if ($onlyreply) {
-            $criteria->add(new Criteria('contact_reply', 1));
+            $criteria->add(new \Criteria('contact_reply', 1));
         }
         $this->deleteAll($criteria);
     }
 
     /**
      * Contact Platform
+     * @param $platform
+     * @return string
      */
-    public function Contact_Platform($platform)
+    public function contactPlatform($platform)
     {
         $platform = strtolower($platform);
         switch ($platform) {
@@ -442,8 +452,10 @@ class ContactContactHandler extends XoopsPersistableObjectHandler
 
     /**
      * Contact type
+     * @param $type
+     * @return string
      */
-    public function Contact_Type($type)
+    public function contactType($type)
     {
         $type = strtolower($type);
         switch ($type) {
@@ -466,22 +478,26 @@ class ContactContactHandler extends XoopsPersistableObjectHandler
 
     /**
      * Contact logs
+     * @param      $column
+     * @param null $timestamp
+     * @return array
      */
-    public function Contact_Logs($column, $timestamp = null)
+    public function contactLogs($column, $timestamp = null)
     {
-        $ret = array();
-        if (!in_array($column, array('contact_mail', 'contact_url', 'contact_phone'))) {
+        $ret = [];
+        if (!in_array($column, ['contact_mail', 'contact_url', 'contact_phone'])) {
             return $ret;
         }
-        $criteria = new CriteriaCompo();
-        $criteria->add(new Criteria('contact_cid', '0'));
+        $criteria = new \CriteriaCompo();
+        $criteria->add(new \Criteria('contact_cid', '0'));
         if (!empty($timestamp)) {
-            $criteria->add(new Criteria('contact_create', $timestamp, '<='));
+            $criteria->add(new \Criteria('contact_create', $timestamp, '<='));
         }
         $criteria->setSort('contact_create');
         $criteria->setOrder('DESC');
-        $contacts = $this->getObjects($criteria, false);
+        $contacts =& $this->getObjects($criteria, false);
         if ($contacts) {
+            /** @var Contact $root */
             foreach ($contacts as $root) {
                 $rootColumn = $root->getVar($column);
                 if (!empty($rootColumn)) {

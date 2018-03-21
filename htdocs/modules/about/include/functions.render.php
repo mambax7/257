@@ -9,15 +9,16 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright       The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright       XOOPS Project (https://xoops.org)
  * @license         http://www.fsf.org/copyleft/gpl.html GNU public license
  * @package         article
  * @since           1.0
  * @author          Taiwen Jiang <phppp@users.sourceforge.net>
- * @version         $Id: functions.render.php 2283 2008-10-12 03:36:13Z phppp $
  */
 
-defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+use XoopsModules\About;
+
+defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 include __DIR__ . '/vars.php';
 define($GLOBALS['artdirname'] . '_FUNCTIONS_RENDER_LOADED', true);
@@ -40,6 +41,7 @@ function about_getTemplate($page = 'index', $style = null)
     if (file_exists($template_dir . $file_name)) {
         return $file_name;
     }
+    // Couldn't find file, try to see if the "default" style for this page exists
     if (!empty($style)) {
         $style     = '';
         $file_name = "{$GLOBALS['artdirname']}_{$page}{$style}.tpl";
@@ -48,21 +50,22 @@ function about_getTemplate($page = 'index', $style = null)
         }
     }
 
+    // Couldn't find a suitable template for this page
     return null;
 }
 
 /**
  * Function to get a list of template files of a page, indexed by file name
  *
- * @var    string      $page page name
+ * @var    string       $page    page name
  * @param  bool|boolean $refresh recreate the data
  * @return array
  *
  */
-function &about_getTemplateList($page = 'index', $refresh = false)
+function about_getTemplateList($page = 'index', $refresh = false)
 {
-    $TplFiles =& about_getTplPageList($page, $refresh);
-    $template = array();
+    $TplFiles = about_getTplPageList($page, $refresh);
+    $template = [];
     if (is_array($TplFiles) && count($TplFiles) > 0) {
         foreach (array_keys($TplFiles) as $temp) {
             $template[$temp] = $temp;
@@ -85,8 +88,8 @@ function about_getCss($style = 'default')
 {
     global $xoops;
 
-    if (is_readable($xoops->path('modules/' . $GLOBALS['artdirname'] . '/assets/style_' . strtolower($style) . '.css'))) {
-        return $xoops->path('modules/' . $GLOBALS['artdirname'] . '/assets/style_' . strtolower($style) . '.css', true);
+    if (is_readable($xoops->path('modules/' . $GLOBALS['artdirname'] . '/assets/css/style_' . strtolower($style) . '.css'))) {
+        return $xoops->path('modules/' . $GLOBALS['artdirname'] . '/assets/css/style_' . strtolower($style) . '.css', true);
     }
 
     return $xoops->path('modules/' . $GLOBALS['artdirname'] . '/assets/css/style.css', true);
@@ -101,7 +104,7 @@ function about_getCss($style = 'default')
  */
 function about_getModuleHeader($style = 'default')
 {
-    $xoops_module_header = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . about_getCss($style) . "\" />";
+    $xoops_module_header = '<link rel="stylesheet" type="text/css" href="' . about_getCss($style) . '">';
 
     return $xoops_module_header;
 }
@@ -129,7 +132,7 @@ function &about_getTplPageList($page = '', $refresh = true)
     $list = XoopsCache::read($key);
 
     if (!is_array($list) || $refresh) {
-        $list =& about_template_lookup(!empty($page));
+        $list = about_template_lookup(!empty($page));
     }
 
     $ret = empty($page) ? $list : @$list[$page];
@@ -143,10 +146,10 @@ function &about_getTplPageList($page = '', $refresh = true)
  */
 function &about_template_lookup($index_by_page = false)
 {
-    include_once XOOPS_ROOT_PATH . '/class/xoopslists.php';
+    require_once XOOPS_ROOT_PATH . '/class/xoopslists.php';
 
     $files = XoopsLists::getHtmlListAsArray(XOOPS_ROOT_PATH . '/modules/' . $GLOBALS['artdirname'] . '/templates/');
-    $list  = array();
+    $list  = [];
     foreach ($files as $file => $name) {
         // The valid file name must be: art_article_mytpl.html OR art_category-1_your-trial.html
         if (preg_match('/^' . $GLOBALS['artdirname'] . "_([^_]*)(_(.*))?\.(tpl|xotpl)$/i", $name, $matches)) {
@@ -157,7 +160,7 @@ function &about_template_lookup($index_by_page = false)
                 $matches[3] = 'default';
             }
             if (empty($index_by_page)) {
-                $list[] = array('file' => $name, 'description' => $matches[3]);
+                $list[] = ['file' => $name, 'description' => $matches[3]];
             } else {
                 $list[$matches[1]][$matches[3]] = $name;
             }

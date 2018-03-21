@@ -1,6 +1,6 @@
 <?php
 /**
- * extcal module
+ * extcal module.
  *
  * You may not change or alter any portion of this comment or credits
  * of supporting developers from this source code or any supporting source code
@@ -9,23 +9,24 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright           XOOPS Project (http://xoops.org)
+ * @copyright           XOOPS Project (https://xoops.org)
  * @license             http://www.fsf.org/copyleft/gpl.html GNU public license
- * @package             extcal
+ *
  * @since               2.2
+ *
  * @author              JJDai <http://xoops.kiolo.com>
- * @version             $Id$
  **/
+
 //----------------------------------------------------
-class extcal_2_34
+class Extcal_2_34
 {
     //----------------------------------------------------
 
     /**
-     * @param $module
-     * @param $options
+     * @param XoopsModule $module
+     * @param             $options
      */
-    public function __construct(& $module, $options)
+    public function __construct(\XoopsModule $module, $options)
     {
         global $xoopsDB;
 
@@ -50,4 +51,3 @@ __sql__;
 
     //-----------------------------------------------------------------
 }   // fin de la classe
-

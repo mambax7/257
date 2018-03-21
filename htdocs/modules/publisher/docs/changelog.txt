@@ -1,3 +1,148 @@
+<h5>1.06 Beta 3       [2018-03-15]</h5>  Dev: Xoops 2.5.9, PHP 7.2.3
+<hr>
+- added Constants (mamba)
+- added truncateHTML (mamba)
+- replaced truncateTagSafe with truncateHTML (mamba)
+
+
+<h5>1.06 Beta 2       [2017-12-09]</h5>  Dev: Xoops 2.5.9, PHP 7.2.1
+<hr>
+- addded missing common traits (goffy/mamba)
+- fix for page styling in categories (liomj/mamba)
+
+
+<h5>1.06 Beta 1       [NOT RELEASED]</h5>
+<hr>
+- namespaces (mamba)
+- work in progress
+
+<h5>1.05 FINAL       [2017-11-22]</h5>
+<hr>
+
+<h5>1.05 RC 4       [2017-11-15]</h5>
+<hr>
+- fix breadcrumb for subcategories (bleekk)
+- change checkVerXoops(mamba)
+- fix confurator link (zyspec)
+- fix fmContent (zyspec)
+- fix archive (zyspec)
+
+<h5>1.05 RC 3       [2017-11-10]</h5>
+<hr>
+- fix bug in item class using $publisher helper (mydarkglobe/mamba)
+- added getDirname() to helper class (mamba)
+- replace $xoopsModule->getVar('dirname', 'n') with helper publisher->getDirname() (mamba)
+- changed to RuntimeException() (mamba)
+
+<h5>1.05 RC 2       [2017-09-08]</h5>
+<hr>
+- update Help, .html to .tpl (mamba)
+- conversion of Publisher helper class to XMF (mamba)
+- short array syntax (mamba)
+- converted to Yoda syntax (mamba)
+- added button for Sample data (mamba)
+
+
+<h5>1.05 RC 1       [NOT RELEASED]</h5>
+- fixed Pagination issues (geekwright)
+- check nonce and file path (geekwright)
+- escape search string (geekwright)
+- min XOOPS version: 2.5.9 (geekwright)
+- added ModuleConfigurator class (mamba)
+- updated disclaimer.html (mamba)
+- cosmetics (mamba)
+- commented out "img-responsive" to all images in index.php and item.php (mamba) (it was a temporary fix for Bootstrap)
+- fixed issue #61: Other articles in this category not working (liomj/mamba)
+- fixed 'element' to $element  (geekwright)
+
+
+<h5>1.05 Beta 1       [NOT RELEASED]</h5>
+- PSR-2 code cosmetics (mamba)
+- addNavigation(basename(__FILE__))  (mamba)
+- dirname(__FILE__) to __DIR__ (mamba)
+- XOOPS 2.5.8, PHP 7 (mamba)
+- replaced < b /> with < b > (mamba)
+- Unnecessary double quotes (mamba)
+- reference mismatch (mamba)
+- Hardening to type safe (mamba)
+- update Help (mamba)
+- changed _handler to Handler (mamba)
+- removed '/' from void HTML elements (&lt;br&gt;, &lt;img&gt;, etc) (mamba)
+- HTML 5: removed 'selected' and 'checked' (mamba)
+- short array syntax (mamba)
+- added install checks for PHP 5.5 and XOOPS 2.5.9 (mamba)
+- added auto-creation of upload folders (mamba)
+- changed static call to XoopsLocal::number_format to dynamic (mamba)
+- added bold to column headers in publisher_author_items.tpl (mamba)
+- fixed cloning of module image (masel/mamba)
+- moved functions to Utility class (mamba)
+- changed to use XoopsFormSelectUser (geekwright/mamba)
+- started conversion to XMF (mamba)
+- move jquery and popeye to template due to conflicts when overriding in theme (geekwright)
+- switch to a color neutral skin for popeye (geekwright)
+- eliminate line feed at EOF  (geekwright)
+- different bugs (bleekk)
+- changed min_db to 5.5 (mamba)
+- changed 'include_once' to 'require_once' (mamba)
+
+<h5>1.04 FINAL       [2015-10-21]</h5>
+- added XoopsLocal::number_format for rating in author_items.php (mamba)
+- added _SHORTDATESTRING to use for date formatting in author_items.php (mamba)
+- added "img-responsive" to all images in index.php and item.php (mamba) (temporary fix for Bootstrap)
+- cosmetics in publisher_author_items.tpl (mamba)
+
+<h5>1.04 RC 2       [NOT RELEASED]</h5>
+- change TEXT fields to allow NULL, needed for import in "strict" mode (mamba)
+- changed min_db to 5.5 (mamba)
+- changed "emptyString" function in metagen.php to static to allow a callback from a static "generateSeoTitle" (mamba)
+- replaced "preg_replace" with "str_replace" in metagen.php (mamba)
+- updated import from News 1.71 (mamba)
+
+<h5>1.04 RC 1       [NOT RELEASED]</h5>
+- fix bug when date change by user is not allowed (cesagonchu/mamba)
+- fix case when TCPDF is not available, incl. warning in Admin (cesagonchu/mamba)
+- fix for HTML in Category description (mage)
+- HTML5 syntax (geekwright/mamba)
+- TCPDF line breaks fix (smedrieben/geekwright)
+- removed JavaScript for PDF Icon (mamba)
+- onupdate remove all .html templates from DB (mamba)
+
+<h5>1.03 FINAL       (2015-07-10)</h5>
+- Fix preg_replace /e ( (cesagonchu/mamba)
+- fixed link to PHP Date info (cesagonchu/mamba)
+
+<h5>1.03 RC 2       (2016-07-09)</h5>
+- fixed New/Recent blocks not visible if only 1 article (cesagonchu/bleekk)
+- fixed Invalid argument supplied for foreach() in profile/userinfo.php?uid=1 if user has no articles (cesagonchu/mamba)
+- moved Clone icon to the right side (mamba)
+
+<h5>1.03 RC 1       (2016-07-07)</h5>
+- fixed Undefined offset: 0 in file /modules/publisher/class/file.php (bleekk/mamba)
+- fixed Recent Articles List Block (bleekk/mamba)
+- fixed Recent Articles Details Block (mamba)
+- changed: if selected "Display block summary on articles page", both Summary & Body are displayed (bleekk/mamba)
+
+<h5>1.03 Beta 4       [NOT RELEASED]</h5>
+- fixed bug in Latest news block (mamba)
+- added copy blank.png in index.php (mamba)
+
+<h5>1.03 Beta 3       [NOT RELEASED]</h5>
+- removed @version (mamba)
+- standardization on addNavigation(basename(__FILE__) (mamba)
+- standardize HTML $lt;br&gt; tags
+- replaced fputs with fwrite (mamba)
+- code cosmetics (mamba)
+- temp fix in /item.php (mamba)
+- replaced self:: with $this-> in /class/item.php (mamba)
+- removed references to objects (mamba)
+- standardized getInstance (mamba)
+- performance: (substr($color, 0, 1) !== '#') to (0 !== strpos($color, '#')) (mamba)
+- renamed logo.png to logo_module.png (mamba)
+- clean up clone (geekwright)
+- revert several template variable changes to work better with override templates (geekwright)
+- revert moduleUrl template variable to publisher_url to better support cloning (geekwright)
+- remove pass-by-ref for non-vars (zyspec)
+
 <h5>1.03 Beta 2       (2016-03-20)</h5>
 - fixed: bugs on submit (mamba)
 - replaced XoopsFormTag with TagFormTag (mamba)
@@ -20,7 +165,7 @@
 - fix for file deletes (mamba)
 - adding link to on-line Tutorial (mamba)
 
-<h5>1.02 RC4       (NOT RELEASED)</h5>
+<h5>1.02 RC4       [NOT RELEASED]</h5>
 - fix issues with Popeye images (mamba)
 - removed 500px hardcoded width for image preview in Admin, as it looks bad for small images (mamba)
 - fixed bug: wrong flag for status after modification in frontend (Dante7237/mamba)
@@ -30,7 +175,7 @@
 - added extra columns in Admin's Summary view (mamba)
 - remove non-existent XoopsFormCalendar in blocks (mamba)
 - replace XoopsLocal::formatTimestamp() with formatTimestamp() so we have User local time (mamba/geekwright)
-- replaced hard-coded GMT date in PublisherFormDateTime with formatTimestamp (mamba) (TODO: do the same for XoopsFormDateTime)
+- replaced hard-coded GMT date in FormDateTime with formatTimestamp (mamba) (TODO: do the same for XoopsFormDateTime)
 - adjusted apostrophes to prevent the define translation errors (slider84)
 - bug #6: Array to string conversion (cesagonchu/mamba)
 - fixed bug: not able to delete category (Dante7237/mamba)

@@ -3,7 +3,7 @@
  * See the enclosed file license.txt for licensing information.
  * If you did not receive this file, get it at http://www.gnu.org/licenses/gpl-2.0.html
  *
- * @copyright   XOOPS Project (http://xoops.org)
+ * @copyright   XOOPS Project (https://xoops.org)
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License (GPL)
  * @package     installer
  * @since       2.3.0
@@ -13,19 +13,19 @@
  * @author      Taiwen Jiang <phppp@users.sourceforge.net>
  * @author      DuGris (aka L. JEN) <dugris@frxoops.org>
  **/
-include_once __DIR__ . '/admin_header.php';
+require_once __DIR__ . '/admin_header.php';
 xoops_cp_header();
 $xoopsOption['checkadmin'] = true;
 $xoopsOption['hascommon']  = true;
-require_once './../include/common.inc.php';
+require_once __DIR__ . '/../include/common.inc.php';
 require_once XOOPS_ROOT_PATH . '/modules/system/admin/modulesadmin/modulesadmin.php';
 defined('XOOPS_INSTALL') || die('XOOPS Installation wizard die');
 
-if (!@include_once XOOPS_ROOT_PATH . "/language/{$wizard->language}/global.php") {
-    include_once XOOPS_ROOT_PATH . '/language/english/global.php';
+if (!@require_once XOOPS_ROOT_PATH . "/language/{$wizard->language}/global.php") {
+    require_once XOOPS_ROOT_PATH . '/language/english/global.php';
 }
-if (!@include_once XOOPS_ROOT_PATH . "/modules/system/language/{$wizard->language}/admin/modulesadmin.php") {
-    include_once XOOPS_ROOT_PATH . '/modules/system/language/english/admin/modulesadmin.php';
+if (!@require_once XOOPS_ROOT_PATH . "/modules/system/language/{$wizard->language}/admin/modulesadmin.php") {
+    require_once XOOPS_ROOT_PATH . '/modules/system/language/english/admin/modulesadmin.php';
 }
 require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 require_once XOOPS_ROOT_PATH . '/class/xoopslists.php';
@@ -35,17 +35,17 @@ require_once XOOPS_ROOT_PATH . '/class/xoopslists.php';
 $pageHasForm = true;
 $pageHasHelp = false;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    include_once XOOPS_ROOT_PATH . '/class/xoopsblock.php';
-    include_once XOOPS_ROOT_PATH . '/kernel/module.php';
-    include_once XOOPS_ROOT_PATH . '/include/cp_functions.php';
-    include_once XOOPS_ROOT_PATH . '/include/version.php';
-    //    include_once './../include/modulesadmin.php';
+if ('POST' === $_SERVER['REQUEST_METHOD']) {
+    require_once XOOPS_ROOT_PATH . '/class/xoopsblock.php';
+    require_once XOOPS_ROOT_PATH . '/kernel/module.php';
+    require_once XOOPS_ROOT_PATH . '/include/cp_functions.php';
+    require_once XOOPS_ROOT_PATH . '/include/version.php';
+    //    require_once __DIR__ . '/../include/modulesadmin.php';
 
-    $config_handler = xoops_getHandler('config');
-    $xoopsConfig    = $config_handler->getConfigsByCat(XOOPS_CONF);
+    $configHandler = xoops_getHandler('config');
+    $xoopsConfig   = $configHandler->getConfigsByCat(XOOPS_CONF);
 
-    $msgs = array();
+    $msgs = [];
     foreach ($_REQUEST['modules'] as $dirname => $installmod) {
         if ($installmod) {
             $msgs[] = xoops_module_uninstall($dirname);
@@ -76,22 +76,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Get installed modules
-    $module_handler = xoops_getHandler('module');
-    $installed_mods = $module_handler->getObjects();
-    $listed_mods    = array();
+    /** @var XoopsModuleHandler $moduleHandler */
+    $moduleHandler  = xoops_getHandler('module');
+    $installed_mods = $moduleHandler->getObjects();
+    $listed_mods    = [];
     foreach ($installed_mods as $module) {
         $listed_mods[] = $module->getVar('dirname');
     }
 
-    include_once XOOPS_ROOT_PATH . '/class/xoopslists.php';
+    require_once XOOPS_ROOT_PATH . '/class/xoopslists.php';
     $dirlist  = XoopsLists::getModulesList();
     $toinstal = 0;
 
     $javascript = '';
     $content    = "<ul class='log'><li>";
-    $content .= "<table class='module'>\n";
+    $content    .= "<table class='module'>\n";
     //remove System module and itself from the list of modules that can be uninstalled
-    $dirlist = array_diff($dirlist, array('system', 'moduleinstaller'));
+    $dirlist = array_diff($dirlist, ['system', 'moduleinstaller']);
     foreach ($dirlist as $file) {
         clearstatcache();
         if (in_array($file, $listed_mods)) {
@@ -103,21 +104,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $file   = trim($file);
-            $module = $module_handler->create();
+            $module = $moduleHandler->create();
             if (!$module->loadInfo($file, false)) {
                 continue;
             }
 
-            $form     = new XoopsThemeForm('', 'modules', 'index.php', 'post');
-            $moduleYN = new XoopsFormRadioYN('', 'modules[' . $module->getInfo('dirname') . ']', $value, _YES, _NO);
+            $form     = new \XoopsThemeForm('', 'modules', 'index.php', 'post', true);
+            $moduleYN = new \XoopsFormRadioYN('', 'modules[' . $module->getInfo('dirname') . ']', $value, _YES, _NO);
             $moduleYN->setExtra("onclick='selectModule(\"" . $file . "\", this)'");
             $form->addElement($moduleYN);
 
             $content .= "<tr id='" . $file . "'" . $style . ">\n";
-            $content .= "    <td class='img' ><img src='" . XOOPS_URL . '/modules/' . $module->getInfo('dirname') . '/' . $module->getInfo('image') . "' alt='" . $module->getInfo('name') . "'/></td>\n";
+            $content .= "    <td class='img' ><img src='" . XOOPS_URL . '/modules/' . $module->getInfo('dirname') . '/' . $module->getInfo('image') . "' alt='" . $module->getInfo('name') . "'></td>\n";
             $content .= '    <td>';
             $content .= '        ' . $module->getInfo('name') . '&nbsp;' . number_format(round($module->getInfo('version'), 2), 2) . '&nbsp;' . $module->getInfo('module_status') . '&nbsp;(folder: /' . $module->getInfo('dirname') . ')';
-            $content .= '        <br />' . $module->getInfo('description');
+            $content .= '        <br>' . $module->getInfo('description');
             $content .= "    </td>\n";
             $content .= "    <td class='yesno'>";
             $content .= $moduleYN->render();
@@ -127,19 +128,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $content .= '</table>';
     $content .= "</li></ul><script type='text/javascript'>" . $javascript . '</script>';
-    if ($toinstal == 0) {
+    if (0 == $toinstal) {
         $pageHasForm = false;
         $content     = "<div class='x2-note confirmMsg'>" . NO_MODULES_FOUND . '</div>';
     }
 }
-$indexAdmin = new ModuleAdmin();
-echo $indexAdmin->addNavigation(basename(__FILE__));
+$adminObject = \Xmf\Module\Admin::getInstance();
+$adminObject->displayNavigation(basename(__FILE__));
 
-$indexAdmin->addItemButton(_AM_INSTALLER_SELECT_ALL, 'javascript:selectAll();', 'button_ok');
+$adminObject->addItemButton(_AM_INSTALLER_SELECT_ALL, 'javascript:selectAll();', 'button_ok');
 
-$indexAdmin->addItemButton(_AM_INSTALLER_SELECT_NONE, 'javascript:unselectAll();', 'prune');
+$adminObject->addItemButton(_AM_INSTALLER_SELECT_NONE, 'javascript:unselectAll();', 'prune');
 
-echo $indexAdmin->renderButton('left', '');
+$adminObject->displayButton('left', '');
 
-include_once dirname(__DIR__) . '/include/install_tpl.php';
-include_once __DIR__ . '/admin_footer.php';
+require_once __DIR__ . '/../include/install_tpl.php';
+require_once __DIR__ . '/admin_footer.php';

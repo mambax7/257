@@ -1,30 +1,51 @@
 <?php
-// $Id: index.php,v 1.2 2005/04/06 09:49:05 gij Exp $
-// FILE     ::  index.php
-// AUTHOR   ::  Ryuji AMANO <info@ryus.co.jp>
-// WEB      ::  Ryu's Planning <http://ryus.co.jp/>
-//
+/*
+ You may not change or alter any portion of this comment or credits of
+ supporting developers from this source code or any supporting source code
+ which is considered copyrighted (c) material of the original comment or credit
+ authors.
 
-$path = dirname(dirname(dirname(dirname(__FILE__))));
-include_once $path . '/mainfile.php';
-include_once $path . '/include/cp_functions.php';
-require_once $path . '/include/cp_header.php';
+ This program is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ */
+/**
+ * Module: Waiting
+ *
+ * @category        Module
+ * @package         waiting
+ * @author          Ryuji AMANO <info@ryus.co.jp>
+ * @author          XOOPS Module Development Team
+ * @copyright       {@link https://xoops.org 2001-2016 XOOPS Project}
+ * @license         {@link http://www.fsf.org/copyleft/gpl.html GNU public license}
+ * @link            http://ryus.co.jp Ryu's Planning
+ * @link            https://xoops.org XOOPS
+ */
 
-global $xoopsModule;
+use XoopsModules\Waiting;
 
-$thisModuleDir = $GLOBALS['xoopsModule']->getVar('dirname');
+require_once __DIR__ . '/../../../include/cp_header.php';
+//require_once $GLOBALS['xoops']->path('www/class/xoopsformloader.php');
+
+// require_once __DIR__ . '/../class/Utility.php';
+//require_once __DIR__ . '/../include/common.php';
+
+$moduleDirName = basename(dirname(__DIR__));
+$helper = Waiting\Helper::getInstance();
+$adminObject = \Xmf\Module\Admin::getInstance();
+
+$pathIcon16    = \Xmf\Module\Admin::iconUrl('', 16);
+$pathIcon32    = \Xmf\Module\Admin::iconUrl('', 32);
+$pathModIcon32 = $helper->getModule()->getInfo('modicons32');
 
 // Load language files
-xoops_loadLanguage('admin', $thisModuleDir);
-xoops_loadLanguage('modinfo', $thisModuleDir);
-xoops_loadLanguage('main', $thisModuleDir);
+$helper->loadLanguage('admin');
+$helper->loadLanguage('modinfo');
+$helper->loadLanguage('main');
 
-$pathIcon16 = '../'.$xoopsModule->getInfo('icons16');
-$pathIcon32 = '../'.$xoopsModule->getInfo('icons32');
-$pathModuleAdmin = $xoopsModule->getInfo('dirmoduleadmin');
+$myts = \MyTextSanitizer::getInstance();
 
-if (file_exists($GLOBALS['xoops']->path($pathModuleAdmin.'/moduleadmin.php'))) {
-    include_once $GLOBALS['xoops']->path($pathModuleAdmin.'/moduleadmin.php');
-} else {
-    redirect_header("../../../admin.php", 5, _AM_MODULEADMIN_MISSING, false);
+if (!isset($GLOBALS['xoopsTpl']) || !($GLOBALS['xoopsTpl'] instanceof XoopsTpl)) {
+    require_once $GLOBALS['xoops']->path('class/template.php');
+    $xoopsTpl = new \XoopsTpl();
 }

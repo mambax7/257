@@ -13,17 +13,18 @@ function smartfaq_notify_iteminfo($category, $item_id)
 {
     global $xoopsModule, $xoopsModuleConfig, $xoopsConfig;
 
-    if (empty($xoopsModule) || $xoopsModule->getVar('dirname') !== 'smartfaq') {
+    if (empty($xoopsModule) || 'smartfaq' !== $xoopsModule->getVar('dirname')) {
+        /** @var XoopsModuleHandler $moduleHandler */
         $moduleHandler = xoops_getHandler('module');
-        $module        = &$moduleHandler->getByDirname('smartfaq');
+        $module        = $moduleHandler->getByDirname('smartfaq');
         $configHandler = xoops_getHandler('config');
-        $config        = &$configHandler->getConfigsByCat(0, $module->getVar('mid'));
+        $config        = $configHandler->getConfigsByCat(0, $module->getVar('mid'));
     } else {
-        $module = &$xoopsModule;
-        $config = &$xoopsModuleConfig;
+        $module = $xoopsModule;
+        $config = $xoopsModuleConfig;
     }
 
-    if ($category === 'global') {
+    if ('global' === $category) {
         $item['name'] = '';
         $item['url']  = '';
 
@@ -32,10 +33,10 @@ function smartfaq_notify_iteminfo($category, $item_id)
 
     global $xoopsDB;
 
-    if ($category === 'category') {
+    if ('category' === $category) {
         // Assume we have a valid category id
         $sql          = 'SELECT name FROM ' . $xoopsDB->prefix('smartfaq_categories') . ' WHERE categoryid  = ' . $item_id;
-        $result       = $xoopsDB->query($sql); // TODO: error check
+        $result       = $xoopsDB->queryF($sql); // TODO: error check
         $result_array = $xoopsDB->fetchArray($result);
         $item['name'] = $result_array['name'];
         $item['url']  = XOOPS_URL . '/modules/' . $module->getVar('dirname') . '/category.php?categoryid=' . $item_id;
@@ -43,10 +44,10 @@ function smartfaq_notify_iteminfo($category, $item_id)
         return $item;
     }
 
-    if ($category === 'faq') {
+    if ('faq' === $category) {
         // Assume we have a valid story id
         $sql          = 'SELECT question FROM ' . $xoopsDB->prefix('smartfaq_faq') . ' WHERE faqid = ' . $item_id;
-        $result       = $xoopsDB->query($sql); // TODO: error check
+        $result       = $xoopsDB->queryF($sql); // TODO: error check
         $result_array = $xoopsDB->fetchArray($result);
         $item['name'] = $result_array['question'];
         $item['url']  = XOOPS_URL . '/modules/' . $module->getVar('dirname') . '/faq.php?faqid=' . $item_id;

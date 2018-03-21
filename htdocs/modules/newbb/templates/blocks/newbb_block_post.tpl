@@ -5,13 +5,13 @@
             <th class="head" nowrap="nowrap"><{$smarty.const._MB_NEWBB_TITLE}></th>
             <th class="head" align="center" nowrap="nowrap"><{$smarty.const._MB_NEWBB_AUTHOR}></th>
         </tr>
-        <{foreachq item=topic from=$block.topics}>
+        <{foreach item=topic from=$block.topics}>
         <tr class="<{cycle values="even,odd"}>">
             <!-- irmtfan remove hardcoded html in URLs  -->
             <td><a href="<{$topic.seo_forum_url}>"><{$topic.forum_name}></a></td>
             <td><a href="<{$topic.seo_url}>"><{$topic.title}></a></td>
             <!-- irmtfan hardcode removed align="right" -->
-            <td class="align_right"><{$topic.time}><br/><{$topic.topic_poster}></td>
+            <td class="align_right"><{$topic.time}><br><{$topic.topic_poster}></td>
         </tr>
     <{/foreach}>
 
@@ -20,18 +20,18 @@
             <th class="head" nowrap="nowrap"><{$smarty.const._MB_NEWBB_TOPIC}></th>
             <th class="head" align="center" nowrap="nowrap"><{$smarty.const._MB_NEWBB_AUTHOR}></th>
         </tr>
-        <{foreachq item=topic from=$block.topics}>
+        <{foreach item=topic from=$block.topics}>
         <tr class="<{cycle values="even,odd"}>">
             <!-- irmtfan remove hardcoded html in URLs  -->
             <td><a href="<{$topic.seo_url}>"><{$topic.title}></a></td>
             <!-- irmtfan hardcode removed align="right" -->
-            <td class="align_right"><{$topic.time}><br/><{$topic.topic_poster}></td>
+            <td class="align_right"><{$topic.time}><br><{$topic.topic_poster}></td>
         </tr>
     <{/foreach}>
 
     <{elseif $block.disp_mode == 2}>
 
-        <{foreachq item=topic from=$block.topics}>
+        <{foreach item=topic from=$block.topics}>
         <tr class="<{cycle values="even,odd"}>">
             <!-- irmtfan remove hardcoded html in URLs  -->
             <td><a href="<{$topic.seo_url}>"><{$topic.title}></a></td>
@@ -41,7 +41,7 @@
     <{else}>
         <tr>
             <td>
-                <{foreachq item=topic from=$block.topics}>
+                <{foreach item=topic from=$block.topics}>
                 <div><strong><a href="<{$topic.seo_url}>"><{$topic.title}></a></strong></div>
                 <div>
                     <a href="<{$topic.seo_forum_url}>"><{$topic.forum_name}></a> |

@@ -1,27 +1,29 @@
 <?php
 
-if (!defined("XOOPS_ROOT_PATH")) {
-    die("XOOPS root path not defined");
-}
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 global $modversion;
-if (!empty($_POST['fct']) && !empty($_POST['op']) && $_POST['fct'] == 'modulesadmin' && $_POST['op'] == 'update_ok' && $_POST['dirname'] == $modversion['dirname']) {
+if (!empty($_POST['fct']) && !empty($_POST['op']) && 'modulesadmin' === $_POST['fct'] && 'update_ok' === $_POST['op'] && $_POST['dirname'] == $modversion['dirname']) {
     // referer check
     $ref = xoops_getenv('HTTP_REFERER');
-    if ($ref == '' || strpos($ref, XOOPS_URL . '/modules/system/admin.php') === 0) {
+    if ('' == $ref || 0 === strpos($ref, XOOPS_URL . '/modules/system/admin.php')) {
         /* module specific part */
 
         /* General part */
 
         // Keep the values of block's options when module is updated (by nobunobu)
-        include dirname(__FILE__) . "/updateblock.inc.php";
+        include __DIR__ . '/updateblock.inc.php';
     }
 }
 
-function xoops_module_update_smartpartner($module)
+/**
+ * @param  XoopsModule $module
+ * @return bool
+ */
+function xoops_module_update_smartpartner(\XoopsModule $module)
 {
-    include_once(XOOPS_ROOT_PATH . "/modules/" . $module->getVar('dirname') . "/include/functions.php");
-    include_once(XOOPS_ROOT_PATH . "/modules/smartobject/class/smartdbupdater.php");
+    require_once XOOPS_ROOT_PATH . '/modules/' . $module->getVar('dirname') . '/include/functions.php';
+    require_once XOOPS_ROOT_PATH . '/modules/smartobject/class/smartdbupdater.php';
 
     $dbupdater = new SmartobjectDbupdater();
 
@@ -31,14 +33,14 @@ function xoops_module_update_smartpartner($module)
 
     $dbupdater = new SmartobjectDbupdater();
 
-    echo "<code>" . _SDU_UPDATE_UPDATING_DATABASE . "<br />";
+    echo '<code>' . _SDU_UPDATE_UPDATING_DATABASE . '<br>';
 
     //smartpartner_create_upload_folders();
 
     // db migrate version = 3
     $newDbVersion = 3;
     if ($dbVersion < $newDbVersion) {
-        echo "Database migrate to version " . $newDbVersion . "<br />";
+        echo 'Database migrate to version ' . $newDbVersion . '<br>';
 
         $table = new SmartDbTable('smartpartner_partner');
         $table->addNewField('email_priv', " tinyint(1) NOT NULL default '0'");
@@ -55,7 +57,7 @@ function xoops_module_update_smartpartner($module)
     // db migrate version =4
     $newDbVersion = 4;
     if ($dbVersion < $newDbVersion) {
-        echo "Database migrate to version " . $newDbVersion . "<br />";
+        echo 'Database migrate to version ' . $newDbVersion . '<br>';
         //create new tables
         // Create table smartpartner_categories
         $table = new SmartDbTable('smartpartner_categories');
@@ -146,33 +148,35 @@ function xoops_module_update_smartpartner($module)
             }
         }
         //loop in partners to insert cat_links in partner_cat_link table
-        $smartparner_partner_handler = xoops_getModuleHandler('partner', 'smartpartner');
-        $smartparner_partner_cat_link_handler = xoops_getModuleHandler('partner_cat_link', 'smartpartner');
+        $smartpartnerPartnerHandler = xoops_getModuleHandler('partner', 'smartpartner');
+        //        $smartpartnerPartnerCatLinkHandler = xoops_getModuleHandler('partner_cat_link', 'smartpartner');
+        $smartpartnerPartnerCatLinkHandler = xoops_getModuleHandler('partner_cat_link', 'smartpartner');
 
-        $moduleperm_handler =& xoops_gethandler('groupperm');
-        $module_handler =& xoops_gethandler('module');
-        $module = $module_handler->getByDirname('smartpartner');
-        $groupsArray = $moduleperm_handler->getGroupIds('module_read', $module->mid(), 1);
+        $modulepermHandler = xoops_getHandler('groupperm');
+        /** @var XoopsModuleHandler $moduleHandler */
+        $moduleHandler = xoops_getHandler('module');
+        $module        = $moduleHandler->getByDirname('smartpartner');
+        $groupsArray   = $modulepermHandler->getGroupIds('module_read', $module->mid(), 1);
 
-        $sql = 'SELECT id, categoryid from ' . $smartparner_partner_handler->table;
-        $records = $smartparner_partner_handler->query($sql);
+        $sql     = 'SELECT id, categoryid FROM ' . $smartpartnerPartnerHandler->table;
+        $records = $smartpartnerPartnerHandler->query($sql);
         foreach ($records as $record) {
-            if ($record['categoryid'] != 0) {
-                $new_link = $smartparner_partner_cat_link_handler->create();
+            if (0 != $record['categoryid']) {
+                $new_link = $smartpartnerPartnerCatLinkHandler->create();
                 $new_link->setVar('partnerid', $record['id']);
                 $new_link->setVar('categoryid', $record['categoryid']);
-                $smartparner_partner_cat_link_handler->insert($new_link);
+                $smartpartnerPartnerCatLinkHandler->insert($new_link);
                 unset($new_link);
             }
             foreach ($groupsArray as $group) {
-                $moduleperm_handler->addRight('full_view', $record['id'], $group, $module->mid());
+                $modulepermHandler->addRight('full_view', $record['id'], $group, $module->mid());
             }
         }
         //drop cat_id in partner table
         $table = new SmartDbTable('smartpartner_partner');
         $table->addNewField('last_update', " int(11) NOT NULL default '0'");
         $table->addNewField('showsummary', " tinyint(1) NOT NULL default '0'");
-        $table->addDropedField('categoryid');
+        $table->addDroppedField('categoryid');
         if (!$dbupdater->updateTable($table)) {
             /**
              * @todo trap the errors
@@ -180,29 +184,33 @@ function xoops_module_update_smartpartner($module)
         }
         unset($table);
     }
-    echo "</code>";
+    echo '</code>';
 
     $feedback = ob_get_clean();
-    if (method_exists($module, "setMessage")) {
+    if (method_exists($module, 'setMessage')) {
         $module->setMessage($feedback);
     } else {
         echo $feedback;
     }
-    smartpartner_SetMeta("version", isset($newDbVersion) ? $newDbVersion : 0); //Set meta version to current
+    smartpartner_SetMeta('version', isset($newDbVersion) ? $newDbVersion : 0); //Set meta version to current
 
     return true;
 }
 
-function xoops_module_install_smartpartner($module)
+/**
+ * @param  XoopsModule $module
+ * @return bool
+ */
+function xoops_module_install_smartpartner(\XoopsModule $module)
 {
     ob_start();
 
-    include_once(XOOPS_ROOT_PATH . "/modules/" . $module->getVar('dirname') . "/include/functions.php");
+    require_once XOOPS_ROOT_PATH . '/modules/' . $module->getVar('dirname') . '/include/functions.php';
 
     smartpartner_create_upload_folders();
 
     $feedback = ob_get_clean();
-    if (method_exists($module, "setMessage")) {
+    if (method_exists($module, 'setMessage')) {
         $module->setMessage($feedback);
     } else {
         echo $feedback;

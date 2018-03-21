@@ -1,4 +1,4 @@
-<div align="right"><{$catnavbar}></div>
+<div align="right"><{$navbar}></div>
 <table border="0" width="90%" cellspacing="1" cellpadding="0" align="center" class="outer">
     <tr>
         <td align="left" class="itemHead">
@@ -16,13 +16,15 @@
         <tr>
             <td class="even" align="left">
                 <{if $category.image_path}> <{if $isAdmin == 1}>
-                    <a href="<{$moduleUrl}>/admin/category.php?op=mod&categoryid=<{$category.categoryid}>"><img src="<{$category.image_path}>" title="<{$smarty.const._MD_PUBLISHER_CATEGORY_EDIT}>" alt="<{$lang_editcategory}>"/></a>
+                    <a href="<{$publisher_url}>/admin/category.php?op=mod&categoryid=<{$category.categoryid}>"><img src="<{$category.image_path}>" title="<{$smarty.const._MD_PUBLISHER_CATEGORY_EDIT}>"
+                                                                                                                    alt="<{$lang_editcategory}>"></a>
                     &nbsp; <{else}>
-                    <img src="<{$category.image_path}>" alt="<{$category.name}>"/>
+                    <img src="<{$category.image_path}>" alt="<{$category.name}>">
                     &nbsp; <{/if}>                <!-- End with a selected image path -->                <{else}>                <!-- Start without a selected image path -->                    <{if $isAdmin == 1}>
-                    <a href="<{$moduleUrl}>/admin/category.php?op=mod&categoryid=<{$category.categoryid}>"><img src="<{$moduleUrl}>/assets/images/links/cat.gif" title="<{$lang_editcategory}>" alt="<{$lang_editcategory}>"/></a>
+                    <a href="<{$publisher_url}>/admin/category.php?op=mod&categoryid=<{$category.categoryid}>"><img src="<{$publisher_url}>/assets/images/links/cat.gif" title="<{$lang_editcategory}>"
+                                                                                                                    alt="<{$lang_editcategory}>"></a>
                     &nbsp; <{else}>
-                    <img src="<{$moduleUrl}>/assets/images/links/cat.gif" alt="<{$category.name}>"/>
+                    <img src="<{$publisher_url}>/assets/images/links/cat.gif" alt="<{$category.name}>">
                     &nbsp; <{/if}>                <!-- End without a selected image path -->                <{/if}>
 
                 <{if $selected_category == $category.categoryid}>
@@ -31,7 +33,7 @@
                     <strong><{$category.categorylink}></strong>
                 <{/if}>
 
-                <br/>
+                <br>
                 <span class="publisher_category_dsc"><{$category.description}></span>
             </td>
             <{if $displayarticlescount}>
@@ -47,13 +49,16 @@
                 <td class="odd" align="left">
                     <div style="padding-left: 10px;">
                         <{if $subcat.image_path}> <{if $isAdmin == 1}>
-                            <a href="<{$moduleUrl}>/admin/category.php?op=mod&categoryid=<{$subcat.categoryid}>"><img src="<{$subcat.image_path}>" title="<{$lang_editcategory}>" alt="<{$lang_editcategory}>" alt="<{$lang_editcategory}>"/></a>
+                            <a href="<{$publisher_url}>/admin/category.php?op=mod&categoryid=<{$subcat.categoryid}>"><img src="<{$subcat.image_path}>" title="<{$lang_editcategory}>"
+                                                                                                                          alt="<{$lang_editcategory}>" alt="<{$lang_editcategory}>"></a>
                             &nbsp;<{$subcat.categorylink}> <{else}>
-                            <img src="<{$subcat.image_path}>" title="<{$lang_editcategory}>" alt="<{$lang_editcategory}>"/>
+                            <img src="<{$subcat.image_path}>" title="<{$lang_editcategory}>" alt="<{$lang_editcategory}>">
                             &nbsp;<{$subcat.categorylink}> <{/if}>                            <!-- End with a selected image path -->                            <{else}>                            <!-- Start without a selected image path -->                                <{if $isAdmin == 1}>
-                            <a href="<{$moduleUrl}>/admin/category.php?op=mod&categoryid=<{$subcat.categoryid}>"><img src="<{$moduleUrl}>/assets/images/links/subcat.gif" title="<{$lang_editcategory}>" alt="<{$lang_editcategory}>" alt="<{$lang_editcategory}>"/></a>
+                            <a href="<{$publisher_url}>/admin/category.php?op=mod&categoryid=<{$subcat.categoryid}>"><img src="<{$publisher_url}>/assets/images/links/subcat.gif"
+                                                                                                                          title="<{$lang_editcategory}>" alt="<{$lang_editcategory}>"
+                                                                                                                          alt="<{$lang_editcategory}>"></a>
                             &nbsp;<{$subcat.categorylink}> <{else}>
-                            <img src="<{$moduleUrl}>/assets/images/links/subcat.gif" title="<{$lang_editcategory}>" alt="<{$lang_editcategory}>"/>
+                            <img src="<{$publisher_url}>/assets/images/links/subcat.gif" title="<{$lang_editcategory}>" alt="<{$lang_editcategory}>">
                             &nbsp;<{$subcat.categorylink}> <{/if}> <{if $displaysubcatdsc == 1}>
                             <span class="publisher_category_dsc"><{$subcat.description}></span>
                         <{/if}> <{/if}>
@@ -67,4 +72,4 @@
             </tr>
         <{/foreach}> <{/if}> <{/foreach}> <!-- End categories loop -->
 </table>
-<div align="right"><{$catnavbar}></div><!-- End sub categories loop -->
+<div align="right"><{$navbar}></div><!-- End sub categories loop -->

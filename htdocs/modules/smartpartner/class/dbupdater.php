@@ -3,11 +3,10 @@
 /**
  * Contains the classes for updating database tables
  *
- * @license GNU
- * @author marcan <marcan@smartfactory.ca>
- * @version $Id: dbupdater.php,v 1.1 2007/06/05 18:32:31 marcan Exp $
- * @link http://www.smartfactory.ca The SmartFactory
- * @package SmartPartner
+ * @license    GNU
+ * @author     marcan <marcan@smartfactory.ca>
+ * @link       http://www.smartfactory.ca The SmartFactory
+ * @package    SmartPartner
  * @subpackage dbUpdater
  */
 
@@ -17,16 +16,13 @@
  * Information about an individual table
  *
  * @package SmartPartner
- * @author marcan <marcan@smartfactory.ca>
- * @link http://www.smartfactory.ca The SmartFactory
+ * @author  marcan <marcan@smartfactory.ca>
+ * @link    http://www.smartfactory.ca The SmartFactory
  */
-if (!defined("XOOPS_ROOT_PATH")) {
-    die("XOOPS root path not defined");
-}
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 class SmartpartnerTable
 {
-
     /**
      * @var string $_name name of the table
      */
@@ -53,9 +49,9 @@ class SmartpartnerTable
     public $_newFields;
 
     /**
-     * @var array $_dropedFields containing fields to be droped
+     * @var array $_droppedFields containing fields to be dropped
      */
-    public $_dropedFields;
+    public $_droppedFields;
 
     /**
      * @var array $_flagForDrop flag table to drop it
@@ -73,10 +69,10 @@ class SmartpartnerTable
      * @param string $name name of the table
      *
      */
-    public function SmartpartnerTable($name)
+    public function __construct($name)
     {
         $this->_name = $name;
-        $this->_data = array();
+        $this->_data = [];
     }
 
     /**
@@ -148,11 +144,11 @@ class SmartpartnerTable
 
         foreach ($this->getData() as $data) {
             $query = sprintf('INSERT INTO %s VALUES (%s)', $this->name(), $data);
-            $ret = $xoopsDB->query($query);
+            $ret   = $xoopsDB->query($query);
             if (!$ret) {
-                echo "<li class='err'>" . sprintf(_AM_SPARTNER_DB_MSG_ADD_DATA_ERR, $this->name()) . "</li>";
+                echo "<li class='err'>" . sprintf(_AM_SPARTNER_DB_MSG_ADD_DATA_ERR, $this->name()) . '</li>';
             } else {
-                echo "<li class='ok'>" . sprintf(_AM_SPARTNER_DB_MSG_ADD_DATA, $this->name()) . "</li>";
+                echo "<li class='ok'>" . sprintf(_AM_SPARTNER_DB_MSG_ADD_DATA, $this->name()) . '</li>';
             }
         }
 
@@ -168,8 +164,8 @@ class SmartpartnerTable
      */
     public function addAlteredField($name, $properties)
     {
-        $field['name'] = $name;
-        $field['properties'] = $properties;
+        $field['name']          = $name;
+        $field['properties']    = $properties;
         $this->_alteredFields[] = $field;
     }
 
@@ -182,9 +178,9 @@ class SmartpartnerTable
      */
     public function addNewField($name, $properties)
     {
-        $field['name'] = $name;
+        $field['name']       = $name;
         $field['properties'] = $properties;
-        $this->_newFields[] = $field;
+        $this->_newFields[]  = $field;
     }
 
     /**
@@ -207,8 +203,8 @@ class SmartpartnerTable
      */
     public function addUpdatedField($name, $value)
     {
-        $field['name'] = $name;
-        $field['value'] = $value;
+        $field['name']          = $name;
+        $field['value']         = $value;
         $this->_updatedFields[] = $field;
     }
 
@@ -240,20 +236,20 @@ class SmartpartnerTable
      * @param string $name name of the field
      *
      */
-    public function addDropedField($name)
+    public function addDroppedField($name)
     {
-        $this->_dropedFields[] = $name;
+        $this->_droppedFields[] = $name;
     }
 
     /**
-     * Get fields that need to be droped
+     * Get fields that need to be dropped
      *
-     * @return array fields that need to be droped
+     * @return array fields that need to be dropped
      *
      */
-    public function getDropedFields()
+    public function getDroppedFields()
     {
-        return $this->_dropedFields;
+        return $this->_droppedFields;
     }
 
     /**
@@ -279,9 +275,9 @@ class SmartpartnerTable
 
         $ret = $xoopsDB->query($query);
         if (!$ret) {
-            echo "<li class='err'>" . sprintf(_AM_SPARTNER_DB_MSG_CREATE_TABLE_ERR, $this->name()) . "</li>";
+            echo "<li class='err'>" . sprintf(_AM_SPARTNER_DB_MSG_CREATE_TABLE_ERR, $this->name()) . '</li>';
         } else {
-            echo "<li class='ok'>" . sprintf(_AM_SPARTNER_DB_MSG_CREATE_TABLE, $this->name()) . "</li>";
+            echo "<li class='ok'>" . sprintf(_AM_SPARTNER_DB_MSG_CREATE_TABLE, $this->name()) . '</li>';
         }
 
         return $ret;
@@ -297,14 +293,14 @@ class SmartpartnerTable
     {
         global $xoopsDB;
 
-        $query = sprintf("DROP TABLE %s", $this->name());
-        $ret = $xoopsDB->query($query);
+        $query = sprintf('DROP TABLE %s', $this->name());
+        $ret   = $xoopsDB->query($query);
         if (!$ret) {
-            echo "<li class='err'>" . sprintf(_AM_SPARTNER_DB_MSG_DROP_TABLE_ERR, $this->name()) . "</li>";
+            echo "<li class='err'>" . sprintf(_AM_SPARTNER_DB_MSG_DROP_TABLE_ERR, $this->name()) . '</li>';
 
             return false;
         } else {
-            echo "<li class='ok'>" . sprintf(_AM_SPARTNER_DB_MSG_DROP_TABLE, $this->name()) . "</li>";
+            echo "<li class='ok'>" . sprintf(_AM_SPARTNER_DB_MSG_DROP_TABLE, $this->name()) . '</li>';
 
             return true;
         }
@@ -323,13 +319,13 @@ class SmartpartnerTable
         $ret = true;
 
         foreach ($this->getAlteredFields() as $alteredField) {
-            $query = sprintf("ALTER TABLE `%s` CHANGE `%s` %s", $this->name(), $alteredField['name'], $alteredField['properties']);
+            $query = sprintf('ALTER TABLE `%s` CHANGE `%s` %s', $this->name(), $alteredField['name'], $alteredField['properties']);
             //echo $query;
             $ret = $ret && $xoopsDB->query($query);
             if (!$ret) {
-                echo "<li class='err'>" . sprintf(_AM_SPARTNER_DB_MSG_CHGFIELD_ERR, $alteredField['name'], $this->name()) . "</li>";
+                echo "<li class='err'>" . sprintf(_AM_SPARTNER_DB_MSG_CHGFIELD_ERR, $alteredField['name'], $this->name()) . '</li>';
             } else {
-                echo "<li class='ok'>" . sprintf(_AM_SPARTNER_DB_MSG_CHGFIELD, $alteredField['name'], $this->name()) . "</li>";
+                echo "<li class='ok'>" . sprintf(_AM_SPARTNER_DB_MSG_CHGFIELD, $alteredField['name'], $this->name()) . '</li>';
             }
         }
 
@@ -348,12 +344,12 @@ class SmartpartnerTable
         $ret = true;
 
         foreach ($this->getNewFields() as $newField) {
-            $query = sprintf("ALTER TABLE `%s` ADD `%s` %s", $this->name(), $newField['name'], $newField['properties']);
-            $ret = $ret && $xoopsDB->query($query);
+            $query = sprintf('ALTER TABLE `%s` ADD `%s` %s', $this->name(), $newField['name'], $newField['properties']);
+            $ret   = $ret && $xoopsDB->query($query);
             if (!$ret) {
-                echo "<li class='err'>" . sprintf(_AM_SPARTNER_DB_MSG_NEWFIELD_ERR, $newField['name'], $this->name()) . "</li>";
+                echo "<li class='err'>" . sprintf(_AM_SPARTNER_DB_MSG_NEWFIELD_ERR, $newField['name'], $this->name()) . '</li>';
             } else {
-                echo "<li class='ok'>" . sprintf(_AM_SPARTNER_DB_MSG_NEWFIELD, $newField['name'], $this->name()) . "</li>";
+                echo "<li class='ok'>" . sprintf(_AM_SPARTNER_DB_MSG_NEWFIELD, $newField['name'], $this->name()) . '</li>';
             }
         }
 
@@ -373,12 +369,12 @@ class SmartpartnerTable
         $ret = true;
 
         foreach ($this->getUpdatedFields() as $updatedField) {
-            $query = sprintf("UPDATE %s SET %s = %s", $this->name(), $updatedField['name'], $updatedField['value']);
-            $ret = $ret && $xoopsDB->query($query);
+            $query = sprintf('UPDATE %s SET %s = %s', $this->name(), $updatedField['name'], $updatedField['value']);
+            $ret   = $ret && $xoopsDB->query($query);
             if (!$ret) {
-                echo "<li class='err'>" . sprintf(_AM_SPARTNER_DB_MSG_UPDATE_TABLE_ERR, $this->name()) . "</li>";
+                echo "<li class='err'>" . sprintf(_AM_SPARTNER_DB_MSG_UPDATE_TABLE_ERR, $this->name()) . '</li>';
             } else {
-                echo "<li class='ok'>" . sprintf(_AM_SPARTNER_DB_MSG_UPDATE_TABLE, $this->name()) . "</li>";
+                echo "<li class='ok'>" . sprintf(_AM_SPARTNER_DB_MSG_UPDATE_TABLE, $this->name()) . '</li>';
             }
         }
 
@@ -397,14 +393,14 @@ class SmartpartnerTable
 
         $ret = true;
 
-        foreach ($this->getdropedFields() as $dropedField) {
-            $query = sprintf("ALTER TABLE %s DROP %s", $this->name(), $dropedField);
+        foreach ($this->getDroppedFields() as $droppedField) {
+            $query = sprintf('ALTER TABLE %s DROP %s', $this->name(), $droppedField);
 
             $ret = $ret && $xoopsDB->query($query);
             if (!$ret) {
-                echo "<li class='err'>" . sprintf(_AM_SPARTNER_DB_MSG_DROPFIELD_ERR, $dropedField, $this->name()) . "</li>";
+                echo "<li class='err'>" . sprintf(_AM_SPARTNER_DB_MSG_DROPFIELD_ERR, $droppedField, $this->name()) . '</li>';
             } else {
-                echo "<li class='ok'>" . sprintf(_AM_SPARTNER_DB_MSG_DROPFIELD, $dropedField, $this->name()) . "</li>";
+                echo "<li class='ok'>" . sprintf(_AM_SPARTNER_DB_MSG_DROPFIELD, $droppedField, $this->name()) . '</li>';
             }
         }
 
@@ -418,14 +414,15 @@ class SmartpartnerTable
  * Class performing the database update for the module
  *
  * @package SmartPartner
- * @author marcan <marcan@smartfactory.ca>
- * @link http://www.smartfactory.ca The SmartFactory
+ * @author  marcan <marcan@smartfactory.ca>
+ * @link    http://www.smartfactory.ca The SmartFactory
  */
-
 class SmartpartnerDbupdater
 {
-
-    public function SmartpartnerDbupdater()
+    /**
+     * SmartpartnerDbupdater constructor.
+     */
+    public function __construct()
     {
     }
 
@@ -467,16 +464,16 @@ class SmartpartnerDbupdater
         global $xoopsDB;
 
         $from = $xoopsDB->prefix($from);
-        $to = $xoopsDB->prefix($to);
+        $to   = $xoopsDB->prefix($to);
 
-        $query = sprintf("ALTER TABLE %s RENAME %s", $from, $to);
-        $ret = $xoopsDB->query($query);
+        $query = sprintf('ALTER TABLE %s RENAME %s', $from, $to);
+        $ret   = $xoopsDB->query($query);
         if (!$ret) {
-            echo "<li class='err'>" . sprintf(_AM_SPARTNER_DB_MSG_RENAME_TABLE_ERR, $from) . "</li>";
+            echo "<li class='err'>" . sprintf(_AM_SPARTNER_DB_MSG_RENAME_TABLE_ERR, $from) . '</li>';
 
             return false;
         } else {
-            echo "<li class='ok'>" . sprintf(_AM_SPARTNER_DB_MSG_RENAME_TABLE, $from, $to) . "</li>";
+            echo "<li class='ok'>" . sprintf(_AM_SPARTNER_DB_MSG_RENAME_TABLE, $from, $to) . '</li>';
 
             return true;
         }
@@ -527,8 +524,8 @@ class SmartpartnerDbupdater
             $ret = $table->updateFieldsValues($table) && $ret;
         }
 
-        // If table has droped field, alter the table
-        if ($table->getDropedFields()) {
+        // If table has dropped field, alter the table
+        if ($table->getDroppedFields()) {
             $ret = $table->dropFields($table) && $ret;
         }
 

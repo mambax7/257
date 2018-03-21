@@ -14,9 +14,10 @@
 // +----------------------------------------------------------------------+
 // | Authors: Jason Rust <jrust@rustyparts.com>                           |
 // +----------------------------------------------------------------------+
-// $Id: Imlib.php 8088 2011-11-06 09:38:12Z beckmi $
+// $Id: Imlib.php 258825 2008-04-30 23:00:13Z cweiske $
 // {{{ requires
 
+//require_once 'Image/Transform.php';
 require_once XOOPS_ROOT_PATH . '/modules/extgallery/class/pear/Image/Transform.php';
 
 // }}}
@@ -55,6 +56,19 @@ class Image_Transform_Driver_Imlib extends Image_Transform
      */
     public $oldHandle = '';
 
+    // }}}
+    // {{{ constructor
+
+    /**
+     * Check settings
+     *
+     * @see __construct()
+     */
+    public function Image_Transform_Imlib()
+    {
+        $this->__construct();
+    }
+
     /**
      * Check settings
      *
@@ -65,7 +79,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform
     public function __construct()
     {
         if (!PEAR::loadExtension('imlib')) {
-            $this->isError(PEAR::raiseError('Couldn\'t find the imlib extension.', true));
+            $this->isError(PEAR::raiseError('Couldn\'t find the imlib extension.', IMAGE_TRANSFORM_ERROR_UNSUPPORTED));
         }
     }
 
@@ -84,7 +98,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform
     {
         $this->image       = $image;
         $this->imageHandle = imlib_load_image($this->image);
-        $result            = $this->_get_image_details($image);
+        $result            =& $this->_get_image_details($image);
         if (PEAR::isError($result)) {
             return $result;
         }
@@ -123,15 +137,16 @@ class Image_Transform_Driver_Imlib extends Image_Transform
             'color' => array(255, 0, 0),
             'font'  => 'Arial.ttf',
             'size'  => '12',
-            'angle' => IMLIB_TEXT_TO_RIGHT);
+            'angle' => IMLIB_TEXT_TO_RIGHT,
+        );
         $params         = array_merge($default_params, $params);
         extract($params);
 
         if (!is_array($color)) {
-            if ($color[0] === '#') {
+            if ('#' == $color[0]) {
                 $color = $this->colorhex2colorarray($color);
             } else {
-                include_once 'Image/Transform/Driver/ColorsDefs.php';
+                require_once 'Image/Transform/Driver/ColorsDefs.php';
                 $color = isset($colornames[$color]) ? $colornames[$color] : false;
             }
         }
@@ -160,12 +175,12 @@ class Image_Transform_Driver_Imlib extends Image_Transform
         $new_y             = imlib_image_get_height($this->imageHandle);
         // when rotating it creates a bigger picture than before so that it can rotate at any angle
         // so for right angles we crop it back to the original size
-        if ($angle % 90 == 0) {
-            if (abs($angle) == 90 || $angle == 270) {
+        if (0 == $angle % 90) {
+            if (90 == abs($angle) || 270 == $angle) {
                 $y_pos = ($new_x - $this->img_x) / 2;
                 $x_pos = ($new_y - $this->img_y) / 2;
-                ++$y_pos;
-                ++$x_pos;
+                $y_pos++;
+                $x_pos++;
                 $this->crop($this->img_y, $this->img_x, $x_pos, $y_pos);
             } else {
                 $x_pos = ($new_x - $this->img_x) / 2;
@@ -196,6 +211,10 @@ class Image_Transform_Driver_Imlib extends Image_Transform
      */
     public function crop($in_cropWidth, $in_cropHeight, $in_cropX, $in_cropY)
     {
+        // Sanity check
+        if (!$this->_intersects($in_cropWidth, $in_cropHeight, $in_cropX, $in_cropY)) {
+            return PEAR::raiseError('Nothing to crop', IMAGE_TRANSFORM_ERROR_OUTOFBOUND);
+        }
         $this->oldHandle   = $this->imageHandle;
         $this->imageHandle = imlib_create_cropped_image($this->imageHandle, $in_cropX, $in_cropY, $in_cropWidth, $in_cropHeight);
         $this->img_x       = $in_cropWidth;
@@ -217,15 +236,15 @@ class Image_Transform_Driver_Imlib extends Image_Transform
      *
      * @return TRUE on success or PEAR Error object on error
      */
-    public function save($filename, $type = '', $quality = null)
+    public function save($filename, $type = '', $quality = 75)
     {
         if (!is_resource($this->imageHandle)) {
             return PEAR::raiseError('Invalid image', true);
         }
 
         $err     = 0;
-        $type    = ($type == '') ? $this->type : $type;
-        $quality = null === $quality ? $this->_options['quality'] : $quality;
+        $type    = ('' == $type) ? $this->type : $type;
+        $quality = (is_null($quality)) ? $this->_options['quality'] : $quality;
         imlib_image_set_format($this->imageHandle, $type);
         $return            = imlib_save_image($this->imageHandle, $filename, $err, $quality);
         $this->imageHandle = $this->oldHandle;
@@ -245,8 +264,8 @@ class Image_Transform_Driver_Imlib extends Image_Transform
      *
      * This method adds the Content-type HTTP header
      *
-     * @param string $type (optional) (JPG,PNG...);
-     * @param int $quality (optional) 75
+     * @param string $type    (optional) (JPG,PNG...);
+     * @param int    $quality (optional) 75
      *
      * @return TRUE on success or PEAR Error object on error
      */
@@ -256,8 +275,8 @@ class Image_Transform_Driver_Imlib extends Image_Transform
             return PEAR::raiseError('Invalid image', true);
         }
 
-        $type    = ($type == '') ? $this->type : $type;
-        $quality = null === $quality ? $this->_options['quality'] : $quality;
+        $type    = ('' == $type) ? $this->type : $type;
+        $quality = (is_null($quality)) ? $this->_options['quality'] : $quality;
         imlib_image_set_format($this->imageHandle, $type);
         $err = 0;
         header('Content-type: ' . $this->getMimeType($type));
@@ -295,8 +314,8 @@ class Image_Transform_Driver_Imlib extends Image_Transform
      *
      * @access private
      *
-     * @param int $new_x     New width
-     * @param int $new_y     New height
+     * @param int   $new_x   New width
+     * @param int   $new_y   New height
      * @param mixed $options Optional parameters
      *
      * @return TRUE on success or PEAR Error object on error
@@ -304,7 +323,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform
      */
     public function _resize($new_x, $new_y, $options = null)
     {
-        if ($this->resized === true) {
+        if (true === $this->resized) {
             return PEAR::raiseError('You have already resized the image without saving it.  Your previous resizing will be overwritten', null, PEAR_ERROR_TRIGGER, E_USER_NOTICE);
         }
 
@@ -331,7 +350,7 @@ class Image_Transform_Driver_Imlib extends Image_Transform
         $this->img_x = imlib_image_get_width($this->imageHandle);
         $this->img_y = imlib_image_get_height($this->imageHandle);
         $this->type  = imlib_image_format($this->imageHandle);
-        $this->type  = ($this->type == '') ? 'png' : $this->type;
+        $this->type  = ('' == $this->type) ? 'png' : $this->type;
 
         return true;
     }

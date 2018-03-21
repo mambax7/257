@@ -10,22 +10,20 @@
  */
 
 /**
- * @copyright       The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright       XOOPS Project (https://xoops.org)
  * @license         http://www.gnu.org/licenses/gpl-2.0.html GNU Public License
  * @package         Mymenus
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
- * @version         $Id: index.php
  */
 
-include_once __DIR__ . '/admin_header.php';
-$currentFile = basename(__FILE__);
+require_once __DIR__ . '/admin_header.php';
 
 // admin navigation
 xoops_cp_header();
-$indexAdmin = new ModuleAdmin();
+$adminObject = \Xmf\Module\Admin::getInstance();
 
-echo $indexAdmin->addNavigation('index.php');
-echo $indexAdmin->renderIndex();
+$adminObject->displayNavigation(basename(__FILE__));
+$adminObject->displayIndex();
 
 include __DIR__ . '/admin_footer.php';

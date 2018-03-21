@@ -1,54 +1,61 @@
 <?php
 /**
- * NewBB 4.3x, the forum module for XOOPS project
+ * NewBB 5.0x,  the forum module for XOOPS project
  *
- * @copyright      XOOPS Project (http://xoops.org)
- * @license        http://www.fsf.org/copyleft/gpl.html GNU public license
+ * @copyright      XOOPS Project (https://xoops.org)
+ * @license        GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
  * @author         Taiwen Jiang (phppp or D.J.) <phppp@users.sourceforge.net>
  * @since          4.00
- * @version        $Id $
  * @package        module::newbb
  */
 
+use Xmf\Request;
+use XoopsModules\Newbb;
+
 ob_start();
-include_once __DIR__ . '/header.php';
+require_once __DIR__ . '/header.php';
 include $GLOBALS['xoops']->path('header.php');
 
-$attach_id = XoopsRequest::getInt('attachid', 0, 'GET');
-$post_id   = XoopsRequest::getInt('post_id', 0, 'GET');
+$attach_id = Request::getInt('attachid', 0, 'GET');
+$post_id   = Request::getInt('post_id', 0, 'GET');
 
 if (!$post_id || !$attach_id) {
-    exit(_MD_NO_SUCH_FILE . ': post_id:' . $post_id . '; attachid' . $attachid);
+    exit(_MD_NEWBB_NO_SUCH_FILE . ': post_id:' . $post_id . '; attachid' . $attachid);
 }
 
-$postHandler = xoops_getModuleHandler('post', 'newbb');
-$forumpost   =& $postHandler->get($post_id);
+///** @var Newbb\PostHandler $postHandler */
+//$postHandler = Newbb\Helper::getInstance()->getHandler('Post');
+
+/** @var Newbb\Post $forumpost */
+$forumpost = $postHandler->get($post_id);
 if (!$approved = $forumpost->getVar('approved')) {
-    exit(_MD_NORIGHTTOVIEW);
+    exit(_MD_NEWBB_NORIGHTTOVIEW);
 }
-$topicHandler = xoops_getModuleHandler('topic', 'newbb');
-$topic_obj    = $topicHandler->getByPost($post_id);
-$topic_id     = $topic_obj->getVar('topic_id');
-if (!$approved = $topic_obj->getVar('approved')) {
-    exit(_MD_NORIGHTTOVIEW);
+///** @var TopicHandler $topicHandler */
+//$topicHandler = Newbb\Helper::getInstance()->getHandler('Topic');
+$topicObject = $topicHandler->getByPost($post_id);
+$topic_id    = $topicObject->getVar('topic_id');
+if (!$approved = $topicObject->getVar('approved')) {
+    exit(_MD_NEWBB_NORIGHTTOVIEW);
 }
-$forumHandler = xoops_getModuleHandler('forum', 'newbb');
-$forum_obj    = $forumHandler->get($topic_obj->getVar('forum_id'));
-if (!$forumHandler->getPermission($forum_obj)) {
-    exit(_MD_NORIGHTTOACCESS);
+///** @var NewbbForumHandler $forumHandler */
+//$forumHandler = Newbb\Helper::getInstance()->getHandler('Forum');
+$forumObject = $forumHandler->get($topicObject->getVar('forum_id'));
+if (!$forumHandler->getPermission($forumObject)) {
+    exit(_MD_NEWBB_NORIGHTTOACCESS);
 }
-if (!$topicHandler->getPermission($forum_obj, $topic_obj->getVar('topic_status'), 'view')) {
-    exit(_MD_NORIGHTTOVIEW);
+if (!$topicHandler->getPermission($forumObject, $topicObject->getVar('topic_status'), 'view')) {
+    exit(_MD_NEWBB_NORIGHTTOVIEW);
 }
 
 $attachments = $forumpost->getAttachment();
 $attach      = $attachments[$attach_id];
 if (!$attach) {
-    exit(_MD_NO_SUCH_FILE);
+    exit(_MD_NEWBB_NO_SUCH_FILE);
 }
 $file_saved = $GLOBALS['xoops']->path($GLOBALS['xoopsModuleConfig']['dir_attachments'] . '/' . $attach['name_saved']);
 if (!file_exists($file_saved)) {
-    exit(_MD_NO_SUCH_FILE);
+    exit(_MD_NEWBB_NO_SUCH_FILE);
 }
 if ($down = $forumpost->incrementDownload($attach_id)) {
     $forumpost->saveAttachment();
@@ -79,7 +86,7 @@ if (!empty($GLOBALS['xoopsModuleConfig']['download_direct'])) {
     header('Expires: 0');
     //header('Content-Type: '.$mimetype);
     header('Content-Type: application/octet-stream');
-    if (preg_match("/MSIE (\d\.\d{1,2})/", $_SERVER['HTTP_USER_AGENT'])) {
+    if (preg_match("/MSIE (\d\.\d{1,2})/", Request::getString('HTTP_USER_AGENT', '', 'SERVER'))) {
         header('Content-Disposition: attachment; filename="' . $file_display . '"');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Pragma: public');

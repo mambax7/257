@@ -9,16 +9,18 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright   {@link http://xoops.org/ XOOPS Project}
+ * @copyright   {@link https://xoops.org/ XOOPS Project}
  * @license     GNU GPL 2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  * @author      Zoullou (http://www.zoullou.net)
  * @package     ExtGallery
- * @version     $Id: public-album.php 10874 2013-01-23 17:23:02Z beckmi $
  */
 
-require dirname(dirname(__DIR__)) . '/mainfile.php';
-include_once XOOPS_ROOT_PATH . '/class/pagenav.php';
-include_once XOOPS_ROOT_PATH . '/modules/extgallery/class/publicPerm.php';
+
+use XoopsModules\Extgallery;
+
+include __DIR__ . '/header.php';
+require_once XOOPS_ROOT_PATH . '/class/pagenav.php';
+//require_once XOOPS_ROOT_PATH . '/modules/extgallery/class/publicPerm.php';
 
 $GLOBALS['xoopsOption']['template_main'] = 'extgallery_public-album.tpl';
 include XOOPS_ROOT_PATH . '/header.php';
@@ -36,14 +38,18 @@ if (!isset($_GET['start'])) {
 
 // HACK BLUETEEN TO SORT PHOTO BY USERS
 //photo_date - photo_title - photo_hits - photo_rating
-if (isset($_GET['sortby']) && ($_GET['sortby'] === 'photo_date' || $_GET['sortby'] === 'photo_title' || $_GET['sortby'] === 'photo_hits' || $_GET['sortby'] === 'photo_rating')) {
+if (isset($_GET['sortby'])
+    && ('photo_date' === $_GET['sortby']
+        || 'photo_title' === $_GET['sortby']
+        || 'photo_hits' === $_GET['sortby']
+        || 'photo_rating' === $_GET['sortby'])) {
     $sortby = $_GET['sortby'];
 } else {
     $sortby = 'photo_date';
 }
 
 //ASC ou DESC
-if (isset($_GET['orderby']) && ($_GET['orderby'] === 'DESC' || $_GET['orderby'] === 'ASC')) {
+if (isset($_GET['orderby']) && ('DESC' === $_GET['orderby'] || 'ASC' === $_GET['orderby'])) {
     $orderby = $_GET['orderby'];
 } else {
     $orderby = $GLOBALS['xoopsModuleConfig']['display_set_order'];
@@ -58,35 +64,35 @@ $SortbyOrderby = $sortby . ' ' . $orderby;
  */
 function convertorderbytrans($SortbyOrderby)
 {
-    $orderbyTrans = array();
-    if ($SortbyOrderby === 'photo_date DESC') {
+    $orderbyTrans = [];
+    if ('photo_date DESC' === $SortbyOrderby) {
         $orderbyTrans = _MD_EXTGALLERY_ORDERBY_DATEASC;
     }
-    if ($SortbyOrderby === 'photo_date ASC') {
+    if ('photo_date ASC' === $SortbyOrderby) {
         $orderbyTrans = _MD_EXTGALLERY_ORDERBY_DATEDESC;
     }
-    if ($SortbyOrderby === 'photo_title ASC') {
+    if ('photo_title ASC' === $SortbyOrderby) {
         $orderbyTrans = _MD_EXTGALLERY_ORDERBY_TITREASC;
     }
-    if ($SortbyOrderby === 'photo_title DESC') {
+    if ('photo_title DESC' === $SortbyOrderby) {
         $orderbyTrans = _MD_EXTGALLERY_ORDERBY_TITREDESC;
     }
-    if ($SortbyOrderby === 'uid ASC') {
+    if ('uid ASC' === $SortbyOrderby) {
         $orderbyTrans = _MD_EXTGALLERY_ORDERBY_DESIGNERASC;
     }
-    if ($SortbyOrderby === 'uid DESC') {
+    if ('uid DESC' === $SortbyOrderby) {
         $orderbyTrans = _MD_EXTGALLERY_ORDERBY_DESIGNERDESC;
     }
-    if ($SortbyOrderby === 'photo_hits DESC') {
+    if ('photo_hits DESC' === $SortbyOrderby) {
         $orderbyTrans = _MD_EXTGALLERY_ORDERBY_HITSASC;
     }
-    if ($SortbyOrderby === 'photo_hits ASC') {
+    if ('photo_hits ASC' === $SortbyOrderby) {
         $orderbyTrans = _MD_EXTGALLERY_ORDERBY_HITSDESC;
     }
-    if ($SortbyOrderby === 'photo_rating DESC') {
+    if ('photo_rating DESC' === $SortbyOrderby) {
         $orderbyTrans = _MD_EXTGALLERY_ORDERBY_NOTEASC;
     }
-    if ($SortbyOrderby === 'photo_rating ASC') {
+    if ('photo_rating ASC' === $SortbyOrderby) {
         $orderbyTrans = _MD_EXTGALLERY_ORDERBY_NOTEDESC;
     }
 
@@ -94,19 +100,19 @@ function convertorderbytrans($SortbyOrderby)
 }
 
 // Check the access permission
-$permHandler = ExtgalleryPublicPermHandler::getHandler();
-if (!$permHandler->isAllowed($xoopsUser, 'public_access', $catId)) {
+$permHandler = Extgallery\PublicPermHandler::getInstance();
+if ((null === $GLOBALS['xoopsUser'] || !is_object($GLOBALS['xoopsUser'])) || !$permHandler->isAllowed($GLOBALS['xoopsUser'], 'public_access', $catId)) {
     redirect_header('index.php', 3, _NOPERM);
-    exit;
 }
-
-$catHandler   = xoops_getModuleHandler('publiccat', 'extgallery');
-$photoHandler = xoops_getModuleHandler('publicphoto', 'extgallery');
+/** @var Extgallery\PublicCategoryHandler $catHandler */
+$catHandler = Extgallery\Helper::getInstance()->getHandler('PublicCategory');
+/** @var Extgallery\PublicPhotoHandler $photoHandler */
+$photoHandler = Extgallery\Helper::getInstance()->getHandler('PublicPhoto');
 
 $catObj = $catHandler->getCat($catId);
 
 if (null === $catObj) {
-    include(XOOPS_ROOT_PATH . '/footer.php');
+    include XOOPS_ROOT_PATH . '/footer.php';
     exit;
 }
 
@@ -119,13 +125,13 @@ $xoopsTpl->assign('cat', $cat);
 $catPath = $photoHandler->objectToArray($catHandler->getPath($catId));
 $xoopsTpl->assign('catPath', $catPath);
 
-$photos = $photoHandler->objectToArray($photoHandler->getAlbumPhotoPage($catId, $start, $sortby, $orderby), array('uid')); //xoops - blueteen - tri de l'affichage
+$photos = $photoHandler->objectToArray($photoHandler->getAlbumPhotoPage($catId, $start, $sortby, $orderby), ['uid']); //xoops - blueteen - tri de l'affichage
 
 // Plugin traitement
-$plugin  = xoops_getModuleHandler('plugin', 'extgallery');
+$plugin  = Extgallery\Helper::getInstance()->getHandler('Plugin');
 $nbPhoto = count($photos);
-for ($i = 0; $i < $nbPhoto; ++$i) {
-    $params = array('catId' => $catId, 'photoId' => $photos[$i]['photo_id'], 'link' => array());
+foreach ($photos as $i => $iValue) {
+    $params = ['catId' => $catId, 'photoId' => $photos[$i]['photo_id'], 'link' => []];
     $plugin->triggerEvent('photoAlbumLink', $params);
     $photos[$i]['link'] = $params['link'];
 }
@@ -133,7 +139,7 @@ for ($i = 0; $i < $nbPhoto; ++$i) {
 $k = $xoopsModuleConfig['nb_column'] - (count($photos) % $xoopsModuleConfig['nb_column']);
 if ($k != $xoopsModuleConfig['nb_column']) {
     for ($i = 0; $i < $k; ++$i) {
-        $photos[] = array();
+        $photos[] = [];
     }
 }
 
@@ -146,10 +152,10 @@ foreach (array_keys($photos) as $i) {
 // END HACK DATE BY MAGE : DISPLAY PUBLICATION DATE
 
 $xoopsTpl->assign('photos', $photos);
+/** @var xos_opal_Theme $xoTheme */
 
-$pageNav = new XoopsPageNav($photoHandler->getAlbumCount($catId), $xoopsModuleConfig['nb_column'] * $xoopsModuleConfig['nb_line'], $start, 'start', 'id=' . $catId . '&orderby=' . $orderby . '&sortby=' . $sortby); //xoops - blueteen - tri de l'affichage
+$pageNav = new \XoopsPageNav($photoHandler->getAlbumCount($catId), $xoopsModuleConfig['nb_column'] * $xoopsModuleConfig['nb_line'], $start, 'start', 'id=' . $catId . '&orderby=' . $orderby . '&sortby=' . $sortby); //xoops - blueteen - tri de l'affichage
 $xoopsTpl->assign('pageNav', $pageNav->renderNav());
-
 if (isset($catObj)) {
     $xoopsTpl->assign('xoops_pagetitle', $catObj->getVar('cat_name'));
     $xoTheme->addMeta('meta', 'description', $catObj->getVar('cat_desc'));
@@ -157,7 +163,7 @@ if (isset($catObj)) {
 
 $jquery = $xoopsModuleConfig['enable_jquery'];
 $xoopsTpl->assign('jquery', $jquery);
-if ($jquery == 1 && $ajaxeffect !== 'none') {
+if (1 == $jquery && 'none' !== $ajaxeffect) {
     $xoTheme->addScript('browse.php?Frameworks/jquery/jquery.js');
     switch ($ajaxeffect) {
         case 'lightbox':
@@ -196,7 +202,11 @@ $attributes['href']  = XOOPS_URL . '/modules/extgallery/public-rss.php';
 $xoTheme->addMeta('link', $rel, $attributes);
 $xoTheme->addStylesheet('modules/extgallery/assets/css/style.css');
 
-$lang = array('hits' => _MD_EXTGALLERY_HITS, 'comments' => _MD_EXTGALLERY_COMMENTS, 'rate_score' => _MD_EXTGALLERY_RATING_SCORE);
+$lang = [
+    'hits'       => _MD_EXTGALLERY_HITS,
+    'comments'   => _MD_EXTGALLERY_COMMENTS,
+    'rate_score' => _MD_EXTGALLERY_RATING_SCORE
+];
 $xoopsTpl->assign('lang', $lang);
 
 $xoopsTpl->assign('enableExtra', $xoopsModuleConfig['display_extra_field']);
@@ -211,9 +221,9 @@ $xoopsTpl->assign('extgallerySortbyOrderby', _MD_EXTGALLERY_ORDERBY . convertord
 
 //DNPROSSI - VOLTAN - added preferences option
 //  enable_info, enable_submitter_lnk, enable_photo_hits
-if ($xoopsModuleConfig['info_view'] === 'album' || $xoopsModuleConfig['info_view'] === 'both') {
-    if ($xoopsModuleConfig['pubusr_info_view'] === 'public' || $xoopsModuleConfig['pubusr_info_view'] === 'both') {
-        if ($xoopsModuleConfig['enable_info'] == 0) {
+if ('album' === $xoopsModuleConfig['info_view'] || 'both' === $xoopsModuleConfig['info_view']) {
+    if ('public' === $xoopsModuleConfig['pubusr_info_view'] || 'both' === $xoopsModuleConfig['pubusr_info_view']) {
+        if (0 == $xoopsModuleConfig['enable_info']) {
             $enable_info = $xoopsModuleConfig['enable_info'];
         } else {
             $enable_info = 1;
@@ -255,4 +265,4 @@ $xoopsTpl->assign('album_prettyphoto_theme', $xoopsModuleConfig['album_prettypho
 $xoopsTpl->assign('album_prettyphoto_slidspeed', $xoopsModuleConfig['album_prettyphoto_slidspe']);
 $xoopsTpl->assign('album_prettyphoto_autoplay', $xoopsModuleConfig['album_prettyphoto_autopla']);
 
-include(XOOPS_ROOT_PATH . '/footer.php');
+include XOOPS_ROOT_PATH . '/footer.php';

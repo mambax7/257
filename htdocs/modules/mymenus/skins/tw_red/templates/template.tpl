@@ -16,7 +16,7 @@
                                         <span class="menu-left"></span>
                                         <span class="menu-mid">
                                             <{if $menu.image}>
-                                                <img src="<{$menu.image}>" alt="<{$menu.alt_title}>"/>
+                                                <img src="<{$menu.image}>" alt="<{$menu.alt_title}>">
                                             <{/if}>
                                             <{$menu.title}>
                                         </span>
@@ -29,9 +29,11 @@
                                                     <{if $sub.pid == $menu.id}>
                                                         <{if ($xlanguage && (($menu.title|strstr:$myStr) || ($menu.image|strstr:$myStr)) || !$xlanguage)}>
                                                             <li<{if $sub.class}> class="<{$sub.css}>"<{/if}>>
-                                                                <a href="<{$sub.link}>" target="<{$sub.target}>" title="<{$sub.alt_title}>">
+                                                                <a href="<{$sub.link}>" target="<{$sub.target}>"
+                                                                   title="<{$sub.alt_title}>">
                                                                     <{if $sub.image}>
-                                                                        <img src="<{$sub.image}>" alt="<{$sub.alt_title}>"/>
+                                                                        <img src="<{$sub.image}>"
+                                                                             alt="<{$sub.alt_title}>">
                                                                     <{/if}>
                                                                     <{$sub.title}>
                                                                 </a>

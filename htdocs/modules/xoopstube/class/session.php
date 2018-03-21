@@ -1,4 +1,5 @@
-<?php
+<?php namespace XoopsModules\Xoopstube;
+
 /*
  You may not change or alter any portion of this comment or credits
  of supporting developers from this source code or any supporting source code
@@ -9,7 +10,7 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 /**
- *  XoopstubeSession class
+ *  Session class
  *
  * @copyright       The XUUPS Project http://sourceforge.net/projects/xuups/
  * @license         http://www.fsf.org/copyleft/gpl.html GNU public license
@@ -17,19 +18,21 @@
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
  * @author          Harry Fuecks (PHP Anthology Volume II)
- * @version         $Id: session.php 10283 2012-11-28 13:39:36Z trabis $
  */
-// defined('XOOPS_ROOT_PATH') || die('XOOPS Root Path not defined');
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
-include_once dirname(__DIR__) . '/include/common.php';
+use XoopsModules\Xoopstube;
+use XoopsModules\Xoopstube\Common;
+
+require_once __DIR__ . '/../include/common.php';
 
 /**
- * Class XoopstubeSession
+ * Class Session
  */
-class XoopstubeSession
+class Session
 {
     /**
-     * Session constructor<br />
+     * Session constructor<br>
      * Starts the session with session_start()
      * <strong>Note:</strong> that if the session has already started,
      * session_start() does nothing
@@ -91,20 +94,21 @@ class XoopstubeSession
      */
     public function destroy()
     {
-        $_SESSION = array();
+        $_SESSION = [];
         session_destroy();
     }
 
     /**
-     * @return XoopstubeSession
+     * @return Session
      */
-    public static function &getInstance()
+    public static function getInstance()
     {
-        static $_sess;
-        if (!isset($_sess)) {
-            $_sess = new XoopstubeSession();
+        static $instance;
+        if (null === $instance) {
+            $instance = new static();
         }
 
-        return $_sess;
+
+        return $instance;
     }
 }

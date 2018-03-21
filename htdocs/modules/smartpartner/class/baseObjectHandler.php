@@ -3,12 +3,11 @@
 /**
  * smartpartnerBaseObjectHandler class
  *
- * @author Nazar Aziz <nazar@panthersoftware.com>
- * @access public
+ * @author  Nazar Aziz <nazar@panthersoftware.com>
+ * @access  public
  * @package xhelp
  */
-
-class smartpartnerBaseObjectHandler extends XoopsObjectHandler
+class SmartpartnerBaseObjectHandler extends XoopsObjectHandler
 {
     /**
      * Database connection
@@ -28,9 +27,9 @@ class smartpartnerBaseObjectHandler extends XoopsObjectHandler
     /**
      * Constructor
      *
-     * @param object $db reference to a xoopsDB object
+     * @param object|XoopsDatabase $db reference to a xoopsDB object
      */
-    public function init(&$db)
+    public function init(\XoopsDatabase $db)
     {
         $this->_db = $db;
     }
@@ -40,27 +39,27 @@ class smartpartnerBaseObjectHandler extends XoopsObjectHandler
      * @return object {@link smartpartnerBaseObject}
      * @access public
      */
-    public function &create()
+    public function create()
     {
         return new $this->classname();
     }
 
     /**
      * retrieve an object from the database, based on. use in child classes
-     * @param  int   $id ID
+     * @param  int $id ID
      * @return mixed object if id exists, false if not
      * @access public
      */
     public function &get($id)
     {
-        $id = intval($id);
+        $id = (int)$id;
         if ($id > 0) {
-            $sql = $this->_selectQuery(new Criteria($this->_idfield, $id));
+            $sql = $this->_selectQuery(new \Criteria($this->_idfield, $id));
             if (!$result = $this->_db->query($sql)) {
                 return false;
             }
             $numrows = $this->_db->getRowsNum($result);
-            if ($numrows == 1) {
+            if (1 == $numrows) {
                 $obj = new $this->classname($this->_db->fetchArray($result));
 
                 return $obj;
@@ -80,10 +79,10 @@ class smartpartnerBaseObjectHandler extends XoopsObjectHandler
      */
     public function &getObjects($criteria = null, $id_as_key = false)
     {
-        $ret = array();
+        $ret   = [];
         $limit = $start = 0;
-        $sql = $this->_selectQuery($criteria);
-        $id = $this->_idfield;
+        $sql   = $this->_selectQuery($criteria);
+        $id    = $this->_idfield;
 
         if (isset($criteria)) {
             $limit = $criteria->getLimit();
@@ -97,7 +96,7 @@ class smartpartnerBaseObjectHandler extends XoopsObjectHandler
         }
 
         // Add each returned record to the result array
-        while ($myrow = $this->_db->fetchArray($result)) {
+        while (false !== ($myrow = $this->_db->fetchArray($result))) {
             $obj = new $this->classname($myrow);
             if (!$id_as_key) {
                 $ret[] =& $obj;
@@ -110,10 +109,15 @@ class smartpartnerBaseObjectHandler extends XoopsObjectHandler
         return $ret;
     }
 
-    public function insert(&$obj, $force = false)
+    /**
+     * @param  XoopsObject $obj
+     * @param  bool        $force
+     * @return bool
+     */
+    public function insert(\XoopsObject $obj, $force = false)
     {
         // Make sure object is of correct type
-        if (strcasecmp($this->classname, get_class($obj)) != 0) {
+        if (0 != strcasecmp($this->classname, get_class($obj))) {
             return false;
         }
 
@@ -130,7 +134,7 @@ class smartpartnerBaseObjectHandler extends XoopsObjectHandler
         // Create query for DB update
         if ($obj->isNew()) {
             // Determine next auto-gen ID for table
-            $id = $this->_db->genId($this->_db->prefix($this->_dbtable) . '_uid_seq');
+            $id  = $this->_db->genId($this->_db->prefix($this->_dbtable) . '_uid_seq');
             $sql = $this->_insertQuery($obj);
         } else {
             $sql = $this->_updateQuery($obj);
@@ -166,9 +170,9 @@ class smartpartnerBaseObjectHandler extends XoopsObjectHandler
     public function _selectQuery($criteria = null)
     {
         $sql = sprintf('SELECT * FROM %s', $this->_db->prefix($this->_dbtable));
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
-            if ($criteria->getSort() != '') {
+            if ('' != $criteria->getSort()) {
                 $sql .= ' ORDER BY ' . $criteria->getSort() . '
                     ' . $criteria->getOrder();
             }
@@ -187,10 +191,10 @@ class smartpartnerBaseObjectHandler extends XoopsObjectHandler
     public function getCount($criteria = null)
     {
         $sql = 'SELECT COUNT(*) FROM ' . $this->_db->prefix($this->_dbtable);
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
         }
-        if (!$result =& $this->_db->query($sql)) {
+        if (!$result = $this->_db->query($sql)) {
             return 0;
         }
         list($count) = $this->_db->fetchRow($result);
@@ -206,9 +210,9 @@ class smartpartnerBaseObjectHandler extends XoopsObjectHandler
      * @return bool   deletion successful?
      * @access public
      */
-    public function delete(&$obj, $force = false)
+    public function delete($obj, $force = false)
     {
-        if (strcasecmp($this->classname, get_class($obj)) != 0) {
+        if (0 != strcasecmp($this->classname, get_class($obj))) {
             return false;
         }
 
@@ -236,7 +240,7 @@ class smartpartnerBaseObjectHandler extends XoopsObjectHandler
     public function deleteAll($criteria = null)
     {
         $sql = 'DELETE FROM ' . $this->_db->prefix($this->_dbtable);
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
         }
         if (!$result = $this->_db->query($sql)) {
@@ -249,6 +253,8 @@ class smartpartnerBaseObjectHandler extends XoopsObjectHandler
     /**
      * Assign a value to 1 field for tickets matching a set of conditions
      *
+     * @param         $fieldname
+     * @param         $fieldvalue
      * @param  object $criteria {@link CriteriaElement}
      * @return bool   FALSE if update failed
      * @access    public
@@ -256,8 +262,8 @@ class smartpartnerBaseObjectHandler extends XoopsObjectHandler
     public function updateAll($fieldname, $fieldvalue, $criteria = null)
     {
         $set_clause = is_numeric($fieldvalue) ? $fieldname . ' = ' . $fieldvalue : $fieldname . ' = ' . $this->_db->quoteString($fieldvalue);
-        $sql = 'UPDATE ' . $this->_db->prefix($this->_dbtable) . ' SET ' . $set_clause;
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        $sql        = 'UPDATE ' . $this->_db->prefix($this->_dbtable) . ' SET ' . $set_clause;
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
         }
         if (!$result = $this->_db->query($sql)) {
@@ -267,17 +273,29 @@ class smartpartnerBaseObjectHandler extends XoopsObjectHandler
         return true;
     }
 
-    public function _insertQuery(&$obj)
+    /**
+     * @param $obj
+     * @return bool
+     */
+    public function _insertQuery($obj)
     {
         return false;
     }
 
-    public function _updateQuery(&$obj)
+    /**
+     * @param $obj
+     * @return bool
+     */
+    public function _updateQuery($obj)
     {
         return false;
     }
 
-    public function _deleteQuery(&$obj)
+    /**
+     * @param $obj
+     * @return bool
+     */
+    public function _deleteQuery($obj)
     {
         return false;
     }
@@ -285,16 +303,16 @@ class smartpartnerBaseObjectHandler extends XoopsObjectHandler
     /**
      * Singleton - prevent multiple instances of this class
      *
-     * @param  object &$db {@link XoopsHandlerFactory}
-     * @return object {@link pagesCategoryHandler}
+     * @param  object|XoopsDatabase $db
+     * @return object               <a href='psi_element://pagesCategoryHandler'>pagesCategoryHandler</a>
      * @access public
      */
-    public function &getInstance(&$db)
+    public function getInstance(\XoopsDatabase $db)
     {
         static $instance;
-        if (!isset($instance)) {
+        if (null === $instance) {
             $classname = $this->classname . 'Handler';
-            $instance = new $classname($db);
+            $instance  = new $classname($db);
         }
 
         return $instance;

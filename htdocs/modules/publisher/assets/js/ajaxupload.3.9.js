@@ -554,7 +554,7 @@
 
                 if (// For Safari
                 iframe.src == "javascript:'%3Chtml%3E%3C/html%3E';" ||
-                    // For FF, IE
+                // For FF, IE
                 iframe.src == "javascript:'<html></html>';") {
                     // First time around, do not delete.
                     // We reload to blank page, so that reloading main page

@@ -1,7 +1,5 @@
 <?php
-/**
- * ****************************************************************************
- * Module généré par TDMCreate de la TDM "http://www.tdmxoops.net"
+/*
  * ****************************************************************************
  * xsitemap - MODULE FOR XOOPS CMS
  * Copyright (c) Urbanspaceman (http://www.takeaweb.it)
@@ -12,34 +10,42 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
- * @copyright       Urbanspaceman (http://www.takeaweb.it)
- * @license         GPL
- * @package         xsitemap
- * @author          Urbanspaceman (http://www.takeaweb.it)
- *
- * Version : 1.00:
- * ****************************************************************************
  */
+/**
+ * @package    module\Xsitemap\frontside
+ * @author     Urbanspaceman (http://www.takeaweb.it)
+ * @copyright  Urbanspaceman (http://www.takeaweb.it)
+ * @copyright  XOOPS Project
+ * @license    http://www.fsf.org/copyleft/gpl.html GNU public license
+ * @link       https://xoops.org XOOPS
+ * @since      1.00
+ **/
 
-include "../../mainfile.php";
+
+require_once __DIR__ . '/header.php';
+
+$moduleDirName = basename(__DIR__);
+require_once __DIR__ . '/../../mainfile.php';
 
 //template assign
-$xoopsOption['template_main'] = 'xsitemap_index.html' ;
+$GLOBALS['xoopsOption']['template_main'] = 'xsitemap_index.tpl';
 
-include_once XOOPS_ROOT_PATH . "/header.php";
-include_once(XOOPS_ROOT_PATH . "/class/tree.php");
-include_once XOOPS_ROOT_PATH . "/modules/xsitemap/class/plugin.php";
-include_once XOOPS_ROOT_PATH . "/modules/xsitemap/include/functions.php";
-include_once(XOOPS_ROOT_PATH . "/modules/xsitemap/class/xsitemap_class.php");
+require_once $GLOBALS['xoops']->path('header.php');
+require_once $GLOBALS['xoops']->path('class/tree.php');
+//require_once $GLOBALS['xoops']->path('modules/' . $moduleDirName . '/class/plugin.php');
+//require_once $GLOBALS['xoops']->path('modules/' . $moduleDirName . '/class/Utility.php');
+//require_once $GLOBALS['xoops']->path('modules/' . $moduleDirName . '/class/DummyObject.php');
 
-$xsitemap_configs = $xoopsModuleConfig ;
+$xsitemap_configs = $GLOBALS['xoopsModuleConfig'];
 
-            $xsitemap_show = xsitemap_show_sitemap();
+$xsitemap_show = $utility::generateSitemap();
 
-            $xoopsTpl->assign('xsitemap', $xsitemap_show);
-            $xoopsTpl->assign('num_col', $xsitemap_configs['columns_number']) ;
-            $xoopsTpl->assign('show_sublink', $xsitemap_configs['show_sublink']) ;
-            $xoopsTpl->assign('show_subcategories', $xsitemap_configs['show_subcategories']) ;
+$GLOBALS['xoTheme']->addStylesheet($GLOBALS['xoops']->url('browse.php?modules/' . $moduleDirName . '/assets/css/style.css'));
+$GLOBALS['xoopsTpl']->assign([
+                                 'xsitemap'           => $xsitemap_show,
+                                 'num_col'            => $xsitemap_configs['columns_number'],
+                                 'show_sublink'       => $xsitemap_configs['show_sublink'],
+                                 'show_subcategories' => $xsitemap_configs['show_subcategories']
+                             ]);
 
-include_once XOOPS_ROOT_PATH."/footer.php";
+require_once $GLOBALS['xoops']->path('footer.php');

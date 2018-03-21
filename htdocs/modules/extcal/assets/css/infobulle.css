@@ -15,11 +15,9 @@
 
 .tooltip54:hover span {
     border-radius: 5px 5px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
-    -webkit-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
-    -moz-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px #000000;
+    box-shadow: 5px 5px #000000;
     font-family: Calibri, Tahoma, Geneva, sans-serif;
     position: absolute;
     left: 1em;
@@ -107,7 +105,7 @@
     border: 1px solid #2BB0D7;
 }
 
-.info {
+.ecinfo {
     background: #9FDAEE;
     border: 1px solid #2BB0D7;
 }
@@ -118,7 +116,7 @@
 }
 
 .custom img:first-child {
-    src: url(assets/images/Critical.png);
+    src: url(images/Critical.png);
     height: 48px;
     width: 48px;
 }

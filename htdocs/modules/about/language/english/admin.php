@@ -10,13 +10,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright      The XOOPS Co.Ltd. http://www.xoops.com.cn
- * @copyright      XOOPS Project (http://xoops.org)
+ * @copyright      XOOPS Project (https://xoops.org)
  * @license        GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
  * @package        about
  * @since          1.0.0
  * @author         Mengjue Shao <magic.shao@gmail.com>
  * @author         Susheng Yang <ezskyyoung@gmail.com>
- * @version        $Id: admin.php 1 2010-2-9 ezsky$
  */
 
 // _LANGCODE: zh-CN
@@ -46,7 +45,7 @@ define('_AM_ABOUT_CATEGORY_SELECT', 'Select category');
 define('_AM_ABOUT_PAGE_LINK_TEXT', 'External links');
 define('_AM_ABOUT_PAGE_LINK_BLANK', 'Display in new window');
 define('_AM_ABOUT_PAGE_STATUS', 'Publish?');
-define('_AM_ABOUT_PAGE_DARFT', 'Draft');
+define('_AM_ABOUT_PAGE_DRAFT', 'Draft');
 define('_AM_ABOUT_PAGE_SUB', 'Publish');
 define('_AM_ABOUT_TEMPLATE_SELECT', 'Template');
 define('_AM_ABOUT_PAGE_IMAGE', 'Header Image');
@@ -60,3 +59,13 @@ define('_AM_ABOUT_PAGE_TYPE', 'Type');
 define('_AM_ABOUT_PAGE_STATUS_LIST', 'Status');
 define('_AM_ABOUT_PAGE_MENU', 'Menu');
 define('_AM_ABOUT_PAGE_AUTHOR', 'Editor');
+
+// Install/Uninstall/Update
+define('_AM_ABOUT_DELETED', '%s deleted');
+
+// error msgs
+define('_AM_ABOUT_ERROR_BAD_DEL_PATH', 'Could not delete %s directory');
+define('_AM_ABOUT_ERROR_BAD_PHP', 'This module requires PHP version %s+ (%s installed)');
+define('_AM_ABOUT_ERROR_BAD_XOOPS', 'This module requires XOOPS %s+ (%s installed)');
+define('_AM_ABOUT_ERROR_BAD_REMOVE', 'Could not delete %s file');
+define('_AM_ABOUT_ERROR_BAD_UPLOAD_DIR', 'Could not create the upload directory');

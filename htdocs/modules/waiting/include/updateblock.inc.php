@@ -1,95 +1,97 @@
 <?php
-// $Id: updateblock.inc.php,v 1.1 2005/04/05 02:48:40 gij Exp $
+/*
+ You may not change or alter any portion of this comment or credits of
+ supporting developers from this source code or any supporting source code
+ which is considered copyrighted (c) material of the original comment or credit
+ authors.
 
-    if (! defined('XOOPS_ROOT_PATH')) {
-        exit ;
-    }
+ This program is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ */
+/**
+ * Module: Waiting
+ *
+ * @category        Module
+ * @package         waiting
+ * @author          XOOPS Module Development Team
+ * @copyright       {@link https://xoops.org 2001-2016 XOOPS Project}
+ * @license         {@link http://www.fsf.org/copyleft/gpl.html GNU public license}
+ * @link            https://xoops.org XOOPS
+ */
+
+if ((!defined('XOOPS_ROOT_PATH')) || !($GLOBALS['xoopsUser'] instanceof \XoopsUser) || !$GLOBALS['xoopsUser']->IsAdmin()) {
+    exit('Restricted Access - ' . basename($_SERVER['PHP_SELF']) . PHP_EOL);
+}
+/**
+ *
+ * Waiting Block installation update
+ * @param XoopsModule $module  {@see XoopsModule}
+ * @param integer     $version currently installed module version
+ *
+ * @return bool success
+ */
+function xoops_module_update_waiting($module, $version)
+{
+    return true;  // force return - following code is really only needed for XOOPS < 2.3
 
     // Keep Block option values when update (by nobunobu)
-    global $xoopsDB;
-    $query = "SELECT mid FROM ".$xoopsDB->prefix('modules')." WHERE dirname='".$modversion['dirname']."' ";
-    $result = $xoopsDB->query($query);
-    $record= $xoopsDB->fetcharray($result);
-    if ($record) {
-        $mid = $record['mid'];
-        $count = count($modversion['blocks']);
-        /* $sql = "SELECT * FROM ".$xoopsDB->prefix('newblocks')." WHERE mid=".$mid." AND block_type ='D'";
-        $fresult = $xoopsDB->query($sql);
-        $n_funcnum = $count;
-        while ($fblock = $xoopsDB->fetchArray($fresult)) {
-            $bnum = 0;
-            for ($i = 1 ; $i <= $count ; $i++) {
-                if (($modversion['blocks'][$i]['file'] == $fblock['func_file']) and ($modversion['blocks'][$i]['show_func'] == $fblock['show_func'])) {
-                    $bnum = $i;
-                    break;
-                }
-            }
-            if($bnum) {
-                $n_funcnum++;
-                $modversion['blocks'][$n_funcnum]['file'] = $fblock['func_file'];
-                $modversion['blocks'][$n_funcnum]['name'] = $fblock['name'];
-                $modversion['blocks'][$n_funcnum]['description'] = $fblock['name'];
-                $modversion['blocks'][$n_funcnum]['show_func'] = $fblock['show_func'];
-                $modversion['blocks'][$n_funcnum]['edit_func'] = $fblock['edit_func'];
-                $modversion['blocks'][$n_funcnum]['template'] = $fblock['template'];
-                if ($fblock['options']) {
-                    $old_vals=explode("|",$fblock['options']);
-                    $def_vals=explode("|",$modversion['blocks'][$bnum]['options']);
-                    if (count($old_vals) == count($def_vals)) {
-                        // the number of parameters is not changed
-                        $modversion['blocks'][$n_funcnum]['options'] = $fblock['options'];
-                        $local_msgs[] = "Option's values of the cloned block <b>".$fblock['name']."</b> will be kept. (value = <b>".$fblock['options']."</b>)";
-                    } else if (count($old_vals) < count($def_vals)){
-                        // the number of parameters is increased
-                        for ($j=0; $j < count($old_vals); $j++) {
-                            $def_vals[$j] = $old_vals[$j];
-                        }
-                        $modversion['blocks'][$n_funcnum]['options'] = implode("|",$def_vals);
-                        $local_msgs[] = "Option's values of the cloned block <b>".$fblock['name']."</b> will be kept and new options are added. (value = <b>".$modversion['blocks'][$fblock['func_num']]['options']."</b>)";
-                    } else {
-                        $modversion['blocks'][$n_funcnum]['options'] = implode("|",$def_vals);
-                        $local_msgs[] = "Option's values of the cloned block <b>".$fblock['name']."</b> will be reset to the default, because of some decrease of options. (value = <b>".$modversion['blocks'][$n_funcnum]['options']."</b>)";
-                    }
-                }
-                $sql = "UPDATE ".$xoopsDB->prefix('newblocks')." SET func_num='$n_funcnum' WHERE mid=".$mid." AND bid='".$fblock['bid']."'";
-                $iret = $xoopsDB->query($sql);
+    $mid = $module->mid();
+    if ($mid) {
+        $configHandler       = xoops_getHandler('config');
+        $waitingModuleConfig = $configHandler->getConfigsByCat(0, $mid);
 
-            }
-        } */
+        $count = count($waitingModuleConfig['blocks']);
 
-        $sql = "SELECT * FROM ".$xoopsDB->prefix('newblocks')." WHERE mid=".$mid." AND block_type <>'D' AND func_num > $count";
-        $fresult = $xoopsDB->query($sql);
-        while ($fblock = $xoopsDB->fetchArray($fresult)) {
-            $local_msgs[] = "Non Defined Block <b>".$fblock['name']."</b> will be deleted";
-            $sql = "DELETE FROM ".$xoopsDB->prefix('newblocks')." WHERE bid='".$fblock['bid']."'";
-            $iret = $xoopsDB->query($sql);
+        $blockHandler = xoops_getHandler('block');
+        $criteria     = new \CriteriaCompo();
+        $criteria->add(new \Criteria('mid', $mid));
+        $criteria->add(new \Criteria('block_type', 'D'));
+        $criteria->add(new \Criteria('func_num', $count, '>'));
+        $blockObjs = $blockHandler->getAll($criteria);
+
+        foreach ($blockObjs as $blockObj) {
+            $local_msgs[] = "Non Defined Block <b>{$fblock['name']}</b> will be deleted";
+            $success      = $blockHandler->delete($blockObj); // remove the invalid block
         }
 
-        for ($i = 1 ; $i <= $count ; $i++) {
-            $sql = "SELECT name,options FROM ".$xoopsDB->prefix('newblocks')." WHERE mid=".$mid." AND func_num=".$i." AND show_func='".addslashes($modversion['blocks'][$i]['show_func'])."' AND func_file='".addslashes($modversion['blocks'][$i]['file'])."'";
-            $fresult = $xoopsDB->query($sql);
-            $fblock = $xoopsDB->fetchArray($fresult);
-            if (isset($fblock['options'])) {
-                $old_vals=explode("|", $fblock['options']);
-                $def_vals=explode("|", $modversion['blocks'][$i]['options']);
+        $fieldsArray = ['func_num', 'name', 'options'];
+        $criteria    = new \CriteriaCompo();
+        $criteria->add(new \Criteria('mid', $mid));
+        //        $criteria->add(new \Criteria('func_num', $i));
+        $criteria->add(new \Criteria('show_func'), addslashes($waitingModuleConfig['blocks'][$i]['show_func']));
+        $criteria->add(new \Criteria('func_file', addslashes($waitingModuleConfig['blocks'][$i]['file'])));
+        $fblockObjs = $blockHandler->getObjects($criteria);
+        foreach ($fblockObjs as $fblockObj) {
+            if (!empty($fblockObj->options())) {
+                $old_vals = explode('|', $fblockObj->getVar('options'));
+                $def_vals = explode('|', $modversion['blocks'][$fblockObj->getVar('func_num')]['options']);
                 if (count($old_vals) == count($def_vals)) {
-                    $modversion['blocks'][$i]['options'] = $fblock['options'];
-                    $local_msgs[] = "Option's values of the block <b>".$fblock['name']."</b> will be kept. (value = <b>".$fblock['options']."</b>)";
+                    $modversion['blocks'][$fblock->getVar('func_num')]['options'] = $fblockObj->getVar('options');
+                    $local_msgs[]                                                 = "Option's values of the block <b>" . $fblockObj->getVar('name') . '</b> will be kept. (value = <b>' . $fblockObj->getVar('options') . '</b>)';
                 } elseif (count($old_vals) < count($def_vals)) {
-                    for ($j=0; $j < count($old_vals); $j++) {
-                        $def_vals[$j] = $old_vals[$j];
-                    }
-                    $modversion['blocks'][$i]['options'] = implode("|", $def_vals);
-                    $local_msgs[] = "Option's values of the block <b>".$fblock['name']."</b> will be kept and new option(s) are added. (value = <b>".$modversion['blocks'][$i]['options']."</b>)";
+                    $def_vals                                                        = array_merge($old_vals, $def_vals); //merges prev. values with new - older are preserved
+                    $modversion['blocks'][$fblockObj->getVar('func_num')]['options'] = implode('|', $def_vals);
+                    $local_msgs[]                                                    = "Option's values of the block "
+                                                                                       . '<b>'
+                                                                                       . $fblockObj->getVar('name')
+                                                                                       . '</b> '
+                                                                                       . 'will be kept and new option(s) are added. (value = '
+                                                                                       . '<b>'
+                                                                                       . $waitingModuleConfig['blocks'][$fblockObj->getVar('options')]
+                                                                                       . '</b>)';
                 } else {
-                    $local_msgs[] = "Option's values of the block <b>".$fblock['name']."</b> will be reset to the default, because of some decrease of options. (value = <b>".$modversion['blocks'][$i]['options']."</b>)";
+                    $local_msgs[] = "Option's values of the block " . '<b>' . $fblockObj->getVar('name') . '</b> ' . 'will be reset to the default, because of some decrease of options. (value = ' . '<b>' . $waitingModuleConfig['blocks'][$fblockObj->getVar('func_num')]['options'] . '</b>)';
                 }
             }
         }
     }
 
-    global $msgs , $myblocksadmin_parsed_updateblock ;
-    if (! empty($msgs) && empty($myblocksadmin_parsed_updateblock)) {
-        $msgs = array_merge($msgs, $local_msgs) ;
-        $myblocksadmin_parsed_updateblock = true ;
+    global $msgs, $myblocksadmin_parsed_updateblock;
+    if (!empty($msgs) && empty($myblocksadmin_parsed_updateblock)) {
+        $msgs                             = array_merge($msgs, $local_msgs);
+        $myblocksadmin_parsed_updateblock = true;
     }
+
+    return true;  //@todo: for now force success - eventually send 'actual' results
+}

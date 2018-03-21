@@ -10,7 +10,7 @@ $loading  = $json->encode(t('Loading image %s...', '#%curr%'));
 $errortxt = $json->encode(t('The image %s could not be loaded.', '#%curr%</a>'));
 
 ?>
-<?php if ($images !== false): ?>
+<?php if (false !== $images): ?>
     <ul id="<?php echo $magnific_type . '-' . $bID ?>" class="<?php echo $magnific_type . '-gallery' . ' ' . $cssFrameworkClass; ?>">
         <?php foreach ($images as $image): ?>
             <?php $thumbnail = $ih->getThumbnail($image, (int)$controller->thumbnailWidth, (int)$controller->thumbnailHeight); ?>
@@ -18,7 +18,7 @@ $errortxt = $json->encode(t('The image %s could not be loaded.', '#%curr%</a>'))
             <?php $fileDescription = $image->getDescription(); ?>
             <li>
                 <a class="<?php echo $cssAnchorClass; ?>" title="<?php echo $fileDescription; ?>" href="<?php echo $image->getRelativePath() ?>">
-                    <img class="<?php echo $cssImageClass; ?>" src="<?php echo $thumbnail->src ?>" width="<?php echo $thumbnailWidth; ?>" height="<?php echo $thumbnailHeight; ?>" alt="<?php echo $fileDescription; ?>"/>
+                    <img class="<?php echo $cssImageClass; ?>" src="<?php echo $thumbnail->src ?>" width="<?php echo $thumbnailWidth; ?>" height="<?php echo $thumbnailHeight; ?>" alt="<?php echo $fileDescription; ?>">
                 </a>
             </li>
         <?php endforeach; ?>

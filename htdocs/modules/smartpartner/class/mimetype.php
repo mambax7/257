@@ -1,15 +1,25 @@
 <?php
-//$Id: mimetype.php,v 1.3 2007/09/19 17:53:35 felix Exp $
-//  ------------------------------------------------------------------------ //
-//                XOOPS - PHP Content Management System                      //
-//                    Copyright (c) 2000 XOOPS.org                           //
-//                       <http://www.xoops.org/>                             //
-//  ------------------------------------------------------------------------ //
-if (!defined("XOOPS_ROOT_PATH")) {
-    die("XOOPS root path not defined");
-}
-include_once XOOPS_ROOT_PATH . '/modules/smartpartner/include/common.php';
-require_once(SMARTPARTNER_ROOT_PATH . 'class/baseObjectHandler.php');
+/*
+ * You may not change or alter any portion of this comment or credits
+ * of supporting developers from this source code or any supporting source code
+ * which is considered copyrighted (c) material of the original comment or credit authors.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ */
+
+/**
+ * @copyright      {@link https://xoops.org/ XOOPS Project}
+ * @license        {@link http://www.gnu.org/licenses/gpl-2.0.html GNU GPL 2 or later}
+ * @package
+ * @since
+ * @author         XOOPS Development Team
+ */
+
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
+require_once XOOPS_ROOT_PATH . '/modules/smartpartner/include/common.php';
+require_once SMARTPARTNER_ROOT_PATH . 'class/baseObjectHandler.php';
 
 /**
  * smartpartnerMimetype class
@@ -17,19 +27,22 @@ require_once(SMARTPARTNER_ROOT_PATH . 'class/baseObjectHandler.php');
  * Information about an individual mimetype
  *
  * <code>
- * $hMime =& xoops_getModuleHandler('mimetype', 'smartpartner');
+ * $hMime = xoops_getModuleHandler('mimetype', 'smartpartner');
  * $mimetype =& $hMime->get(1);
  * $mime_id = $mimetype->getVar('id');
  * </code>
  *
- * @author Eric Juden <ericj@epcusa.com>
- * @access public
+ * @author  Eric Juden <ericj@epcusa.com>
+ * @access  public
  * @package smartpartner
  */
-
 class smartpartnerMimetype extends XoopsObject
 {
-    public function smartpartnerMimetype($id = null)
+    /**
+     * smartpartnerMimetype constructor.
+     * @param null $id
+     */
+    public function __construct($id = null)
     {
         $this->initVar('mime_id', XOBJ_DTYPE_INT, null, false);
         $this->initVar('mime_ext', XOBJ_DTYPE_TXTBOX, null, true, 60);
@@ -48,7 +61,10 @@ class smartpartnerMimetype extends XoopsObject
     }
 } // end of class
 
-class smartpartnerMimetypeHandler extends smartpartnerBaseObjectHandler
+/**
+ * Class smartpartnerMimetypeHandler
+ */
+class SmartpartnerMimetypeHandler extends SmartpartnerBaseObjectHandler
 {
     /**
      * Name of child class
@@ -69,29 +85,29 @@ class smartpartnerMimetypeHandler extends smartpartnerBaseObjectHandler
     /**
      * Constructor
      *
-     * @param object $db reference to a xoopsDB object
+     * @param object|XoopsDatabase $db reference to a xoopsDB object
      */
-    public function smartpartnerMimetypeHandler(&$db)
+    public function __construct(\XoopsDatabase $db)
     {
         parent::init($db);
     }
 
     /**
      * retrieve a mimetype object from the database
-     * @param  int    $id ID of mimetype
+     * @param  int $id ID of mimetype
      * @return object {@link smartpartnerMimetype}
      * @access    public
      */
     public function &get($id)
     {
-        $id = intval($id);
+        $id = (int)$id;
         if ($id > 0) {
-            $sql = $this->_selectQuery(new Criteria('mime_id', $id));
+            $sql = $this->_selectQuery(new \Criteria('mime_id', $id));
             if (!$result = $this->_db->query($sql)) {
                 return false;
             }
             $numrows = $this->_db->getRowsNum($result);
-            if ($numrows == 1) {
+            if (1 == $numrows) {
                 $obj = new $this->classname($this->_db->fetchArray($result));
 
                 return $obj;
@@ -110,14 +126,14 @@ class smartpartnerMimetypeHandler extends smartpartnerBaseObjectHandler
      */
     public function &getObjects($criteria = null)
     {
-        $ret = array();
+        $ret   = [];
         $limit = $start = 0;
-        $sql = $this->_selectQuery($criteria);
+        $sql   = $this->_selectQuery($criteria);
         if (isset($criteria)) {
             $limit = $criteria->getLimit();
             $start = $criteria->getStart();
         }
-        //echo "<br />$sql<br />";exit;
+        //echo "<br>$sql<br>";exit;
         $result = $this->_db->query($sql, $limit, $start);
         // if no records from db, return empty array
         if (!$result) {
@@ -125,8 +141,8 @@ class smartpartnerMimetypeHandler extends smartpartnerBaseObjectHandler
         }
 
         // Add each returned record to the result array
-        while ($myrow = $this->_db->fetchArray($result)) {
-            $obj = new $this->classname($myrow);
+        while (false !== ($myrow = $this->_db->fetchArray($result))) {
+            $obj   = new $this->classname($myrow);
             $ret[] =& $obj;
             unset($obj);
         }
@@ -137,25 +153,26 @@ class smartpartnerMimetypeHandler extends smartpartnerBaseObjectHandler
     /**
      * Format mime_types into array
      *
+     * @param  null $mime_ext
      * @return array array of mime_types
      * @access public
      */
     public function getArray($mime_ext = null)
     {
-        /*global $smartpartner_isAdmin, $xoopsUser, $xoopsModule;
+        /*global $smartPartnerIsAdmin, $xoopsUser, $xoopsModule;
 
           $ret = array();
-          if ($xoopsUser && !$smartpartner_isAdmin){
+          if ($xoopsUser && !$smartPartnerIsAdmin) {
               // For user uploading
-              $crit = new CriteriaCompo(new Criteria('mime_user', 1));   //$sql = sprintf("SELECT * FROM %s WHERE mime_user=1", $xoopsDB->prefix('smartpartner_mimetypes'));
-          } elseif ($xoopsUser && $smartpartner_isAdmin){
+              $crit = new \CriteriaCompo(new \Criteria('mime_user', 1));   //$sql = sprintf("SELECT * FROM %s WHERE mime_user=1", $xoopsDB->prefix('smartpartner_mimetypes'));
+          } elseif ($xoopsUser && $smartPartnerIsAdmin) {
               // For admin uploading
-              $crit = new CriteriaCompo(new Criteria('mime_admin', 1));  //$sql = sprintf("SELECT * FROM %s WHERE mime_admin=1", $xoopsDB->prefix('smartpartner_mimetypes'));
+              $crit = new \CriteriaCompo(new \Criteria('mime_admin', 1));  //$sql = sprintf("SELECT * FROM %s WHERE mime_admin=1", $xoopsDB->prefix('smartpartner_mimetypes'));
           } else {
               return $ret;
           }
-          if($mime_ext){
-              $crit->add(new Criteria('mime_ext', $mime_ext));
+          if ($mime_ext) {
+              $crit->add(new \Criteria('mime_ext', $mime_ext));
           }
           $result =& $this->getObjects($crit);
 
@@ -164,16 +181,16 @@ class smartpartnerMimetypeHandler extends smartpartnerBaseObjectHandler
               return $ret;
           }
 
-          foreach($result as $mime){
-              $line = split(" ", $mime->getVar('mime_types'));
-              foreach($line as $row){
+          foreach ($result as $mime) {
+              $line = explode(" ", $mime->getVar('mime_types'));
+              foreach ($line as $row) {
                   $allowed_mimetypes[] = array('type'=>$row, 'ext'=>$mime->getVar('mime_ext'));
               }
           }*/
         global $xoopsModuleConfig;
-        $mymetypesArray = include_once(SMARTPARTNER_ROOT_PATH . "/include/mimetypes.inc.php");
+        $mymetypesArray = require_once SMARTPARTNER_ROOT_PATH . '/include/mimetypes.inc.php';
         foreach (explode('|', $xoopsModuleConfig['allowed_ext']) as $ext) {
-            $allowed_mimetypes[] = array('type' => $mymetypesArray[$ext], 'ext' => $ext);
+            $allowed_mimetypes[] = ['type' => $mymetypesArray[$ext], 'ext' => $ext];
         }
 
         return $allowed_mimetypes;
@@ -187,8 +204,8 @@ class smartpartnerMimetypeHandler extends smartpartnerBaseObjectHandler
      */
     public function checkMimeTypes($post_field)
     {
-        $fname = $_FILES[$post_field]['name'];
-        $farray = explode('.', $fname);
+        $fname      = $_FILES[$post_field]['name'];
+        $farray     = explode('.', $fname);
         $fextension = strtolower($farray[count($farray) - 1]);
 
         $allowed_mimetypes = $this->getArray();
@@ -210,6 +227,7 @@ class smartpartnerMimetypeHandler extends smartpartnerBaseObjectHandler
     /**
      * Create a "select" SQL query
      * @param  object $criteria {@link CriteriaElement} to match
+     * @param  bool   $join
      * @return string SQL query
      * @access    private
      */
@@ -218,12 +236,12 @@ class smartpartnerMimetypeHandler extends smartpartnerBaseObjectHandler
         if (!$join) {
             $sql = sprintf('SELECT * FROM %s', $this->_db->prefix($this->_dbtable));
         } else {
-            echo "no need for join...";
+            echo 'no need for join...';
             exit;
         }
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
-            if ($criteria->getSort() != '') {
+            if ('' != $criteria->getSort()) {
                 $sql .= ' ORDER BY ' . $criteria->getSort() . ' ' . $criteria->getOrder();
             }
         }
@@ -231,39 +249,48 @@ class smartpartnerMimetypeHandler extends smartpartnerBaseObjectHandler
         return $sql;
     }
 
-    public function _insertQuery(&$obj)
+    /**
+     * @param $obj
+     * @return string
+     */
+    public function _insertQuery($obj)
     {
         // Copy all object vars into local variables
         foreach ($obj->cleanVars as $k => $v) {
             ${$k} = $v;
         }
 
-        $sql = sprintf("INSERT INTO %s (mime_id, mime_ext, mime_types, mime_name, mime_admin, mime_user) VALUES
-               (%u, %s, %s, %s, %u, %u)", $this->_db->prefix($this->_dbtable), $mime_id, $this->_db->quoteString($mime_ext),
-                       $this->_db->quoteString($mime_types), $this->_db->quoteString($mime_name), $mime_admin, $mime_user);
+        $sql = sprintf('INSERT INTO %s (mime_id, mime_ext, mime_types, mime_name, mime_admin, mime_user) VALUES
+               (%u, %s, %s, %s, %u, %u)', $this->_db->prefix($this->_dbtable), $mime_id, $this->_db->quoteString($mime_ext), $this->_db->quoteString($mime_types), $this->_db->quoteString($mime_name), $mime_admin, $mime_user);
 
         return $sql;
     }
 
-    public function _updateQuery(&$obj)
+    /**
+     * @param $obj
+     * @return string
+     */
+    public function _updateQuery($obj)
     {
         // Copy all object vars into local variables
         foreach ($obj->cleanVars as $k => $v) {
             ${$k} = $v;
         }
 
-        $sql = sprintf("UPDATE %s SET mime_ext = %s, mime_types = %s, mime_name = %s, mime_admin = %u, mime_user = %u WHERE
-               mime_id = %u", $this->_db->prefix($this->_dbtable), $this->_db->quoteString($mime_ext),
-                       $this->_db->quoteString($mime_types), $this->_db->quoteString($mime_name), $mime_admin, $mime_user, $mime_id);
+        $sql = sprintf('UPDATE %s SET mime_ext = %s, mime_types = %s, mime_name = %s, mime_admin = %u, mime_user = %u WHERE
+               mime_id = %u', $this->_db->prefix($this->_dbtable), $this->_db->quoteString($mime_ext), $this->_db->quoteString($mime_types), $this->_db->quoteString($mime_name), $mime_admin, $mime_user, $mime_id);
 
         return $sql;
     }
 
-    public function _deleteQuery(&$obj)
+    /**
+     * @param $obj
+     * @return string
+     */
+    public function _deleteQuery($obj)
     {
         $sql = sprintf('DELETE FROM %s WHERE mime_id = %u', $this->_db->prefix($this->_dbtable), $obj->getVar('mime_id'));
 
         return $sql;
     }
 } // end class
-;

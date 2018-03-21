@@ -9,18 +9,18 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright       XOOPS Project (http://xoops.org)
+ * @copyright       XOOPS Project (https://xoops.org)
  * @license         http://www.gnu.org/licenses/gpl-2.0.html GNU Public License
  * @package         xlanguage
  * @author          trabis <lusopoemas@gmail.com>
  */
 
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 /**
  * Xlanguage core preloads
  *
- * @copyright       XOOPS Project (http://xoops.org)
+ * @copyright       XOOPS Project (https://xoops.org)
  * @license         http://www.gnu.org/licenses/gpl-2.0.html GNU Public License
  * @author          trabis <lusopoemas@gmail.com>
  */
@@ -31,20 +31,16 @@ class XlanguageCorePreload extends XoopsPreloadItem
      */
     public static function eventCoreIncludeCommonLanguage($args)
     {
-        if (XlanguageCorePreload::isActive()) {
-            global $xoopsConfig;
-            include_once dirname(__DIR__) . '/api.php';
-        }
+        global $xoopsConfig;
+        require_once __DIR__ . '/../api.php';
     }
 
+    // to add PSR-4 autoloader
     /**
-     * @return bool
+     * @param $args
      */
-    public static function isActive()
+    public static function eventCoreIncludeCommonEnd($args)
     {
-        $module_handler = xoops_getHandler('module');
-        $module = $module_handler->getByDirname('xlanguage');
-
-        return ($module && $module->getVar('isactive'));
+        include __DIR__ . '/autoloader.php';
     }
 }

@@ -1,118 +1,112 @@
 <?php
-// $Id: submit.php 11819 2013-07-09 18:21:40Z zyspec $
-//  ------------------------------------------------------------------------ //
-//                XOOPS - PHP Content Management System                      //
-//                    Copyright (c) 2000 XOOPS.org                           //
-//                       <http://www.xoops.org/>                             //
-// ------------------------------------------------------------------------- //
-//  This program is free software; you can redistribute it and/or modify     //
-//  it under the terms of the GNU General Public License as published by     //
-//  the Free Software Foundation; either version 2 of the License, or        //
-//  (at your option) any later version.                                      //
-//                                                                           //
-//  You may not change or alter any portion of this comment or credits       //
-//  of supporting developers from this source code or any supporting         //
-//  source code which is considered copyrighted (c) material of the          //
-//  original comment or credit authors.                                      //
-//                                                                           //
-//  This program is distributed in the hope that it will be useful,          //
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of           //
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            //
-//  GNU General Public License for more details.                             //
-//                                                                           //
-//  You should have received a copy of the GNU General Public License        //
-//  along with this program; if not, write to the Free Software              //
-//  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
-//  ------------------------------------------------------------------------ //
-include 'header.php';
-$myts =& MyTextSanitizer::getInstance();// MyTextSanitizer object
-include_once XOOPS_ROOT_PATH . '/include/xoopscodes.php';
+/*
+ * You may not change or alter any portion of this comment or credits
+ * of supporting developers from this source code or any supporting source code
+ * which is considered copyrighted (c) material of the original comment or credit authors.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ */
 
-include_once './class/utility.php';
+/**
+ * @copyright    {@link https://xoops.org/ XOOPS Project}
+ * @license      {@link http://www.gnu.org/licenses/gpl-2.0.html GNU GPL 2 or later}
+ * @package
+ * @since
+ * @author       XOOPS Development Team
+ */
+
+include __DIR__ . '/header.php';
+$myts = \MyTextSanitizer::getInstance();// MyTextSanitizer object
+require_once XOOPS_ROOT_PATH . '/include/xoopscodes.php';
+
+require_once __DIR__ . '/class/Utility.php';
 //xoops_load('utility', $xoopsModule->getVar('dirname'));
 
 if (empty($xoopsUser) and !$xoopsModuleConfig['anonpost']) {
     redirect_header(XOOPS_URL . '/user.php', 2, _MD_MYLINKS_MUSTREGFIRST);
-    exit();
 }
 
 if (!empty($_POST['submit'])) {
 
-//    include_once XOOPS_ROOT_PATH . '/class/module.errorhandler.php';
-//    $eh = new ErrorHandler; //ErrorHandler object
+    //    require_once XOOPS_ROOT_PATH . '/class/module.errorhandler.php';
+    //    $eh = new ErrorHandler; //ErrorHandler object
     $submitter = !empty($xoopsUser) ? $xoopsUser->getVar('uid') : 0;
 
-    $msg = "";
+    $msg = '';
     switch (true) {
         case (empty($_POST['title'])):
             $msg .= _MD_MYLINKS_ERRORTITLE;
+            // no break
         case (empty($_POST['url'])):
             $msg .= _MD_MYLINKS_ERRORURL;
+            // no break
         case (empty($_POST['message'])):
             $msg .= _MD_MYLINKS_ERRORDESC;
     }
     if ('' !== $msg) {
-        mylinksUtility::show_message($msg);
+        MylinksUtility::show_message($msg);
         exit();
     }
 
     $title        = $myts->addSlashes($_POST['title']);
     $url          = $myts->addSlashes($url);
     $notify       = !empty($_POST['notify']) ? 1 : 0;
-    $cid          = mylinksUtility::mylinks_cleanVars($_POST, 'cid', 0, 'int', array('min'=>0));
+    $cid          = MylinksUtility::mylinks_cleanVars($_POST, 'cid', 0, 'int', ['min' => 0]);
     $description  = $myts->addSlashes($_POST['message']);
     $date         = time();
-    $newid        = $xoopsDB->genId($xoopsDB->prefix('mylinks_links').'_lid_seq');
+    $newid        = $xoopsDB->genId($xoopsDB->prefix('mylinks_links') . '_lid_seq');
     $mylinksAdmin = (is_object($xoopsUser) && $xoopsUser->isAdmin($xoopsModule->mid())) ? true : false;
     $status       = ((1 == $xoopsModuleConfig['autoapprove']) || $mylinksAdmin) ? 1 : 0;
 
-    $sql = sprintf("INSERT INTO %s (lid, cid, title, url, logourl, submitter, status, date, hits, rating, votes, comments) VALUES (%u, %u, '%s', '%s', '%s', %u, %u, %u, %u, %u, %u, %u)", $xoopsDB->prefix("mylinks_links"), $newid, $cid, $title, $url, ' ', $submitter, $status, $date, 0, 0, 0, 0);
+    $sql    = sprintf("INSERT INTO %s (lid, cid, title, url, logourl, submitter, STATUS, DATE, hits, rating, votes, comments) VALUES (%u, %u, '%s', '%s', '%s', %u, %u, %u, %u, %u, %u, %u)", $xoopsDB->prefix('mylinks_links'), $newid, $cid, $title, $url, ' ', $submitter, $status, $date, 0, 0, 0, 0);
     $result = $xoopsDB->query($sql);
     if (!$result) {
-        mylinksUtility::show_message(_MD_MYLINKS_DBNOTUPDATED);
+        MylinksUtility::show_message(_MD_MYLINKS_DBNOTUPDATED);
         exit();
     }
     if (0 == $newid) {
         $newid = $xoopsDB->getInsertId();
     }
-    $sql = sprintf("INSERT INTO %s (lid, description) VALUES (%u, '%s')", $xoopsDB->prefix("mylinks_text"), $newid, $description);
+    $sql    = sprintf("INSERT INTO %s (lid, description) VALUES (%u, '%s')", $xoopsDB->prefix('mylinks_text'), $newid, $description);
     $result = $xoopsDB->query($sql);
     if (!$result) {
-        mylinksUtility::show_message(_MD_MYLINKS_DBNOTUPDATED);
+        MylinksUtility::show_message(_MD_MYLINKS_DBNOTUPDATED);
         exit();
     }
-        // Notify of new link (anywhere) and new link in category.
-    $notification_handler =& xoops_gethandler('notification');
-    $tags = array();
-    $tags['LINK_NAME'] = $title;
-    $tags['LINK_URL'] = XOOPS_URL . "/modules/" . $xoopsModule->getVar('dirname') . "/singlelink.php?cid={$cid}&amp;lid={$newid}";
-    $sql = "SELECT title FROM " . $xoopsDB->prefix("mylinks_cat") . " WHERE cid={$cid}";
-    $result = $xoopsDB->query($sql);
-    $row = $xoopsDB->fetchArray($result);
+    // Notify of new link (anywhere) and new link in category.
+    $notificationHandler   = xoops_getHandler('notification');
+    $tags                  = [];
+    $tags['LINK_NAME']     = $title;
+    $tags['LINK_URL']      = XOOPS_URL . '/modules/' . $xoopsModule->getVar('dirname') . "/singlelink.php?cid={$cid}&amp;lid={$newid}";
+    $sql                   = 'SELECT title FROM ' . $xoopsDB->prefix('mylinks_cat') . " WHERE cid={$cid}";
+    $result                = $xoopsDB->query($sql);
+    $row                   = $xoopsDB->fetchArray($result);
     $tags['CATEGORY_NAME'] = $row['title'];
-    $tags['CATEGORY_URL'] = XOOPS_URL . "/modules/" . $xoopsModule->getVar('dirname') . "/viewcat.php?cid={$cid}";
+    $tags['CATEGORY_URL']  = XOOPS_URL . '/modules/' . $xoopsModule->getVar('dirname') . "/viewcat.php?cid={$cid}";
     if (1 == $xoopsModuleConfig['autoapprove']) {
-        $notification_handler->triggerEvent('global', 0, 'new_link', $tags);
-        $notification_handler->triggerEvent('category', $cid, 'new_link', $tags);
-        redirect_header('index.php', 2, _MD_MYLINKS_RECEIVED . "<br />" . _MD_MYLINKS_ISAPPROVED . "");
+        $notificationHandler->triggerEvent('global', 0, 'new_link', $tags);
+        $notificationHandler->triggerEvent('category', $cid, 'new_link', $tags);
+        redirect_header('index.php', 2, _MD_MYLINKS_RECEIVED . '<br>' . _MD_MYLINKS_ISAPPROVED . '');
     } else {
         $tags['WAITINGLINKS_URL'] = XOOPS_URL . '/modules/' . $xoopsModule->getVar('dirname') . '/admin/index.php?op=listNewLinks';
-        $notification_handler->triggerEvent('global', 0, 'link_submit', $tags);
-        $notification_handler->triggerEvent('category', $cid, 'link_submit', $tags);
+        $notificationHandler->triggerEvent('global', 0, 'link_submit', $tags);
+        $notificationHandler->triggerEvent('category', $cid, 'link_submit', $tags);
         if ($notify) {
-            include_once XOOPS_ROOT_PATH . '/include/notification_constants.php';
-            $notification_handler->subscribe('link', $newid, 'approve', XOOPS_NOTIFICATION_MODE_SENDONCETHENDELETE);
+            require_once XOOPS_ROOT_PATH . '/include/notification_constants.php';
+            $notificationHandler->subscribe('link', $newid, 'approve', XOOPS_NOTIFICATION_MODE_SENDONCETHENDELETE);
         }
         redirect_header('index.php', 2, _MD_MYLINKS_RECEIVED);
     }
     exit();
 } else {
-    include_once XOOPS_ROOT_PATH . '/class/tree.php';
-    $mylinksCatHandler =& xoops_getmodulehandler('category', $xoopsModule->getVar('dirname'));
+    require_once XOOPS_ROOT_PATH . '/class/tree.php';
+    $mylinksCatHandler = xoops_getModuleHandler('category', $xoopsModule->getVar('dirname'));
     $catObjs           = $mylinksCatHandler->getAll();
-    $myCatTree         = new XoopsObjectTree($catObjs, 'cid', 'pid');
+    $myCatTree         = new \XoopsObjectTree($catObjs, 'cid', 'pid');
 
-    $xoopsOption['template_main'] = 'mylinks_submit.html';
+    $GLOBALS['xoopsOption']['template_main'] = 'mylinks_submit.tpl';
     include XOOPS_ROOT_PATH . '/header.php';
     //wanikoo
     $xoTheme->addStylesheet('browse.php?' . mylinksGetStylePath('mylinks.css', 'include'));
@@ -150,7 +144,7 @@ if (!empty($_POST['submit'])) {
     foreach ($GLOBALS['mylinks_allowed_theme'] as $mymylinkstheme) {
         $mymylinkstheme_options .= "<option value='{$mymylinkstheme}'";
         if ($mymylinkstheme == $GLOBALS['mylinks_theme']) {
-            $mymylinkstheme_options .= " selected='selected'";
+            $mymylinkstheme_options .= ' selected';
         }
         $mymylinkstheme_options .= ">{$mymylinkstheme}</option>";
     }
@@ -160,10 +154,10 @@ if (!empty($_POST['submit'])) {
     $xoopsTpl->assign('mylinksthemeoption', $mylinkstheme_select);
 
     //wanikoo search
-    if (file_exists(XOOPS_ROOT_PATH."/language/".$xoopsConfig['language']."/search.php")) {
-        include_once XOOPS_ROOT_PATH."/language/".$xoopsConfig['language']."/search.php";
+    if (file_exists(XOOPS_ROOT_PATH . '/language/' . $xoopsConfig['language'] . '/search.php')) {
+        require_once XOOPS_ROOT_PATH . '/language/' . $xoopsConfig['language'] . '/search.php';
     } else {
-        include_once XOOPS_ROOT_PATH . '/language/english/search.php';
+        require_once XOOPS_ROOT_PATH . '/language/english/search.php';
     }
     $xoopsTpl->assign('lang_all', _SR_ALL);
     $xoopsTpl->assign('lang_any', _SR_ANY);
@@ -171,7 +165,7 @@ if (!empty($_POST['submit'])) {
     $xoopsTpl->assign('lang_search', _SR_SEARCH);
     $xoopsTpl->assign('module_id', $xoopsModule->getVar('mid'));
     //category head
-    $catarray = array();
+    $catarray = [];
     if ($mylinks_show_letters) {
         $catarray['letters'] = ml_wfd_letters();
     }
@@ -180,5 +174,5 @@ if (!empty($_POST['submit'])) {
     }
     $xoopsTpl->assign('catarray', $catarray);
 
-    include_once XOOPSMYLINKPATH . '/footer.php';
+    require_once XOOPSMYLINKPATH . '/footer.php';
 }

@@ -11,37 +11,35 @@
 /**
  * Mymenus module
  *
- * @copyright       The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright       XOOPS Project (https://xoops.org)
  * @license         GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
  * @package         mymenus
  * @since           1.5
  * @author          Xoops Development Team
- * @version         svn:$id$
  */
 
-defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 // This must contain the name of the folder in which reside mymenus
-define("MYMENUS_DIRNAME", basename(dirname(__DIR__)));
-define("MYMENUS_URL", XOOPS_URL . '/modules/' . MYMENUS_DIRNAME);
-define("MYMENUS_ROOT_PATH", XOOPS_ROOT_PATH . '/modules/' . MYMENUS_DIRNAME);
-define("MYMENUS_IMAGES_URL", MYMENUS_URL . '/assets/images');
-define("MYMENUS_ADMIN_URL", MYMENUS_URL . '/admin');
-define("MYMENUS_ICONS_URL", MYMENUS_URL . '/assets/images/icons');
+define('MYMENUS_DIRNAME', basename(dirname(__DIR__)));
+define('MYMENUS_URL', XOOPS_URL . '/modules/' . MYMENUS_DIRNAME);
+define('MYMENUS_ROOT_PATH', XOOPS_ROOT_PATH . '/modules/' . MYMENUS_DIRNAME);
+define('MYMENUS_IMAGES_URL', MYMENUS_URL . '/assets/images');
+define('MYMENUS_ADMIN_URL', MYMENUS_URL . '/admin');
+define('MYMENUS_ICONS_URL', MYMENUS_URL . '/assets/images/icons');
 
 xoops_loadLanguage('common', MYMENUS_DIRNAME);
 
-include_once MYMENUS_ROOT_PATH . '/class/mymenus.php'; // MymenusMymenus class
-include_once MYMENUS_ROOT_PATH . '/include/config.php'; // IN PROGRESS
-include_once MYMENUS_ROOT_PATH . '/include/functions.php';
-include_once MYMENUS_ROOT_PATH . '/include/constants.php';
+require_once MYMENUS_ROOT_PATH . '/class/mymenus.php'; // MymenusMymenus class
+require_once MYMENUS_ROOT_PATH . '/include/config.php'; // IN PROGRESS
+require_once MYMENUS_ROOT_PATH . '/include/functions.php';
+require_once MYMENUS_ROOT_PATH . '/include/constants.php';
 
 xoops_load('XoopsUserUtility');
-xoops_load('XoopsRequest');
 xoops_load('XoopsFormLoader');
 
 // MyTextSanitizer object
-$myts = MyTextSanitizer::getInstance();
+$myts = \MyTextSanitizer::getInstance();
 
 $debug   = false;
 $mymenus = MymenusMymenus::getInstance($debug);
@@ -57,8 +55,13 @@ if (is_object($mymenus->getModule())) {
 $xoopsModule = $mymenus->getModule();
 
 // Load Xoops handlers
-$moduleHandler       = xoops_gethandler('module');
-$memberHandler       = xoops_gethandler('member');
-$notificationHandler = xoops_gethandler('notification');
-$gpermHandler        = xoops_gethandler('groupperm');
-$configHandler       = xoops_gethandler('config');
+/** @var XoopsModuleHandler $moduleHandler */
+$moduleHandler       = xoops_getHandler('module');
+/** @var XoopsMemberHandler $memberHandler */
+$memberHandler       = xoops_getHandler('member');
+/** @var XoopsNotificationHandler $notificationHandler */
+$notificationHandler = xoops_getHandler('notification');
+/** @var XoopsGroupPermHandler $gpermHandler */
+$gpermHandler        = xoops_getHandler('groupperm');
+/** @var XoopsConfigHandler $configHandler */
+$configHandler       = xoops_getHandler('config');

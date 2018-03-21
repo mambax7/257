@@ -1,21 +1,20 @@
-<?php
+<?php namespace XoopsModules\Extcal;
 
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 /**
- * Class ExtcalConfig
+ * Class Config.
  */
-class ExtcalConfig
+class Config
 {
-
     /**
-     * @return ExtcalConfig
+     * @return Config
      */
-    public static function &getHandler()
+    public static function getHandler()
     {
         static $configHandler;
         if (!isset($configHandler[0])) {
-            $configHandler[0] = new ExtcalConfig();
+            $configHandler[0] = new self();
         }
 
         return $configHandler[0];
@@ -29,10 +28,11 @@ class ExtcalConfig
         global $xoopsModule;
         static $moduleConfig;
         $dirname = (isset($xoopsModule) ? $xoopsModule->getVar('dirname') : 'system');
-        if ($dirname === 'extcal') {
+        if ('extcal' === $dirname) {
             $moduleConfig = $GLOBALS['xoopsModuleConfig'];
         } else {
             if (!isset($moduleConfig)) {
+                /** @var \XoopsModuleHandler $moduleHandler */
                 $moduleHandler = xoops_getHandler('module');
                 $module        = $moduleHandler->getByDirname('extcal');
                 $configHandler = xoops_getHandler('config');

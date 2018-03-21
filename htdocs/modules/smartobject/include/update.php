@@ -1,52 +1,48 @@
 <?php
-// $Id: update.php 1414 2008-04-02 21:07:16Z malanciault $
-//  ------------------------------------------------------------------------ //
-//                XOOPS - PHP Content Management System                      //
-//                    Copyright (c) 2000 XOOPS.org                           //
-//                       <http://www.xoops.org/>                             //
-//  ------------------------------------------------------------------------ //
-//  This program is free software; you can redistribute it and/or modify     //
-//  it under the terms of the GNU General Public License as published by     //
-//  the Free Software Foundation; either version 2 of the License, or        //
-//  (at your option) any later version.                                      //
-//                                                                           //
-//  You may not change or alter any portion of this comment or credits       //
-//  of supporting developers from this source code or any supporting         //
-//  source code which is considered copyrighted (c) material of the          //
-//  original comment or credit authors.                                      //
-//                                                                           //
-//  This program is distributed in the hope that it will be useful,          //
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of           //
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            //
-//  GNU General Public License for more details.                             //
-//                                                                           //
-//  You should have received a copy of the GNU General Public License        //
-//  along with this program; if not, write to the Free Software              //
-//  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
-//  ------------------------------------------------------------------------ //
-if (!defined("XOOPS_ROOT_PATH")) {
-    die("Xoops root path not defined");
-}
+/*
+ * You may not change or alter any portion of this comment or credits
+ * of supporting developers from this source code or any supporting source code
+ * which is considered copyrighted (c) material of the original comment or credit authors.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ */
 
-include_once(XOOPS_ROOT_PATH . "/modules/smartobject/include/common.php");
-include_once(XOOPS_ROOT_PATH . "/modules/smartobject/class/smartdbupdater.php");
+/**
+ * @copyright      {@link https://xoops.org/ XOOPS Project}
+ * @license        {@link http://www.gnu.org/licenses/gpl-2.0.html GNU GPL 2 or later}
+ * @package
+ * @since
+ * @author         XOOPS Development Team
+ */
 
-function xoops_module_update_smartobject($module) {
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
+
+require_once XOOPS_ROOT_PATH . '/modules/smartobject/include/common.php';
+require_once XOOPS_ROOT_PATH . '/modules/smartobject/class/smartdbupdater.php';
+
+/**
+ * @param  XoopsModule $module
+ * @return bool
+ */
+function xoops_module_update_smartobject(\XoopsModule $module)
+{
     ob_start();
 
-    $dbVersion  = smart_GetMeta('version', 'smartobject');
+    $dbVersion = smart_GetMeta('version', 'smartobject');
     if (!$dbVersion) {
         $dbVersion = 0;
     }
 
     $dbupdater = new SmartobjectDbupdater();
 
-    echo "<code>" . _SDU_UPDATE_UPDATING_DATABASE . "<br />";
+    echo '<code>' . _SDU_UPDATE_UPDATING_DATABASE . '<br>';
 
     // db migrate version = 1
     $newDbVersion = 1;
     if ($dbVersion < $newDbVersion) {
-        echo "Database migrate to version " . $newDbVersion . "<br />";
+        echo 'Database migrate to version ' . $newDbVersion . '<br>';
 
         // Create table smartobject_link
         $table = new SmartDbTable('smartobject_link');
@@ -84,7 +80,6 @@ function xoops_module_update_smartobject($module) {
                  * @todo trap the errors
                  */
             }
-
         }
         unset($table);
 
@@ -150,12 +145,12 @@ function xoops_module_update_smartobject($module) {
     // db migrate version = 2
     $newDbVersion = 2;
     if ($dbVersion < $newDbVersion) {
-        echo "Database migrate to version " . $newDbVersion . "<br />";
+        echo 'Database migrate to version ' . $newDbVersion . '<br>';
 
         // Create table smartobject_rating
         $table = new SmartDbTable('smartobject_rating');
         if (!$table->exists()) {
-            $table->setStructure("
+            $table->setStructure('
   `ratingid` int(11) NOT NULL auto_increment,
   `dirname` VARCHAR(255) NOT NULL,
   `item` VARCHAR(255) NOT NULL,
@@ -165,7 +160,7 @@ function xoops_module_update_smartobject($module) {
   `date` int(11) NOT NULL,
   PRIMARY KEY  (`ratingid`),
   UNIQUE (`dirname`, `item`, `itemid`, `uid`)
-            ");
+            ');
         }
 
         if (!$dbupdater->updateTable($table)) {
@@ -176,7 +171,7 @@ function xoops_module_update_smartobject($module) {
 
         // Create table smartobject_currency
         $table = new SmartDbTable('smartobject_currency');
-        $table->setData("2, 'EUR', 'Euro', '€', 0.65, 0");
+        $table->setData("2, 'EUR', 'Euro', 'ï¿½', 0.65, 0");
         $table->setData("3, 'USD', 'American dollar', '$', 0.9, 0");
         $table->setData("1, 'CAD', 'Canadian dollar', '$', 1, 1");
 
@@ -185,25 +180,24 @@ function xoops_module_update_smartobject($module) {
              * @todo trap the errors
              */
         }
-
     }
 
     // db migrate version = 3
     $newDbVersion = 3;
     if ($dbVersion < $newDbVersion) {
-        echo "Database migrate to version " . $newDbVersion . "<br />";
+        echo 'Database migrate to version ' . $newDbVersion . '<br>';
 
         // Create table smartobject_customtag
         $table = new SmartDbTable('smartobject_customtag');
         if (!$table->exists()) {
-            $table->setStructure("
+            $table->setStructure('
               `customtagid` int(11) NOT NULL auto_increment,
               `name` VARCHAR(255) NOT NULL,
               `description` TEXT NOT NULL,
               `content` TEXT NOT NULL,
               `language` TEXT NOT NULL,
               PRIMARY KEY  (`customtagid`)
-            ");
+            ');
         }
 
         if (!$dbupdater->updateTable($table)) {
@@ -216,12 +210,12 @@ function xoops_module_update_smartobject($module) {
     // db migrate version = 4
     $newDbVersion = 4;
     if ($dbVersion < $newDbVersion) {
-        echo "Database migrate to version " . $newDbVersion . "<br />";
+        echo 'Database migrate to version ' . $newDbVersion . '<br>';
 
         // Create table smartobject_currency
         $table = new SmartDbTable('smartobject_currency');
         if (!$table->exists()) {
-            $table->setStructure("
+            $table->setStructure('
               `currencyid` int(11) NOT NULL auto_increment,
               `iso4217` VARCHAR(5) NOT NULL,
               `name` VARCHAR(255) NOT NULL,
@@ -229,7 +223,7 @@ function xoops_module_update_smartobject($module) {
               `rate` float NOT NULL,
               `default_currency` int(1) NOT NULL,
               PRIMARY KEY  (`currencyid`)
-            ");
+            ');
         }
 
         if (!$dbupdater->updateTable($table)) {
@@ -242,24 +236,23 @@ function xoops_module_update_smartobject($module) {
     // db migrate version = 6
     $newDbVersion = 6;
     if ($dbVersion < $newDbVersion) {
-        echo "Database migrate to version " . $newDbVersion . "<br />";
-
+        echo 'Database migrate to version ' . $newDbVersion . '<br>';
     }
 
     $newDbVersion = 7;
     if ($dbVersion < $newDbVersion) {
-        echo "Database migrate to version " . $newDbVersion . "<br />";
+        echo 'Database migrate to version ' . $newDbVersion . '<br>';
 
         // Create table smartobject_file
         $table = new SmartDbTable('smartobject_file');
         if (!$table->exists()) {
-            $table->setStructure("
+            $table->setStructure('
               `fileid` int(11) NOT NULL auto_increment,
               `caption` varchar(255) collate latin1_general_ci NOT NULL,
               `url` varchar(255) collate latin1_general_ci NOT NULL,
               `description` text collate latin1_general_ci NOT NULL,
                PRIMARY KEY  (`fileid`)
-            ");
+            ');
             if (!$dbupdater->updateTable($table)) {
                 /**
                  * @todo trap the errors
@@ -270,14 +263,14 @@ function xoops_module_update_smartobject($module) {
         // Create table smartobject_urllink
         $table = new SmartDbTable('smartobject_urllink');
         if (!$table->exists()) {
-            $table->setStructure("
+            $table->setStructure('
               `urllinkid` int(11) NOT NULL auto_increment,
               `caption` varchar(255) collate latin1_general_ci NOT NULL,
               `url` varchar(255) collate latin1_general_ci NOT NULL,
               `description` text collate latin1_general_ci NOT NULL,
               `target` varchar(10) collate latin1_general_ci NOT NULL,
-               PRIMARY KEY  (`urllinkid`)
-            ");
+                PRIMARY KEY  (`urllinkid`)
+            ');
             if (!$dbupdater->updateTable($table)) {
                 /**
                  * @todo trap the errors
@@ -285,26 +278,30 @@ function xoops_module_update_smartobject($module) {
             }
         }
         unset($table);
-
     }
-    echo "</code>";
+    echo '</code>';
 
     $feedback = ob_get_clean();
-    if (method_exists($module, "setMessage")) {
+    if (method_exists($module, 'setMessage')) {
         $module->setMessage($feedback);
-    }
-    else {
+    } else {
         echo $feedback;
     }
-    smart_SetMeta("version", $newDbVersion, "smartobject"); //Set meta version to current
+    smart_SetMeta('version', $newDbVersion, 'smartobject'); //Set meta version to current
+
     return true;
 }
 
-function xoops_module_install_smartobject($module) {
+/**
+ * @param  XoopsModule $module
+ * @return string
+ */
+function xoops_module_install_smartobject(\XoopsModule $module)
+{
     ob_start();
 
-    echo "Using the ImpressCMS onInstall event";
+    echo 'Using the ImpressCMS onInstall event';
     $feedback = ob_get_clean();
+
     return $feedback;
 }
-?>

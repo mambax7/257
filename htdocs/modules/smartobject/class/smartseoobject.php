@@ -3,32 +3,35 @@
 /**
  * Contains the basis classes for managing any objects derived from SmartObjects
  *
- * @license GNU
- * @author marcan <marcan@smartfactory.ca>
- * @version $Id: smartseoobject.php 159 2007-12-17 16:44:05Z malanciault $
- * @link http://smartfactory.ca The SmartFactory
- * @package SmartObject
+ * @license    GNU
+ * @author     marcan <marcan@smartfactory.ca>
+ * @link       http://smartfactory.ca The SmartFactory
+ * @package    SmartObject
  * @subpackage SmartObjectCore
  */
 
-if (!defined("XOOPS_ROOT_PATH")) {
-    die("XOOPS root path not defined");
-}
-include_once XOOPS_ROOT_PATH."/modules/smartobject/class/smartobject.php";
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
+require_once XOOPS_ROOT_PATH . '/modules/smartobject/class/smartobject.php';
+
 /**
  * SmartObject base SEO-enabled class
  *
  * Base class representing a single SmartObject with "search engine optimisation" capabilities
  *
  * @package SmartObject
- * @author marcan <marcan@smartfactory.ca>
- * @link http://smartfactory.ca The SmartFactory
+ * @author  marcan <marcan@smartfactory.ca>
+ * @link    http://smartfactory.ca The SmartFactory
  */
-class SmartSeoObject extends SmartObject {
-    function SmartSeoObject() {
-        $this->initCommonVar("meta_keywords");
-        $this->initCommonVar("meta_description");
-        $this->initCommonVar("short_url");
+class SmartSeoObject extends SmartObject
+{
+    /**
+     * SmartSeoObject constructor.
+     */
+    public function __construct()
+    {
+        $this->initCommonVar('meta_keywords');
+        $this->initCommonVar('meta_description');
+        $this->initCommonVar('short_url');
         $this->seoEnabled = true;
     }
 
@@ -37,7 +40,7 @@ class SmartSeoObject extends SmartObject {
      *
      * @return string
      */
-    function short_url()
+    public function short_url()
     {
         return $this->getVar('short_url');
     }
@@ -47,7 +50,7 @@ class SmartSeoObject extends SmartObject {
      *
      * @return string
      */
-    function meta_keywords()
+    public function meta_keywords()
     {
         return $this->getVar('meta_keywords');
     }
@@ -57,7 +60,7 @@ class SmartSeoObject extends SmartObject {
      *
      * @return string
      */
-    function meta_description()
+    public function meta_description()
     {
         return $this->getVar('meta_description');
     }

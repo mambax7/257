@@ -1,17 +1,21 @@
 <?php
+
+use Xmf\Request;
+
+require_once __DIR__ . '/header.php';
 /*
- * $Id: seo.php,v 1.5 2006/08/15 19:52:08 malanciault Exp $
+ *
  * Module: newbbss
  * Author: Sudhaker Raj <http://xoops.biz>
  * Licence: GNU
  */
-$seoOp = XoopsRequest::getString('seoOp', '', 'GET')       = checker(XoopsRequest::getString('seoOp', '', 'GET'));
-$seoArg                                                    = XoopsRequest::getInt('seoArg', 0, 'GET');
-$seoOther = XoopsRequest::getString('seoOther', '', 'GET') = checker(XoopsRequest::getString('seoOther', '', 'GET'));
+$seoOp    = Request::getString('seoOp', '', 'GET');
+$seoArg   = Request::getInt('seoArg', 0, 'GET');
+$seoOther = Request::getString('seoOther', '', 'GET');
 
-$seos = array('c', 'f', 't', 'p', 'rc', 'rf', 'v', 'pr', 'pdf');
+$seos = ['c', 'f', 't', 'p', 'rc', 'rf', 'v', 'pr', 'pdf'];
 
-$seoMap = array(
+$seoMap = [
     'c'   => 'index.php',
     'f'   => 'viewforum.php',
     't'   => 'viewtopic.php',
@@ -19,12 +23,13 @@ $seoMap = array(
     'rc'  => 'rss.php',
     'rf'  => 'rss.php',
     'pr'  => 'print.php',
-    'pdf' => 'makepdf.php');
+    'pdf' => 'makepdf.php'
+];
 
 if (!empty($seoOp) && !empty($seoMap[$seoOp]) && in_array($seoOp, $seos)) {
     // module specific dispatching logic, other module must implement as
     // per their requirements.
-    $ori_self               = $_SERVER['PHP_SELF'];
+    $ori_self               = Request::getString('PHP_SELF', '', 'SERVER');
     $ori_self               = explode('modules/newbb', $ori_self);
     $newUrl                 = $ori_self[0] . 'modules/newbb/' . $seoMap[$seoOp];
     $_ENV['PHP_SELF']       = $newUrl;
@@ -58,11 +63,10 @@ if (!empty($seoOp) && !empty($seoMap[$seoOp]) && in_array($seoOp, $seos)) {
             $_GET['topic_id']       = $seoArg;
             break;
     }
-    include($seoMap[$seoOp]);
-
+    include $seoMap[$seoOp];
 } else {
     $last = $seoOp . '/' . $seoArg;
-    if ($seoOther !== '') {
+    if ('' !== $seoOther) {
         $last .= '/' . $seoOther;
     }
     include $last;

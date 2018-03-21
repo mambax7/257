@@ -1,4 +1,5 @@
-<?php
+<?php namespace XoopsModules\Tag;
+
 /*
  You may not change or alter any portion of this comment or credits
  of supporting developers from this source code or any supporting source code
@@ -12,22 +13,21 @@
 /**
  * Tag form element for form input
  *
- * @package        tag
+ * @package         tag
  * @subpackage      class
  * @copyright       {@link http://sourceforge.net/projects/xoops/ The XOOPS Project}
  * @license         {@link http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU GPL 2}
  * @author          Kazumi Ono (AKA onokazu) http://www.myweb.ne.jp/, http://jp.xoops.org/
  * @author          ZySpec <owners@zyspec.com>
  * @since           2.33
- * @version         $Id: $
  */
 
-defined('XOOPS_ROOT_PATH') || exit('Restricted access');
+defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 /**
  * A simple HTML5 type validated input field
  */
-class TagFormValidatedInput extends XoopsFormText
+class FormValidatedInput extends \XoopsFormText
 {
 
     /**
@@ -54,32 +54,34 @@ class TagFormValidatedInput extends XoopsFormText
      * @param int    $size      Size
      * @param int    $maxlength Maximum length of text
      * @param string $value     Initial text
+     * @param string $type
      */
-    public function __construct($caption, $name, $size, $maxlength, $value = '', $type='text')
+    public function __construct($caption, $name, $size, $maxlength, $value = '', $type = 'text')
     {
-        $this->_htmlTypes = array('color', 'date', 'datetime', 'datetime-local', 'email', 'month', 'number', 'range',
-                                  'search', 'tel', 'text', 'time', 'url', 'week');
+        $this->_htmlTypes = [
+            'color',
+            'date',
+            'datetime',
+            'datetime-local',
+            'email',
+            'month',
+            'number',
+            'range',
+            'search',
+            'tel',
+            'text',
+            'time',
+            'url',
+            'week'
+        ];
         $this->setCaption($caption);
         $this->setName($name);
-        $this->_size = intval($size);
-        $this->_maxlength = intval($maxlength);
+        $this->_size      = (int)$size;
+        $this->_maxlength = (int)$maxlength;
         $this->setValue($value);
         $this->setType($type);
     }
 
-    public function TagFormValidatedInput(&$caption, &$name, &$size, &$maxlength, &$value = '', &$type)
-    {
-        self::__construct($caption, $name, $size, $maxlength, $value, $type);
-    }
-
-    /**
-     *
-     * XoopsFormText method is included here as an override for the base class (XoopsFormText)
-     */
-    public function XoopsFormText(&$caption, &$name, &$size, &$maxlength, $value='')
-    {
-        self::__construct($caption, $name, $size, $maxlength, $value, 'text');
-    }
 
     /**
      * Get type information value
@@ -110,18 +112,22 @@ class TagFormValidatedInput extends XoopsFormText
     {
         if (isset($value)) {
             if (is_array($value)) {
-                $value = isset($value['type']) ? mb_strtolower($value['type']) : 'text';
-                $this->_type = in_array($value, $this->_htmlTypes) ? $value :  'text';
-                if (in_array($value['type'], array('number', 'date', 'range'))) {
+                $value       = isset($value['type']) ? mb_strtolower($value['type']) : 'text';
+                $this->_type = in_array($value, $this->_htmlTypes) ? $value : 'text';
+                if (in_array($value['type'], [
+                    'number',
+                    'date',
+                    'range'
+                    ])) {
                     if (isset($value['min'])) {
-                        $this->setExtra("min=" . $value['min']);
+                        $this->setExtra('min=' . $value['min']);
                     }
                     if (isset($value['max'])) {
-                        $this->setExtra("max=" . $value['max']);
+                        $this->setExtra('max=' . $value['max']);
                     }
                 }
             } else {
-                $value = isset($value) ? mb_strtolower($value) : 'text';
+                $value       = isset($value) ? mb_strtolower($value) : 'text';
                 $this->_type = in_array($value, $this->_htmlTypes) ? $value : 'text';
             }
         } else {
@@ -137,8 +143,8 @@ class TagFormValidatedInput extends XoopsFormText
     public function render()
     {
         $myClasses = $this->getClass();
-        $classes = ($myClasses) ? " class='{$myClasses}'" : "";
+        $classes   = $myClasses ? " class='{$myClasses}'" : '';
 
-        return "<input type='" . $this->_type . "' name='" . $this->getName() . "' title='" . $this->getTitle() . "' id='" . $this->getName() . "' size='" . $this->getSize() . "' maxlength='" . $this->getMaxlength() . "' value='" . $this->getValue() . "'" . $classes . $this->getExtra() . " />";
+        return "<input type='" . $this->_type . "' name='" . $this->getName() . "' title='" . $this->getTitle() . "' id='" . $this->getName() . "' size='" . $this->getSize() . "' maxlength='" . $this->getMaxlength() . "' value='" . $this->getValue() . "'" . $classes . $this->getExtra() . '>';
     }
 }

@@ -4,13 +4,13 @@
     padding: 10px;
     font-size: 11px;
     border-radius: 5px;
-   -moz-border-radius: 5px;
-   -webkit-border-radius: 5px;
-   -khtml-border-radius: 5px;
-   box-shadow: 0 0 5px 5px rgba(0,0,0,0.5);
-   -moz-box-shadow: 0 0 5px 5px rgba(0,0,0,0.5);
-   -webkit-box-shadow: 0 0 5px 5px rgba(0,0,0,0.5);
-   -khtml-box-shadow: 0 0 5px 5px rgba(0,0,0,0.5);
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    box-shadow: 0 0 5px 5px #000000;
+    -moz-box-shadow: 0 0 5px 5px #000000;
+    -webkit-box-shadow: 0 0 5px 5px #000000;
+    -khtml-box-shadow: 0 0 5px 5px #000000;
 }
 
 .apple_overlay .close {
@@ -25,8 +25,8 @@
 
 .apple_overlay .details {
     font-size: 1em;
-   margin-top: 1em;
-   padding: 5px;
+    margin-top: 1em;
+    padding: 5px;
 }
 
 .apple_overlay .details a {

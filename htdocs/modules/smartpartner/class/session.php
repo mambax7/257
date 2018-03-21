@@ -1,21 +1,20 @@
 <?php
+
 /**
  * A wrapper around PHP's session functions
  * @package smartpartner
- * @author Harry Fuecks (PHP Anthology Volume II)
+ * @author  Harry Fuecks (PHP Anthology Volume II)
  */
-
 class SmartpartnerSession
 {
-
     /**
-     * Session constructor<br />
+     * Session constructor<br>
      * Starts the session with session_start()
      * <b>Note:</b> that if the session has already started,
      * session_start() does nothing
      * @access public
      */
-    public function SmartpartnerSession()
+    public function __construct()
     {
         @session_start();
     }
@@ -23,7 +22,7 @@ class SmartpartnerSession
     /**
      * Sets a session variable
      * @param string name of variable
-     * @param mixed value of variable
+     * @param mixed  value of variable
      * @return void
      * @access public
      */
@@ -65,18 +64,20 @@ class SmartpartnerSession
      */
     public function destroy()
     {
-        $_SESSION = array();
+        $_SESSION = [];
         session_destroy();
     }
 
-    public function singleton()
+    /**
+     * @return SmartpartnerSession
+     */
+    public static function getInstance()
     {
-        static $_sess;
-
-        if (!isset($_sess)) {
-            $_sess = new SmartpartnerSession();
+        static $instance;
+        if (null === $instance) {
+            $instance = new static();
         }
 
-        return $_sess;
+        return $instance;
     }
 }

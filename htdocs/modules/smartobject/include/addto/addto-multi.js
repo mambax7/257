@@ -29,36 +29,40 @@ var addtoInterval = null;
 var popupWin = '';
 
 //intervalMgr was added to make the popup and timer work in Safari
-function intervalMgr(){
-    if(/Safari/i.test(navigator.userAgent)){ //Test for Safari
-        var addtoInterval=setInterval(function(){
-        if(/loaded|complete/.test(document.readyState)){
-            closeAddTo() // call target function
-        }}, 1000)
+function intervalMgr() {
+    if (/Safari/i.test(navigator.userAgent)) { //Test for Safari
+        var addtoInterval = setInterval(function () {
+            if (/loaded|complete/.test(document.readyState)) {
+                closeAddTo() // call target function
+            }
+        }, 1000)
     }
-    else{var addtoInterval = setInterval("closeAddTo();",1000);}
+    else {
+        var addtoInterval = setInterval("closeAddTo();", 1000);
+    }
 }
 
-function addtoWin(addtoFullURL)
-{
-    if (!popupWin.closed && popupWin.location){
+function addtoWin(addtoFullURL) {
+    if (!popupWin.closed && popupWin.location) {
         popupWin.location.href = addtoFullURL;
         intervalMgr();
     }
-    else{
-        popupWin = window.open(addtoFullURL,'addtoPopUp','width=770px,height=500px,status=0,location=0,resizable=1,scrollbars=1,left=0,top=100');
+    else {
+        popupWin = window.open(addtoFullURL, 'addtoPopUp', 'width=770px,height=500px,status=0,location=0,resizable=1,scrollbars=1,left=0,top=100');
         if (!popupWin.opener) popupWin.opener = self;
         intervalMgr();
         //var addtoInterval = setInterval("closeAddTo();",1500);
     }
-    if (window.focus) {popupWin.focus()}
+    if (window.focus) {
+        popupWin.focus()
+    }
     return false;
 }
 // closes the popupWin
 function closeAddTo() {
-    if (!popupWin.closed && popupWin.location){
+    if (!popupWin.closed && popupWin.location) {
         if (popupWin.location.href == AddURL)   //if it's the same url as what was bookmarked, close the win
-        popupWin.close();
+            popupWin.close();
         clearInterval(addtoInterval)
     }
     else {  //if it's closed - clear the timer
@@ -67,10 +71,10 @@ function closeAddTo() {
     }
 }
 //main addto function - sets the variables for each Social Bookmarking site
-function addto(addsite,AddURL,AddTitle){
+function addto(addsite, AddURL, AddTitle) {
     var AddURL = AddURL;
     var AddTitle = AddTitle;
-    switch(addsite){
+    switch (addsite) {
         case 0: //  AddToBookmarks.com ID:0 - an educational page on what Social Bookmarking is
             var AddSite = "http://www.addtobookmarks.com/socialbookmarking.htm?";
             var AddUrlVar = "url";
@@ -98,9 +102,9 @@ function addto(addsite,AddURL,AddTitle){
         case 3: //  Digg ID:3
             var AddSite = "http://digg.com/submit?";
             var AddUrlVar = "url";
-            var AddTitleVar =  "";
-            var AddNoteVar =  "";
-            var AddReturnVar =  "";
+            var AddTitleVar = "";
+            var AddNoteVar = "";
+            var AddReturnVar = "";
             var AddOtherVars = "&phase=2";
             break
         case 4: //  Furl ID:4
@@ -147,13 +151,15 @@ function addto(addsite,AddURL,AddTitle){
     }
 
 //  Build the URL
-    var addtoFullURL = AddSite + AddUrlVar + "=" + AddURL + "&" + AddTitleVar + "=" + AddTitle + AddOtherVars ;
-    if (AddNoteVar != "")
-        {var addtoFullURL = addtoFullURL + "&" + AddNoteVar + "=" + AddTitle;}
-    if (AddReturnVar != "")
-        {var addtoFullURL = addtoFullURL + "&" + AddReturnVar + "=" + AddURL;}
+    var addtoFullURL = AddSite + AddUrlVar + "=" + AddURL + "&" + AddTitleVar + "=" + AddTitle + AddOtherVars;
+    if (AddNoteVar != "") {
+        var addtoFullURL = addtoFullURL + "&" + AddNoteVar + "=" + AddTitle;
+    }
+    if (AddReturnVar != "") {
+        var addtoFullURL = addtoFullURL + "&" + AddReturnVar + "=" + AddURL;
+    }
 //  Checking AddToMethod, to see if it opens in new window or not
-    switch(addtoMethod){
+    switch (addtoMethod) {
         case 0: // 0=direct link
             self.location = addtoFullURL
             break
@@ -161,9 +167,11 @@ function addto(addsite,AddURL,AddTitle){
             addtoWin(addtoFullURL);
             break
         default:
-        }
-        return true;
+    }
+    return true;
 }
 //  checking across domains causes errors - this is to supress these
-function handleError() {return true;}
+function handleError() {
+    return true;
+}
 window.onerror = handleError;

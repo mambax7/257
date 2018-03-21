@@ -4,5 +4,5 @@
 //                      wanikoo <http://www.wanisys.net/>       //
 //  ----------------------------------------------------------- //
 //                Original Module: mylinks 1.10                 //
-//             The XOOPS Project ( http://www.xoops.org/ )      //
+//             XOOPS Project ( https://xoops.org/ )      //
 //  ----------------------------------------------------------- //

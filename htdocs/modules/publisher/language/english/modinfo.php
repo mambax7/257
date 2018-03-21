@@ -39,9 +39,9 @@ define('_MI_PUBLISHER_CLONEDSC', 'Select “Yes” to allow users with appropria
 define('_MI_PUBLISHER_COLLHEAD', 'Display the collapsible bar?');
 define('_MI_PUBLISHER_COLLHEADDSC', 'If you set this option to “Yes”, the categories summary will be displayed in a collapsible bar as well as the articles. If you set this option to “No”, the collapsible bar will not be displayed.');
 define('_MI_PUBLISHER_COMMENTS', 'Control comments at the article level?');
-define('_MI_PUBLISHER_COMMENTSDSC', 'if you set this option to “Yes”, you will see comments only on those items that have their comment checkbox marked. <br /><br />Select “No” to have comments managed at the global level (look below under the tag \'Comment rules\'.');
+define('_MI_PUBLISHER_COMMENTSDSC', 'if you set this option to “Yes”, you will see comments only on those items that have their comment checkbox marked. <br><br>Select “No” to have comments managed at the global level (look below under the tag \'Comment rules\'.');
 define('_MI_PUBLISHER_DATEFORMAT', 'Date format:');
-define('_MI_PUBLISHER_DATEFORMATDSC', "Select a display style. Example: 'd-M-Y H:i' translates to '30-Mar-2004 22:35'<br /><a href=\'http://jp.php.net/date\'>Refer to the PHP manual for more display options.</a>");
+define('_MI_PUBLISHER_DATEFORMATDSC', "Select a display style. Example: 'd-M-Y H:i' translates to '30-Mar-2004 22:35'<br><a href='http://php.net/manual/en/function.date.php/' target='_blank'>Refer to the PHP manual for more display options.</a>");
 define('_MI_PUBLISHER_DEMO_SITE', 'SmartFactory Demo Site');
 define('_MI_PUBLISHER_DEVELOPER_CONTRIBUTOR', 'Contributor(s)');
 define('_MI_PUBLISHER_DEVELOPER_CREDITS', 'Credits');
@@ -109,7 +109,7 @@ define('_MI_PUBLISHER_ITEMSMENU', 'Categories Menu block');
 //bd tree block hack
 define('_MI_PUBLISHER_ITEMSTREE', 'Tree block');
 //--/bd
-define('_MI_PUBLISHER_ITEMSNEW', 'Recent items List');
+define('_MI_PUBLISHER_ITEMSNEW', 'New Articles List');
 define('_MI_PUBLISHER_ITEMSPOT', 'In the Spotlight!');
 define('_MI_PUBLISHER_ITEMSRANDOM_ITEM', 'Random item!');
 define('_MI_PUBLISHER_LASTITEM', 'Display last item column?');
@@ -155,7 +155,7 @@ define('_MI_PUBLISHER_PERPAGEINDEX', 'Maximum articles per page (User side):');
 define('_MI_PUBLISHER_PERPAGEINDEXDSC', 'Maximum number of articles per page to be displayed together in the user side.');
 define('_MI_PUBLISHER_PRINTLOGOURL', 'Logo print URL');
 define('_MI_PUBLISHER_PRINTLOGOURLDSC', 'URL of the logo that will be printed at the top of the page.');
-define('_MI_PUBLISHER_RECENTITEMS', 'Recent items (Detail)');
+define('_MI_PUBLISHER_RECENTITEMS', 'Recent Articles (Detail)');
 define('_MI_PUBLISHER_SHOW_RSS', 'Show link for RSS feed');
 define('_MI_PUBLISHER_SHOW_RSSDSC', '');
 define('_MI_PUBLISHER_SHOW_SUBCATS', 'Display sub categories');
@@ -246,7 +246,10 @@ define('_MI_PUBLISHER_SINGLEITEM_BLOCK_DSC', 'Display a single item in a block')
 define('_MI_PUBLISHER_PRINT_DSC', 'Print page template');
 define('_MI_PUBLISHER_RSS_DSC', 'Display publisher RSS feed');
 define('_MI_PUBLISHER_ADDFILE_DSC', 'Form to add a file to an article');
-define('_MI_PUBLISHER_WARNING_ALPHA', 'This module comes as is, without any guarantees whatsoever. This module is ALPHA, meaning it is still under active development. This release is meant for <strong>testing purposes only</strong> and we <strong>strongly</strong> recommend that you do not use it on a live website or in a production environment.');
+define(
+    '_MI_PUBLISHER_WARNING_ALPHA',
+       'This module comes as is, without any guarantees whatsoever. This module is ALPHA, meaning it is still under active development. This release is meant for <strong>testing purposes only</strong> and we <strong>strongly</strong> recommend that you do not use it on a live website or in a production environment.'
+);
 define('_MI_PUBLISHER_PEOPLE_DEVELOPERS', 'Developers');
 define('_MI_PUBLISHER_PEOPLE_TESTERS', 'Testers');
 define('_MI_PUBLISHER_PEOPLE_DOCUMENTERS', 'Documenters');
@@ -278,16 +281,16 @@ define('_MI_PUBLISHER_LATEST_NEWS', 'Latest news');
 define('_MI_PUBLISHER_LATEST_NEWS_DSC', '');
 define('_MI_PUBLISHER_SEARCH', 'Search block');
 define('_MI_PUBLISHER_SEARCH_DSC', 'Advanced search page');
-define('_MI_PUBLISHER_CATEGORY_ITEMS_SEL', 'Category items select');
+define('_MI_PUBLISHER_CATEGORY_ITEMS_SEL', 'Category Articles select');
 define('_MI_PUBLISHER_CATEGORY_ITEMS_SEL_DSC', 'Shows a drop down select box with items grouped by category');
 define('_MI_PUBLISHER_CONFCAT_INDEX', 'Index page');
 define('_MI_PUBLISHER_CONFCAT_INDEX_DSC', '');
 define('_MI_PUBLISHER_CONFCAT_CATEGORY', 'Category page');
 define('_MI_PUBLISHER_CONFCAT_CATEGORY_DSC', '');
-define('_MI_PUBLISHER_CONFCAT_ITEM', 'Item page');
+define('_MI_PUBLISHER_CONFCAT_ITEM', 'Article page');
 define('_MI_PUBLISHER_CONFCAT_ITEM_DSC', '');
-define('_MI_PUBLISHER_CONFCAT_SUBMIT', 'Submit page');
-define('_MI_PUBLISHER_CONFCAT_SUBMIT_DSC', 'Submit page layout and form default values');
+define('_MI_PUBLISHER_CONFCAT_SUBMIT', 'Submit article');
+define('_MI_PUBLISHER_CONFCAT_SUBMIT_DSC', 'Submit article layout and form default values');
 define('_MI_PUBLISHER_CONFCAT_INDEXCAT', 'Index and category pages');
 define('_MI_PUBLISHER_CONFCAT_INDEXCAT_DSC', '');
 define('_MI_PUBLISHER_CONFCAT_SEARCH', 'Search page');
@@ -295,17 +298,17 @@ define('_MI_PUBLISHER_CONFCAT_SEARCH_DSC', '');
 define('_MI_PUBLISHER_SEO_METAKEYWORDS', 'Meta Keywords');
 define('_MI_PUBLISHER_SEO_METAKEYWORDS_DSC', 'This keywords will be merged with the keywords set by articles. Use \', \' to separate them.');
 define('_MI_PUBLISHER_SUB_ARCHIVE', 'Archive');
-define('_MI_PUBLISHER_ALLOW_AUTHOR_ITEMS', 'Allow author items feature');
+define('_MI_PUBLISHER_ALLOW_AUTHOR_ITEMS', 'Allow author articles feature');
 define('_MI_PUBLISHER_ALLOW_AUTHOR_ITEMS_DSC', '');
-define('_MI_PUBLISHER_AUTHOR_ITEMS_DSC', 'Show items from the same author');
-define('_MI_PUBLISHER_DISP_BLOCK_SUM', 'Display block summary on items page?');
+define('_MI_PUBLISHER_AUTHOR_ITEMS_DSC', 'Show articles from the same author');
+define('_MI_PUBLISHER_DISP_BLOCK_SUM', 'Display block summary on articles page?');
 define('_MI_PUBLISHER_DISP_BLOCK_SUM_DSC', '');
 define('_MI_PUBLISHER_ADMENU0', 'Home');
-define('_MI_PUBLISHER_DISP_INDEX_SUB', 'Display items subtitles in index page?');
+define('_MI_PUBLISHER_DISP_INDEX_SUB', 'Display article subtitles in index page?');
 define('_MI_PUBLISHER_DISP_INDEX_SUB_DSC', '');
-define('_MI_PUBLISHER_DISP_CAT_SUB', 'Display items subtitles in categories pages?');
+define('_MI_PUBLISHER_DISP_CAT_SUB', 'Display article subtitles in categories pages?');
 define('_MI_PUBLISHER_DISP_CAT_SUB_DSC', '');
-define('_MI_PUBLISHER_DISP_ITEM_SUB', 'Display item subtitle in item page?');
+define('_MI_PUBLISHER_DISP_ITEM_SUB', 'Display article subtitle in item page?');
 define('_MI_PUBLISHER_DISP_ITEM_SUB_DSC', '');
 //30/04/2012
 define('_MI_PUBLISHER_ALLOWEDIT', 'User article edit?');
@@ -315,7 +318,7 @@ define('_MI_PUBLISHER_ALLOWDELETEDSC', 'Allow users to delete their own articles
 
 //1.02 Beta 2
 define('_MI_PUBLISHER_DISPLAY_PDF', 'Display PDF Icon');
-define('_MI_PUBLISHER_DISPLAY_PDF_DSC', 'Select Yes to show PDF icon and allow users to create PDF files');
+define('_MI_PUBLISHER_DISPLAY_PDF_DSC', 'Select Yes to show PDF icon and allow users to create PDF files <br>Make sure you have the TCPDF library installed. Please read the "readme.txt" file in /docs folder for info how to get it.');
 
 //1.02 RC2
 define('_MI_PUBLISHER_ORDERBY_RATING', 'Rating DESC');
@@ -326,8 +329,24 @@ define('_MI_PUBLISHER_ORDERBY_HITS', 'Hits DESC');
 // The name of this module
 define('_MI_PUBLISHER_NAME', 'Publisher');
 define('_MI_PUBLISHER_DIRNAME', basename(dirname(dirname(__DIR__))));
-define('_MI_PUBLISHER_HELP_HEADER', __DIR__.'/help/helpheader.html');
+define('_MI_PUBLISHER_HELP_HEADER', __DIR__ . '/help/helpheader.tpl');
 define('_MI_PUBLISHER_BACK_2_ADMIN', 'Back to Administration of ');
 
 //help
 define('_MI_PUBLISHER_HELP_OVERVIEW', 'Overview');
+
+//help multi-page
+define('_MI_PUBLISHER_DISCLAIMER', 'Disclaimer');
+define('_MI_PUBLISHER_LICENSE', 'License');
+define('_MI_PUBLISHER_SUPPORT', 'Support');
+
+define('_MI_PUBLISHER_IMPORT', 'Import');
+define('_MI_PUBLISHER_ABOUT', 'About');
+define('_MI_PUBLISHER_MENU_CLONE', 'Clone Module');
+
+
+
+define('_MI_PUBLISHER_SHOW_SAMPLE_BUTTON', 'Show Sample Button?');
+define('_MI_PUBLISHER_SHOW_SAMPLE_BUTTON_DESC', 'If yes, the "Add Sample Data" button will be visible to the Admin. It is Yes as a default for first installation.');
+
+define('_MI_PUBLISHER_MENU_HISTORY', 'History');

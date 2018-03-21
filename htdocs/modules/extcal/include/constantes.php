@@ -1,22 +1,26 @@
 <?php
-/**
- * classGenerator
- * walls_watermarks
- *
+/*
  * You may not change or alter any portion of this comment or credits
  * of supporting developers from this source code or any supporting source code
  * which is considered copyrighted (c) material of the original comment or credit authors.
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
- *
+ */
+
+/**
+ * @copyright    {@link https://xoops.org/ XOOPS Project}
+ * @license      {@link http://www.gnu.org/licenses/gpl-2.0.html GNU GPL 2 or later}
+ * @package      extcal
+ * @since
+ * @author       XOOPS Development Team,
  *
  * L'utilisation de ce formulaire d'adminitration suppose
  * que la classe correspondante de la table a été générées avec classGenerator
  **/
 
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 //modif JJD
 define('_EXTCAL_MODULE', 'extcal');
@@ -27,17 +31,17 @@ define('_EXTCAL_CLS_MEMBER', 'eventmember');
 define('_EXTCAL_CLS_NOT_MEMBER', 'eventnotmember');
 define('_EXTCAL_CLS_ETABLISSEMENT', 'etablissement');
 
-define('_EXTCAL_CLN_CAT', 'ExtcalCat');
-define('_EXTCAL_CLN_FILE', 'ExtcalFile');
-define('_EXTCAL_CLN_MEMBER', 'ExtcalEventmember');
-define('_EXTCAL_CLN_NOT_MEMBER', 'ExtcalEventNotMember');
-define('_EXTCAL_CLN_ETABLISSEMENT', 'ExtcalEtablissement');
+define('_EXTCAL_CLN_CAT', 'Category');
+define('_EXTCAL_CLN_FILE', 'File');
+define('_EXTCAL_CLN_MEMBER', 'Eventmember');
+define('_EXTCAL_CLN_NOT_MEMBER', 'EventNotMember');
+define('_EXTCAL_CLN_ETABLISSEMENT', 'Etablissement');
 
 define('_EXTCAL_CLS_EVENT', 'event');
-define('_EXTCAL_CLN_EVENT', 'ExtcalEvent');
+define('_EXTCAL_CLN_EVENT', 'Event');
 
 //-------------------------------------------------------------------
-define('_EXTCAL_PEAR_ROOT_DEFAULT', XOOPS_ROOT_PATH . '/modules/extcal/class/pear');
+define('_EXTCAL_PEAR_ROOT_DEFAULT', __DIR__ . '/../class/pear');
 //define('_EXTCAL_PEAR_ROOT', 'F:/wamp/www/xfr254b/xoops_lib/Frameworks/pear' );
 
 $pear_path = _EXTCAL_PEAR_ROOT_DEFAULT;
@@ -48,13 +52,16 @@ if (is_object($xoopsModule)) {
     $name = $xoopsModule->getVar('name');
 }
 
+/** @var XoopsModuleHandler $moduleHandler */
 $moduleHandler = xoops_getHandler('module');
 $module        = $moduleHandler->getByDirname('extcal');
 
-if ($name === 'extcal' || is_object($module)) {
+/** @var XoopsModules\Extcal\Config $extcalConfig */
+if ('extcal' === $name || is_object($module)) {
     if (is_object($xoopsModuleConfig)) {
         $extcalConfig = $xoopsModuleConfig;
     } else {
+        /** @var \XoopsConfigHandler $configHandler */
         $configHandler = xoops_getHandler('config');
         $extcalConfig  = $configHandler->getConfigList($module->getVar('mid'));
     }
@@ -101,7 +108,10 @@ define('_EXTCAL_NAV_AGENDA_DAY', 'agenda-day');
 define('_EXTCAL_NAV_SEARCH', 'search');
 define('_EXTCAL_NAV_NEW_EVENT', 'new-event');
 
-define('_EXTCAL_NAV_LIST', _EXTCAL_NAV_CALMONTH . "\n" . _EXTCAL_NAV_CALWEEK . "\n" . _EXTCAL_NAV_YEAR . "\n" . _EXTCAL_NAV_MONTH . "\n" . _EXTCAL_NAV_WEEK . "\n" . _EXTCAL_NAV_DAY . "\n" . _EXTCAL_NAV_AGENDA_WEEK . "\n" . _EXTCAL_NAV_AGENDA_DAY . "\n" . _EXTCAL_NAV_SEARCH . "\n" . _EXTCAL_NAV_NEW_EVENT);
+define(
+    '_EXTCAL_NAV_LIST',
+       _EXTCAL_NAV_CALMONTH . "\n" . _EXTCAL_NAV_CALWEEK . "\n" . _EXTCAL_NAV_YEAR . "\n" . _EXTCAL_NAV_MONTH . "\n" . _EXTCAL_NAV_WEEK . "\n" . _EXTCAL_NAV_DAY . "\n" . _EXTCAL_NAV_AGENDA_WEEK . "\n" . _EXTCAL_NAV_AGENDA_DAY . "\n" . _EXTCAL_NAV_SEARCH . "\n" . _EXTCAL_NAV_NEW_EVENT
+);
 
 define('_EXTCAL_PREFIX_VIEW', 'view_');
 define('_EXTCAL_SUFFIX_VIEW', '.php');

@@ -1,8 +1,8 @@
-<?php
+<?php namespace XoopsModules\Extcal;
 
 /**
- * Class extDateTime
+ * Class ExtDateTime.
  */
-class extDateTime extends DateTime
+class ExtDateTime extends \DateTime
 {
 }

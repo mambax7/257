@@ -13,21 +13,20 @@
 #
 # Creation: Mar 16, 2004 at 11:14 AM
 # Last update: Mar 16, 2004 at 12:31 PM
-#
 
 CREATE TABLE `publisher_categories` (
   `categoryid`       INT(11)      NOT NULL AUTO_INCREMENT,
   `parentid`         INT(11)      NOT NULL DEFAULT '0',
   `name`             VARCHAR(100) NOT NULL DEFAULT '',
-  `description`      TEXT         NOT NULL,
+  `description`      TEXT         NULL,
   `image`            VARCHAR(255) NOT NULL DEFAULT '',
   `total`            INT(11)      NOT NULL DEFAULT '0',
   `weight`           INT(11)      NOT NULL DEFAULT '1',
   `created`          INT(11)      NOT NULL DEFAULT '1033141070',
   `template`         VARCHAR(255) NOT NULL DEFAULT '',
-  `header`           TEXT         NOT NULL,
-  `meta_keywords`    TEXT         NOT NULL,
-  `meta_description` TEXT         NOT NULL,
+  `header`           TEXT         NULL,
+  `meta_keywords`    TEXT         NULL,
+  `meta_description` TEXT         NULL,
   `short_url`        VARCHAR(255) NOT NULL DEFAULT '',
   `moderator`        INT(6)       NOT NULL DEFAULT '0',
   PRIMARY KEY (`categoryid`),
@@ -48,7 +47,7 @@ CREATE TABLE `publisher_items` (
   `categoryid`       INT(11)          NOT NULL DEFAULT '0',
   `title`            VARCHAR(255)     NOT NULL DEFAULT '',
   `subtitle`         VARCHAR(255)     NOT NULL DEFAULT '',
-  `summary`          TEXT             NOT NULL,
+  `summary`          TEXT             NULL,
   `body`             LONGTEXT         NOT NULL,
   `uid`              INT(6)                    DEFAULT '0',
   `author_alias`     VARCHAR(255)     NOT NULL DEFAULT '',
@@ -68,16 +67,15 @@ CREATE TABLE `publisher_items` (
   `cancomment`       TINYINT(1)       NOT NULL DEFAULT '1',
   `comments`         INT(11)          NOT NULL DEFAULT '0',
   `notifypub`        TINYINT(1)       NOT NULL DEFAULT '0',
-  `meta_keywords`    TEXT             NOT NULL,
-  `meta_description` TEXT             NOT NULL,
-  `short_url`        VARCHAR(255)     NOT NULL,
-  `item_tag`         TEXT             NOT NULL,
+  `meta_keywords`    TEXT             NULL,
+  `meta_description` TEXT             NULL,
+  `short_url`        VARCHAR(255)     NULL,
+  `item_tag`         TEXT             NULL,
   PRIMARY KEY (`itemid`),
   KEY categoryid (categoryid),
   KEY status (status)
 )
   ENGINE = MyISAM;
-
 
 #
 # Table structure for table `publisher_files`
@@ -90,7 +88,7 @@ CREATE TABLE `publisher_files` (
   `fileid`      INT(11)         NOT NULL AUTO_INCREMENT,
   `itemid`      INT(11)         NOT NULL DEFAULT '0',
   `name`        VARCHAR(255)    NOT NULL DEFAULT '',
-  `description` TEXT            NOT NULL,
+  `description` TEXT            NULL,
   `filename`    VARCHAR(255)    NOT NULL DEFAULT '',
   `mimetype`    VARCHAR(64)     NOT NULL DEFAULT '',
   `uid`         INT(6)                   DEFAULT '0',
@@ -101,7 +99,6 @@ CREATE TABLE `publisher_files` (
   PRIMARY KEY (`fileid`)
 )
   ENGINE = MyISAM;
-
 
 # --------------------------------------------------------
 
@@ -127,7 +124,7 @@ INSERT INTO `publisher_meta` VALUES ('version', '0.1');
 CREATE TABLE publisher_mimetypes (
   mime_id    INT(11)      NOT NULL AUTO_INCREMENT,
   mime_ext   VARCHAR(60)  NOT NULL DEFAULT '',
-  mime_types TEXT         NOT NULL,
+  mime_types TEXT         NULL,
   mime_name  VARCHAR(255) NOT NULL DEFAULT '',
   mime_admin INT(1)       NOT NULL DEFAULT '1',
   mime_user  INT(1)       NOT NULL DEFAULT '0',
@@ -153,6 +150,45 @@ CREATE TABLE `publisher_rating` (
   KEY ip (ip)
 )
   ENGINE = MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table `publisher_liking`
+#
+
+# CREATE TABLE `publisher_liking` (
+#   `likingid` INT(11)     NOT NULL AUTO_INCREMENT,
+#   `itemid`   INT(11)     NOT NULL,
+#   `uid`      INT(11)     NOT NULL,
+#   `like`     INT(1)      NOT NULL,
+#   `dislike`  INT(1)      NOT NULL,
+#   `date`     INT(11)     NOT NULL,
+#   `ip`       VARCHAR(60) NOT NULL DEFAULT '',
+#   PRIMARY KEY (`likingid`),
+#   KEY uid (uid),
+#   KEY ip (ip)
+# )
+#   ENGINE = MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table `publisher_rating`
+#
+
+# CREATE TABLE `publisher_reactions` (
+#   `reactionid` INT(11)     NOT NULL AUTO_INCREMENT,
+#   `itemid`     INT(11)     NOT NULL,
+#   `uid`        INT(11)     NOT NULL,
+#   `reaction`   INT(1)      NOT NULL,
+#   `date`       INT(11)     NOT NULL,
+#   `ip`         VARCHAR(60) NOT NULL DEFAULT '',
+#   PRIMARY KEY (`reactionid`),
+#   KEY uid (uid),
+#   KEY ip (ip)
+# )
+#   ENGINE = MyISAM;
 
 # --------------------------------------------------------
 

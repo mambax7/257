@@ -1,4 +1,5 @@
-<?php
+<?php namespace XoopsModules\Tag;
+
 /*
  You may not change or alter any portion of this comment or credits
  of supporting developers from this source code or any supporting source code
@@ -12,83 +13,33 @@
 /**
  * XOOPS tag management module
  *
- * @package        tag
+ * @package         tag
  * @subpackage      class
  * @copyright       {@link http://sourceforge.net/projects/xoops/ The XOOPS Project}
  * @license         {@link http://www.fsf.org/copyleft/gpl.html GNU public license}
  * @author          Taiwen Jiang <phppp@users.sourceforge.net>
  * @since           1.00
- * @version         $Id: link.php 12898 2014-12-08 22:05:21Z zyspec $
  */
 
-defined("XOOPS_ROOT_PATH") || exit('Restricted access');
+use XoopsModules\Tag;
 
-class TagLink extends XoopsObject
+defined('XOOPS_ROOT_PATH') || die('Restricted access');
+
+/**
+ * Class TagLink
+ */
+class Link extends \XoopsObject
 {
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->initVar("tl_id",         XOBJ_DTYPE_INT,     null, false);
-        $this->initVar("tag_id",        XOBJ_DTYPE_INT,     0);
-        $this->initVar("tag_modid",     XOBJ_DTYPE_INT,     0);
-        $this->initVar("tag_catid",     XOBJ_DTYPE_INT,     0);
-        $this->initVar("tag_itemid",    XOBJ_DTYPE_INT,     0);
-        $this->initVar("tag_time",      XOBJ_DTYPE_INT,     0);
-    }
-    /**
-     * Constructor
-     */
-    public function TagLink()
-    {
-        self::__construct();
-    }
-}
-
-/**
- * Tag link handler class.
- * @package tag
- *
- * @author      Taiwen Jiang <phppp@users.sourceforge.net>
- * @copyright   copyright &copy; The XOOPS Project
- *
- * {@link XoopsPersistableObjectHandler}
- *
- */
-
-class TagLinkHandler extends XoopsPersistableObjectHandler
-{
-    public $table_stats;
-
-    /**
-     * Constructor
-     *
-     * @param object $db reference to the {@link XoopsDatabase} object
-     **/
-    public function __construct(&$db)
-    {
-        parent::__construct($db, "tag_link", "TagLink", "tl_id", "tag_itemid");
-        $this->table_stats = $this->db->prefix("tag_stats");
-    }
-
-    /**
-     * Constructor
-     *
-     * @param object $db reference to the {@link XoopsDatabase} object
-     **/
-    public function TagLinkHandler(&$db)
-    {
-        self::__construct($db);
-    }
-
-    /**
-     * clean orphan links from database
-     *
-     * @return bool true on success
-     */
-    public function cleanOrphan()
-    {
-        return parent::cleanOrphan($this->db->prefix("tag_tag"), "tag_id");
+        $this->initVar('tl_id', XOBJ_DTYPE_INT, null, false);
+        $this->initVar('tag_id', XOBJ_DTYPE_INT, 0);
+        $this->initVar('tag_modid', XOBJ_DTYPE_INT, 0);
+        $this->initVar('tag_catid', XOBJ_DTYPE_INT, 0);
+        $this->initVar('tag_itemid', XOBJ_DTYPE_INT, 0);
+        $this->initVar('tag_time', XOBJ_DTYPE_INT, 0);
     }
 }

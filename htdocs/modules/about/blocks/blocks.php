@@ -10,38 +10,42 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright      The XOOPS Co.Ltd. http://www.xoops.com.cn
- * @copyright      XOOPS Project (http://xoops.org)
+ * @copyright      XOOPS Project (https://xoops.org)
  * @license        GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
  * @package        about
  * @since          1.0.0
  * @author         Mengjue Shao <magic.shao@gmail.com>
  * @author         Susheng Yang <ezskyyoung@gmail.com>
- * @version        $Id: blocks.php 1 2010-2-9 ezsky$
  */
 
-defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+use XoopsModules\About\Constants;
+
+defined('XOOPS_ROOT_PATH') || die('Restricted access');
 /**
  * @return mixed
  */
 function about_block_menu_show()
 {
-    $page_handler  = xoops_getModuleHandler('page', 'about');
-    $menu_criteria = new CriteriaCompo();
-    $menu_criteria->add(new Criteria('page_status', 1), 'AND');
-    $menu_criteria->add(new Criteria('page_menu_status', 1));
+    $moduleDirName = basename(dirname(__DIR__));
+    xoops_load('constants', $moduleDirName);
+
+    $helper     = Xmf\Module\Helper::getHelper($moduleDirName);
+    $pageHandler  = $helper->getHandler('page');
+    $menu_criteria = new \CriteriaCompo();
+    $menu_criteria->add(new \Criteria('page_status', Constants::PUBLISHED), 'AND');
+    $menu_criteria->add(new \Criteria('page_menu_status', Constants::IN_MENU));
     $menu_criteria->setSort('page_order');
-    $menu_criteria->setOrder('ASC');
-    $fields    = array(
+    $menu_criteria->order = 'ASC';
+    $fields    = [
         'page_id',
         'page_menu_title',
         'page_blank',
         'page_menu_status',
-        'page_status');
-    $page_menu = $page_handler->getAll($menu_criteria, $fields, false);
-
-    include dirname(__DIR__) . '/xoops_version.php';
+        'page_status'
+    ];
+    $page_menu = $pageHandler->getAll($menu_criteria, $fields, false);
     foreach ($page_menu as $k => $v) {
-        $page_menu[$k]['links'] = XOOPS_URL . '/modules/' . $modversion['dirname'] . '/index.php?page_id=' . $v['page_id'];
+        $page_menu[$k]['links'] = $helper->url("index.php?page_id={$v['page_id']}");
     }
 
     return $page_menu;
@@ -53,17 +57,22 @@ function about_block_menu_show()
  */
 function about_block_page_show($options)
 {
-    @include dirname(__DIR__) . '/xoops_version.php';
-    $myts         = MyTextSanitizer::getInstance();
-    $block        = array();
-    $page_handler = xoops_getModuleHandler('page', 'about');
-    $page         = $page_handler->get($options[0]);
-    if (!is_object($page) || empty($options[0])) {
+    if (empty($options[0])) {
+        return false;
+    }
+    $moduleDirName = basename(dirname(__DIR__));
+    $helper     = Xmf\Module\Helper::getHelper($moduleDirName);
+
+    $myts        = \MyTextSanitizer::getInstance();
+    $block       = [];
+    $pageHandler = $helper->getHandler('page');
+    $page        = $pageHandler->get($options[0]);
+    if (!is_object($page)) {
         return false;
     }
     $page_text = strip_tags($page->getVar('page_text', 'n'));
     if ($options[1] > 0) {
-        $url        = XOOPS_URL . '/modules/' . $modversion['dirname'] . '/index.php?page_id=' . $options[0];
+        $url        = $helper->url("index.php?page_id={$options[0]}");
         $trimmarker = <<<EOF
 <a href="{$url}" class="more">{$options[2]}</a>
 EOF;
@@ -71,7 +80,7 @@ EOF;
     }
 
     $block['page_text']  = $myts->nl2br($page_text);
-    $block['page_image'] = $options[3] == 1 ? XOOPS_UPLOAD_URL . '/' . $modversion['dirname'] . '/' . $page->getVar('page_image', 's') : '';
+    $block['page_image'] = 1 == $options[3] ? $helper->url($page->getVar('page_image', 's')) : '';
 
     return $block;
 }
@@ -82,29 +91,33 @@ EOF;
  */
 function about_block_page_edit($options)
 {
-    @include dirname(__DIR__) . '/xoops_version.php';
-    xoops_loadLanguage('blocks', 'about');
-    $page_handler = xoops_getModuleHandler('page', 'about');
-    $criteria     = new CriteriaCompo();
-    $criteria->add(new Criteria('page_status', 1), 'AND');
-    $criteria->add(new Criteria('page_type', 1));
+    $moduleDirName = basename(dirname(__DIR__));
+    $helper     = Xmf\Module\Helper::getHelper($moduleDirName);
+    xoops_load('constants', $moduleDirName);
+
+    $helper->loadLanguage('blocks');
+    $pageHandler = $helper->getHandler('page');
+    $criteria    = new \CriteriaCompo();
+    $criteria->add(new \Criteria('page_status', Constants::PUBLISHED), 'AND');
+    $criteria->add(new \Criteria('page_type', Constants::PAGE_TYPE_PAGE));
     $criteria->setSort('page_order');
-    $criteria->setOrder('ASC');
-    $fields     = array('page_id', 'page_title', 'page_image');
-    $pages      = $page_handler->getAll($criteria, $fields, false);
+    $criteria->order = 'ASC';
+    $fields     = ['page_id', 'page_title', 'page_image'];
+    $pages      = $pageHandler->getAll($criteria, $fields, false);
     $page_title = '';
     foreach ($pages as $k => $v) {
-        $page_title       = '<a href="' . XOOPS_URL . '/modules/' . $modversion['dirname'] . '/index.php?page_id=' . $k . '" target="_blank">' . $v['page_title'] . '</a>';
-        $options_page[$k] = empty($v['page_image']) ? $page_title : $page_title . '<img src="' . XOOPS_URL . '/modules/' . $modversion['dirname'] . '/assets/images/picture.png' . '" />';
+        $page_title       = '<a href="' . $helper->url("index.php?page_id={$k}") . '" target="_blank">' . $v['page_title'] . '</a>';
+        $options_page[$k] = empty($v['page_image']) ? $page_title : $page_title . '<img src="' . $helper->url('assets/images/picture.png') . '">';
     }
-    include_once dirname(__DIR__) . '/include/xoopsformloader.php';
-    $form        = new XoopsBlockForm();
-    $page_select = new XoopsFormRadio(_MB_ABOUT_BLOCKPAGE, 'options[0]', $options[0], '<br />');
+//    require_once dirname(__DIR__) . '/include/xoopsformloader.php';
+    xoops_load('blockform', $moduleDirName);
+    $form        = new AboutBlockForm();
+    $page_select = new \XoopsFormRadio(_MB_ABOUT_BLOCKPAGE, 'options[0]', $options[0], '<br>');
     $page_select->addOptionArray($options_page);
     $form->addElement($page_select);
-    $form->addElement(new XoopsFormText(_MB_ABOUT_TEXT_LENGTH, 'options[1]', 5, 5, $options[1]));
-    $form->addElement(new XoopsFormText(_MB_ABOUT_VIEW_MORELINKTEXT, 'options[2]', 30, 50, $options[2]));
-    $form->addElement(new XoopsFormRadioYN(_MB_ABOUT_DOTITLEIMAGE, 'options[3]', $options[3]));
+    $form->addElement(new \XoopsFormText(_MB_ABOUT_TEXT_LENGTH, 'options[1]', 5, 5, $options[1]));
+    $form->addElement(new \XoopsFormText(_MB_ABOUT_VIEW_MORELINKTEXT, 'options[2]', 30, 50, $options[2]));
+    $form->addElement(new \XoopsFormRadioYN(_MB_ABOUT_DOTITLEIMAGE, 'options[3]', $options[3]));
 
     return $form->render();
 }

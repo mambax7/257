@@ -81,9 +81,9 @@ Para  incluir  o   hack, abra  o  arquivo  XOOPS_ROOT_PATH/header.php  e no  fin
 #### Hack by rw-banner
 #### Cria variáveis smarty para exibir banner no tema do site e nos templates
 #######################################################################################
-$mod = XoopsModule::getByDirname("rw_banner");
+$mod = XoopsModule::getByDirname("rwbanner");
 if ($mod){
-  include_once (dirname(dirname(__FILE__)) .'/include/maketags.php');
+  include_once (dirname(__DIR__) .'/include/maketags.php');
 }
 #######################################################################################
 #### Fim do Hack by rw-banner
@@ -99,9 +99,9 @@ Para incluir o hack, abra o arquivo XOOPS_ROOT_PATH/class/module.textsanitizer.p
 #### Hack by rw-banner
 #### Permite a exibição de banners randomicos em qualquer módulo que aceite bbcodes
 #######################################################################################
-$mod = XoopsModule::getByDirname("rw_banner");
+$mod = XoopsModule::getByDirname("rwbanner");
 if ($mod){
-  include(dirname(dirname(__FILE__)) .'/include/bbcode.php');
+  include(dirname(__DIR__) .'/include/bbcode.php');
 }
 #######################################################################################
 #### Fim do Hack by rw-banner
@@ -133,11 +133,11 @@ O  parametro  align   aceita   os  valores  "left","right" e "center"  respectiv
 ===============================
 O módulo sofreu uma  modificação  total  em sua estrutura, seja em banco de dados ou em scipts, praticamente foi todo  refeito.  Se você usa  versões  anteriores à 1.3 RC, nós recomendamos firmemente que você desinstale o módulo antes de instalar a nova versão.
 
-Caso você use uma  versão igual ou superior à 1.3 RC, apague a pasta do rw_banner e coloque no lugar a pasta da nova versão.
+Caso você use uma  versão igual ou superior à 1.3 RC, apague a pasta do prefix('rwbanner_banner' e coloque no lugar a pasta da nova versão.
 
 Faça login no site como administrador.
 
-Se você utiliza o hack no header.php , comente-o primeiro, acesse via browser o endereço "dirname(dirname(__FILE__)) ."/admin/upgrade.php" que o script  fará  a  atualização  das tabelas automaticamente sem que você perca as configurações e banners já cadastrados.
+Se você utiliza o hack no header.php , comente-o primeiro, acesse via browser o endereço "dirname(__DIR__) ."/admin/upgrade.php" que o script  fará  a  atualização  das tabelas automaticamente sem que você perca as configurações e banners já cadastrados.
 
 Siga os passos do script e seu módulo estará atualizado.
 
@@ -155,7 +155,7 @@ http://rwbanner.brinfo.com.br
 
 [b]A SUA DISPOSIÇÃO:[/b]
 ===============================
-Estaremos  dentro do possivel  sempre criando  exemplos de  como utilizar o rw_banner e assim você poderá obter o maior proveito possivel a utilizar este módulo.
+Estaremos  dentro do possivel  sempre criando  exemplos de  como utilizar o prefix('rwbanner_banner' e assim você poderá obter o maior proveito possivel a utilizar este módulo.
 
 Se  você  estiver  utilizando  este  módulo, não  deixe de   visitar  o nosso  site  de desenvolvimento para sugerir novidades.
 

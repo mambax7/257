@@ -2,14 +2,14 @@
 /**
  * CBB 4.0, or newbb, the forum module for XOOPS project
  *
- * @copyright   XOOPS Project (http://xoops.org)
+ * @copyright   XOOPS Project (https://xoops.org)
  * @license     http://www.fsf.org/copyleft/gpl.html GNU public license
  * @author      Taiwen Jiang (phppp or D.J.) <phppp@users.sourceforge.net>
  * @since       4.00
  * @package     module::newbb
  */
 
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 defined('NEWBB_FUNCTIONS_INI') || include __DIR__ . '/functions.ini.php';
 define('NEWBB_FUNCTIONS_RENDER_LOADED', true);
@@ -26,35 +26,35 @@ if (!defined('NEWBB_FUNCTIONS_RENDER')):
      */
     function sf_htmlSpecialChars($text)
     {
-        return preg_replace(array('/&amp;/i', '/&nbsp;/i'), array('&', '&amp;nbsp;'), htmlspecialchars($text));
+        return preg_replace(['/&amp;/i', '/&nbsp;/i'], ['&', '&amp;nbsp;'], htmlspecialchars($text, ENT_QUOTES));
     }
 
     /**
-     * @param      $text
-     * @param  int $html
-     * @param  int $smiley
-     * @param  int $xcode
-     * @param  int $image
-     * @param  int $br
+     * @param        $text
+     * @param  int   $html
+     * @param  int   $smiley
+     * @param  int   $xcode
+     * @param  int   $image
+     * @param  int   $br
      * @return mixed
      */
     function &sf_displayTarea(&$text, $html = 0, $smiley = 1, $xcode = 1, $image = 1, $br = 1)
     {
         global $myts;
 
-        if ($html != 1) {
+        if (1 != $html) {
             // html not allowed
             $text = sf_htmlSpecialChars($text);
         }
         $text = $myts->codePreConv($text, $xcode); // Ryuji_edit(2003-11-18)
         $text = $myts->makeClickable($text);
-        if ($smiley != 0) {
+        if (0 != $smiley) {
             // process smiley
             $text = $myts->smiley($text);
         }
-        if ($xcode != 0) {
+        if (0 != $xcode) {
             // decode xcode
-            if ($image != 0) {
+            if (0 != $image) {
                 // image allowed
                 $text =& $myts->xoopsCodeDecode($text);
             } else {
@@ -62,7 +62,7 @@ if (!defined('NEWBB_FUNCTIONS_RENDER')):
                 $text =& $myts->xoopsCodeDecode($text, 0);
             }
         }
-        if ($br != 0) {
+        if (0 != $br) {
             $text =& $myts->nl2Br($text);
         }
         $text = $myts->codeConv($text, $xcode, $image);    // Ryuji_edit(2003-11-18)
@@ -84,8 +84,8 @@ if (!defined('NEWBB_FUNCTIONS_RENDER')):
     /**
      * Display forrum button
      *
-     * @param          $link
-     * @param          $button  image/button name, without extension
+     * @param  string  $link
+     * @param  string  $button  image/button name, without extension
      * @param  string  $alt     alt message
      * @param  boolean $asImage true for image mode; false for text mode
      * @param  string  $extra   extra attribute for the button
@@ -93,7 +93,7 @@ if (!defined('NEWBB_FUNCTIONS_RENDER')):
      */
     function sf_getButton($link, $button, $alt = '', $asImage = true, $extra = "class='forum_button'")
     {
-        $button = "<input type='button' name='{$button}' {$extra} value='{$alt}' onclick='window.location.href={$link}' />";
+        $button = "<input type='button' name='{$button}' {$extra} value='{$alt}' onclick='window.location.href={$link}'>";
         if (empty($asImage)) {
             $button = "<a href='{$link}' title='{$alt}' {$extra}>" . sf_displayImage($button, $alt, true) . '</a>';
         }
@@ -116,7 +116,7 @@ if (!defined('NEWBB_FUNCTIONS_RENDER')):
         // START hacked by irmtfan
         // to show text links instead of buttons - func_num_args()==2 => only when $image, $alt is set and optional $display not set
         global $xoopsModuleConfig;
-        if (func_num_args() == 2) {
+        if (2 == func_num_args()) {
             // overall setting
             if (!empty($xoopsModuleConfig['display_text_links'])) {
                 $display = false;
@@ -135,7 +135,7 @@ if (!defined('NEWBB_FUNCTIONS_RENDER')):
     }
 
     /**
-     * @return NewbbIconHandler
+     * @return \XoopsModules\Newbb\IconHandler
      */
     function sf_getIconHandler()
     {
@@ -145,12 +145,12 @@ if (!defined('NEWBB_FUNCTIONS_RENDER')):
         if (isset($iconHandler)) {
             return $iconHandler;
         }
-
-        if (!class_exists('NewbbIconHandler')) {
-            require_once dirname(__DIR__) . '/class/icon.php';
-        }
-
-        $iconHandler           = NewbbIconHandler::instance();
+        /*
+                if (!class_exists('NewbbIconHandler')) {
+                    // require_once __DIR__ . '/../class/icon.php';
+                }
+        */
+        $iconHandler           = \XoopsModules\Newbb\IconHandler::getInstance();
         $iconHandler->template = $xoTheme->template;
         $iconHandler->init($xoopsConfig['language']);
 

@@ -10,17 +10,16 @@
  */
 
 /**
- * @copyright       The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright       XOOPS Project (https://xoops.org)
  * @license         http://www.gnu.org/licenses/gpl-2.0.html GNU Public License
  * @package         Mymenus
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
- * @version         $Id: links.php 12944 2015-01-23 13:05:09Z beckmi $
  */
 
-defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
-include_once dirname(__DIR__) . '/include/common.php';
+require_once __DIR__ . '/../include/common.php';
 
 /**
  * Class MymenusLinks
@@ -39,7 +38,7 @@ class MymenusLinks extends XoopsObject
     public function __construct()
     {
         $this->mymenus = MymenusMymenus::getInstance();
-        $this->db      = XoopsDatabaseFactory::getDatabaseConnection();
+        $this->db      = \XoopsDatabaseFactory::getDatabaseConnection();
         $this->initVar('id', XOBJ_DTYPE_INT);
         $this->initVar('pid', XOBJ_DTYPE_INT);
         $this->initVar('mid', XOBJ_DTYPE_INT);
@@ -49,8 +48,8 @@ class MymenusLinks extends XoopsObject
         $this->initVar('link', XOBJ_DTYPE_TXTBOX);
         $this->initVar('weight', XOBJ_DTYPE_INT, 255);
         $this->initVar('target', XOBJ_DTYPE_TXTBOX);
-        $this->initVar('groups', XOBJ_DTYPE_ARRAY, serialize(array(XOOPS_GROUP_ANONYMOUS, XOOPS_GROUP_USERS)));
-        $this->initVar('hooks', XOBJ_DTYPE_ARRAY, serialize(array()));
+        $this->initVar('groups', XOBJ_DTYPE_ARRAY, serialize([XOOPS_GROUP_ANONYMOUS, XOOPS_GROUP_USERS]));
+        $this->initVar('hooks', XOBJ_DTYPE_ARRAY, serialize([]));
         $this->initVar('image', XOBJ_DTYPE_TXTBOX);
         $this->initVar('css', XOBJ_DTYPE_TXTBOX);
     }
@@ -63,7 +62,7 @@ class MymenusLinks extends XoopsObject
         $hooks              = $this->getHooks();
         $hooks['mymenus'][] = 'checkAccess';
         foreach ($hooks as $hookName => $hook) {
-            if (!mymenusHook($hookName, 'checkAccess', array('links' => $this))) {
+            if (!mymenusHook($hookName, 'checkAccess', ['links' => $this])) {
                 return false;
             }
         }
@@ -76,7 +75,7 @@ class MymenusLinks extends XoopsObject
      */
     public function getHooks()
     {
-        $ret  = array();
+        $ret  = [];
         $data = $this->getVar('hooks', 'n');
         if (!$data) {
             return $ret;
@@ -87,7 +86,7 @@ class MymenusLinks extends XoopsObject
             $line   = explode('|', $line);
             $hook   = trim($line[0]);
             $method = isset($line[1]) ? trim($line[1]) : '';
-            //$info = split(',', trim($line[0]));
+            //$info = explode(',', trim($line[0]));
             $ret[$hook][] = $method;
         }
 
@@ -107,9 +106,9 @@ class MymenusLinksHandler extends XoopsPersistableObjectHandler
     private $mymenus = null;
 
     /**
-     * @param null|object $db
+     * @param null|\XoopsDatabase $db
      */
-    public function __construct($db)
+    public function __construct(\XoopsDatabase $db)
     {
         parent::__construct($db, 'mymenus_links', 'MymenusLinks', 'id', 'title');
         $this->mymenus = MymenusMymenus::getInstance();
@@ -118,26 +117,26 @@ class MymenusLinksHandler extends XoopsPersistableObjectHandler
     /**
      * @param $obj
      */
-    public function updateWeights(&$obj)
+    public function updateWeights($obj)
     {
-        $sql = "UPDATE " . $this->table . " SET weight = weight+1";
-        $sql .= " WHERE";
-        $sql .= " weight >= " . $obj->getVar('weight');
-        $sql .= " AND";
-        $sql .= " id <> " . $obj->getVar('id');
+        $sql = 'UPDATE ' . $this->table . ' SET weight = weight+1';
+        $sql .= ' WHERE';
+        $sql .= ' weight >= ' . $obj->getVar('weight');
+        $sql .= ' AND';
+        $sql .= ' id <> ' . $obj->getVar('id');
         //$sql .= " AND pid = " . $obj->getVar('pid');
-        $sql .= " AND";
-        $sql .= " mid = " . $obj->getVar('mid');
+        $sql .= ' AND';
+        $sql .= ' mid = ' . $obj->getVar('mid');
         $this->db->queryF($sql);
 
-        $sql = "SELECT id FROM " . $this->table;
-        $sql .= " WHERE mid = " . $obj->getVar('mid');
+        $sql = 'SELECT id FROM ' . $this->table;
+        $sql .= ' WHERE mid = ' . $obj->getVar('mid');
         //$sql .= " AND pid = " . $obj->getVar('pid');
-        $sql .= " ORDER BY weight ASC";
+        $sql    .= ' ORDER BY weight ASC';
         $result = $this->db->query($sql);
         $i      = 1;  //lets start at 1 please!
-        while (list($id) = $this->db->fetchrow($result)) {
-            $sql = "UPDATE " . $this->table;
+        while (false !== (list($id) = $this->db->fetchRow($result))) {
+            $sql = 'UPDATE ' . $this->table;
             $sql .= " SET weight = {$i}";
             $sql .= " WHERE id = {$id}";
             $this->db->queryF($sql);

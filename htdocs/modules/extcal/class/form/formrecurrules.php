@@ -1,9 +1,11 @@
-<?php
+<?php namespace XoopsModules\Extcal\Form;
+
+use  XoopsModules\Extcal;
 
 /**
- * Class ExtcalFormRecurRules
+ * Class FormRecurRules.
  */
-class ExtcalFormRecurRules extends XoopsFormElement
+class FormRecurRules extends \XoopsFormElement
 {
     // Initial value form reccur form
     public $_rrule_freq             = 'none';
@@ -55,7 +57,7 @@ class ExtcalFormRecurRules extends XoopsFormElement
     }
 
     /**
-     * prepare HTML for output
+     * prepare HTML for output.
      *
      * @return string
      */
@@ -63,30 +65,30 @@ class ExtcalFormRecurRules extends XoopsFormElement
     {
         $ret = '';
 
-        $formObject = new XoopsFormRadio('', 'rrule_freq', $this->_rrule_freq);
+        $formObject = new \XoopsFormRadio('', 'rrule_freq', $this->_rrule_freq);
         $formObject->addOption('none', _MD_EXTCAL_NO_RECCUR_EVENT);
         $ret .= $formObject->render();
-        $ret .= '<br /><br /><fieldset><legend>' . _MD_EXTCAL_RECCUR_POLICY . '</legend><fieldset><legend>';
+        $ret .= '<br><br><fieldset><legend>' . _MD_EXTCAL_RECCUR_POLICY . '</legend><fieldset><legend>';
 
-        $formObject = new XoopsFormRadio('', 'rrule_freq', $this->_rrule_freq);
+        $formObject = new \XoopsFormRadio('', 'rrule_freq', $this->_rrule_freq);
         $formObject->addOption('daily', _MD_EXTCAL_DAILY);
         $ret .= $formObject->render();
         $ret .= '</legend>' . _MD_EXTCAL_DURING . ' ';
 
-        $formObject = new XoopsFormText('', 'rrule_daily_interval', 3, 2, $this->_rrule_daily_interval);
-        $ret .= $formObject->render();
-        $ret .= ' ' . _MD_EXTCAL_DAYS . '</fieldset><br /><fieldset><legend>';
+        $formObject = new \XoopsFormText('', 'rrule_daily_interval', 3, 2, $this->_rrule_daily_interval);
+        $ret        .= $formObject->render();
+        $ret        .= ' ' . _MD_EXTCAL_DAYS . '</fieldset><br><fieldset><legend>';
 
-        $formObject = new XoopsFormRadio('', 'rrule_freq', $this->_rrule_freq);
+        $formObject = new \XoopsFormRadio('', 'rrule_freq', $this->_rrule_freq);
         $formObject->addOption('weekly', _MD_EXTCAL_WEEKLY);
         $ret .= $formObject->render();
         $ret .= '</legend>' . _MD_EXTCAL_DURING . ' ';
 
-        $formObject = new XoopsFormText('', 'rrule_weekly_interval', 3, 2, $this->_rrule_weekly_interval);
-        $ret .= $formObject->render();
-        $ret .= ' ' . _MD_EXTCAL_WEEKS . '<br />';
+        $formObject = new \XoopsFormText('', 'rrule_weekly_interval', 3, 2, $this->_rrule_weekly_interval);
+        $ret        .= $formObject->render();
+        $ret        .= ' ' . _MD_EXTCAL_WEEKS . '<br>';
 
-        $formObject = new XoopsFormCheckBox('', 'rrule_weekly_bydays', $this->_rrule_weekly_bydays);
+        $formObject = new \XoopsFormCheckBox('', 'rrule_weekly_bydays', $this->_rrule_weekly_bydays);
         $formObject->addOption('MO', _MD_EXTCAL_MO2 . '&nbsp;');
         $formObject->addOption('TU', _MD_EXTCAL_TU2 . '&nbsp;');
         $formObject->addOption('WE', _MD_EXTCAL_WE2 . '&nbsp;');
@@ -95,18 +97,18 @@ class ExtcalFormRecurRules extends XoopsFormElement
         $formObject->addOption('SA', _MD_EXTCAL_SA2 . '&nbsp;');
         $formObject->addOption('SU', _MD_EXTCAL_SU2 . '&nbsp;');
         $ret .= $formObject->render();
-        $ret .= '</fieldset><br /><fieldset><legend>';
+        $ret .= '</fieldset><br><fieldset><legend>';
 
-        $formObject = new XoopsFormRadio('', 'rrule_freq', $this->_rrule_freq);
+        $formObject = new \XoopsFormRadio('', 'rrule_freq', $this->_rrule_freq);
         $formObject->addOption('monthly', _MD_EXTCAL_MONTHLY);
         $ret .= $formObject->render();
         $ret .= '</legend>' . _MD_EXTCAL_DURING . ' ';
 
-        $formObject = new XoopsFormText('', 'rrule_monthly_interval', 3, 2, $this->_rrule_monthly_interval);
-        $ret .= $formObject->render();
-        $ret .= ' ' . _MD_EXTCAL_MONTH . ', ' . _MD_EXTCAL_ON . ' ';
+        $formObject = new \XoopsFormText('', 'rrule_monthly_interval', 3, 2, $this->_rrule_monthly_interval);
+        $ret        .= $formObject->render();
+        $ret        .= ' ' . _MD_EXTCAL_MONTH . ', ' . _MD_EXTCAL_ON . ' ';
 
-        $formObject = new XoopsFormSelect('', 'rrule_monthly_byday', $this->_rrule_monthly_byday);
+        $formObject = new \XoopsFormSelect('', 'rrule_monthly_byday', $this->_rrule_monthly_byday);
         $formObject->addOption('', '&nbsp;');
         $formObject->addOption('1MO', _MD_EXTCAL_1_MO);
         $formObject->addOption('1TU', _MD_EXTCAL_1_TU);
@@ -146,20 +148,20 @@ class ExtcalFormRecurRules extends XoopsFormElement
         $ret .= $formObject->render();
         $ret .= ' ' . _MD_EXTCAL_OR_THE . ' ';
 
-        $formObject = new XoopsFormText('', 'rrule_bymonthday', 3, 2, $this->_rrule_bymonthday);
-        $ret .= $formObject->render();
-        $ret .= ' ' . _MD_EXTCAL_DAY_NUM_MONTH . '</fieldset><br /><fieldset><legend>';
+        $formObject = new \XoopsFormText('', 'rrule_bymonthday', 3, 2, $this->_rrule_bymonthday);
+        $ret        .= $formObject->render();
+        $ret        .= ' ' . _MD_EXTCAL_DAY_NUM_MONTH . '</fieldset><br><fieldset><legend>';
 
-        $formObject = new XoopsFormRadio('', 'rrule_freq', $this->_rrule_freq);
+        $formObject = new \XoopsFormRadio('', 'rrule_freq', $this->_rrule_freq);
         $formObject->addOption('yearly', _MD_EXTCAL_YEARLY);
         $ret .= $formObject->render();
         $ret .= '</legend>' . _MD_EXTCAL_DURING . ' ';
 
-        $formObject = new XoopsFormText('', 'rrule_yearly_interval', 3, 2, $this->_rrule_yearly_interval);
-        $ret .= $formObject->render();
-        $ret .= ' ' . _MD_EXTCAL_YEARS . '<br />';
+        $formObject = new \XoopsFormText('', 'rrule_yearly_interval', 3, 2, $this->_rrule_yearly_interval);
+        $ret        .= $formObject->render();
+        $ret        .= ' ' . _MD_EXTCAL_YEARS . '<br>';
 
-        $formObject = new ExtcalFormRRuleCheckBox('', 'rrule_yearly_bymonths', $this->_rrule_yearly_bymonths);
+        $formObject = new Extcal\Form\FormRRuleCheckBox('', 'rrule_yearly_bymonths', $this->_rrule_yearly_bymonths);
         $formObject->addOption('1', _MD_EXTCAL_JAN);
         $formObject->addOption('2', _MD_EXTCAL_FEB);
         $formObject->addOption('3', _MD_EXTCAL_MAR);
@@ -173,9 +175,9 @@ class ExtcalFormRecurRules extends XoopsFormElement
         $formObject->addOption('11', _MD_EXTCAL_NOV);
         $formObject->addOption('12', _MD_EXTCAL_DEC);
         $ret .= $formObject->render();
-        $ret .= '<br />';
+        $ret .= '<br>';
 
-        $formObject = new XoopsFormSelect('', 'rrule_yearly_byday', $this->_rrule_yearly_byday);
+        $formObject = new \XoopsFormSelect('', 'rrule_yearly_byday', $this->_rrule_yearly_byday);
         $formObject->addOption('', _MD_EXTCAL_SAME_ST_DATE);
         $formObject->addOption('1MO', _MD_EXTCAL_1_MO);
         $formObject->addOption('1TU', _MD_EXTCAL_1_TU);

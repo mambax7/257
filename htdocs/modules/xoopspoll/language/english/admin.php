@@ -4,7 +4,6 @@
  *
  * @package   ::    xoopspoll
  * @subpackage:: defines
- * @version   ::    $Id: admin.php 11547 2013-05-15 20:47:32Z zyspec $
  */
 define('_AM_XOOPSPOLL_DBUPDATED', 'Database Updated Successfully!');
 define('_AM_XOOPSPOLL_POLLCONF', 'Polls Configuration');
@@ -47,7 +46,7 @@ define('_AM_XOOPSPOLL_VOTETIME', 'Vote Time');
 define('_AM_XOOPSPOLL_HOST_NAME', 'Host Name');
 
 // Text for Admin footer
-//define('_AM_XOOPSPOLL_ADMIN_FOOTER', '<div class='center smallsmall italic pad5'>XOOPS Poll is maintained by the <a class='tooltip' rel='external' href='http://xoops.org/' title='Visit XOOPS Community'>XOOPS Community</a></div>');
+//define('_AM_XOOPSPOLL_ADMIN_FOOTER', '<div class='center smallsmall italic pad5'>XOOPS Poll is maintained by the <a class='tooltip' rel='external' href='https://xoops.org/' title='Visit XOOPS Community'>XOOPS Community</a></div>');
 
 define('_AM_XOOPSPOLL_ACTIONS', 'Actions');
 define('_AM_XOOPSPOLL_POLLVOTERS', 'Voters participating in this Poll');

@@ -1,5 +1,5 @@
 /*
- * $Id: seo.txt,v 1.1 2007/08/25 14:37:47 marcan Exp $
+ *
  * Module: Publisher
  * Author: Sudhaker Raj <http://xoops.biz>
  * Licence: GNU

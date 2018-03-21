@@ -1,7 +1,40 @@
+<h5>1.14 Beta 1  [NOT RELEASED]</h5>  Dev: Xoops 2.5.9, PHP 7.2.3
+<hr>
+- namespaces, autoloading (mamba)
+WORK IN PROGRESS
+
+============================
+1.13 RC 1       NOT RELEASED
+============================
+- updates for PHP7, XOOPS 2.5.8 (mamba)
+- code cosmetics (mamba)
+- removed @version (mamba)
+- addNavigation(basename(__FILE__))  (mamba)
+- dirname(__FILE__) to __DIR__ (mamba)
+- XOOPS 2.5.8, PHP 7 (mamba)
+- replaced < b /> with < b > (mamba)
+- Unnecessary double quotes (mamba)
+- reference mismatch (mamba)
+- Hardening to type safe (mamba)
+- update Help (mamba)
+- changed RGB to HEX (mamba)
+- updated and optimized CSS (background and margins) (mamba)
+- added "type hints" via PhpDocs (mamba)
+- added oninstall.php, onupdate.php (mamba)
+- added checks for PHP & XOOPS Versions (mamba)
+- added moduleConfig array (mamba)
+- added upload button to index page (peekay)
+- added defaults for mysql.sql (mamba)
+
+- updated PEAR 1.10.3 (mamba)
+- updated PEAR GetoptPlus 1.0.0 RC1 (mamba)
+- update PEAR Image-Transform 0.9.5 (mamba)
+
+
 ============================
 1.13 Beta 1     2016-03-20
 ============================
-- updates for PHP7, XOOPS 2.5.8 (mamba)
+- XOOPS 2.5.8, PHP 7 (mamba)
 
 ============================
 1.12 Beta 2       2014-04-23
@@ -26,7 +59,7 @@ _MB_EXTGALLERY_AJAX_TOSRUS (added) (luciorota)
 1.12 Beta 1     2013-08-12
 ============================
 - added .jpeg extension (mamba)
-- replaced ExtgalleryPhotoUploader with standard XoopsMediaUploader (mamba)
+- replaced Extgallery\PhotoUploader with standard XoopsMediaUploader (mamba)
 - fix for index template (Cifug)
 
 ============================
@@ -719,7 +752,7 @@ extension.php (added file)
 - Fix bug : language constant wasn't use on admin side (permission page)
 - Add a directory permission checker to display error message if eXtGallery photo directories isn't writable
 - Add title for photos and choice to display or not (jbboschung)
-- Add weight for photos. All request SQL order (new criteria : ASC) by weight now (jbboschung)
+- Add weight for photos. All request SQL order (new Criteria : ASC) by weight now (jbboschung)
 - Add image url for category and choice to display or not. Display image url witdh = 100 px. (jbboschung)
 - Note : Image url is priority as 'Miniature' of category. If not image url, the 'Miniature' image was display.
 
@@ -729,7 +762,7 @@ extension.php (added file)
 ============================
 
 - Fix bug : eCard not sent
-- Add a new criteria order for category. Category name is used after weight
+- Add a new Criteria order for category. Category name is used after weight
 - Fix bug : blank page when an anonymous rate a photo
 - Fix bug : only one anonymous user could rate a photo
 - Fix bug : Medium photo not resized when border or watermark are enable

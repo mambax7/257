@@ -1,9 +1,9 @@
 <?php
-// $Id: rating.php 159 2007-12-17 16:44:05Z malanciault $
+//
 // ------------------------------------------------------------------------ //
 //               XOOPS - PHP Content Management System                      //
-//                   Copyright (c) 2000 XOOPS.org                           //
-//                      <http://www.xoops.org/>                             //
+//                   Copyright (c) 2000-2016 XOOPS.org                           //
+//                      <https://xoops.org>                             //
 // ------------------------------------------------------------------------ //
 // This program is free software; you can redistribute it and/or modify     //
 // it under the terms of the GNU General Public License as published by     //
@@ -23,22 +23,27 @@
 // along with this program; if not, write to the Free Software              //
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
 // ------------------------------------------------------------------------ //
-// URL: http://www.xoops.org/                                               //
-// Project: The XOOPS Project                                               //
+// URL: https://xoops.org/                                               //
+// Project: XOOPS Project                                               //
 // -------------------------------------------------------------------------//
 
-if (!defined("XOOPS_ROOT_PATH")) {
-    die("XOOPS root path not defined");
-}
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
-include_once XOOPS_ROOT_PATH."/modules/smartobject/class/smartobject.php";
-include_once XOOPS_ROOT_PATH."/modules/smartobject/class/smartplugins.php";
+require_once XOOPS_ROOT_PATH . '/modules/smartobject/class/smartobject.php';
+require_once XOOPS_ROOT_PATH . '/modules/smartobject/class/smartplugins.php';
 
-class SmartobjectRating extends SmartObject {
+/**
+ * Class SmartobjectRating
+ */
+class SmartobjectRating extends SmartObject
+{
+    public $_modulePlugin = false;
 
-    var $_modulePlugin=false;
-
-    function SmartobjectRating() {
+    /**
+     * SmartobjectRating constructor.
+     */
+    public function __construct()
+    {
         $this->quickInitVar('ratingid', XOBJ_DTYPE_INT, true);
         $this->quickInitVar('dirname', XOBJ_DTYPE_TXTBOX, true, _CO_SOBJECT_RATING_DIRNAME);
         $this->quickInitVar('item', XOBJ_DTYPE_TXTBOX, true, _CO_SOBJECT_RATING_ITEM);
@@ -49,78 +54,126 @@ class SmartobjectRating extends SmartObject {
 
         $this->initNonPersistableVar('name', XOBJ_DTYPE_TXTBOX, 'user', _CO_SOBJECT_RATING_NAME);
 
-        $this->setControl('dirname', array(
-                                'handler' => 'rating',
-                                'method' => 'getModuleList',
-                                'onSelect' => 'submit'));
+        $this->setControl('dirname', [
+            'handler'  => 'rating',
+            'method'   => 'getModuleList',
+            'onSelect' => 'submit'
+        ]);
 
-        $this->setControl('item', array(
-                                'object' => &$this,
-                                'method' => 'getItemList'));
+        $this->setControl('item', [
+            'object' => &$this,
+            'method' => 'getItemList'
+        ]);
 
         $this->setControl('uid', 'user');
 
-        $this->setControl('rate', array(
-                                'handler' => 'rating',
-                                'method' => 'getRateList'));
+        $this->setControl('rate', [
+            'handler' => 'rating',
+            'method'  => 'getRateList'
+        ]);
     }
 
-    function getVar($key, $format = 's') {
-        if ($format == 's' && in_array($key, array('name', 'dirname'))) {
-            return call_user_func(array($this,$key));
+    /**
+     * @param  string $key
+     * @param  string $format
+     * @return mixed
+     */
+    public function getVar($key, $format = 's')
+    {
+        if ('s' === $format && in_array($key, ['name', 'dirname'])) {
+            //            return call_user_func(array($this, $key));
+            return $this->{$key}();
         }
+
         return parent::getVar($key, $format);
     }
 
-    function name() {
-        $ret = smart_getLinkedUnameFromId($this->getVar('uid', 'e'), true, array());
+    /**
+     * @return string
+     */
+    public function name()
+    {
+        $ret = smart_getLinkedUnameFromId($this->getVar('uid', 'e'), true, []);
 
         return $ret;
     }
 
-    function dirname() {
-        global $smartobject_rating_handler;
-        $moduleArray = $smartobject_rating_handler->getModuleList();
+    /**
+     * @return mixed
+     */
+    public function dirname()
+    {
+        global $smartobjectRatingHandler;
+        $moduleArray = $smartobjectRatingHandler->getModuleList();
+
         return $moduleArray[$this->getVar('dirname', 'n')];
     }
 
-    function getItemList() {
+    /**
+     * @return mixed
+     */
+    public function getItemList()
+    {
         $plugin = $this->getModulePlugin();
+
         return $plugin->getItemList();
     }
 
-    function getItemValue() {
-        $moduleUrl = XOOPS_URL . '/modules/' . $this->getVar('dirname', 'n') . '/';
-        $plugin = $this->getModulePlugin();
+    /**
+     * @return string
+     */
+    public function getItemValue()
+    {
+        $moduleUrl      = XOOPS_URL . '/modules/' . $this->getVar('dirname', 'n') . '/';
+        $plugin         = $this->getModulePlugin();
         $pluginItemInfo = $plugin->getItemInfo($this->getVar('item'));
         if (!$pluginItemInfo) {
             return '';
         }
         $itemPath = sprintf($pluginItemInfo['url'], $this->getVar('itemid'));
-        $ret = '<a href="' . $moduleUrl . $itemPath . '">' . $pluginItemInfo['caption'] . '</a>';
+        $ret      = '<a href="' . $moduleUrl . $itemPath . '">' . $pluginItemInfo['caption'] . '</a>';
+
         return $ret;
     }
 
-    function getRateValue() {
+    /**
+     * @return mixed
+     */
+    public function getRateValue()
+    {
         return $this->getVar('rate');
     }
 
-    function getModulePlugin() {
+    /**
+     * @return bool
+     */
+    public function getModulePlugin()
+    {
         if (!$this->_modulePlugin) {
-            global $smartobject_rating_handler;
-            $this->_modulePlugin = $smartobject_rating_handler->pluginsObject->getPlugin($this->getVar('dirname', 'n'));
+            global $smartobjectRatingHandler;
+            $this->_modulePlugin = $smartobjectRatingHandler->pluginsObject->getPlugin($this->getVar('dirname', 'n'));
         }
+
         return $this->_modulePlugin;
     }
 }
-class SmartobjectRatingHandler extends SmartPersistableObjectHandler {
 
-    var $_rateOptions=array();
-    var $_moduleList=false;
-    var $pluginsObject;
+/**
+ * Class SmartobjectRatingHandler
+ */
+class SmartobjectRatingHandler extends SmartPersistableObjectHandler
+{
+    public $_rateOptions = [];
+    public $_moduleList  = false;
+    public $pluginsObject;
 
-    function SmartobjectRatingHandler($db) {
-        $this->SmartPersistableObjectHandler($db, 'rating', 'ratingid', 'rate', '', 'smartobject');
+    /**
+     * SmartobjectRatingHandler constructor.
+     * @param XoopsDatabase $db
+     */
+    public function __construct(\XoopsDatabase $db)
+    {
+        parent::__construct($db, 'rating', 'ratingid', 'rate', '', 'smartobject');
         $this->generalSQL = 'SELECT * FROM ' . $this->table . ' AS ' . $this->_itemname . ' INNER JOIN ' . $this->db->prefix('users') . ' AS user ON ' . $this->_itemname . '.uid=user.uid';
 
         $this->_rateOptions[1] = 1;
@@ -132,49 +185,71 @@ class SmartobjectRatingHandler extends SmartPersistableObjectHandler {
         $this->pluginsObject = new SmartPluginHandler();
     }
 
-    function getModuleList() {
+    /**
+     * @return bool
+     */
+    public function getModuleList()
+    {
         if (!$this->_moduleList) {
-            $moduleArray = $this->pluginsObject->getPluginsArray();
+            $moduleArray          = $this->pluginsObject->getPluginsArray();
             $this->_moduleList[0] = _CO_SOBJECT_MAKE_SELECTION;
-            foreach ($moduleArray as $k=>$v) {
+            foreach ($moduleArray as $k => $v) {
                 $this->_moduleList[$k] = $v;
             }
         }
+
         return $this->_moduleList;
     }
 
-    function getRateList() {
+    /**
+     * @return array
+     */
+    public function getRateList()
+    {
         return $this->_rateOptions;
     }
 
-    function getRatingAverageByItemId($itemid, $dirname, $item) {
-        $sql = "SELECT AVG(rate), COUNT(ratingid) FROM " . $this->table . " WHERE itemid=$itemid AND dirname='$dirname' AND item='$item' GROUP BY itemid";
+    /**
+     * @param $itemid
+     * @param $dirname
+     * @param $item
+     * @return int
+     */
+    public function getRatingAverageByItemId($itemid, $dirname, $item)
+    {
+        $sql    = 'SELECT AVG(rate), COUNT(ratingid) FROM ' . $this->table . " WHERE itemid=$itemid AND dirname='$dirname' AND item='$item' GROUP BY itemid";
         $result = $this->db->query($sql);
         if (!$result) {
             return 0;
         }
         list($average, $sum) = $this->db->fetchRow($result);
         $ret['average'] = isset($average) ? $average : 0;
-        $ret['sum'] = isset($sum) ? $sum : 0;
+        $ret['sum']     = isset($sum) ? $sum : 0;
+
         return $ret;
     }
-    function already_rated($item, $itemid, $dirname, $uid){
 
-        $criteria = new CriteriaCompo();
-        $criteria->add(new Criteria('item',$item ));
-        $criteria->add(new Criteria('itemid',$itemid ));
-        $criteria->add(new Criteria('dirname', $dirname));
-        $criteria->add(new Criteria('user.uid', $uid));
+    /**
+     * @param $item
+     * @param $itemid
+     * @param $dirname
+     * @param $uid
+     * @return bool
+     */
+    public function already_rated($item, $itemid, $dirname, $uid)
+    {
+        $criteria = new \CriteriaCompo();
+        $criteria->add(new \Criteria('item', $item));
+        $criteria->add(new \Criteria('itemid', $itemid));
+        $criteria->add(new \Criteria('dirname', $dirname));
+        $criteria->add(new \Criteria('user.uid', $uid));
 
-        $ret = $this->getObjects($criteria);
+        $ret =& $this->getObjects($criteria);
 
-        if(!$ret){
+        if (!$ret) {
             return false;
-        }else{
+        } else {
             return $ret[0];
         }
-
-
     }
 }
-?>

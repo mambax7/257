@@ -9,15 +9,16 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright   {@link http://xoops.org/ XOOPS Project}
+ * @copyright   {@link https://xoops.org/ XOOPS Project}
  * @license     GNU GPL 2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  * @author      Zoullou (http://www.zoullou.net)
  * @package     ExtGallery
- * @version     $Id: public-photo.php 10874 2013-01-23 17:23:02Z beckmi $
  */
 
-require dirname(dirname(__DIR__)) . '/mainfile.php';
-include_once XOOPS_ROOT_PATH . '/modules/extgallery/class/publicPerm.php';
+
+use XoopsModules\Extgallery;
+
+include __DIR__ . '/header.php';
 
 $GLOBALS['xoopsOption']['template_main'] = 'extgallery_public-photo.tpl';
 include XOOPS_ROOT_PATH . '/header.php';
@@ -27,27 +28,27 @@ if (!isset($_GET['photoId'])) {
 } else {
     $photoId = (int)$_GET['photoId'];
 }
-
-$catHandler    = xoops_getModuleHandler('publiccat', 'extgallery');
-$photoHandler  = xoops_getModuleHandler('publicphoto', 'extgallery');
-$ratingHandler = xoops_getModuleHandler('publicrating', 'extgallery');
-$permHandler   = ExtgalleryPublicPermHandler::getHandler();
+/** @var Extgallery\PublicCategoryHandler $catHandler */
+$catHandler = Extgallery\Helper::getInstance()->getHandler('PublicCategory');
+/** @var Extgallery\PublicPhotoHandler $photoHandler */
+$photoHandler = Extgallery\Helper::getInstance()->getHandler('PublicPhoto');
+/** @var Extgallery\PublicRatingHandler $ratingHandler */
+$ratingHandler = Extgallery\Helper::getInstance()->getHandler('PublicRating');
+$permHandler   = Extgallery\PublicPermHandler::getInstance();
 
 $photoObj = $photoHandler->getPhoto($photoId);
 
 // Check is the photo exist
 if (!$photoObj) {
     redirect_header('index.php', 3, _NOPERM);
-    exit;
 }
 
-$photo = $photoHandler->objectToArray($photoObj, array('cat_id', 'uid'));
+$photo = $photoHandler->objectToArray($photoObj, ['cat_id', 'uid']);
 
 // Check the category access permission
-$permHandler = ExtgalleryPublicPermHandler::getHandler();
-if (!$permHandler->isAllowed($xoopsUser, 'public_access', $photo['cat']['cat_id'])) {
+$permHandler = Extgallery\PublicPermHandler::getInstance();
+if (!$permHandler->isAllowed($GLOBALS['xoopsUser'], 'public_access', $photo['cat']['cat_id'])) {
     redirect_header('index.php', 3, _NOPERM);
-    exit;
 }
 
 // Don't update counter if user come from rating page
@@ -56,8 +57,8 @@ if (isset($_SERVER['HTTP_REFERER']) && basename($_SERVER['HTTP_REFERER']) != 'pu
 }
 
 // Plugin traitement
-$plugin = xoops_getModuleHandler('plugin', 'extgallery');
-$params = array('catId' => $photo['cat']['cat_id'], 'photoId' => $photo['photo_id'], 'link' => array());
+$plugin = Extgallery\Helper::getInstance()->getHandler('Plugin');
+$params = ['catId' => $photo['cat']['cat_id'], 'photoId' => $photo['photo_id'], 'link' => []];
 $plugin->triggerEvent('photoAlbumLink', $params);
 $photo['link'] = $params['link'];
 
@@ -75,10 +76,10 @@ $photosIds = $photoHandler->getPhotoAlbumId($photoObj->getVar('cat_id'));
 $nbPhoto           = count($photosIds);
 $currentPhotoPlace = array_search($photoId, $photosIds);
 
-if ($nbPhoto == 1) {
+if (1 == $nbPhoto) {
     $prev = 0;
     $next = 0;
-} elseif ($currentPhotoPlace == 0) {
+} elseif (0 == $currentPhotoPlace) {
     $prev = 0;
     $next = $photosIds[$currentPhotoPlace + 1];
 } elseif (($currentPhotoPlace + 1) == $nbPhoto) {
@@ -107,7 +108,7 @@ $xoTheme->addStylesheet('modules/extgallery/assets/css/style.css');
 
 $xoopsTpl->assign('rating', $ratingHandler->getRate($photoId));
 
-$lang = array(
+$lang = [
     'preview'      => _MD_EXTGALLERY_PREVIEW,
     'next'         => _MD_EXTGALLERY_NEXT,
     'of'           => _MD_EXTGALLERY_OF,
@@ -126,11 +127,12 @@ $lang = array(
     'sendEcard'    => _MD_EXTGALLERY_SEND_ECARD,
     'sends'        => _MD_EXTGALLERY_SENDS,
     'submitter'    => _MD_EXTGALLERY_SUBMITTER,
-    'allPhotoBy'   => _MD_EXTGALLERY_ALL_PHOTO_BY);
+    'allPhotoBy'   => _MD_EXTGALLERY_ALL_PHOTO_BY
+];
 $xoopsTpl->assign('lang', $lang);
 
 if ($xoopsModuleConfig['enable_rating']) {
-    $xoopsTpl->assign('canRate', $permHandler->isAllowed($xoopsUser, 'public_rate', $cat['cat_id']));
+    $xoopsTpl->assign('canRate', $permHandler->isAllowed($GLOBALS['xoopsUser'], 'public_rate', $cat['cat_id']));
 } else {
     $xoopsTpl->assign('canRate', false);
     //DNPROSSI - added preferences option - enable_rating
@@ -140,9 +142,9 @@ if ($xoopsModuleConfig['enable_rating']) {
 //DNPROSSI - added preferences option
 //  enable_info, enable_resolution, enable_download, enable_date
 //  enable_ecards, enable_submitter_lnk, enable_photo_hits
-if ($xoopsModuleConfig['info_view'] === 'photo' || $xoopsModuleConfig['info_view'] === 'both') {
-    if ($xoopsModuleConfig['pubusr_info_view'] === 'public' || $xoopsModuleConfig['pubusr_info_view'] === 'both') {
-        if ($xoopsModuleConfig['enable_info'] == 0) {
+if ('photo' === $xoopsModuleConfig['info_view'] || 'both' === $xoopsModuleConfig['info_view']) {
+    if ('public' === $xoopsModuleConfig['pubusr_info_view'] || 'both' === $xoopsModuleConfig['pubusr_info_view']) {
+        if (0 == $xoopsModuleConfig['enable_info']) {
             $enable_info = $xoopsModuleConfig['enable_info'];
         } else {
             $enable_info = 1;
@@ -164,8 +166,8 @@ $xoopsTpl->assign('enable_photo_hits', $xoopsModuleConfig['enable_photo_hits']);
 $xoopsTpl->assign('show_social_book', $xoopsModuleConfig['show_social_book']);
 
 $xoopsTpl->assign('enableExtra', $xoopsModuleConfig['display_extra_field']);
-$xoopsTpl->assign('canSendEcard', $permHandler->isAllowed($xoopsUser, 'public_ecard', $cat['cat_id']));
-$xoopsTpl->assign('canDownload', $permHandler->isAllowed($xoopsUser, 'public_download', $cat['cat_id']));
+$xoopsTpl->assign('canSendEcard', $permHandler->isAllowed($GLOBALS['xoopsUser'], 'public_ecard', $cat['cat_id']));
+$xoopsTpl->assign('canDownload', $permHandler->isAllowed($GLOBALS['xoopsUser'], 'public_download', $cat['cat_id']));
 
 $xoopsTpl->assign('extgalleryName', $xoopsModule->getVar('name'));
 $xoopsTpl->assign('disp_ph_title', $xoopsModuleConfig['disp_ph_title']);
@@ -173,8 +175,8 @@ $xoopsTpl->assign('display_type', $xoopsModuleConfig['display_type']);
 $xoopsTpl->assign('show_rss', $xoopsModuleConfig['show_rss']);
 
 // For xoops tag
-if (($xoopsModuleConfig['usetag'] == 1) and is_dir('../tag')) {
-    include_once XOOPS_ROOT_PATH . '/modules/tag/include/tagbar.php';
+if ((1 == $xoopsModuleConfig['usetag']) && is_dir('../tag')) {
+    require_once XOOPS_ROOT_PATH . '/modules/tag/include/tagbar.php';
     $xoopsTpl->assign('tagbar', tagBar($photo['photo_id'], $catid = 0));
     $xoopsTpl->assign('tags', true);
 } else {

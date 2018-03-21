@@ -1,4 +1,5 @@
-<?php
+<?php namespace XoopsModules\Publisher;
+
 /*
  You may not change or alter any portion of this comment or credits
  of supporting developers from this source code or any supporting source code
@@ -17,10 +18,11 @@
  * @package         Publisher
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
- * @version         $Id: blockform.php 10374 2012-12-12 23:39:48Z trabis $
  */
 
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+use XoopsModules\Publisher;
+
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 xoops_load('XoopsForm');
 
@@ -29,7 +31,7 @@ xoops_load('XoopsForm');
  *
  * No styles and no JavaScript to check for required fields.
  */
-class PublisherBlockForm extends XoopsForm
+class BlockForm extends \XoopsForm
 {
     /**
      *
@@ -46,7 +48,7 @@ class PublisherBlockForm extends XoopsForm
      *
      * To use the noColspan simply use the following example:
      *
-     * $colspan = new XoopsFormDhtmlTextArea( '', 'key', $value, '100%', '100%' );
+     * $colspan = new \XoopsFormDhtmlTextArea( '', 'key', $value, '100%', '100%' );
      * $colspan->setNocolspan();
      * $form->addElement( $colspan );
      *
@@ -61,7 +63,7 @@ class PublisherBlockForm extends XoopsForm
                     $ret .= '<tr><td style="vertical-align: top; width: 250px;">';
                     $ret .= '<span style="font-weight: bold;">' . $ele->getCaption() . '</span>';
                     if (isset($eleDesc) && $eleDesc == $ele->getDescription()) {
-                        $ret .= '<br /><br /><span style="font-weight: normal;">' . $eleDesc . '</span>';
+                        $ret .= '<br><br><span style="font-weight: normal;">' . $eleDesc . '</span>';
                     }
                     $ret .= '</td><td>' . $ele->render() . '</td></tr>';
                 } else {

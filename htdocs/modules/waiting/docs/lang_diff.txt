@@ -3,16 +3,25 @@ LANGUAGE DIFFERENCES
 
 Below are language differences from a version to next version.
 
+Version 1.06
+
++ _MI_WAITING_NAME
++ _MI_WAITING_HEADER
++ _MI_WAITING_DIRNAME
++ _MI_WAITING_BACK_2_ADMIN
+
+--------------------------------------------------------------
+
 Version 0.97
 
-waiting\language\english\admin.php
+Waiting\language\english\admin.php
     Line 8: define('_AM_WAITING_DIRNAME',"Directory name");
 
 --------------------------------------------------------------
 
 Version 0.96
 
-waiting\language\english\modinfo.php
+Waiting\language\english\modinfo.php
 
 + _MI_WAITING_MENU_HOME
 + _MI_WAITING_MENU_ABOUT

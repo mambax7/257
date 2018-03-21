@@ -1,13 +1,13 @@
 <?php
 /**
  * Description: Performs same behaviour as 2.php but uses Month::buildWeekDays()
- * and is faster
+ * and is faster.
  */
 function getmicrotime()
 {
     list($usec, $sec) = explode(' ', microtime());
 
-    return ((float)$usec + (float)$sec);
+    return (float)$usec + (float)$sec;
 }
 
 $start = getmicrotime();
@@ -84,9 +84,10 @@ $next   = $_SERVER['PHP_SELF'] . '?y=' . $NMonth->thisYear() . '&m=' . $NMonth->
 <body>
 
 <?php
-$selectedDays = array(
+$selectedDays = [
     new Calendar_Day($_GET['y'], $_GET['m'], $_GET['d']),
-    new Calendar_Day($_GET['y'], 12, 25));
+    new Calendar_Day($_GET['y'], 12, 25),
+];
 
 // Build the days in the month
 $Month->build($selectedDays);
@@ -94,7 +95,7 @@ $Month->build($selectedDays);
 <h2>Built with Calendar_Month_Weekday::build()</h2>
 <table class="calendar">
     <caption>
-        <?php echo(date('F Y', $Month->getTimestamp())); ?>
+        <?php echo date('F Y', $Month->getTimestamp()); ?>
     </caption>
     <tr>
         <th>M</th>
@@ -113,35 +114,35 @@ $Month->build($selectedDays);
 
         // isFirst() to find start of week
         if ($Day->isFirst()) {
-            echo("<tr>\n");
+            echo "<tr>\n";
         }
 
         if ($Day->isSelected()) {
-            echo("<td class=\"selected\">" . $Day->thisDay() . "</td>\n");
+            echo '<td class="selected">' . $Day->thisDay() . "</td>\n";
         } elseif ($Day->isEmpty()) {
-            echo("<td>&nbsp;</td>\n");
+            echo "<td>&nbsp;</td>\n";
         } else {
-            echo("<td><a href=\"" . $link . "\">" . $Day->thisDay() . "</a></td>\n");
+            echo '<td><a href="' . $link . '">' . $Day->thisDay() . "</a></td>\n";
         }
 
         // isLast() to find end of week
         if ($Day->isLast()) {
-            echo("</tr>\n");
+            echo "</tr>\n";
         }
     }
     ?>
     <tr>
         <td>
-            <a href="<?php echo($prev); ?>" class="prevMonth"><< </a>
+            <a href="<?php echo $prev; ?>" class="prevMonth"><< </a>
         </td>
         <td colspan="5">&nbsp;</td>
         <td>
-            <a href="<?php echo($next); ?>" class="nextMonth"> >></a>
+            <a href="<?php echo $next; ?>" class="nextMonth"> >></a>
         </td>
     </tr>
 </table>
 <?php
-echo('<p><b>Took: ' . (getmicrotime() - $start) . ' seconds</b></p>');
+echo '<p><b>Took: ' . (getmicrotime() - $start) . ' seconds</b></p>';
 ?>
 </body>
 </html>

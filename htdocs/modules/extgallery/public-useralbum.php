@@ -9,16 +9,17 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright   {@link http://xoops.org/ XOOPS Project}
+ * @copyright   {@link https://xoops.org/ XOOPS Project}
  * @license     GNU GPL 2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  * @author      Zoullou (http://www.zoullou.net)
  * @package     ExtGallery
- * @version     $Id: public-useralbum.php 10875 2013-01-23 17:25:30Z beckmi $
  */
 
-require dirname(dirname(__DIR__)) . '/mainfile.php';
-include_once XOOPS_ROOT_PATH . '/class/pagenav.php';
-include_once XOOPS_ROOT_PATH . '/modules/extgallery/class/publicPerm.php';
+use XoopsModules\Extgallery;
+
+include __DIR__ . '/header.php';
+require_once XOOPS_ROOT_PATH . '/class/pagenav.php';
+//require_once XOOPS_ROOT_PATH . '/modules/extgallery/class/publicPerm.php';
 
 $GLOBALS['xoopsOption']['template_main'] = 'extgallery_public-useralbum.tpl';
 include XOOPS_ROOT_PATH . '/header.php';
@@ -39,14 +40,18 @@ $xoopsTpl->assign('use_ajax_effects', $ajaxeffect);
 
 //HACK BLUETEEN TO SORT PHOTOS BY USERS
 //photo_date - photo_title - photo_hits - photo_rating
-if (isset($_GET['sortby']) && ($_GET['sortby'] === 'photo_date' || $_GET['sortby'] === 'photo_title' || $_GET['sortby'] === 'photo_hits' || $_GET['sortby'] === 'photo_rating')) {
+if (isset($_GET['sortby'])
+    && ('photo_date' === $_GET['sortby']
+        || 'photo_title' === $_GET['sortby']
+        || 'photo_hits' === $_GET['sortby']
+        || 'photo_rating' === $_GET['sortby'])) {
     $sortby = $_GET['sortby'];
 } else {
     $sortby = 'photo_date';
 }
 
 //ASC ou DESC
-if (isset($_GET['orderby']) && ($_GET['orderby'] === 'DESC' || $_GET['orderby'] === 'ASC')) {
+if (isset($_GET['orderby']) && ('DESC' === $_GET['orderby'] || 'ASC' === $_GET['orderby'])) {
     $orderby = $_GET['orderby'];
 } else {
     $orderby = $GLOBALS['xoopsModuleConfig']['display_set_order'];
@@ -61,48 +66,49 @@ $SortbyOrderby = $sortby . ' ' . $orderby;
  */
 function convertorderbytrans($SortbyOrderby)
 {
-    $orderbyTrans = array();
-    if ($SortbyOrderby === 'photo_date DESC') {
+    $orderbyTrans = [];
+    if ('photo_date DESC' === $SortbyOrderby) {
         $orderbyTrans = _MD_EXTGALLERY_ORDERBY_DATEASC;
     }
-    if ($SortbyOrderby === 'photo_date ASC') {
+    if ('photo_date ASC' === $SortbyOrderby) {
         $orderbyTrans = _MD_EXTGALLERY_ORDERBY_DATEDESC;
     }
-    if ($SortbyOrderby === 'photo_title ASC') {
+    if ('photo_title ASC' === $SortbyOrderby) {
         $orderbyTrans = _MD_EXTGALLERY_ORDERBY_TITREASC;
     }
-    if ($SortbyOrderby === 'photo_title DESC') {
+    if ('photo_title DESC' === $SortbyOrderby) {
         $orderbyTrans = _MD_EXTGALLERY_ORDERBY_TITREDESC;
     }
-    if ($SortbyOrderby === 'uid ASC') {
+    if ('uid ASC' === $SortbyOrderby) {
         $orderbyTrans = _MD_EXTGALLERY_ORDERBY_DESIGNERASC;
     }
-    if ($SortbyOrderby === 'uid DESC') {
+    if ('uid DESC' === $SortbyOrderby) {
         $orderbyTrans = _MD_EXTGALLERY_ORDERBY_DESIGNERDESC;
     }
-    if ($SortbyOrderby === 'photo_hits DESC') {
+    if ('photo_hits DESC' === $SortbyOrderby) {
         $orderbyTrans = _MD_EXTGALLERY_ORDERBY_HITSASC;
     }
-    if ($SortbyOrderby === 'photo_hits ASC') {
+    if ('photo_hits ASC' === $SortbyOrderby) {
         $orderbyTrans = _MD_EXTGALLERY_ORDERBY_HITSDESC;
     }
-    if ($SortbyOrderby === 'photo_rating DESC') {
+    if ('photo_rating DESC' === $SortbyOrderby) {
         $orderbyTrans = _MD_EXTGALLERY_ORDERBY_NOTEASC;
     }
-    if ($SortbyOrderby === 'photo_rating ASC') {
+    if ('photo_rating ASC' === $SortbyOrderby) {
         $orderbyTrans = _MD_EXTGALLERY_ORDERBY_NOTEDESC;
     }
 
     return $orderbyTrans;
 }
 
-$photoHandler = xoops_getModuleHandler('publicphoto', 'extgallery');
+/** @var Extgallery\PublicPhotoHandler $photoHandler */
+$photoHandler = Extgallery\Helper::getInstance()->getHandler('PublicPhoto');
 
-$photos = $photoHandler->objectToArray($photoHandler->getUserAlbumPhotoPage($userId, $start, $sortby, $orderby), array('uid'));
+$photos = $photoHandler->objectToArray($photoHandler->getUserAlbumPhotoPage($userId, $start, $sortby, $orderby), ['uid']);
 $k      = $xoopsModuleConfig['nb_column'] - (count($photos) % $xoopsModuleConfig['nb_column']);
 if ($k != $xoopsModuleConfig['nb_column']) {
     for ($i = 0; $i < $k; ++$i) {
-        $photos[] = array();
+        $photos[] = [];
     }
 }
 
@@ -116,7 +122,7 @@ foreach (array_keys($photos) as $i) {
 
 $xoopsTpl->assign('photos', $photos);
 
-$pageNav = new XoopsPageNav($photoHandler->getUserAlbumCount($userId), $xoopsModuleConfig['nb_column'] * $xoopsModuleConfig['nb_line'], $start, 'start', 'id=' . $userId . '&orderby=' . $orderby . '&sortby=' . $sortby);//xoops - blueteen - tri de l'affichage
+$pageNav = new \XoopsPageNav($photoHandler->getUserAlbumCount($userId), $xoopsModuleConfig['nb_column'] * $xoopsModuleConfig['nb_line'], $start, 'start', 'id=' . $userId . '&orderby=' . $orderby . '&sortby=' . $sortby);//xoops - blueteen - tri de l'affichage
 $xoopsTpl->assign('pageNav', $pageNav->renderNav());
 
 $albumName = '';
@@ -128,7 +134,7 @@ if (count($photos) > 0) {
 
 $jquery = $xoopsModuleConfig['enable_jquery'];
 $xoopsTpl->assign('jquery', $jquery);
-if ($jquery == 1 && $ajaxeffect !== 'none') {
+if (1 == $jquery && 'none' !== $ajaxeffect) {
     $xoTheme->addScript('browse.php?Frameworks/jquery/jquery.js');
     switch ($ajaxeffect) {
         case 'lightbox':
@@ -167,7 +173,7 @@ $attributes['href']  = XOOPS_URL . '/modules/extgallery/public-rss.php';
 $xoTheme->addMeta('link', $rel, $attributes);
 $xoTheme->addStylesheet('modules/extgallery/assets/css/style.css');
 
-$lang = array('hits' => _MD_EXTGALLERY_HITS, 'comments' => _MD_EXTGALLERY_COMMENTS, 'albumName' => $albumName);
+$lang = ['hits' => _MD_EXTGALLERY_HITS, 'comments' => _MD_EXTGALLERY_COMMENTS, 'albumName' => $albumName];
 $xoopsTpl->assign('lang', $lang);
 
 $xoopsTpl->assign('enableExtra', $xoopsModuleConfig['display_extra_field']);
@@ -182,9 +188,9 @@ $xoopsTpl->assign('extgallerySortbyOrderby', _MD_EXTGALLERY_ORDERBY . convertord
 
 //DNPROSSI - VOLTAN - added preferences option
 //  enable_info, enable_submitter_lnk, enable_photo_hits
-if ($xoopsModuleConfig['info_view'] === 'album' || $xoopsModuleConfig['info_view'] === 'both') {
-    if ($xoopsModuleConfig['pubusr_info_view'] === 'user' || $xoopsModuleConfig['pubusr_info_view'] === 'both') {
-        if ($xoopsModuleConfig['enable_info'] == 0) {
+if ('album' === $xoopsModuleConfig['info_view'] || 'both' === $xoopsModuleConfig['info_view']) {
+    if ('user' === $xoopsModuleConfig['pubusr_info_view'] || 'both' === $xoopsModuleConfig['pubusr_info_view']) {
+        if (0 == $xoopsModuleConfig['enable_info']) {
             $enable_info = $xoopsModuleConfig['enable_info'];
         } else {
             $enable_info = 1;
@@ -226,4 +232,4 @@ $xoopsTpl->assign('album_prettyphoto_theme', $xoopsModuleConfig['album_prettypho
 $xoopsTpl->assign('album_prettyphoto_slidspeed', $xoopsModuleConfig['album_prettyphoto_slidspe']);
 $xoopsTpl->assign('album_prettyphoto_autoplay', $xoopsModuleConfig['album_prettyphoto_autopla']);
 
-include(XOOPS_ROOT_PATH . '/footer.php');
+include XOOPS_ROOT_PATH . '/footer.php';

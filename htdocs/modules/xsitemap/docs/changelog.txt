@@ -1,45 +1,111 @@
-1.53 Beta 1 2013-05-08
-============================
+<h5>1.54 RC-2 [NOT RELEASED]</h5>  Dev: Xoops 2.5.9, PHP 7.2.3
+<hr>
+- Edit image off (aerograf)
+- cosmetics  (aerograf)
+- added removal of old tables on istall (mamba)
+- namespaces, autoload (mamba)
+
+
+<h5>1.54 RC-1 [2017-11-15]</h5>
+<hr>
+- added SCANDIR_SORT_NONE to scandir() (mamba)
+- fixed folder links to images in style.css (mamba)
+- added individual files for install/uninstall (mamba)
+- added namespaces (mamba)
+- moved functions to Utility class (mamba)
+- added traits for Utility class (mamba)
+
+
+
+<h5>1.54 Beta 1 [2017-05-02] - NOT RELEASED</h5>
+<hr>
+- added XsitemapUtility class (zyspec)
+- added Addresses, AdsLight, AmReviews, AMS, eGuide, FmContent, Lexikon,
+  MxDirectory, MyDownloads, MyWords, MyTube, PDLinks, Portfolio, Qpages,
+  Recette, SmartFaq, SongList, TDMDownloads, TDMPictures, WfDownloads, WfLinks,
+  XoopsFaq, xQuiz, & Xyp4all plugin support on install (zyspec)
+- changed Publisher plugin to sort by weight instead of title (zyspec)
+- changed PAYPAL to reference xoopsfoundation@gmail.com (zyspec)
+- changed to require XOOPS 2.5.8+ (zyspec)
+- changed to use XoopsRequest to filter input vars (zyspec)
+- changed release notes to English (zyspec)
+- changed rendering of XML file to include entity escaping strings (per sitemaps.org) (zyspec)
+- changed rendering of XML to use DOCElement instead of hand coded strings (zyspec)
+- changed XML generation to allow for modules that don't support subcategories (zyspec)
+- changed to use \Xmf\Module\Helper & \Xmf\Admin (zyspec)
+- changed assigned by reference for methods/functions (zyspec)
+- changed most global references to use $[GLOBALS] (zyspec)
+- changed class names to be more XOOPS compatible for loading (zyspec)
+- changed phpDoc comments (copyright, XOOPS Url, etc) (zyspec)
+- changed to create initial xsitemap.xml using preload (zyspec)
+- changed to remove {XOOPS_ROOT_PATH}/xsitemap.xml on uninstall (zyspec)
+- fixed display of action/sub links on index.php to honor Preferences setting (zyspec)
+- removed function checkModuleAdmin() - deprecated (zyspec)
+- removed creation of uploads folders on install - they were not being used (zyspec)
+- removed '/' from HTML void tags (&lt;br&gt;, &lt;img&gt;, etc) (zyspec)
+- removed local copy of XoopsPersistableObjectHandler class (zyspec)
+- removed upload folders on upgrade or uninstall if they exist (zyspec)
+- removed deprecated xsitemapmenu class (zyspec)
+- added zyspec as author to his changes (mamba)
+- added missing $moduleDirName to installation (mamba)
+- Unnecessary double quotes (mamba)
+- added extra Help files (mamba)
+- made preload function eventCoreIndexStart static (mamba)
+- RGB to #HEX representation (mamba)
+
+
+<h5>1.53 Final [2014-04-23]</h5>
+<hr>
+- Final Release
+
+<h5>1.53 Beta 2 [2014-04-23]</h5>
+<hr>
+- moved all images, CSS, and JS files to /assets (mamba)
+- renamed .html Smarty templates to .tpl (mamba)
+
+<h5>1.53 Beta 1 [2013-05-08]</h5>
+<hr>
 - fix: Warning: array_keys() expects parameter 1 to be array, null given (mamba)
 - fix: Jobs and Classifieds info (jlm69)
 - fix: deprecated notices (jlm69)
 
-1.52 Final 2012-12-22
-============================
+<h5>1.52 Final [2012-12-22]</h5>
+<hr>
 - changed GUI to standard XOOPS Module GUI
 - included ModuleAdmin class from Mage
 
-28/08/2009
-============================
-- Modificata la fase di creazione del file XML. Ora il file viene creato durante l'installazione del modulo nella ROOT del sito come richiesto
-  dallo standard XML per le sitemap. Quando viene creato il file XML in fase di installazione del modulo, esso non è completo poichè
-  Xsitemap non è ancora in grado di leggere i plugin installati.
-  Bisogna quindi rigenerare il file xml con l'apposito pulsante dal pannello di controllo oppure visitando la pagina xsitemap/xml_google.php.
+<h5>[2009-08-28]</h5>
+<hr>
+- Modified the step of creating the XML file. Now the file is created during
+  the installation of the module in the root of the site as required by the
+  XML standard for the sitemap. When you create the XML file in the
+  installation phase of the module, it is not complete since Xsitemap is not
+  yet able to read the plugin installed. We must then rebuild the XML file
+  with the appropriate button from the control panel or by visiting the page
+  xsitemap/xml_google.php.
 
+<h5>[2009-08-26]</h5>
+<hr>
+- Added sitemap XML now generated the system file xsitemap.xml to send to
+  the search engines
+- Added language file main.php
+- Added new definitions for the language file in admin.php , modinfo.php
+- updated the english language translation
 
-26/08/2009
-============================
-- Aggiunta la gestione della sitemap XML ora viene generato dal sistema un file xsitemap.xml da inviare ai motori di ricerca
-- Aggiunto file di lingua main.php
-- Aggiunte nuove definizioni per la lingua nei file admin.php, modinfo.php
-- Aggiornata la lingua inglese
+<h5>[2009-08-22]</h5>
+<hr>
+- Fixed a small bug in the file includes/install.php thanks to DUGRIS
+- Added Portoghesebr language translation - by Artsgeral
+- Added English language translation - by dbman
+- Amended language file admin.php
 
-
-22/08/2009
-============================
-- Sistemato un piccolo bug nel file include/install.php grazie a DUGRIS per la segnalazione
-- Aggiunto il Portoghesebr tra le lingue del modulo by Artsgeral
-- Aggiunto l'inglese tra le lingue del modulo by dbman
-- Modificato file di traduzione admin.php
-
-
-21/08/2009
-============================
+<h5>[2009-08-21]</h5>
+<hr>
 RELEASE:
-- Rilasciata la prima versione BETA del modulo XSITEMAP.
+- Released the first BETA version of the module XSITEMAP
 
-21/08/2009
-============================
-DA FINIRE:
-- Verificare la funzionalità XML e verificare la compatibilità con Google Sitemap.
-- Con alcuni moduli non si vedono i sublinks.
+<h5>[2009-08-21]</h5>
+<hr>
+TO FINISH:
+- Check the XML functionality and check the compatibility with Google Sitemap.
+- With some of the modules you do not see the sublinks.

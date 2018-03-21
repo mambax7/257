@@ -1,21 +1,20 @@
-<?php
+<?php namespace XoopsModules\Extcal;
 
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 /**
- * Class ExtcalPerm
+ * Class Perm.
  */
-class ExtcalPerm
+class Perm
 {
-
     /**
-     * @return ExtcalPerm
+     * @return Perm
      */
     public static function getHandler()
     {
         static $permHandler;
         if (!isset($permHandler)) {
-            $permHandler = new ExtcalPerm();
+            $permHandler = new self();
         }
 
         return $permHandler;
@@ -26,7 +25,7 @@ class ExtcalPerm
      *
      * @return string
      */
-    public function _getUserGroup(&$user)
+    public function getUserGroup(&$user)
     {
         if (is_a($user, 'XoopsUser')) {
             return $user->getGroups();
@@ -36,23 +35,24 @@ class ExtcalPerm
     }
 
     /**
-     * @param $user
-     * @param $perm
+     * @param           $user
+     * @param           $perm
      *
      * @return bool
      */
-    public function getAuthorizedCat(&$user, $perm)
+    public function getAuthorizedCat($user, $perm)
     {
         static $authorizedCat;
         $userId = $user ? $user->getVar('uid') : 0;
         if (!isset($authorizedCat[$perm][$userId])) {
             $groupPermHandler = xoops_getHandler('groupperm');
-            $moduleHandler    = xoops_getHandler('module');
-            $module           = $moduleHandler->getByDirname('extcal');
+            /** @var \XoopsModuleHandler $moduleHandler */
+            $moduleHandler = xoops_getHandler('module');
+            $module        = $moduleHandler->getByDirname('extcal');
             if (!$module) {
                 return false;
             }
-            $authorizedCat[$perm][$userId] = $groupPermHandler->getItemIds($perm, $this->_getUserGroup($user), $module->getVar('mid'));
+            $authorizedCat[$perm][$userId] = $groupPermHandler->getItemIds($perm, $this->getUserGroup($user), $module->getVar('mid'));
         }
 
         return $authorizedCat[$perm][$userId];

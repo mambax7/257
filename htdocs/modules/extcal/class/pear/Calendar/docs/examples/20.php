@@ -1,7 +1,7 @@
 <?php
 /**
  * Description: demonstrates a decorator used to "attach a payload" to a selection
- * to make it available when iterating over calendar children
+ * to make it available when iterating over calendar children.
  */
 
 //if you use ISO-8601 dates, switch to PearDate engine
@@ -16,12 +16,13 @@ require_once CALENDAR_ROOT . 'Day.php';
 require_once CALENDAR_ROOT . 'Decorator.php';
 
 // accepts multiple entries
+
 /**
- * Class DiaryEvent
+ * Class DiaryEvent.
  */
 class DiaryEvent extends Calendar_Decorator
 {
-    public $entries = array();
+    public $entries = [];
 
     /**
      * @param $calendar
@@ -56,7 +57,7 @@ class DiaryEvent extends Calendar_Decorator
 }
 
 /**
- * Class MonthPayload_Decorator
+ * Class MonthPayload_Decorator.
  */
 class MonthPayload_Decorator extends Calendar_Decorator
 {
@@ -73,7 +74,7 @@ class MonthPayload_Decorator extends Calendar_Decorator
      *
      * @return bool
      */
-    public function build($events = array())
+    public function build($events = [])
     {
         require_once CALENDAR_ROOT . 'Day.php';
         require_once CALENDAR_ROOT . 'Table/Helper.php';
@@ -110,7 +111,10 @@ class MonthPayload_Decorator extends Calendar_Decorator
             $stamp1 = $this->cE->dateToStamp($this->year, $this->month, $i);
             $stamp2 = $this->cE->dateToStamp($this->year, $this->month, $i + 1);
             foreach ($events as $event) {
-                if (($stamp1 >= $event['start'] && $stamp1 < $event['end']) || ($stamp2 >= $event['start'] && $stamp2 < $event['end']) || ($stamp1 <= $event['start'] && $stamp2 > $event['end'])) {
+                if (($stamp1 >= $event['start'] && $stamp1 < $event['end'])
+                    || ($stamp2 >= $event['start']
+                        && $stamp2 < $event['end'])
+                    || ($stamp1 <= $event['start'] && $stamp2 > $event['end'])) {
                     $this->children[$i]->addEntry($event);
                     $this->children[$i]->setSelected();
                 }
@@ -136,22 +140,25 @@ class MonthPayload_Decorator extends Calendar_Decorator
 
 // Calendar instance used to get the dates in the preferred format:
 // you can switch Calendar Engine and the example still works
-$cal = new Calendar;
+$cal = new Calendar();
 
-$events = array();
+$events = [];
 //add some events
-$events[] = array(
+$events[] = [
     'start' => $cal->cE->dateToStamp(2004, 6, 1, 10),
     'end'   => $cal->cE->dateToStamp(2004, 6, 1, 12),
-    'desc'  => 'Important meeting');
-$events[] = array(
+    'desc'  => 'Important meeting',
+];
+$events[] = [
     'start' => $cal->cE->dateToStamp(2004, 6, 1, 21),
     'end'   => $cal->cE->dateToStamp(2004, 6, 1, 23, 59),
-    'desc'  => 'Dinner with the boss');
-$events[] = array(
+    'desc'  => 'Dinner with the boss',
+];
+$events[] = [
     'start' => $cal->cE->dateToStamp(2004, 6, 5),
     'end'   => $cal->cE->dateToStamp(2004, 6, 10, 23, 59),
-    'desc'  => 'Holidays!');
+    'desc'  => 'Holidays!',
+];
 
 $Month          = new Calendar_Month_Weekdays(2004, 6);
 $MonthDecorator = new MonthPayload_Decorator($Month);

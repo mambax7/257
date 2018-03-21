@@ -7,19 +7,26 @@
  * @param $options
  * @return array
  */
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
 
+use XoopsModules\Smartfaq;
+
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
+
+/**
+ * @param $options
+ * @return array
+ */
 function b_faqs_recent_show($options)
 {
-    include_once(XOOPS_ROOT_PATH . '/modules/smartfaq/include/functions.php');
-    $myts = MyTextSanitizer::getInstance();
+//    require_once XOOPS_ROOT_PATH . '/modules/smartfaq/include/functions.php';
+    $myts = \MyTextSanitizer::getInstance();
 
-    $smartModule       = sf_getModuleInfo();
-    $smartModuleConfig = sf_getModuleConfig();
+    $smartModule       = Smartfaq\Utility::getModuleInfo();
+    $smartModuleConfig = Smartfaq\Utility::getModuleConfig();
 
-    $block = array();
+    $block = [];
 
-    if ($options[0] == 0) {
+    if (0 == $options[0]) {
         $categoryid = -1;
     } else {
         $categoryid = $options[0];
@@ -30,21 +37,24 @@ function b_faqs_recent_show($options)
     $maxQuestionLength = $options[3];
 
     // Creating the faq handler object
-    $faqHandler = sf_gethandler('faq');
+    /** @var \XoopsModules\Smartfaq\FaqHandler $faqHandler */
+    $faqHandler = \XoopsModules\Smartfaq\Helper::getInstance()->getHandler('Faq');
 
     // Creating the category handler object
-    $categoryHandler = sf_gethandler('category');
+    /** @var \XoopsModules\Smartfaq\CategoryHandler $categoryHandler */
+    $categoryHandler = \XoopsModules\Smartfaq\Helper::getInstance()->getHandler('Category');
 
     // Creating the last FAQs
     $faqsObj       = $faqHandler->getAllPublished($limit, 0, $categoryid, $sort);
     $allcategories = $categoryHandler->getObjects(null, true);
     if ($faqsObj) {
-        $userids = array();
+        $userids = [];
         foreach ($faqsObj as $key => $thisfaq) {
             $faqids[]                 = $thisfaq->getVar('faqid');
             $userids[$thisfaq->uid()] = 1;
         }
-        $answerHandler = sf_gethandler('answer');
+        /** @var \XoopsModules\Smartfaq\AnswerHandler $answerHandler */
+        $answerHandler = \XoopsModules\Smartfaq\Helper::getInstance()->getHandler('Answer');
         $allanswers    = $answerHandler->getLastPublishedByFaq($faqids);
 
         foreach ($allanswers as $key => $thisanswer) {
@@ -52,19 +62,19 @@ function b_faqs_recent_show($options)
         }
 
         $memberHandler = xoops_getHandler('member');
-        $users         = $memberHandler->getUsers(new Criteria('uid', '(' . implode(',', array_keys($userids)) . ')', 'IN'), true);
-        for ($i = 0, $iMax = count($faqsObj); $i < $iMax; ++$i) {
-            $faqs['categoryid']   = $faqsObj[$i]->categoryid();
-            $faqs['question']     = $faqsObj[$i]->question($maxQuestionLength);
-            $faqs['faqid']        = $faqsObj[$i]->faqid();
-            $faqs['categoryname'] = $allcategories[$faqsObj[$i]->categoryid()]->getVar('name');
+        $users         = $memberHandler->getUsers(new \Criteria('uid', '(' . implode(',', array_keys($userids)) . ')', 'IN'), true);
+        foreach ($faqsObj as $iValue) {
+            $faqs['categoryid']   = $iValue->categoryid();
+            $faqs['question']     = $iValue->question($maxQuestionLength);
+            $faqs['faqid']        = $iValue->faqid();
+            $faqs['categoryname'] = $allcategories[$iValue->categoryid()]->getVar('name');
 
             // Creating the answer object
-            $answerObj =& $allanswers[$faqsObj[$i]->faqid()];
+            $answerObj = $allanswers[$iValue->faqid()];
 
-            $faqs['date'] = $faqsObj[$i]->datesub();
+            $faqs['date'] = $iValue->datesub();
 
-            $faqs['poster'] = sf_getLinkedUnameFromId($answerObj->uid(), $smartModuleConfig['userealname'], $users);
+            $faqs['poster'] = Smartfaq\Utility::getLinkedUnameFromId($answerObj->uid(), $smartModuleConfig['userealname'], $users);
 
             $block['faqs'][] = $faqs;
         }
@@ -86,34 +96,34 @@ function b_faqs_recent_show($options)
  */
 function b_faqs_recent_edit($options)
 {
-    include_once(XOOPS_ROOT_PATH . '/modules/smartfaq/include/functions.php');
+//    require_once XOOPS_ROOT_PATH . '/modules/smartfaq/include/functions.php';
 
-    $form = sf_createCategorySelect($options[0]);
+    $form = Smartfaq\Utility::createCategorySelect($options[0]);
 
     $form .= '&nbsp;<br>' . _MB_SF_ORDER . "&nbsp;<select name='options[]'>";
 
     $form .= "<option value='datesub'";
-    if ($options[1] === 'datesub') {
-        $form .= " selected='selected'";
+    if ('datesub' === $options[1]) {
+        $form .= ' selected';
     }
     $form .= '>' . _MB_SF_DATE . "</option>\n";
 
     $form .= "<option value='counter'";
-    if ($options[1] === 'counter') {
-        $form .= " selected='selected'";
+    if ('counter' === $options[1]) {
+        $form .= ' selected';
     }
     $form .= '>' . _MB_SF_HITS . "</option>\n";
 
     $form .= "<option value='weight'";
-    if ($options[1] === 'weight') {
-        $form .= " selected='selected'";
+    if ('weight' === $options[1]) {
+        $form .= ' selected';
     }
     $form .= '>' . _MB_SF_WEIGHT . "</option>\n";
 
     $form .= "</select>\n";
 
-    $form .= '&nbsp;' . _MB_SF_DISP . "&nbsp;<input type='text' name='options[]' value='" . $options[2] . "' />&nbsp;" . _MB_SF_FAQS . '';
-    $form .= '&nbsp;<br>' . _MB_SF_CHARS . "&nbsp;<input type='text' name='options[]' value='" . $options[3] . "' />&nbsp;" . _MB_SF_LENGTH . '';
+    $form .= '&nbsp;' . _MB_SF_DISP . "&nbsp;<input type='text' name='options[]' value='" . $options[2] . "'>&nbsp;" . _MB_SF_FAQS . '';
+    $form .= '&nbsp;<br>' . _MB_SF_CHARS . "&nbsp;<input type='text' name='options[]' value='" . $options[3] . "'>&nbsp;" . _MB_SF_LENGTH . '';
 
     return $form;
 }

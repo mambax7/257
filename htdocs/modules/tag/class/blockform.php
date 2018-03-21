@@ -1,4 +1,5 @@
-<?php
+<?php namespace XoopsModules\Tag;
+
 /*
  You may not change or alter any portion of this comment or credits
  of supporting developers from this source code or any supporting source code
@@ -12,19 +13,23 @@
 /**
  * XOOPS tag management module
  *
- * @package        tag
+ * @package         tag
  * @subpackage      class
  * @copyright       {@link http://sourceforge.net/projects/xoops/ The XOOPS Project}
  * @license         {@link http://www.fsf.org/copyleft/gpl.html GNU public license}
  * @author          Taiwen Jiang <phppp@users.sourceforge.net>
  * @author          susheng yang <ezskyyoung@gmail.com>
  * @since           2.33
- * @version         $Id: $
  */
 
-include_once $GLOBALS['xoops']->path("/class/xoopsformloader.php");
+use XoopsModules\Tag;
 
-class TagBlockForm extends XoopsForm
+require_once $GLOBALS['xoops']->path('/class/xoopsformloader.php');
+
+/**
+ * Class BlockForm
+ */
+class BlockForm extends \XoopsForm
 {
 
     /**
@@ -35,20 +40,17 @@ class TagBlockForm extends XoopsForm
     public function render()
     {
         //        $ele_name = $this->getName();
-        $ret = "<div>\n";
+        $ret    = "<div>\n";
         $hidden = '';
         foreach ($this->getElements() as $ele) {
             if (!is_object($ele)) {
                 $ret .= $ele;
             } elseif (!$ele->isHidden()) {
-                if (('' != $caption = $ele->getCaption())) {
-                    $ret .= "<div class='xoops-form-element-caption" . ($ele->isRequired() ? "-required" : "") . "'>\n"
-                          . "  <span class='caption-text'>{$caption}</span>\n"
-                          . "  <span class='caption-marker'>*</span>\n"
-                          . "</div>\n";
+                if ('' != $caption = $ele->getCaption()) {
+                    $ret .= "<div class='xoops-form-element-caption" . ($ele->isRequired() ? '-required' : '') . "'>\n" . "  <span class='caption-text'>{$caption}</span>\n" . "  <span class='caption-marker'>*</span>\n" . "</div>\n";
                 }
 
-                $ret .= "<div style='margin:5px 0 8px 0; '>".$ele->render()."</div>\n";
+                $ret .= "<div style='margin:5px 0 8px 0; '>" . $ele->render() . "</div>\n";
             } else {
                 $hidden .= $ele->render();
             }

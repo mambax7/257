@@ -1,9 +1,9 @@
 <?php
-// $Id: currency.php 159 2007-12-17 16:44:05Z malanciault $
+//
 // ------------------------------------------------------------------------ //
 //               XOOPS - PHP Content Management System                      //
-//                   Copyright (c) 2000 XOOPS.org                           //
-//                      <http://www.xoops.org/>                             //
+//                   Copyright (c) 2000-2016 XOOPS.org                           //
+//                      <https://xoops.org>                             //
 // ------------------------------------------------------------------------ //
 // This program is free software; you can redistribute it and/or modify     //
 // it under the terms of the GNU General Public License as published by     //
@@ -23,22 +23,27 @@
 // along with this program; if not, write to the Free Software              //
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
 // ------------------------------------------------------------------------ //
-// URL: http://www.xoops.org/                                               //
-// Project: The XOOPS Project                                               //
+// URL: https://xoops.org/                                               //
+// Project: XOOPS Project                                               //
 // -------------------------------------------------------------------------//
 
-if (!defined("XOOPS_ROOT_PATH")) {
-    die("XOOPS root path not defined");
-}
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
-include_once XOOPS_ROOT_PATH."/modules/smartobject/class/smartobject.php";
-include_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
+require_once XOOPS_ROOT_PATH . '/modules/smartobject/class/smartobject.php';
+require_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 
-class SmartobjectCurrency extends SmartObject {
+/**
+ * Class SmartobjectCurrency
+ */
+class SmartobjectCurrency extends SmartObject
+{
+    public $_modulePlugin = false;
 
-    var $_modulePlugin=false;
-
-    function SmartobjectCurrency() {
+    /**
+     * SmartobjectCurrency constructor.
+     */
+    public function __construct()
+    {
         $this->quickInitVar('currencyid', XOBJ_DTYPE_INT, true);
         $this->quickInitVar('iso4217', XOBJ_DTYPE_TXTBOX, true, _CO_SOBJECT_CURRENCY_ISO4217, _CO_SOBJECT_CURRENCY_ISO4217_DSC);
         $this->quickInitVar('name', XOBJ_DTYPE_TXTBOX, true, _CO_SOBJECT_CURRENCY_NAME);
@@ -46,81 +51,124 @@ class SmartobjectCurrency extends SmartObject {
         $this->quickInitVar('rate', XOBJ_DTYPE_FLOAT, true, _CO_SOBJECT_CURRENCY_RATE, '', '1.0');
         $this->quickInitVar('default_currency', XOBJ_DTYPE_INT, false, _CO_SOBJECT_CURRENCY_DEFAULT, '', false);
 
-        $this->setControl('symbol', array(
-                                        'name' => 'text',
-                                        'size' => '15',
-                                        'maxlength' => '15'
-                                        ));
+        $this->setControl('symbol', [
+            'name'      => 'text',
+            'size'      => '15',
+            'maxlength' => '15'
+        ]);
 
-        $this->setControl('iso4217', array(
-                                        'name' => 'text',
-                                        'size' => '5',
-                                        'maxlength' => '5'
-                                        ));
+        $this->setControl('iso4217', [
+            'name'      => 'text',
+            'size'      => '5',
+            'maxlength' => '5'
+        ]);
 
-        $this->setControl('rate', array(
-                                        'name' => 'text',
-                                        'size' => '5',
-                                        'maxlength' => '5'
-                                        ));
+        $this->setControl('rate', [
+            'name'      => 'text',
+            'size'      => '5',
+            'maxlength' => '5'
+        ]);
 
-        $this->setControl('rate', array(
-                                        'name' => 'text',
-                                        'size' => '5',
-                                        'maxlength' => '5'
-                                        ));
+        $this->setControl('rate', [
+            'name'      => 'text',
+            'size'      => '5',
+            'maxlength' => '5'
+        ]);
 
         $this->hideFieldFromForm('default_currency');
     }
 
-    function getVar($key, $format = 's') {
-        if ($format == 's' && in_array($key, array('rate', 'default_currency'))) {
-            return call_user_func(array($this,$key));
+    /**
+     * @param  string $key
+     * @param  string $format
+     * @return mixed
+     */
+    public function getVar($key, $format = 's')
+    {
+        if ('s' === $format && in_array($key, ['rate', 'default_currency'])) {
+            //            return call_user_func(array($this, $key));
+            return $this->{$key}();
         }
+
         return parent::getVar($key, $format);
     }
 
-    function getCurrencyLink() {
+    /**
+     * @return mixed
+     */
+    public function getCurrencyLink()
+    {
         $ret = $this->getVar('name', 'e');
+
         return $ret;
     }
 
-    function getCode() {
+    /**
+     * @return mixed
+     */
+    public function getCode()
+    {
         $ret = $this->getVar('iso4217', 'e');
+
         return $ret;
     }
 
-    function rate() {
+    /**
+     * @return float|int|mixed|string
+     */
+    public function rate()
+    {
         return smart_currency($this->getVar('rate', 'e'));
     }
 
-    function default_currency() {
-        if ($this->getVar('default_currency', 'e') == true) {
+    /**
+     * @return string
+     */
+    public function defaultCurrency()
+    {
+        if (true === $this->getVar('default_currency', 'e')) {
             return _YES;
         } else {
             return _NO;
         }
     }
 
-    function getDefault_currencyControl() {
+    /**
+     * @return string
+     */
+    public function getDefaultCurrencyControl()
+    {
         $radio_box = '<input name="default_currency" value="' . $this->getVar('currencyid') . '" type="radio"';
         if ($this->getVar('default_currency', 'e')) {
-            $radio_box .= 'checked="checked"';
+            $radio_box .= 'checked';
         }
         $radio_box .= '>';
+
         return $radio_box;
     }
-
 }
-class SmartobjectCurrencyHandler extends SmartPersistableObjectHandler {
 
-    function SmartobjectCurrencyHandler($db) {
-        $this->SmartPersistableObjectHandler($db, 'currency', 'currencyid', 'name', '', 'smartobject');
+/**
+ * Class SmartObjectCurrencyHandler
+ */
+class SmartObjectCurrencyHandler extends SmartPersistableObjectHandler
+{
+    /**
+     * SmartObjectCurrencyHandler constructor.
+     * @param XoopsDatabase $db
+     */
+    public function __construct(\XoopsDatabase $db)
+    {
+        parent::__construct($db, 'currency', 'currencyid', 'name', '', 'smartobject');
     }
 
-    function getCurrencies() {
-        $currenciesObj = $this->getObjects(null, true);
+    /**
+     * @return array
+     */
+    public function getCurrencies()
+    {
+        $currenciesObj =& $this->getObjects(null, true);
+
         return $currenciesObj;
     }
 }
-?>

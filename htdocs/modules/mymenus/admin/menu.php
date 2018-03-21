@@ -10,46 +10,45 @@
  */
 
 /**
- * @copyright       The XOOPS Project http://sourceforge.net/projects/xoops/
+ * @copyright       XOOPS Project (https://xoops.org)
  * @license         http://www.gnu.org/licenses/gpl-2.0.html GNU Public License
  * @package         Mymenus
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
- * @version         $Id: menu.php
  */
 
-defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
-$moduleDirName = basename(dirname(__DIR__));
-$moduleHandler = &xoops_gethandler("module");
-$xoopsModule   = &XoopsModule::getByDirname($moduleDirName);
-$moduleInfo    = &$moduleHandler->get($xoopsModule->getVar("mid"));
-$pathIcon32    = '../../' . $moduleInfo->getInfo('systemIcons32');
+use XoopsModules\Mymenus;
 
-xoops_loadLanguage('admin', $moduleDirName);
+// require_once __DIR__ . '/../class/Helper.php';
+//require_once __DIR__ . '/../include/common.php';
+$helper = Mymenus\Helper::getInstance();
 
-$adminmenu = array(
-    array(
+$pathIcon32 = \Xmf\Module\Admin::menuIconPath('');
+$pathModIcon32 = $helper->getModule()->getInfo('modicons32');
+
+$adminmenu = [
+    [
         'title' => _MI_MYMENUS_ADMMENU0,
         'link'  => 'admin/index.php',
         'icon'  => "{$pathIcon32}/home.png"
-    ),
-    array(
+    ],
+    [
         'title' => _MI_MYMENUS_MENUSMANAGER,
-        'link'  => "admin/menus.php",
+        'link'  => 'admin/menus.php',
         'icon'  => "{$pathIcon32}/manage.png"
-    ),
-    array(
+    ],
+    [
         'title' => _MI_MYMENUS_MENUMANAGER,
-        'link'  => "admin/links.php",
+        'link'  => 'admin/links.php',
         'icon'  => "{$pathIcon32}/insert_table_row.png"
-    ),
-    array(
+    ],
+    [
         'title' => _MI_MYMENUS_ABOUT,
-        'link'  => "admin/about.php",
+        'link'  => 'admin/about.php',
         'icon'  => "{$pathIcon32}/about.png"
-    )
-);
+    ]
+];
 
 //$mymenus_adminmenu = $adminmenu;
-

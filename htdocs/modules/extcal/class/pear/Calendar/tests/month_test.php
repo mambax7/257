@@ -1,13 +1,13 @@
 <?php
-// $Id: month_test.php 1511 2011-09-01 20:56:07Z jjdai $
+//
 
-require_once 'simple_include.php';
-require_once 'calendar_include.php';
+require_once __DIR__ . '/simple_include.php';
+require_once __DIR__ . '/calendar_include.php';
 
-require_once './calendar_test.php';
+require_once __DIR__ . '/./calendar_test.php';
 
 /**
- * Class TestOfMonth
+ * Class TestOfMonth.
  */
 class TestOfMonth extends TestOfCalendar
 {
@@ -36,13 +36,14 @@ class TestOfMonth extends TestOfCalendar
 
     public function testPrevDay_Array()
     {
-        $this->assertEqual(array(
+        $this->assertEqual([
                                'year'   => 2003,
                                'month'  => 9,
                                'day'    => 30,
                                'hour'   => 0,
                                'minute' => 0,
-                               'second' => 0), $this->cal->prevDay('array'));
+                               'second' => 0,
+                           ], $this->cal->prevDay('array'));
     }
 
     public function testThisDay()
@@ -108,7 +109,7 @@ class TestOfMonth extends TestOfCalendar
 }
 
 /**
- * Class TestOfMonthBuild
+ * Class TestOfMonthBuild.
  */
 class TestOfMonthBuild extends TestOfMonth
 {
@@ -139,7 +140,7 @@ class TestOfMonthBuild extends TestOfMonth
     public function testFetchAll()
     {
         $this->cal->build();
-        $children = array();
+        $children = [];
         $i        = 1;
         while ($Child = $this->cal->fetch()) {
             $children[$i] = $Child;
@@ -150,12 +151,12 @@ class TestOfMonthBuild extends TestOfMonth
 
     public function testSelection()
     {
-        require_once(CALENDAR_ROOT . 'Day.php');
-        $selection = array(new Calendar_Day(2003, 10, 25));
+        require_once CALENDAR_ROOT . 'Day.php';
+        $selection = [new Calendar_Day(2003, 10, 25)];
         $this->cal->build($selection);
         $i = 1;
         while ($Child = $this->cal->fetch()) {
-            if ($i == 25) {
+            if (25 == $i) {
                 break;
             }
             ++$i;

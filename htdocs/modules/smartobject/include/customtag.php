@@ -1,33 +1,31 @@
 <?php
 
 /**
- * $Id: customtag.php 159 2007-12-17 16:44:05Z malanciault $
+ *
  * Module: SmartRental
  * Author: The SmartFactory <www.smartfactory.ca>
  * Licence: GNU
  */
-if (!defined("XOOPS_ROOT_PATH")) {
-    die("XOOPS root path not defined");
-}
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
-function smart_customtag_initiate() {
-    global $xoopsTpl, $smartobject_customtag_handler;
+function smart_customtag_initiate()
+{
+    global $xoopsTpl, $smartobjectCustomtagHandler;
     if (is_object($xoopsTpl)) {
-        foreach($smartobject_customtag_handler->objects as $k=>$v) {
+        foreach ($smartobjectCustomtagHandler->objects as $k => $v) {
             $xoopsTpl->assign($k, $v->render());
         }
     }
 }
 
 if (!defined('SMARTOBJECT_URL')) {
-    include_once(XOOPS_ROOT_PATH . '/modules/smartobject/include/common.php');
+    require_once XOOPS_ROOT_PATH . '/modules/smartobject/include/common.php';
 }
 
 smart_loadLanguageFile('smartobject', 'customtag');
 
-include_once XOOPS_ROOT_PATH."/modules/smartobject/include/functions.php";
-include_once(SMARTOBJECT_ROOT_PATH . "class/customtag.php");
+require_once XOOPS_ROOT_PATH . '/modules/smartobject/include/functions.php';
+require_once SMARTOBJECT_ROOT_PATH . 'class/customtag.php';
 
-$smartobject_customtag_handler = xoops_getModuleHandler('customtag', 'smartobject');
-$smartobject_customTagsObj = $smartobject_customtag_handler->getCustomtagsByName();
-?>
+$smartobjectCustomtagHandler = xoops_getModuleHandler('customtag', 'smartobject');
+$smartobjectCustomTagsObj    = $smartobjectCustomtagHandler->getCustomtagsByName();

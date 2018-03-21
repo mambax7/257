@@ -15,25 +15,30 @@ Usage:
 // ##########################################################
 //  Define your mapping here
 // ##########################################################
-$patterns = array(
+$patterns = [
     // first one must be module directory name
-    'smartpartner' => 'smartclient',
-    'partner' => 'client',
-    'SMARTPARTNER' => 'SMARTCLIENT',
-    'SmartPartner' => 'SmartClient',
+    'smartpartner'  => 'smartclient',
+    'partner'       => 'client',
+    'SMARTPARTNER'  => 'SMARTCLIENT',
+    'SmartPartner'  => 'SmartClient',
     'Smart Partner' => 'Smart Client',
-    'SPARTNER' => 'SCLIENT',
-    'Smartpartner' => 'Smartclient',
-    'Partner' => 'Client',
-    'Partenaire' => 'Client',
-    'partenaire' => 'client'
-);
+    'SPARTNER'      => 'SCLIENT',
+    'Smartpartner'  => 'Smartclient',
+    'Partner'       => 'Client',
+    'Partenaire'    => 'Client',
+    'partenaire'    => 'client'
+];
 
-$patKeys = array_keys($patterns);
+$patKeys   = array_keys($patterns);
 $patValues = array_values($patterns);
 
 // work around for PHP < 5.0.x
 if (!function_exists('file_put_contents')) {
+    /**
+     * @param      $filename
+     * @param      $data
+     * @param bool $file_append
+     */
     function file_put_contents($filename, $data, $file_append = false)
     {
         $fp = fopen($filename, (!$file_append ? 'w+' : 'a+'));
@@ -42,12 +47,16 @@ if (!function_exists('file_put_contents')) {
 
             return;
         }
-        fputs($fp, $data);
+        fwrite($fp, $data);
         fclose($fp);
     }
 }
 
 // recursive clonning script
+/**
+ * @param $path
+ * @throws
+ */
 function cloneFileFolder($path)
 {
     global $patKeys;
@@ -58,12 +67,15 @@ function cloneFileFolder($path)
 
     if (is_dir($path)) {
         // create new dir
-        mkdir($newPath);
+        //        mkdir($newPath);
+        if (!@mkdir($newPath) && !is_dir($newPath)) {
+            throw new Exception("Couldn't create this directory: " . $newPath);
+        }
 
         // check all files in dir, and process it
         if ($handle = opendir($path)) {
             while ($file = readdir($handle)) {
-                if ($file != '.' && $file != '..') {
+                if ('.' !== $file && '..' !== $file) {
                     cloneFileFolder("$path/$file");
                 }
             }
@@ -84,5 +96,5 @@ function cloneFileFolder($path)
 cloneFileFolder('modules/smartpartner');
 
 echo "Happy cloning...\n";
-echo "check directory modules/" . $patterns['smartpartner'] . " for cloned module \n";
-echo "Consider modifying new module by editing language/english/modinfo.php and images/mysection_slogo.png manually (if you care)\n";
+echo 'check directory modules/' . $patterns['smartpartner'] . " for cloned module \n";
+echo "Consider modifying new module by editing language/english/modinfo.php and assets/images/logo_module.png manually (if you care)\n";

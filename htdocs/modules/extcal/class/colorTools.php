@@ -1,7 +1,7 @@
-<?php
+<?php namespace XoopsModules\Extcal;
 
 /**
- * Class ColorTools
+ * Class ColorTools.
  */
 class ColorTools
 {
@@ -30,15 +30,25 @@ class ColorTools
      *
      * @return string
      */
-    public function modifierCouleur($colorHexa, $incrementRouge, $incrementVert, $incrementBleu, $plancherRouge = 0, $plafondRouge = 255, $plancherVert = 0, $plafondVert = 255, $plancherBleu = 0, $plafondBleu = 255)
-    {
-        $t10 = ColorTools::hexa2rgbA($colorHexa);
+    public function modifierCouleur(
+        $colorHexa,
+        $incrementRouge,
+        $incrementVert,
+        $incrementBleu,
+        $plancherRouge = 0,
+        $plafondRouge = 255,
+        $plancherVert = 0,
+        $plafondVert = 255,
+        $plancherBleu = 0,
+        $plafondBleu = 255
+    ) {
+        $t10 = static::hexa2rgbA($colorHexa);
 
-        $t10[1] = ColorTools::bornerValeur($t10[1] + $incrementRouge, $plancherRouge, $plafondRouge);
-        $t10[2] = ColorTools::bornerValeur($t10[2] + $incrementVert, $plancherVert, $plafondVert);
-        $t10[3] = ColorTools::bornerValeur($t10[3] + $incrementBleu, $plancherBleu, $plafondBleu);
+        $t10[1] = static::bornerValeur($t10[1] + $incrementRouge, $plancherRouge, $plafondRouge);
+        $t10[2] = static::bornerValeur($t10[2] + $incrementVert, $plancherVert, $plafondVert);
+        $t10[3] = static::bornerValeur($t10[3] + $incrementBleu, $plancherBleu, $plafondBleu);
 
-        $newColorHexa = ColorTools::getHexaColorFromA($t10);
+        $newColorHexa = static::getHexaColorFromA($t10);
 
         return $newColorHexa;
     }
@@ -55,12 +65,12 @@ class ColorTools
      */
     public static function eclaircir($colorHexa, $plancher = 0, $plafond = 255)
     {
-        $tMin = array('', $plancher, $plancher, $plancher);
-        $tMax = array('', $plafond, $plafond, $plafond);
+        $tMin = ['', $plancher, $plancher, $plancher];
+        $tMax = ['', $plafond, $plafond, $plafond];
 
-        $t10 = ColorTools::hexa2rgbA($colorHexa);
+        $t10 = static::hexa2rgbA($colorHexa);
         // echo "<hr>";
-        // ext_echoArray($t10);
+        // Extcal\Utility::echoArray($t10);
         $max = $plancher;
         for ($h = 1; $h <= 3; ++$h) {
             if ($max < $t10[$h]) {
@@ -85,13 +95,14 @@ class ColorTools
         // echo "{$colorHexa}-{$plancher}-{$plafond}<br>";
         // echo "{$min}-{$max}-{$increment}<br>";
 
-        $t10[1] = ColorTools::bornerValeur($t10[1] + $min, $plancher, $plafond);
-        $t10[2] = ColorTools::bornerValeur($t10[2] + $min, $plancher, $plafond);
-        $t10[3] = ColorTools::bornerValeur($t10[3] + $min, $plancher, $plafond);
+        $t10[1] = static::bornerValeur($t10[1] + $min, $plancher, $plafond);
+        $t10[2] = static::bornerValeur($t10[2] + $min, $plancher, $plafond);
+        $t10[3] = static::bornerValeur($t10[3] + $min, $plancher, $plafond);
 
-        // ext_echoArray($t10);
+        // Extcal\Utility::echoArray($t10);
 
-        $newColorHexa = ColorTools::getHexaColorFromA($t10);
+        $newColorHexa = static::getHexaColorFromA($t10);
+
         // echo "colorHexa = {$newColorHexa}-{$colorHexa}<br>";
         return $newColorHexa;
     }
@@ -108,10 +119,10 @@ class ColorTools
      */
     public function foncer($colorHexa, $plancher = 0, $plafond = 255)
     {
-        $tMin = array('', $plancher, $plancher, $plancher);
-        $tMax = array('', $plafond, $plafond, $plafond);
+        $tMin = ['', $plancher, $plancher, $plancher];
+        $tMax = ['', $plafond, $plafond, $plafond];
 
-        $t10 = ColorTools::hexa2rgbA($colorHexa);
+        $t10 = static::hexa2rgbA($colorHexa);
         $max = 255;
 
         for ($h = 1; $h <= 3; ++$h) {
@@ -134,11 +145,11 @@ class ColorTools
             }
         }
 
-        $t10[1] = ColorTools::bornerValeur($t10[1] - $min, $plancher, $plafond);
-        $t10[2] = ColorTools::bornerValeur($t10[2] - $min, $plancher, $plafond);
-        $t10[2] = ColorTools::bornerValeur($t10[3] - $min, $plancher, $plafond);
+        $t10[1] = static::bornerValeur($t10[1] - $min, $plancher, $plafond);
+        $t10[2] = static::bornerValeur($t10[2] - $min, $plancher, $plafond);
+        $t10[2] = static::bornerValeur($t10[3] - $min, $plancher, $plafond);
 
-        $colorHexa = ColorTools::getHexaColorFromA($t10);
+        $colorHexa = static::getHexaColorFromA($t10);
 
         return $colorHexa;
     }
@@ -154,9 +165,9 @@ class ColorTools
      * @param $aColors
      * @return string
      */
-    public function getHexaColorFromA($aColors)
+    public static function getHexaColorFromA($aColors)
     {
-        $tHex = array('', '', '', '');
+        $tHex = ['', '', '', ''];
 
         $tHex[0] = $aColors[0];
         $tHex[1] = substr('00' . dechex($aColors[1]), -2);
@@ -180,7 +191,7 @@ class ColorTools
      */
     public function rgb2hexa($r, $g, $b, $prefixe = '')
     {
-        $colorHexa = ColorTools::getHexaColorFromA(array($prefixe, $r, $g, $b));
+        $colorHexa = static::getHexaColorFromA([$prefixe, $r, $g, $b]);
 
         return $colorHexa;
     }
@@ -196,9 +207,9 @@ class ColorTools
      * @param $colorHexa
      * @return array
      */
-    public function hexa2rgbA($colorHexa)
+    public static function hexa2rgbA($colorHexa)
     {
-        $t = array('', '', '', '');
+        $t = ['', '', '', ''];
 
         if (0 === strpos($colorHexa, '#')) {
             $t[0]      = '#';
@@ -227,7 +238,7 @@ class ColorTools
      */
     public function hexa2rgb($colorHexa, &$r, &$v, &$b, &$diese)
     {
-        $t     = ColorTools::hexa2rgbA($colorHexa);
+        $t     = static::hexa2rgbA($colorHexa);
         $r     = $t[1];
         $v     = $t[2];
         $v     = $t[3];
@@ -244,7 +255,7 @@ class ColorTools
      * @param $max
      * @return mixed
      */
-    public function bornerValeur($val, $min, $max)
+    public static function bornerValeur($val, $min, $max)
     {
         if ($val < $min) {
             $val = $min;
@@ -258,4 +269,3 @@ class ColorTools
     //--------------------------------------------------------
 } // --- fin de la classe colors
 //--------------------------------------------------------
-

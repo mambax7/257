@@ -17,12 +17,14 @@
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
  * @author          The SmartFactory <www.smartfactory.ca>
- * @version         $Id: items_random_item.php 10374 2012-12-12 23:39:48Z trabis $
  */
 
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+use XoopsModules\Publisher;
+use XoopsModules\Publisher\Constants;
 
-include_once dirname(__DIR__) . '/include/common.php';
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
+
+require_once __DIR__ . '/../include/common.php';
 
 /**
  * @param $options
@@ -31,10 +33,10 @@ include_once dirname(__DIR__) . '/include/common.php';
  */
 function publisher_items_random_item_show($options)
 {
-    $block     = array();
-    $publisher = PublisherPublisher::getInstance();
+    $block     = [];
+    $helper = Publisher\Helper::getInstance();
     // creating the ITEM object
-    $itemsObj = $publisher->getHandler('item')->getRandomItem('', array(PublisherConstants::PUBLISHER_STATUS_PUBLISHED));
+    $itemsObj = $helper->getHandler('Item')->getRandomItem('', [Constants::PUBLISHER_STATUS_PUBLISHED]);
 
     if (!is_object($itemsObj)) {
         return $block;

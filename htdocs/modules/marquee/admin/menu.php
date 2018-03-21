@@ -1,47 +1,31 @@
 <?php
 
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+use XoopsModules\Marquee;
 
-//$path = dirname(dirname(dirname(__DIR__)));
-//include_once $path . '/mainfile.php';
-//
-//$dirname         = basename(dirname(__DIR__));
-//$module_handler  = xoops_getHandler('module');
-//$module          = $module_handler->getByDirname($dirname);
-//$pathIcon32      = $module->getInfo('icons32');
-//$pathModuleAdmin = $module->getInfo('dirmoduleadmin');
-//$pathLanguage    = $path . $pathModuleAdmin;
-//
-//if (!file_exists($fileinc = $pathLanguage . '/language/' . $GLOBALS['xoopsConfig']['language'] . '/' . 'main.php')) {
-//    $fileinc = $pathLanguage . '/language/english/main.php';
-//}
-//
-//include_once $fileinc;
+require_once __DIR__ . '/admin_header.php';
+// require_once __DIR__ . '/../class/helper.php';
+//require_once __DIR__ . '/../include/common.php';
+$helper = Marquee\Helper::getInstance();
 
-$module_handler = xoops_getHandler('module');
-$module         = $module_handler->getByDirname(basename(dirname(__DIR__)));
-$pathIcon32     = '../../' . $module->getInfo('icons32');
-xoops_loadLanguage('modinfo', $module->dirname());
 
-$pathModuleAdmin = XOOPS_ROOT_PATH . '/' . $module->getInfo('dirmoduleadmin') . '/moduleadmin';
-if (!file_exists($fileinc = $pathModuleAdmin . '/language/' . $GLOBALS['xoopsConfig']['language'] . '/' . 'main.php')) {
-    $fileinc = $pathModuleAdmin . '/language/english/main.php';
-}
-include_once $fileinc;
+$pathIcon32 = \Xmf\Module\Admin::menuIconPath('');
+$pathModIcon32 = $helper->getModule()->getInfo('modicons32');
 
-//$adminmenu = array();
 
-$adminmenu[] = array(
-    'title' => _AM_MODULEADMIN_HOME,
+$adminmenu[] = [
+    'title' => _MI_MARQUEE_HOME,
     'link'  => 'admin/index.php',
-    'icon'  => $pathIcon32 . '/home.png');
+    'icon'  => $pathIcon32 . '/home.png'
+];
 
-$adminmenu[] = array(
+$adminmenu[] = [
     'title' => _MI_MARQUEE_MENU_01,
     'link'  => 'admin/main.php',
-    'icon'  => $pathIcon32 . '/marquee.png');
+    'icon'  => $pathIcon32 . '/marquee.png'
+];
 
-$adminmenu[] = array(
-    'title' => _AM_MODULEADMIN_ABOUT,
+$adminmenu[] = [
+    'title' => _MI_MARQUEE_ABOUT,
     'link'  => 'admin/about.php',
-    'icon'  => $pathIcon32 . '/about.png');
+    'icon'  => $pathIcon32 . '/about.png'
+];

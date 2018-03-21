@@ -10,21 +10,20 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright   {@link http://xoops.org/ XOOPS Project}
+ * @copyright   {@link https://xoops.org/ XOOPS Project}
  * @license     GNU GPL 2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  * @author      Zoullou (http://www.zoullou.net)
  * @package     ExtGallery
- * @version     $Id: upgrade.php 8088 2011-11-06 09:38:12Z beckmi $
  */
 
+require_once __DIR__ . '/admin_header.php';
 if (isset($_POST['step'])) {
     $step = $_POST['step'];
 } else {
     $step = 'default';
 }
 
-include_once dirname(dirname(dirname(__DIR__))) . '/include/cp_header.php';
-include __DIR__ . '/function.php';
+require_once __DIR__ . '/../../../include/cp_header.php';
 include __DIR__ . '/moduleUpdateFunction.php';
 
 // Change this variable if you use a cloned version of eXtGallery
@@ -67,7 +66,7 @@ switch ($step) {
         }
 
         // English file are included on module package
-        if ($xoopsConfig['language'] != 'english') {
+        if ('english' !== $xoopsConfig['language']) {
             if (!$handle = @fopen($downloadServer . $langFileName, 'r')) {
                 printf(_AM_EXTGALLERY_LG_FILE_DONT_EXIST, $downloadServer, $langFileName);
             } else {
@@ -84,7 +83,7 @@ switch ($step) {
             }
         }
 
-        xoops_confirm(array('step' => 'install'), 'upgrade.php', _AM_EXTGALLERY_DOWN_DONE, _AM_EXTGALLERY_INSTALL);
+        xoops_confirm(['step' => 'install'], 'upgrade.php', _AM_EXTGALLERY_DOWN_DONE, _AM_EXTGALLERY_INSTALL);
 
         xoops_cp_footer();
 
@@ -102,7 +101,7 @@ switch ($step) {
         }
 
         $g_pcltar_lib_dir = XOOPS_ROOT_PATH . '/modules/' . $localModuleDir . '/class';
-        include dirname(__DIR__) . '/class/pcltar.lib.php';
+        include __DIR__ . '/../class/pcltar.lib.php';
 
         //TrOn(5);
 
@@ -126,7 +125,7 @@ switch ($step) {
         // Delete template_c file
         if ($handle = opendir(XOOPS_ROOT_PATH . '/templates_c')) {
             while (false !== ($file = readdir($handle))) {
-                if ($file !== '.' && $file !== '..' && $file !== 'index.html') {
+                if ('.' !== $file && '..' !== $file && 'index.html' !== $file) {
                     unlink(XOOPS_ROOT_PATH . '/templates_c/' . $file);
                 }
             }
@@ -135,7 +134,7 @@ switch ($step) {
         }
         //TrDisplay();
 
-        xoops_confirm(array('dirname' => $localModuleDir, 'op' => 'update_ok', 'fct' => 'modulesadmin'), XOOPS_URL . '/modules/system/admin.php', _AM_EXTGALLERY_INSTALL_DONE, _AM_EXTGALLERY_UPDATE);
+        xoops_confirm(['dirname' => $localModuleDir, 'op' => 'update_ok', 'fct' => 'modulesadmin'], XOOPS_URL . '/modules/system/admin.php', _AM_EXTGALLERY_INSTALL_DONE, _AM_EXTGALLERY_UPDATE);
 
         xoops_cp_footer();
 

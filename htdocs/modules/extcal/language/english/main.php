@@ -1,5 +1,6 @@
 <?php
-include_once XOOPS_ROOT_PATH . '/language/' . $GLOBALS['xoopsConfig']['language'] . '/calendar.php';
+
+require_once XOOPS_ROOT_PATH . '/language/' . $GLOBALS['xoopsConfig']['language'] . '/calendar.php';
 define('_MD_CLEAR_CRITERIA', 'clear criteria');
 define('_MD_EXTCAL_1_FR', '1st ' . _CAL_FRIDAY);
 define('_MD_EXTCAL_1_MO', '1st ' . _CAL_MONDAY);
@@ -55,8 +56,8 @@ define('_MD_EXTCAL_DEC', 'Dec');
 define('_MD_EXTCAL_DEL_IMG', 'Delete the image');
 define('_MD_EXTCAL_DESCRIPTION', 'Description');
 define('_MD_EXTCAL_DEVISE1', '£');
-define('_MD_EXTCAL_DEVISE2', "US$");
-define('_MD_EXTCAL_DEVISE3', "AUS$");
+define('_MD_EXTCAL_DEVISE2', 'US$');
+define('_MD_EXTCAL_DEVISE3', 'AUS$');
 define('_MD_EXTCAL_DURING', 'During');
 define('_MD_EXTCAL_EDIT_EVENT', 'Edit event');
 define('_MD_EXTCAL_EMAIL', 'Email');
@@ -91,9 +92,9 @@ define('_MD_EXTCAL_ETABLISSEMENT_TEL_FIXE', 'Phone number');
 define('_MD_EXTCAL_ETABLISSEMENT_TEL_PORTABLE', 'Mobile Phone');
 define('_MD_EXTCAL_ETABLISSEMENT_VILLE', 'City');
 define('_MD_EXTCAL_EVENT', 'Event');
-define('_MD_EXTCAL_EVENT_CREATED', 'Thank you for your submission.<br />Your event has been approved and will now appear in our calendar.');
+define('_MD_EXTCAL_EVENT_CREATED', 'Thank you for your submission.<br>Your event has been approved and will now appear in our calendar.');
 define('_MD_EXTCAL_EVENT_END', 'Have end?');
-define('_MD_EXTCAL_EVENTS_FOUND', "%1\$s events found");
+define('_MD_EXTCAL_EVENTS_FOUND', '%1$s events found');
 define('_MD_EXTCAL_EXPRESSION', 'Expression (list)');
 define('_MD_EXTCAL_FEB', 'Feb');
 define('_MD_EXTCAL_FILE_ATTACHEMENT', 'Attach a file');
@@ -127,11 +128,11 @@ define('_MD_EXTCAL_MEMBERS_LIST', 'List of participants');
 define('_MD_EXTCAL_MO2', 'Mo');
 define('_MD_EXTCAL_MONTH', 'month');
 define('_MD_EXTCAL_MONTHLY', 'Monthly');
-define('_MD_EXTCAL_MSG_0', "%1\$s cannot be registered");
-define('_MD_EXTCAL_MSG_1', "%1\$s has registered");
-define('_MD_EXTCAL_MSG_2', "%1\$s has cancelled participation");
-define('_MD_EXTCAL_MSG_3', "%1\$s will be absent");
-define('_MD_EXTCAL_MSG_4', "%1\$s has cancelled his absence");
+define('_MD_EXTCAL_MSG_0', '%1$s cannot be registered');
+define('_MD_EXTCAL_MSG_1', '%1$s has registered');
+define('_MD_EXTCAL_MSG_2', '%1$s has cancelled participation');
+define('_MD_EXTCAL_MSG_3', '%1$s will be absent');
+define('_MD_EXTCAL_MSG_4', '%1$s has cancelled his absence');
 define('_MD_EXTCAL_NAV_AGENDA_DAY', 'Agenda&nbsp;day');
 define('_MD_EXTCAL_NAV_AGENDA_WEEK', 'Agenda&nbsp;week');
 define('_MD_EXTCAL_NAV_CALMONTH', 'Calendar&nbsp;month');
@@ -226,7 +227,7 @@ define('_MD_EXTCAL_SITE', 'Website');
 define('_MD_EXTCAL_VISIT_SITE', 'Visit the Website');
 define('_MD_EXTCAL_EVENT_UPDATED', 'Event Updated');
 //2.37 RC4
-define('_MD_EXTCAL_EVENT_PENDING', 'Thank you for your submission.<br />The event will be visible once it is approved by the webmaster.');
+define('_MD_EXTCAL_EVENT_PENDING', 'Thank you for your submission.<br>The event will be visible once it is approved by the webmaster.');
 //2.39 Beta 1
 define('_MD_EXTCAL_MESSAGE', 'Good day to all'); //Bonne journée à tous
-
+define('_MD_EXTCAL_CLONE_OF', 'Clone the event #');

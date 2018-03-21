@@ -19,8 +19,8 @@ class MetaSliderImageHelper
      * @param integer $slide_id
      * @param integer $width  - required width of image
      * @param integer $height - required height of image
-     * @param string $smart_crop
-     * @param bool $use_image_editor
+     * @param string  $smart_crop
+     * @param bool    $use_image_editor
      */
     public function __construct($slide_id, $width, $height, $smart_crop, $use_image_editor = true)
     {
@@ -48,7 +48,7 @@ class MetaSliderImageHelper
      */
     private function get_crop_dimensions($image_width, $image_height)
     {
-        if ($this->smart_crop === 'false') {
+        if ('false' === $this->smart_crop) {
             return array('width' => (int)$this->container_width, 'height' => (int)$this->container_height);
         }
 
@@ -172,7 +172,8 @@ class MetaSliderImageHelper
         // if the file exists, just return it without going any further
         $dest_file_name = $this->get_destination_file_name(array(
                                                                'width'  => $this->container_width,
-                                                               'height' => $this->container_height));
+                                                               'height' => $this->container_height
+                                                           ));
 
         if (file_exists($dest_file_name)) {
             return str_replace(basename($this->url), basename($dest_file_name), $this->url);
@@ -182,7 +183,7 @@ class MetaSliderImageHelper
         $orig_size = $this->get_original_image_dimensions();
 
         // bail out if we can't find the image dimensions
-        if ($orig_size == false) {
+        if (false == $orig_size) {
             return $this->url;
         }
 
@@ -266,7 +267,7 @@ class MetaSliderImageHelper
      *
      * @param  array $orig_size
      * @param  array $dest_size
-     * @param $dest_file_name
+     * @param        $dest_file_name
      * @return string
      */
     private function resize_image($orig_size, $dest_size, $dest_file_name)
@@ -280,7 +281,7 @@ class MetaSliderImageHelper
                 echo '<div id="message" class="error">';
                 echo '<p><strong>ERROR</strong> ' . $image->get_error_message() . " Check <a href='http://codex.wordpress.org/Changing_File_Permissions' target='_blank'>file permissions</a></p>";
                 echo "<button class='toggle'>Show Details</button>";
-                echo "<div class='message' style='display: none;'><br />Slide ID: {$this->id}<pre>";
+                echo "<div class='message' style='display: none;'><br >Slide ID: {$this->id}<pre>";
                 var_dump($image);
                 echo '</pre></div>';
                 echo '</div>';

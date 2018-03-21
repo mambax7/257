@@ -1,14 +1,11 @@
 <?php
 
 /**
- * $Id: adsense.php 159 2007-12-17 16:44:05Z malanciault $
  * Module: SmartContent
  * Author: The SmartFactory <www.smartfactory.ca>
  * Licence: GNU
  */
-if (!defined("XOOPS_ROOT_PATH")) {
-    die("XOOPS root path not defined");
-}
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 define('_AM_SOBJECT_ADSENSES', 'Adense ads');
 define('_AM_SOBJECT_ADSENSES_DSC', 'Here is a list of the adsense ads available in the system.');
@@ -41,12 +38,10 @@ define('_CO_SOBJECT_ADSENSE_FORMAT_DSC', '');
 define('_CO_SOBJECT_ADSENSE_LINK_COLOR', 'Link color');
 define('_CO_SOBJECT_ADSENSE_LINK_COLOR_DSC', '');
 define('_CO_SOBJECT_ADSENSE_STYLE', 'Syle infomation');
-define('_CO_SOBJECT_ADSENSE_STYLE_DSC', 'The add will be displayed in a container with these style information. Example : text-align:center; padding-top: 15px;');
+define('_CO_SOBJECT_ADSENSE_STYLE_DSC', 'The add will be displayed in a container with these style information. Example: text-align:center; padding-top: 15px;');
 define('_CO_SOBJECT_ADSENSE_TAG', 'ID of the [adsense] tag to display this add');
 define('_CO_SOBJECT_ADSENSE_TAG_DSC', 'The module will automatically generate an ID for you. However, if you which to customize it, you can. Remember that this needs to be unique.');
 define('_CO_SOBJECT_ADSENSE_TEXT_COLOR', 'Text color');
 define('_CO_SOBJECT_ADSENSE_TEXT_COLOR_DSC', '');
 define('_CO_SOBJECT_ADSENSE_URL_COLOR', 'URL color');
 define('_CO_SOBJECT_ADSENSE_URL_COLOR_DSC', '');
-
-?>

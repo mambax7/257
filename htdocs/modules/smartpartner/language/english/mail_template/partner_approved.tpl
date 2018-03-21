@@ -4,7 +4,7 @@ We are please to inform you that the following partner submitted on {X_SITENAME}
 
 "{PARTNER_NAME}"
 
-You can view this item here :
+You can view this item here:
 
 {PARTNER_URL}
 

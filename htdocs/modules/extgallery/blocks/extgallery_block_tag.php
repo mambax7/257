@@ -10,24 +10,23 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright   {@link http://xoops.org/ XOOPS Project}
+ * @copyright   {@link https://xoops.org/ XOOPS Project}
  * @license     GNU GPL 2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  * @author      Voltan (djvoltan@gmail.com)
  * @package     ExtGallery
- * @version     $Id: extgallery_block_tag.php 8088 2011-11-06 09:38:12Z beckmi $
  */
 
 /**
  * @param $options
  *
- * @return string
+ * @return array
  */
 function extgallery_tag_block_cloud_show($options)
 {
     $module_dirname = basename(dirname(__DIR__));
     // tags support
     if (xoops_isActiveModule('tag')) {
-        include_once XOOPS_ROOT_PATH . '/modules/tag/blocks/block.php';
+        require_once XOOPS_ROOT_PATH . '/modules/tag/blocks/block.php';
 
         return tag_block_cloud_show($options, $module_dirname);
     }
@@ -40,7 +39,7 @@ function extgallery_tag_block_cloud_show($options)
  */
 function extgallery_tag_block_cloud_edit($options)
 {
-    include_once XOOPS_ROOT_PATH . '/modules/tag/blocks/block.php';
+    require_once XOOPS_ROOT_PATH . '/modules/tag/blocks/block.php';
 
     return tag_block_cloud_edit($options);
 }
@@ -56,7 +55,7 @@ function extgallery_tag_block_top_show($options)
 
     // tags support
     if (xoops_isActiveModule('tag')) {
-        include_once XOOPS_ROOT_PATH . '/modules/tag/blocks/block.php';
+        require_once XOOPS_ROOT_PATH . '/modules/tag/blocks/block.php';
 
         return tag_block_top_show($options, $module_dirname);
     }
@@ -69,7 +68,7 @@ function extgallery_tag_block_top_show($options)
  */
 function extgallery_tag_block_top_edit($options)
 {
-    include_once XOOPS_ROOT_PATH . '/modules/tag/blocks/block.php';
+    require_once XOOPS_ROOT_PATH . '/modules/tag/blocks/block.php';
 
     return tag_block_top_edit($options);
 }

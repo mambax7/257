@@ -1,6 +1,6 @@
 <?php
-/**
- * xSiteMap module
+/*
+ * xsitemap module
  *
  * You may not change or alter any portion of this comment or credits
  * of supporting developers from this source code or any supporting source code
@@ -8,24 +8,21 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
- * @copyright    The XOOPS Project http://sourceforge.net/projects/xoops/
- * @license             http://www.gnu.org/licenses/gpl-2.0.html GNU Public License
- * @copyright    The XOOPS Project (http://www.xoops.org)
- * @license   {@link http://www.gnu.org/licenses/gpl-2.0.html GNU Public License}
- * @package    xSiteMap
- * @since        2.5.0
+ */
+/**
+ * @package    module\Xsitemap\admin
  * @author     Mage, Mamba
- * @version    $Id $
- **/
+ * @copyright  XOOPS Project (https://xoops.org)
+ * @license    http://www.gnu.org/licenses/gpl-2.0.html GNU Public License
+ * @link       https://xoops.org XOOPS
+ * @since      1.00
+ */
 
-include_once dirname(__FILE__) . '/admin_header.php';
-
+require_once __DIR__ . '/admin_header.php';
 xoops_cp_header();
 
-$aboutAdmin = new ModuleAdmin();
+$adminObject->displayNavigation(basename(__FILE__));
+$adminObject::setPaypal('xoopsfoundation@gmail.com');
+$adminObject->displayAbout(false);
 
-echo $aboutAdmin->addNavigation('about.php');
-echo $aboutAdmin->renderabout('6KJ7RW5DR3VTJ', false);
-
-include 'admin_footer.php';
+require_once __DIR__ . '/admin_footer.php';

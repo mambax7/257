@@ -11,19 +11,21 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright::  &copy; ZySpec Incorporated
- * @license::    {@link http://www.gnu.org/licenses/gpl-2.0.html GNU Public License}
- * @package::    mylinks
+ * @copyright ::  &copy; ZySpec Incorporated
+ * @license   ::    {@link http://www.gnu.org/licenses/gpl-2.0.html GNU Public License}
+ * @package   ::    mylinks
  * @subpackage:: class
- * @since::      File available since version 3.11
- * @author::     zyspec (owner@zyspec.com)
- * @version::    $Id: category.php 11304 2013-03-25 14:40:45Z zyspec $
+ * @since     ::      File available since version 3.11
+ * @author    ::     zyspec (owner@zyspec.com)
  */
 
-defined('XOOPS_ROOT_PATH') or die('Restricted access');
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
-$mylinksDir = basename(dirname(dirname(__FILE__)));
+$mylinksDir = basename(dirname(__DIR__));
 
+/**
+ * Class mylinksCategory_base
+ */
 class mylinksCategory_base extends XoopsObject
 {
     /**
@@ -56,11 +58,11 @@ class mylinksCategory_base extends XoopsObject
      */
     public function getPathFromId($id = null, $path = '')
     {
-        $id = isset($id) ? intval($id) : $this->cid;
-        $myts =& MyTextSanitizer::getInstance();
+        $id   = isset($id) ? (int)$id : $this->cid;
+        $myts = \MyTextSanitizer::getInstance();
         $name = $myts->htmlSpecialChars($this->title);
         $path = "/{$name}{$path}";
-        if ($this->pid != 0) {
+        if (0 != $this->pid) {
             $path = $this->getPathFromId($this->pid, $path);
         }
 
@@ -68,16 +70,26 @@ class mylinksCategory_base extends XoopsObject
     }
 }
 
+/**
+ * Class mylinksCategoryHandler_base
+ */
 class mylinksCategoryHandler_base extends XoopsPersistableObjectHandler
 {
-    public function mylinksCategoryHandler(&$db)
+    /**
+     * @param XoopsDatabase $db
+     */
+    public function mylinksCategoryHandler(\XoopsDatabase $db)
     {
         $this->__construct($db);
     }
 
-    public function __construct(&$db)
+    /**
+     * mylinksCategoryHandler_base constructor.
+     * @param XoopsDatabase $db
+     */
+    public function __construct(\XoopsDatabase $db)
     {
-        $mylinksDir = basename(dirname(dirname(__FILE__)));
+        $mylinksDir = basename(dirname(__DIR__));
         parent::__construct($db, 'mylinks_cat', strtolower($mylinksDir) . 'Category', 'cid');
     }
 
@@ -91,19 +103,19 @@ class mylinksCategoryHandler_base extends XoopsPersistableObjectHandler
      */
     public function getCatTitles($cats = null)
     {
-        $catTitles = array();
-        $criteria = new CriteriaCompo();
-        if (isset($cats) && (is_array($cats))) {
+        $catTitles = [];
+        $criteria  = new \CriteriaCompo();
+        if (isset($cats) && is_array($cats)) {
             $catIdString = (!empty($cats)) ? '(' . implode(',', $cats) . ')' : '';
             if ($catIdString) {
-                $criteria->add(new Criteria('cid', $catIdString, 'IN'));
+                $criteria->add(new \Criteria('cid', $catIdString, 'IN'));
             }
-        } elseif (isset($cats) && (intval($cats) > 0)) {
-            $criteria->add(new Criteria('cid', intval($cats), '='));
+        } elseif (isset($cats) && ((int)$cats > 0)) {
+            $criteria->add(new \Criteria('cid', (int)$cats, '='));
         }
-        $catFields = array('title');
-        $catArray = $this->getAll($criteria, $catFields, false);
-        $catTitles = array();
+        $catFields = ['title'];
+        $catArray  = $this->getAll($criteria, $catFields, false);
+        $catTitles = [];
         if (is_array($catArray) && count($catArray)) {
             foreach ($catArray as $catItem) {
                 $catTitles[$catItem['cid']] = $catItem['title'];
@@ -113,6 +125,7 @@ class mylinksCategoryHandler_base extends XoopsPersistableObjectHandler
         return $catTitles;
     }
 }
+
 eval('class ' . $mylinksDir . 'Category extends mylinksCategory_base
         {
         }

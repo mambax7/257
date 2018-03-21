@@ -6,81 +6,60 @@
  * Licence: GNU
  */
 
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+use XoopsModules\Smartfaq;
 
-$path = dirname(dirname(dirname(__DIR__)));
-include_once $path . '/mainfile.php';
+// require_once __DIR__ . '/../class/Helper.php';
+//require_once __DIR__ . '/../include/common.php';
+$helper = Smartfaq\Helper::getInstance();
 
-$dirname         = basename(dirname(__DIR__));
-$moduleHandler   = xoops_getHandler('module');
-$module          = $moduleHandler->getByDirname($dirname);
-$pathIcon32      = $module->getInfo('icons32');
-$pathModuleAdmin = $module->getInfo('dirmoduleadmin');
-$pathLanguage    = $path . $pathModuleAdmin;
+$pathIcon32 = \Xmf\Module\Admin::menuIconPath('');
+$pathModIcon32 = $helper->getModule()->getInfo('modicons32');
 
-if (!file_exists($fileinc = $pathLanguage . '/language/' . $GLOBALS['xoopsConfig']['language'] . '/' . 'main.php')) {
-    $fileinc = $pathLanguage . '/language/english/main.php';
-}
 
-include_once $fileinc;
+$adminmenu[] = [
+    'title' => _MI_SF_HOME,
+    'link'  => 'admin/index.php',
+    'icon'  => $pathIcon32 . '/home.png',
+];
 
-$adminmenu              = array();
-$i                      = 0;
-$adminmenu[$i]['title'] = _AM_MODULEADMIN_HOME;
-$adminmenu[$i]['link']  = 'admin/index.php';
-$adminmenu[$i]['icon']  = $pathIcon32 . '/home.png';
-++$i;
-$adminmenu[$i]['title'] = _MI_SF_ADMENU1;
-$adminmenu[$i]['link']  = 'admin/main.php';
-$adminmenu[$i]['icon']  = $pathIcon32 . '/manage.png';
+$adminmenu[] = [
+    'title' => _MI_SF_ADMENU1,
+    'link'  => 'admin/main.php',
+    'icon'  => $pathIcon32 . '/manage.png',
+];
 
-++$i;
-$adminmenu[$i]['title'] = _MI_SF_ADMENU2;
-$adminmenu[$i]['link']  = 'admin/category.php';
-$adminmenu[$i]['icon']  = $pathIcon32 . '/category.png';
-++$i;
-$adminmenu[$i]['title'] = _MI_SF_ADMENU3;
-$adminmenu[$i]['link']  = 'admin/faq.php';
-$adminmenu[$i]['icon']  = $pathIcon32 . '/search.png';
-++$i;
-$adminmenu[$i]['title'] = _MI_SF_ADMENU4;
-$adminmenu[$i]['link']  = 'admin/question.php';
-$adminmenu[$i]['icon']  = $pathIcon32 . '/faq.png';
-++$i;
-$adminmenu[$i]['title'] = _MI_SF_ADMENU5;
-$adminmenu[$i]['link']  = 'admin/permissions.php';
-$adminmenu[$i]['icon']  = $pathIcon32 . '/permissions.png';
-++$i;
-$adminmenu[$i]['title'] = _MI_SF_ADMENU8;
-$adminmenu[$i]['link']  = 'admin/import.php';
-$adminmenu[$i]['icon']  = $pathIcon32 . '/download.png';
-++$i;
-$adminmenu[$i]['title'] = _AM_MODULEADMIN_ABOUT;
-$adminmenu[$i]['link']  = 'admin/about.php';
-$adminmenu[$i]['icon']  = $pathIcon32 . '/about.png';
-//++$i;
-//$adminmenu[$i]['title'] = _AM_MODULEADMIN_ABOUT;
-//$adminmenu[$i]["link"]  = "admin/about2.php";
-//$adminmenu[$i]["icon"]  = $pathIcon32 . '/about.png';
-//-------------------------------
-// Index
-//$adminmenu[0]['title'] = _MI_SF_ADMENU1;
-//$adminmenu[0]['link'] = "admin/index.php";
-// Category
-//$adminmenu[1]['title'] = _MI_SF_ADMENU2;
-//$adminmenu[1]['link'] = "admin/category.php";
-// faqs
-//$adminmenu[2]['title'] = _MI_SF_ADMENU3;
-//$adminmenu[2]['link'] = "admin/faq.php";
-// Questions
-//$adminmenu[3]['title'] = _MI_SF_ADMENU4;
-//$adminmenu[3]['link'] = "admin/question.php";
-//// Permissions
-//$adminmenu[4]['title'] = _MI_SF_ADMENU5;
-//$adminmenu[4]['link'] = "admin/permissions.php";
-//// Blocks and Groups
-//$adminmenu[5]['title'] = _MI_SF_ADMENU6;
-//$adminmenu[5]['link'] = "admin/myblocksadmin.php";
-// Goto Module
-//$adminmenu[6]['title'] = _MI_SF_ADMENU7;
-//$adminmenu[6]['link'] = "index.php";
+$adminmenu[] = [
+    'title' => _MI_SF_ADMENU2,
+    'link'  => 'admin/category.php',
+    'icon'  => $pathIcon32 . '/category.png',
+];
+
+$adminmenu[] = [
+    'title' => _MI_SF_ADMENU3,
+    'link'  => 'admin/faq.php',
+    'icon'  => $pathIcon32 . '/search.png',
+];
+
+$adminmenu[] = [
+    'title' => _MI_SF_ADMENU4,
+    'link'  => 'admin/question.php',
+    'icon'  => $pathIcon32 . '/faq.png',
+];
+
+$adminmenu[] = [
+    'title' => _MI_SF_ADMENU5,
+    'link'  => 'admin/permissions.php',
+    'icon'  => $pathIcon32 . '/permissions.png',
+];
+
+$adminmenu[] = [
+    'title' => _MI_SF_ADMENU8,
+    'link'  => 'admin/import.php',
+    'icon'  => $pathIcon32 . '/download.png',
+];
+
+$adminmenu[] = [
+    'title' => _MI_SF_ABOUT,
+    'link'  => 'admin/about.php',
+    'icon'  => $pathIcon32 . '/about.png',
+];

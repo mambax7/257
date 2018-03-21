@@ -16,11 +16,13 @@
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
  * @author          The SmartFactory <www.smartfactory.ca>
- * @version         $Id: items_spot.php 10374 2012-12-12 23:39:48Z trabis $
  */
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
 
-include_once dirname(__DIR__) . '/include/common.php';
+use XoopsModules\Publisher;
+
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
+
+require_once __DIR__ . '/../include/common.php';
 
 /**
  * @param $options
@@ -30,31 +32,31 @@ include_once dirname(__DIR__) . '/include/common.php';
 function publisher_items_spot_show($options)
 {
     //    global $xoTheme;
-    $publisher           = PublisherPublisher::getInstance();
+    $helper         = Publisher\Helper::getInstance();
     $optDisplayLast    = $options[0];
     $optItemsCount     = $options[1];
-    $optCategoryId      = $options[2];
-    $selItems           = isset($options[3]) ? explode(',', $options[3]) : '';
+    $optCategoryId     = $options[2];
+    $selItems          = isset($options[3]) ? explode(',', $options[3]) : '';
     $optDisplayPoster  = $options[4];
     $optDisplayComment = $options[5];
     $optDisplayType    = $options[6];
-    $optTruncate        = (int)$options[7];
-    $optCatImage        = $options[8];
-    if ($optCategoryId == 0) {
+    $optTruncate       = (int)$options[7];
+    $optCatImage       = $options[8];
+    if (0 == $optCategoryId) {
         $optCategoryId = -1;
     }
-    $block = array();
-    if ($optDisplayLast == 1) {
-        $itemsObj   = $publisher->getHandler('item')->getAllPublished($optItemsCount, 0, $optCategoryId, $sort = 'datesub', $order = 'DESC', 'summary');
+    $block = [];
+    if (1 == $optDisplayLast) {
+        $itemsObj   = $helper->getHandler('Item')->getAllPublished($optItemsCount, 0, $optCategoryId, $sort = 'datesub', $order = 'DESC', 'summary');
         $i          = 1;
         $itemsCount = count($itemsObj);
         if ($itemsObj) {
             if ($optCategoryId != -1 && $optCatImage) {
-                $cat                     = $publisher->getHandler('category')->get($optCategoryId);
+                $cat                     = $helper->getHandler('Category')->get($optCategoryId);
                 $category['name']        = $cat->name();
                 $category['categoryurl'] = $cat->getCategoryUrl();
-                if ($cat->getImage() !== 'blank.png') {
-                    $category['image_path'] = publisherGetImageDir('category', false) . $cat->getImage();
+                if ('blank.png' !== $cat->getImage()) {
+                    $category['image_path'] = Publisher\Utility::getImageDir('category', false) . $cat->getImage();
                 } else {
                     $category['image_path'] = '';
                 }
@@ -78,7 +80,7 @@ function publisher_items_spot_show($options)
         $i          = 1;
         $itemsCount = count($selItems);
         foreach ($selItems as $itemId) {
-            $itemObj = $publisher->getHandler('item')->get($itemId);
+            $itemObj = $helper->getHandler('Item')->get($itemId);
             if (!$itemObj->notLoaded()) {
                 $item             = $itemObj->toArraySimple();
                 $item['who_when'] = sprintf(_MB_PUBLISHER_WHO_WHEN, $itemObj->posterName(), $itemObj->getDatesub());
@@ -89,14 +91,14 @@ function publisher_items_spot_show($options)
                 }
                 if ($optTruncate > 0) {
                     $block['truncate'] = true;
-                    $item['summary']   = publisherTruncateTagSafe($item['summary'], $optTruncate);
+                    $item['summary']   = Publisher\Utility::truncateHtml($item['summary'], $optTruncate);
                 }
                 $block['items'][] = $item;
                 ++$i;
             }
         }
     }
-    if (!isset($block['items']) || count($block['items']) == 0) {
+    if (!isset($block['items']) || 0 == count($block['items'])) {
         return false;
     }
     $block['lang_reads']           = _MB_PUBLISHER_READS;
@@ -106,7 +108,7 @@ function publisher_items_spot_show($options)
     $block['display_comment_link'] = $optDisplayComment;
     $block['display_type']         = $optDisplayType;
 
-    $block['moduleUrl'] = PUBLISHER_URL;
+    $block['publisher_url'] = PUBLISHER_URL;
     $GLOBALS['xoTheme']->addStylesheet(XOOPS_URL . '/modules/' . PUBLISHER_DIRNAME . '/assets/css/publisher.css');
 
     return $block;
@@ -119,34 +121,35 @@ function publisher_items_spot_show($options)
  */
 function publisher_items_spot_edit($options)
 {
-    include_once PUBLISHER_ROOT_PATH . '/class/blockform.php';
+    // require_once PUBLISHER_ROOT_PATH . '/class/blockform.php';
     xoops_load('XoopsFormLoader');
-    $form      = new PublisherBlockForm();
-    $autoEle   = new XoopsFormRadioYN(_MB_PUBLISHER_AUTO_LAST_ITEMS, 'options[0]', $options[0]);
-    $countEle  = new XoopsFormText(_MB_PUBLISHER_LAST_ITEMS_COUNT, 'options[1]', 2, 255, $options[1]);
-    $catEle    = new XoopsFormLabel(_MB_PUBLISHER_SELECTCAT, publisherCreateCategorySelect($options[2], 0, true, 'options[2]'));
-    $publisher = PublisherPublisher::getInstance();
-    $criteria  = new CriteriaCompo();
+    $form      = new Publisher\BlockForm();
+    $autoEle   = new \XoopsFormRadioYN(_MB_PUBLISHER_AUTO_LAST_ITEMS, 'options[0]', $options[0]);
+    $countEle  = new \XoopsFormText(_MB_PUBLISHER_LAST_ITEMS_COUNT, 'options[1]', 2, 255, $options[1]);
+    $catEle    = new \XoopsFormLabel(_MB_PUBLISHER_SELECTCAT, Publisher\Utility::createCategorySelect($options[2], 0, true, 'options[2]'));
+    $helper = Publisher\Helper::getInstance();
+    $criteria  = new \CriteriaCompo();
     $criteria->setSort('datesub');
     $criteria->setOrder('DESC');
-    $itemsObj = $publisher->getHandler('item')->getList($criteria);
+    $itemsObj = $helper->getHandler('Item')->getList($criteria);
     $keys     = array_keys($itemsObj);
     unset($criteria);
-    if (empty($options[3]) || ($options[3] == 0)) {
+    if (empty($options[3]) || (0 == $options[3])) {
         $selItems = isset($keys[0]) ? $keys[0] : 0;
     } else {
         $selItems = explode(',', $options[3]);
     }
-    $itemEle = new XoopsFormSelect(_MB_PUBLISHER_SELECT_ITEMS, 'options[3]', $selItems, 10, true);
+    $itemEle = new \XoopsFormSelect(_MB_PUBLISHER_SELECT_ITEMS, 'options[3]', $selItems, 10, true);
     $itemEle->addOptionArray($itemsObj);
-    $whoEle  = new XoopsFormRadioYN(_MB_PUBLISHER_DISPLAY_WHO_AND_WHEN, 'options[4]', $options[4]);
-    $comEle  = new XoopsFormRadioYN(_MB_PUBLISHER_DISPLAY_COMMENTS, 'options[5]', $options[5]);
-    $typeEle = new XoopsFormSelect(_MB_PUBLISHER_DISPLAY_TYPE, 'options[6]', $options[6]);
-    $typeEle->addOptionArray(array(
+    $whoEle  = new \XoopsFormRadioYN(_MB_PUBLISHER_DISPLAY_WHO_AND_WHEN, 'options[4]', $options[4]);
+    $comEle  = new \XoopsFormRadioYN(_MB_PUBLISHER_DISPLAY_COMMENTS, 'options[5]', $options[5]);
+    $typeEle = new \XoopsFormSelect(_MB_PUBLISHER_DISPLAY_TYPE, 'options[6]', $options[6]);
+    $typeEle->addOptionArray([
                                  'block'  => _MB_PUBLISHER_DISPLAY_TYPE_BLOCK,
-                                 'bullet' => _MB_PUBLISHER_DISPLAY_TYPE_BULLET));
-    $truncateEle = new XoopsFormText(_MB_PUBLISHER_TRUNCATE, 'options[7]', 4, 255, $options[7]);
-    $imageEle    = new XoopsFormRadioYN(_MB_PUBLISHER_DISPLAY_CATIMAGE, 'options[8]', $options[8]);
+                                 'bullet' => _MB_PUBLISHER_DISPLAY_TYPE_BULLET
+                             ]);
+    $truncateEle = new \XoopsFormText(_MB_PUBLISHER_TRUNCATE, 'options[7]', 4, 255, $options[7]);
+    $imageEle    = new \XoopsFormRadioYN(_MB_PUBLISHER_DISPLAY_CATIMAGE, 'options[8]', $options[8]);
     $form->addElement($autoEle);
     $form->addElement($countEle);
     $form->addElement($catEle);

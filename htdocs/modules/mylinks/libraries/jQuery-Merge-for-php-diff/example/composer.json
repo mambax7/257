@@ -1,0 +1,5 @@
+{
+	"require": {
+		"phpspec/php-diff": "^1.1"
+	}
+}

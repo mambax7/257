@@ -4,15 +4,15 @@
 $imageType = 'magnific_popup_image_thumb';
 $imageFile = 'REX_MEDIA[1]';
 
-if ($imageFile != '') {
+if ('' != $imageFile) {
     $media = OOMedia::getMediaByFilename($imageFile);
 
     // get title and description
     if (OOMedia::isValid($media)) {
-        $title = $media->getValue('title');
+        $title       = $media->getValue('title');
         $description = $media->getValue('med_description');
     } else {
-        $title = '';
+        $title       = '';
         $description = '';
     }
 
@@ -20,7 +20,7 @@ if ($imageFile != '') {
     if (isset($REX['MEDIA_DIR'])) {
         $mediaDir = $REX['MEDIA_DIR'];
     } else {
-        $mediaDir =  'files';
+        $mediaDir = 'files';
     }
 
     // generate image url
@@ -39,9 +39,9 @@ if ($imageFile != '') {
 
     // get dimensions of image manager image
     $resizedFile = $REX['INCLUDE_PATH'] . '/generated/files/image_manager__' . $imageType . '_' . $imageFile;
-    $imageSize = @getimagesize($resizedFile);
+    $imageSize   = @getimagesize($resizedFile);
 
-    if ($imageSize != false) {
+    if (false != $imageSize) {
         $imageDimensions = ' width="' . $imageSize[0] . '" height="' . $imageSize[1] . '"';
     } else {
         $imageDimensions = '';
@@ -50,7 +50,7 @@ if ($imageFile != '') {
     // html code
     echo '<div class="magnific-popup-container">';
     echo '<a class="magnific-popup-image" href="' . $imageUrl . '" title="' . $description . '">';
-    echo '<img src="' . $imageManagerUrl . '"' . $imageDimensions . ' alt="' . $title . '" />';
+    echo '<img src="' . $imageManagerUrl . '"' . $imageDimensions . ' alt="' . $title . '" >';
     echo '</a>';
     echo '</div>';
 }

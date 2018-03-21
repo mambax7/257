@@ -9,16 +9,15 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright   {@link http://xoops.org/ XOOPS Project}
+ * @copyright   {@link https://xoops.org/ XOOPS Project}
  * @license     GNU GPL 2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  * @author      Zoullou (http://www.zoullou.net)
  * @package     ExtGallery
- * @version     $Id: install_function.php 8088 2011-11-06 09:38:12Z beckmi $
- * @param $xoopsModule
+ * @param $module
  * @return bool
  */
 
-function xoops_module_pre_install_extgallery(&$xoopsModule)
+function xoops_module_pre_install_extgallery(\XoopsModule $module)
 {
     // Check if this XOOPS version is supported
     $minSupportedVersion = explode('.', '2.5.0');
@@ -42,14 +41,16 @@ function xoops_module_pre_install_extgallery(&$xoopsModule)
 }
 
 /**
- * @param $xoopsModule
+ * @param XoopsModule $module
  *
  * @return bool
  */
-function xoops_module_install_extgallery(&$xoopsModule)
+function xoops_module_install_extgallery(\XoopsModule $module)
 {
-    $module_id     = $xoopsModule->getVar('mid');
-    $gpermHandler  = xoops_getHandler('groupperm');
+    $module_id = $module->getVar('mid');
+    /** @var XoopsGroupPermHandler $gpermHandler */
+    $gpermHandler = xoops_getHandler('groupperm');
+    /** @var XoopsModuleHandler $moduleHandler */
     $configHandler = xoops_getHandler('config');
 
     /**

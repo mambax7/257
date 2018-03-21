@@ -1,4 +1,4 @@
-<?php
+<?php namespace XoopsModules\Newbb;
 
 //adopted from poweradmin (https://github.com/poweradmin)
 
@@ -12,10 +12,11 @@ class IpCheck
     public $ipver;
 
     // Return IP type.  4 for IPv4, 6 for IPv6, 0 for bad IP.
+
     /**
      * @param $ipValue
      */
-    public function address_type($ipValue)
+    public function addressType($ipValue)
     {
         $this->ipin  = $ipValue;
         $this->ipver = 0;
@@ -30,7 +31,7 @@ class IpCheck
         if (filter_var($this->ipin, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 
             // Look for embedded IPv4 in an embedded IPv6 address, where FFFF is appended.
-            if (strpos($this->ipin, '::FFFF:') === 0) {
+            if (0 === strpos($this->ipin, '::FFFF:')) {
                 $ipv4addr = substr($this->ipin, 7);
                 if (filter_var($ipv4addr, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
                     $this->ipver = 4;
@@ -38,7 +39,7 @@ class IpCheck
                 }
 
                 // Look for an IPv4 address embedded as ::x.x.x.x
-            } elseif (strpos($this->ipin, '::') === 0) {
+            } elseif (0 === strpos($this->ipin, '::')) {
                 $ipv4addr = substr($this->ipin, 2);
                 if (filter_var($ipv4addr, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
                     $this->ipver = 4;

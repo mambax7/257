@@ -3,9 +3,8 @@
  * Contains the classes for updating database tables
  *
  * @license GNU
- * @author marcan <marcan@smartfactory.ca>
- * @version $Id: smartdbupdater.php 799 2008-02-04 22:14:27Z malanciault $
- * @link http://www.smartfactory.ca The SmartFactory
+ * @author  marcan <marcan@smartfactory.ca>
+ * @link    http://www.smartfactory.ca The SmartFactory
  * @package SmartObject
  */
 /**
@@ -14,70 +13,73 @@
  * Information about an individual table
  *
  * @package SmartObject
- * @author marcan <marcan@smartfactory.ca>
- * @link http://www.smartfactory.ca The SmartFactory
+ * @author  marcan <marcan@smartfactory.ca>
+ * @link    http://www.smartfactory.ca The SmartFactory
  */
-if (!defined("XOOPS_ROOT_PATH")) {
-    die("XOOPS root path not defined");
-}
-if (!defined("SMARTOBJECT_ROOT_PATH")) {
-    include_once (XOOPS_ROOT_PATH . '/modules/smartobject/include/common.php');
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
+if (!defined('SMARTOBJECT_ROOT_PATH')) {
+    require_once XOOPS_ROOT_PATH . '/modules/smartobject/include/common.php';
 }
 /**
  * Include the language constants for the SmartObjectDBUpdater
  */
 global $xoopsConfig;
-$common_file = SMARTOBJECT_ROOT_PATH . "language/" . $xoopsConfig['language'] . "/smartdbupdater.php";
+$common_file = SMARTOBJECT_ROOT_PATH . 'language/' . $xoopsConfig['language'] . '/smartdbupdater.php';
 if (!file_exists($common_file)) {
-    $common_file = SMARTOBJECT_ROOT_PATH . "language/english/smartdbupdater.php";
+    $common_file = SMARTOBJECT_ROOT_PATH . 'language/english/smartdbupdater.php';
 }
-include ($common_file);
-class SmartDbTable {
+include $common_file;
+
+/**
+ * Class SmartDbTable
+ */
+class SmartDbTable
+{
     /**
      * @var string $_name name of the table
      */
-    var $_name;
+    public $_name;
     /**
      * @var string $_structure structure of the table
      */
-    var $_structure;
+    public $_structure;
 
     /**
      * @var array $_data containing valued of each records to be added
      */
-    var $_data;
+    public $_data;
 
     /**
      * @var array $_alteredFields containing fields to be altered
      */
-    var $_alteredFields;
+    public $_alteredFields;
 
     /**
      * @var array $_newFields containing new fields to be added
      */
-    var $_newFields;
+    public $_newFields;
 
     /**
-     * @var array $_dropedFields containing fields to be droped
+     * @var array $_droppedFields containing fields to be dropped
      */
-    var $_dropedFields;
+    public $_droppedFields;
 
     /**
      * @var array $_flagForDrop flag table to drop it
      */
-    var $_flagForDrop = false;
+    public $_flagForDrop = false;
 
     /**
      * @var array $_updatedFields containing fields which values will be updated
      */
-    var $_updatedFields;
+    public $_updatedFields;
 
     /**
      * @var array $_updatedFields containing fields which values will be updated
      */ //felix
-    var $_updatedWhere;
+    public $_updatedWhere;
 
-    var $_existingFieldsArray=false;
+    public $_existingFieldsArray = false;
 
     /**
      * Constructor
@@ -85,9 +87,10 @@ class SmartDbTable {
      * @param string $name name of the table
      *
      */
-    function SmartDbTable($name) {
+    public function __construct($name)
+    {
         $this->_name = $name;
-        $this->_data = array ();
+        $this->_data = [];
     }
 
     /**
@@ -96,8 +99,10 @@ class SmartDbTable {
      * @return string table name
      *
      */
-    function name() {
+    public function name()
+    {
         global $xoopsDB;
+
         return $xoopsDB->prefix($this->_name);
     }
 
@@ -107,36 +112,52 @@ class SmartDbTable {
      * @return bool TRUE if it exists, FALSE if not
      *
      */
-    function exists() {
+    public function exists()
+    {
         return smart_TableExists($this->_name);
     }
 
-    function getExistingFieldsArray() {
-
+    /**
+     * @return mixed
+     */
+    public function getExistingFieldsArray()
+    {
         global $xoopsDB;
-        $result = $xoopsDB->query("SHOW COLUMNS FROM " . $this->name());
-        while ($existing_field = $xoopsDB->fetchArray($result)) {
+        $result = $xoopsDB->query('SHOW COLUMNS FROM ' . $this->name());
+        while (false !== ($existing_field = $xoopsDB->fetchArray($result))) {
             $fields[$existing_field['Field']] = $existing_field['Type'];
-            if ($existing_field['Null'] != "YES") {
-                $fields[$existing_field['Field']] .= " NOT NULL";
+            if ('YES' !== $existing_field['Null']) {
+                $fields[$existing_field['Field']] .= ' NOT NULL';
             }
             if ($existing_field['Extra']) {
-                $fields[$existing_field['Field']] .= " " . $existing_field['Extra'];
+                $fields[$existing_field['Field']] .= ' ' . $existing_field['Extra'];
             }
-            if (!($existing_field['Default'] === NULL) && ($existing_field['Default'] || $existing_field['Default'] == '' || $existing_field['Default'] == 0)) {
+            if (!(null === $existing_field['Default'])
+                && ($existing_field['Default']
+                    || '' === $existing_field['Default']
+                    || 0 == $existing_field['Default'])) {
                 $fields[$existing_field['Field']] .= " default '" . $existing_field['Default'] . "'";
             }
         }
+
         return $fields;
     }
-    function fieldExists($field) {
+
+    /**
+     * @param $field
+     * @return bool
+     */
+    public function fieldExists($field)
+    {
         $existingFields = $this->getExistingFieldsArray();
-        return isset ($existingFields[$field]);
+
+        return isset($existingFields[$field]);
     }
+
     /**
      * Set the table structure
      *
-     * Example :
+     * Example:
      *
      *      $table->setStructure("`transactionid` int(11) NOT NULL auto_increment,
      *                `date` int(11) NOT NULL default '0',
@@ -147,28 +168,33 @@ class SmartDbTable {
      *                `currency` varchar(100) NOT NULL default '',
      *                PRIMARY KEY  (`transactionid`)");
      *
-     * @param  string $structure table structure
+     * @param string $structure table structure
      *
      */
-    function setStructure($structure) {
+    public function setStructure($structure)
+    {
         $this->_structure = $structure;
     }
+
     /**
      * Return the table structure
      *
      * @return string table structure
      *
      */
-    function getStructure() {
+    public function getStructure()
+    {
         return sprintf($this->_structure, $this->name());
     }
+
     /**
      * Add values of a record to be added
      *
      * @param string $data values of a record
      *
      */
-    function setData($data) {
+    public function setData($data)
+    {
         $this->_data[] = $data;
     }
 
@@ -178,105 +204,124 @@ class SmartDbTable {
      * @return array containing the records values to be added
      *
      */
-    function getData() {
+    public function getData()
+    {
         return $this->_data;
     }
+
     /**
      * Use to insert data in a table
      *
      * @return bool true if success, false if an error occured
      *
      */
-    function addData() {
+    public function addData()
+    {
         global $xoopsDB;
         foreach ($this->getData() as $data) {
             $query = sprintf('INSERT INTO %s VALUES (%s)', $this->name(), $data);
-            $ret = $xoopsDB->query($query);
+            $ret   = $xoopsDB->query($query);
             if (!$ret) {
-                echo "&nbsp;&nbsp;" . sprintf(_SDU_MSG_ADD_DATA_ERR, $this->name()) . "<br />";
+                echo '&nbsp;&nbsp;' . sprintf(_SDU_MSG_ADD_DATA_ERR, $this->name()) . '<br>';
             } else {
-                echo "&nbsp;&nbsp;" . sprintf(_SDU_MSG_ADD_DATA, $this->name()) . "<br />";
+                echo '&nbsp;&nbsp;' . sprintf(_SDU_MSG_ADD_DATA, $this->name()) . '<br>';
             }
         }
+
         return $ret;
     }
+
     /**
      * Add a field to be added
      *
-     * @param string $name name of the field
+     * @param string $name       name of the field
      * @param string $properties properties of the field
-     *
+     * @param bool   $newname
+     * @param bool   $showerror
      */
-    function addAlteredField($name, $properties, $newname=false, $showerror = true) {
-        $field['name'] = $name;
-        $field['properties'] = $properties;
-        $field['showerror'] = $showerror;
-        $field['newname'] = $newname;
+    public function addAlteredField($name, $properties, $newname = false, $showerror = true)
+    {
+        $field['name']          = $name;
+        $field['properties']    = $properties;
+        $field['showerror']     = $showerror;
+        $field['newname']       = $newname;
         $this->_alteredFields[] = $field;
     }
     /**
      * Invert values 0 to 1 and 1 to 0
      *
      * @param string $name name of the field
-     * @param string $old old propertie
-     * @param string $new new propertie
-     *
+     * @param        $newValue
+     * @param        $oldValue
+     * @internal param string $old old propertie
+     * @internal param string $new new propertie
      */ //felix
-    function addUpdatedWhere($name, $newValue, $oldValue) {
-        $field['name'] = $name;
-        $field['value'] = $newValue;
-        $field['where'] = $oldValue;
+    public function addUpdatedWhere($name, $newValue, $oldValue)
+    {
+        $field['name']         = $name;
+        $field['value']        = $newValue;
+        $field['where']        = $oldValue;
         $this->_updatedWhere[] = $field;
     }
+
     /**
      * Add new field of a record to be added
      *
-     * @param string $name name of the field
+     * @param string $name       name of the field
      * @param string $properties properties of the field
      *
      */
-    function addNewField($name, $properties) {
-        $field['name'] = $name;
+    public function addNewField($name, $properties)
+    {
+        $field['name']       = $name;
         $field['properties'] = $properties;
-        $this->_newFields[] = $field;
+        $this->_newFields[]  = $field;
     }
+
     /**
      * Get fields that need to be altered
      *
      * @return array fields that need to be altered
      *
      */
-    function getAlteredFields() {
+    public function getAlteredFields()
+    {
         return $this->_alteredFields;
     }
+
     /**
      * Add field for which the value will be updated
      *
-     * @param string $name name of the field
+     * @param string $name  name of the field
      * @param string $value value to be set
      *
      */
-    function addUpdatedField($name, $value) {
-        $field['name'] = $name;
-        $field['value'] = $value;
+    public function addUpdatedField($name, $value)
+    {
+        $field['name']          = $name;
+        $field['value']         = $value;
         $this->_updatedFields[] = $field;
     }
+
     /**
      * Get new fields to be added
      *
      * @return array fields to be added
      *
      */
-    function getNewFields() {
+    public function getNewFields()
+    {
         return $this->_newFields;
     }
+
     /**
      * Get fields which values need to be updated
      *
      * @return array fields which values need to be updated
      *
      */
-    function getUpdatedFields() {
+    public function getUpdatedFields()
+    {
         return $this->_updatedFields;
     }
     /**
@@ -285,79 +330,94 @@ class SmartDbTable {
      * @return array fields which values need to be updated
      *
      */ //felix
-    function getUpdatedWhere() {
+    public function getUpdatedWhere()
+    {
         return $this->_updatedWhere;
     }
+
     /**
      * Add values of a record to be added
      *
      * @param string $name name of the field
      *
      */
-    function addDropedField($name) {
-        $this->_dropedFields[] = $name;
+    public function addDroppedField($name)
+    {
+        $this->_droppedFields[] = $name;
     }
+
     /**
-     * Get fields that need to be droped
+     * Get fields that need to be dropped
      *
-     * @return array fields that need to be droped
+     * @return array fields that need to be dropped
      *
      */
-    function getDropedFields() {
-        return $this->_dropedFields;
+    public function getDroppedFields()
+    {
+        return $this->_droppedFields;
     }
+
     /**
      * Set the flag to drop the table
      *
      */
-    function setFlagForDrop() {
+    public function setFlagForDrop()
+    {
         $this->_flagForDrop = true;
     }
+
     /**
      * Use to create a table
      *
      * @return bool true if success, false if an error occured
      *
      */
-    function createTable() {
+    public function createTable()
+    {
         global $xoopsDB;
         $query = $this->getStructure();
-        $query = "CREATE TABLE `" . $this->name() . "` (" . $query . ") ENGINE=MyISAM COMMENT='The SmartFactory <www.smartfactory.ca>'";
+        $query = 'CREATE TABLE `' . $this->name() . '` (' . $query . ") ENGINE=MyISAM COMMENT='The SmartFactory <www.smartfactory.ca>'";
         //xoops_debug($query);
         $ret = $xoopsDB->query($query);
         if (!$ret) {
-            echo "&nbsp;&nbsp;" . sprintf(_SDU_MSG_CREATE_TABLE_ERR, $this->name()) . " (" . $xoopsDB->error(). ")<br />";
-
+            echo '&nbsp;&nbsp;' . sprintf(_SDU_MSG_CREATE_TABLE_ERR, $this->name()) . ' (' . $xoopsDB->error() . ')<br>';
         } else {
-            echo "&nbsp;&nbsp;" . sprintf(_SDU_MSG_CREATE_TABLE, $this->name()) . "<br />";
+            echo '&nbsp;&nbsp;' . sprintf(_SDU_MSG_CREATE_TABLE, $this->name()) . '<br>';
         }
+
         return $ret;
     }
+
     /**
      * Use to drop a table
      *
      * @return bool true if success, false if an error occured
      *
      */
-    function dropTable() {
+    public function dropTable()
+    {
         global $xoopsDB;
-        $query = sprintf("DROP TABLE %s", $this->name());
-        $ret = $xoopsDB->query($query);
+        $query = sprintf('DROP TABLE %s', $this->name());
+        $ret   = $xoopsDB->query($query);
         if (!$ret) {
-            echo "&nbsp;&nbsp;" . sprintf(_SDU_MSG_DROP_TABLE_ERR, $this->name()) . " (" . $xoopsDB->error(). ")<br />";
+            echo '&nbsp;&nbsp;' . sprintf(_SDU_MSG_DROP_TABLE_ERR, $this->name()) . ' (' . $xoopsDB->error() . ')<br>';
+
             return false;
         } else {
-            echo "&nbsp;&nbsp;" . sprintf(_SDU_MSG_DROP_TABLE, $this->name()) . "<br />";
+            echo '&nbsp;&nbsp;' . sprintf(_SDU_MSG_DROP_TABLE, $this->name()) . '<br>';
+
             return true;
         }
     }
+
     /**
      * Use to alter a table
      *
      * @return bool true if success, false if an error occured
      *
      */
-    function alterTable() {
+    public function alterTable()
+    {
         global $xoopsDB;
         $ret = true;
 
@@ -366,58 +426,64 @@ class SmartDbTable {
                 $alteredField['newname'] = $alteredField['name'];
             }
 
-            $query = sprintf("ALTER TABLE `%s` CHANGE `%s` `%s` %s", $this->name(), $alteredField['name'], $alteredField['newname'], $alteredField['properties']);
-            $ret = $ret && $xoopsDB->query($query);
+            $query = sprintf('ALTER TABLE `%s` CHANGE `%s` `%s` %s', $this->name(), $alteredField['name'], $alteredField['newname'], $alteredField['properties']);
+            $ret   = $ret && $xoopsDB->query($query);
             if ($alteredField['showerror']) {
                 if (!$ret) {
-                    echo "&nbsp;&nbsp;" . sprintf(_SDU_MSG_CHGFIELD_ERR, $alteredField['name'], $this->name()) . " (" . $xoopsDB->error(). ")<br />";
+                    echo '&nbsp;&nbsp;' . sprintf(_SDU_MSG_CHGFIELD_ERR, $alteredField['name'], $this->name()) . ' (' . $xoopsDB->error() . ')<br>';
                 } else {
-                    echo "&nbsp;&nbsp;" . sprintf(_SDU_MSG_CHGFIELD, $alteredField['name'], $this->name()) . "<br />";
+                    echo '&nbsp;&nbsp;' . sprintf(_SDU_MSG_CHGFIELD, $alteredField['name'], $this->name()) . '<br>';
                 }
             }
         }
 
         return $ret;
     }
+
     /**
      * Use to add new fileds in the table
      *
      * @return bool true if success, false if an error occured
      *
      */
-    function addNewFields() {
+    public function addNewFields()
+    {
         global $xoopsDB;
         $ret = true;
         foreach ($this->getNewFields() as $newField) {
-            $query = sprintf("ALTER TABLE `%s` ADD `%s` %s", $this->name(), $newField['name'], $newField['properties']);
+            $query = sprintf('ALTER TABLE `%s` ADD `%s` %s', $this->name(), $newField['name'], $newField['properties']);
             //echo $query;
             $ret = $ret && $xoopsDB->query($query);
             if (!$ret) {
-                echo "&nbsp;&nbsp;" . sprintf(_SDU_MSG_NEWFIELD_ERR, $newField['name'], $this->name()) . "<br />";
+                echo '&nbsp;&nbsp;' . sprintf(_SDU_MSG_NEWFIELD_ERR, $newField['name'], $this->name()) . '<br>';
             } else {
-                echo "&nbsp;&nbsp;" . sprintf(_SDU_MSG_NEWFIELD, $newField['name'], $this->name()) . "<br />";
+                echo '&nbsp;&nbsp;' . sprintf(_SDU_MSG_NEWFIELD, $newField['name'], $this->name()) . '<br>';
             }
         }
+
         return $ret;
     }
+
     /**
      * Use to update fields values
      *
      * @return bool true if success, false if an error occured
      *
      */
-    function updateFieldsValues() {
+    public function updateFieldsValues()
+    {
         global $xoopsDB;
         $ret = true;
         foreach ($this->getUpdatedFields() as $updatedField) {
-            $query = sprintf("UPDATE %s SET %s = %s", $this->name(), $updatedField['name'], $updatedField['value']);
-            $ret = $ret && $xoopsDB->query($query);
+            $query = sprintf('UPDATE %s SET %s = %s', $this->name(), $updatedField['name'], $updatedField['value']);
+            $ret   = $ret && $xoopsDB->query($query);
             if (!$ret) {
-                echo "&nbsp;&nbsp;" . sprintf(_SDU_MSG_UPDATE_TABLE_ERR, $this->name()) . " (" . $xoopsDB->error(). ")<br />";
+                echo '&nbsp;&nbsp;' . sprintf(_SDU_MSG_UPDATE_TABLE_ERR, $this->name()) . ' (' . $xoopsDB->error() . ')<br>';
             } else {
-                echo "&nbsp;&nbsp;" . sprintf(_SDU_MSG_UPDATE_TABLE, $this->name()) . "<br />";
+                echo '&nbsp;&nbsp;' . sprintf(_SDU_MSG_UPDATE_TABLE, $this->name()) . '<br>';
             }
         }
+
         return $ret;
     }
     /**
@@ -426,118 +492,137 @@ class SmartDbTable {
      * @return bool true if success, false if an error occured
      *
      */ //felix
-    function updateWhereValues() {
+    public function updateWhereValues()
+    {
         global $xoopsDB;
         $ret = true;
         foreach ($this->getUpdatedWhere() as $updatedWhere) {
-            $query = sprintf("UPDATE %s SET %s = %s WHERE %s  %s", $this->name(), $updatedWhere['name'], $updatedWhere['value'], $updatedWhere['name'], $updatedWhere['where']);
+            $query = sprintf('UPDATE %s SET %s = %s WHERE %s  %s', $this->name(), $updatedWhere['name'], $updatedWhere['value'], $updatedWhere['name'], $updatedWhere['where']);
             //echo $query."<br>";
             $ret = $ret && $xoopsDB->query($query);
             if (!$ret) {
-                echo "&nbsp;&nbsp;" . sprintf(_SDU_MSG_UPDATE_TABLE_ERR, $this->name()) . " (" . $xoopsDB->error(). ")<br />";
+                echo '&nbsp;&nbsp;' . sprintf(_SDU_MSG_UPDATE_TABLE_ERR, $this->name()) . ' (' . $xoopsDB->error() . ')<br>';
             } else {
-                echo "&nbsp;&nbsp;" . sprintf(_SDU_MSG_UPDATE_TABLE, $this->name()) . "<br />";
+                echo '&nbsp;&nbsp;' . sprintf(_SDU_MSG_UPDATE_TABLE, $this->name()) . '<br>';
             }
         }
+
         return $ret;
     }
+
     /**
      * Use to drop fields
      *
      * @return bool true if success, false if an error occured
      *
      */
-    function dropFields() {
+    public function dropFields()
+    {
         global $xoopsDB;
         $ret = true;
-        foreach ($this->getdropedFields() as $dropedField) {
-            $query = sprintf("ALTER TABLE %s DROP %s", $this->name(), $dropedField);
-            $ret = $ret && $xoopsDB->query($query);
+        foreach ($this->getDroppedFields() as $droppedField) {
+            $query = sprintf('ALTER TABLE %s DROP %s', $this->name(), $droppedField);
+            $ret   = $ret && $xoopsDB->query($query);
             if (!$ret) {
-                echo "&nbsp;&nbsp;" . sprintf(_SDU_MSG_DROPFIELD_ERR, $dropedField, $this->name()) . " (" . $xoopsDB->error(). ")<br />";
+                echo '&nbsp;&nbsp;' . sprintf(_SDU_MSG_DROPFIELD_ERR, $droppedField, $this->name()) . ' (' . $xoopsDB->error() . ')<br>';
             } else {
-                echo "&nbsp;&nbsp;" . sprintf(_SDU_MSG_DROPFIELD, $dropedField, $this->name()) . "<br />";
+                echo '&nbsp;&nbsp;' . sprintf(_SDU_MSG_DROPFIELD, $droppedField, $this->name()) . '<br>';
             }
         }
+
         return $ret;
     }
 }
+
 /**
  * SmartobjectDbupdater class
  *
  * Class performing the database update for the module
  *
  * @package SmartObject
- * @author marcan <marcan@smartfactory.ca>
- * @link http://www.smartfactory.ca The SmartFactory
+ * @author  marcan <marcan@smartfactory.ca>
+ * @link    http://www.smartfactory.ca The SmartFactory
  */
-class SmartobjectDbupdater {
+class SmartobjectDbupdater
+{
+    public $_dbTypesArray;
 
-    var $_dbTypesArray;
-
-    function SmartobjectDbupdater() {
-        $this->_dbTypesArray[XOBJ_DTYPE_TXTBOX] = 'varchar(255)';
-        $this->_dbTypesArray[XOBJ_DTYPE_TXTAREA] = 'text';
-        $this->_dbTypesArray[XOBJ_DTYPE_INT] = 'int(11)';
-        $this->_dbTypesArray[XOBJ_DTYPE_URL] = 'varchar(255)';
-        $this->_dbTypesArray[XOBJ_DTYPE_EMAIL] = 'varchar(255)';
-        $this->_dbTypesArray[XOBJ_DTYPE_ARRAY] = 'text';
-        $this->_dbTypesArray[XOBJ_DTYPE_OTHER] = 'text';
-        $this->_dbTypesArray[XOBJ_DTYPE_SOURCE] = 'text';
-        $this->_dbTypesArray[XOBJ_DTYPE_STIME] = 'int(11)';
-        $this->_dbTypesArray[XOBJ_DTYPE_MTIME] = 'int(11)';
-        $this->_dbTypesArray[XOBJ_DTYPE_LTIME] = 'int(11)';
+    /**
+     * SmartobjectDbupdater constructor.
+     */
+    public function __construct()
+    {
+        $this->_dbTypesArray[XOBJ_DTYPE_TXTBOX]       = 'varchar(255)';
+        $this->_dbTypesArray[XOBJ_DTYPE_TXTAREA]      = 'text';
+        $this->_dbTypesArray[XOBJ_DTYPE_INT]          = 'int(11)';
+        $this->_dbTypesArray[XOBJ_DTYPE_URL]          = 'varchar(255)';
+        $this->_dbTypesArray[XOBJ_DTYPE_EMAIL]        = 'varchar(255)';
+        $this->_dbTypesArray[XOBJ_DTYPE_ARRAY]        = 'text';
+        $this->_dbTypesArray[XOBJ_DTYPE_OTHER]        = 'text';
+        $this->_dbTypesArray[XOBJ_DTYPE_SOURCE]       = 'text';
+        $this->_dbTypesArray[XOBJ_DTYPE_STIME]        = 'int(11)';
+        $this->_dbTypesArray[XOBJ_DTYPE_MTIME]        = 'int(11)';
+        $this->_dbTypesArray[XOBJ_DTYPE_LTIME]        = 'int(11)';
         $this->_dbTypesArray[XOBJ_DTYPE_SIMPLE_ARRAY] = 'text';
-        $this->_dbTypesArray[XOBJ_DTYPE_CURRENCY] = 'text';
-        $this->_dbTypesArray[XOBJ_DTYPE_FLOAT] = 'float';
-        $this->_dbTypesArray[XOBJ_DTYPE_TIME_ONLY] = 'int(11)';
-        $this->_dbTypesArray[XOBJ_DTYPE_URLLINK] = 'int(11)';
-        $this->_dbTypesArray[XOBJ_DTYPE_FILE] = 'int(11)';
-        $this->_dbTypesArray[XOBJ_DTYPE_IMAGE] = 'varchar(255)';
+        $this->_dbTypesArray[XOBJ_DTYPE_CURRENCY]     = 'text';
+        $this->_dbTypesArray[XOBJ_DTYPE_FLOAT]        = 'float';
+        $this->_dbTypesArray[XOBJ_DTYPE_TIME_ONLY]    = 'int(11)';
+        $this->_dbTypesArray[XOBJ_DTYPE_URLLINK]      = 'int(11)';
+        $this->_dbTypesArray[XOBJ_DTYPE_FILE]         = 'int(11)';
+        $this->_dbTypesArray[XOBJ_DTYPE_IMAGE]        = 'varchar(255)';
     }
+
     /**
      * Use to execute a general query
      *
-     * @param string $query query that will be executed
+     * @param string $query   query that will be executed
      * @param string $goodmsg message displayed on success
-     * @param string $badmsg message displayed on error
+     * @param string $badmsg  message displayed on error
      *
      * @return bool true if success, false if an error occured
      *
      */
-    function runQuery($query, $goodmsg, $badmsg) {
+    public function runQuery($query, $goodmsg, $badmsg)
+    {
         global $xoopsDB;
         $ret = $xoopsDB->query($query);
         if (!$ret) {
-            echo "&nbsp;&nbsp;$badmsg<br />";
+            echo "&nbsp;&nbsp;$badmsg<br>";
+
             return false;
         } else {
-            echo "&nbsp;&nbsp;$goodmsg<br />";
+            echo "&nbsp;&nbsp;$goodmsg<br>";
+
             return true;
         }
     }
+
     /**
      * Use to rename a table
      *
      * @param string $from name of the table to rename
-     * @param string $to new name of the renamed table
+     * @param string $to   new name of the renamed table
      *
      * @return bool true if success, false if an error occured
      */
-    function renameTable($from, $to) {
+    public function renameTable($from, $to)
+    {
         global $xoopsDB;
-        $from = $xoopsDB->prefix($from);
-        $to = $xoopsDB->prefix($to);
-        $query = sprintf("ALTER TABLE %s RENAME %s", $from, $to);
-        $ret = $xoopsDB->query($query);
+        $from  = $xoopsDB->prefix($from);
+        $to    = $xoopsDB->prefix($to);
+        $query = sprintf('ALTER TABLE %s RENAME %s', $from, $to);
+        $ret   = $xoopsDB->query($query);
         if (!$ret) {
-            echo "&nbsp;&nbsp;" . sprintf(_SDU_MSG_RENAME_TABLE_ERR, $from) . "<br />";
+            echo '&nbsp;&nbsp;' . sprintf(_SDU_MSG_RENAME_TABLE_ERR, $from) . '<br>';
+
             return false;
         } else {
-            echo "&nbsp;&nbsp;" . sprintf(_SDU_MSG_RENAME_TABLE, $from, $to) . "<br />";
+            echo '&nbsp;&nbsp;' . sprintf(_SDU_MSG_RENAME_TABLE, $from, $to) . '<br>';
+
             return true;
         }
     }
+
     /**
      * Use to update a table
      *
@@ -547,7 +632,8 @@ class SmartobjectDbupdater {
      *
      * @return bool true if success, false if an error occured
      */
-    function updateTable($table) {
+    public function updateTable($table)
+    {
         global $xoopsDB;
         $ret = true;
         // If table has a structure, create the table
@@ -574,8 +660,8 @@ class SmartobjectDbupdater {
         if ($table->getUpdatedFields()) {
             $ret = $table->updateFieldsValues($table) && $ret;
         }
-        // If table has droped field, alter the table
-        if ($table->getDropedFields()) {
+        // If table has dropped field, alter the table
+        if ($table->getDroppedFields()) {
             $ret = $table->dropFields($table) && $ret;
         }
         //felix
@@ -583,12 +669,18 @@ class SmartobjectDbupdater {
         if ($table->getUpdatedWhere()) {
             $ret = $table->UpdateWhereValues($table) && $ret;
         }
+
         return $ret;
     }
 
-    function automaticUpgrade($module, $item) {
+    /**
+     * @param $module
+     * @param $item
+     */
+    public function automaticUpgrade($module, $item)
+    {
         if (is_array($item)) {
-            foreach($item as $v) {
+            foreach ($item as $v) {
                 $this->upgradeObjectItem($module, $v);
             }
         } else {
@@ -596,24 +688,36 @@ class SmartobjectDbupdater {
         }
     }
 
-    function getFieldTypeFromVar($var) {
+    /**
+     * @param $var
+     * @return string
+     */
+    public function getFieldTypeFromVar($var)
+    {
         $ret = isset($this->_dbTypesArray[$var['data_type']]) ? $this->_dbTypesArray[$var['data_type']] : 'text';
+
         return $ret;
     }
 
-    function getFieldDefaultFromVar($var, $key = false) {
+    /**
+     * @param         $var
+     * @param  bool   $key
+     * @return string
+     */
+    public function getFieldDefaultFromVar($var, $key = false)
+    {
         if ($var['value']) {
             return $var['value'];
         } else {
-            if (in_array($var['data_type'], array(
-            XOBJ_DTYPE_INT,
-            XOBJ_DTYPE_STIME,
-            XOBJ_DTYPE_MTIME,
-            XOBJ_DTYPE_LTIME,
-            XOBJ_DTYPE_TIME_ONLY,
-            XOBJ_DTYPE_URLLINK,
-            XOBJ_DTYPE_FILE
-            ))) {
+            if (in_array($var['data_type'], [
+                XOBJ_DTYPE_INT,
+                XOBJ_DTYPE_STIME,
+                XOBJ_DTYPE_MTIME,
+                XOBJ_DTYPE_LTIME,
+                XOBJ_DTYPE_TIME_ONLY,
+                XOBJ_DTYPE_URLLINK,
+                XOBJ_DTYPE_FILE
+            ])) {
                 return '0';
             } else {
                 return '';
@@ -621,35 +725,41 @@ class SmartobjectDbupdater {
         }
     }
 
-    function upgradeObjectItem($module, $item) {
-        $module_handler = xoops_getModuleHandler($item, $module);
-        if (!$module_handler) {
+    /**
+     * @param $module
+     * @param $item
+     * @return bool
+     */
+    public function upgradeObjectItem($module, $item)
+    {
+        $moduleHandler = xoops_getModuleHandler($item, $module);
+        if (!$moduleHandler) {
             return false;
         }
 
-        $table = new SmartDbTable($module . '_' . $item);
-        $object = $module_handler->create();
+        $table      = new SmartDbTable($module . '_' . $item);
+        $object     = $moduleHandler->create();
         $objectVars = $object->getVars();
 
         if (!$table->exists()) {
             // table was never created, let's do it
-            $structure = "";
-            foreach($objectVars as $key=>$var) {
+            $structure = '';
+            foreach ($objectVars as $key => $var) {
                 if ($var['persistent']) {
                     $type = $this->getFieldTypeFromVar($var);
-                    if ($key == $module_handler->keyName) {
-                        $extra = "auto_increment";
+                    if ($key == $moduleHandler->keyName) {
+                        $extra = 'auto_increment';
                     } else {
-                        $default =  $this->getFieldDefaultFromVar($var);
-                        $extra = "default '$default'
+                        $default = $this->getFieldDefaultFromVar($var);
+                        $extra   = "default '$default'
 ";
                     }
                     $structure .= "`$key` $type not null $extra,
 ";
                 }
             }
-            $structure .= "PRIMARY KEY  (`" . $module_handler->keyName . "`)
-";
+            $structure .= 'PRIMARY KEY  (`' . $moduleHandler->keyName . '`)
+';
             $table->setStructure($structure);
             if (!$this->updateTable($table)) {
                 /**
@@ -658,22 +768,22 @@ class SmartobjectDbupdater {
             }
         } else {
             $existingFieldsArray = $table->getExistingFieldsArray();
-            foreach($objectVars as $key=>$var) {
+            foreach ($objectVars as $key => $var) {
                 if ($var['persistent']) {
                     if (!isset($existingFieldsArray[$key])) {
                         // the fiels does not exist, let's create it
-                        $type = $this->getFieldTypeFromVar($var);
-                        $default =  $this->getFieldDefaultFromVar($var);
+                        $type    = $this->getFieldTypeFromVar($var);
+                        $default = $this->getFieldDefaultFromVar($var);
                         $table->addNewField($key, "$type not null default '$default'");
                     } else {
                         // if field already exists, let's check if the definition is correct
-                        $definition =  strtolower($existingFieldsArray[$key]);
-                        $type = $this->getFieldTypeFromVar($var);
-                        if ($key == $module_handler->keyName) {
-                            $extra = "auto_increment";
+                        $definition = strtolower($existingFieldsArray[$key]);
+                        $type       = $this->getFieldTypeFromVar($var);
+                        if ($key == $moduleHandler->keyName) {
+                            $extra = 'auto_increment';
                         } else {
-                            $default =  $this->getFieldDefaultFromVar($var, $key);
-                            $extra = "default '$default'";
+                            $default = $this->getFieldDefaultFromVar($var, $key);
+                            $extra   = "default '$default'";
                         }
                         $actual_definition = "$type not null $extra";
                         if ($definition != $actual_definition) {
@@ -684,9 +794,9 @@ class SmartobjectDbupdater {
             }
 
             // check to see if there are some unused fields left in the table
-            foreach ($existingFieldsArray as $key=>$v) {
+            foreach ($existingFieldsArray as $key => $v) {
                 if (!isset($objectVars[$key]) || !$objectVars[$key]['persistent']) {
-                    $table->addDropedField($key);
+                    $table->addDroppedField($key);
                 }
             }
 
@@ -697,7 +807,13 @@ class SmartobjectDbupdater {
             }
         }
     }
-    function moduleUpgrade(&$module) {
+
+    /**
+     * @param $module
+     * @return bool
+     */
+    public function moduleUpgrade(\XoopsModule $module)
+    {
         $dirname = $module->getVar('dirname');
 
         ob_start();
@@ -716,16 +832,16 @@ class SmartobjectDbupdater {
             }
         }
 
-        $dbVersion  = smart_GetMeta('version', $dirname);
+        $dbVersion = smart_GetMeta('version', $dirname);
         if (!$dbVersion) {
             $dbVersion = 0;
         }
-        $newDbVersion = constant(strtoupper($dirname . '_db_version')) ? constant(strtoupper($dirname . '_db_version')) : 0;
-        echo 'Database version : ' . $dbVersion . '<br />';
-        echo 'New database version : ' . $newDbVersion . '<br />';
+        $newDbVersion = constant(strtoupper($dirname . '_db_version')) ?: 0;
+        echo 'Database version: ' . $dbVersion . '<br>';
+        echo 'New database version: ' . $newDbVersion . '<br>';
 
         if ($newDbVersion > $dbVersion) {
-            for($i=$dbVersion+1;$i<=$newDbVersion; $i++) {
+            for ($i = $dbVersion + 1; $i <= $newDbVersion; ++$i) {
                 $upgrade_function = $dirname . '_db_upgrade_' . $i;
                 if (function_exists($upgrade_function)) {
                     $upgrade_function();
@@ -733,7 +849,7 @@ class SmartobjectDbupdater {
             }
         }
 
-        echo "<code>" . _SDU_UPDATE_UPDATING_DATABASE . "<br />";
+        echo '<code>' . _SDU_UPDATE_UPDATING_DATABASE . '<br>';
 
         // if there is a function to execute for this DB version, let's do it
         //$function_
@@ -741,16 +857,16 @@ class SmartobjectDbupdater {
         $module_info = smart_getModuleInfo($dirname);
         $this->automaticUpgrade($dirname, $module_info->modinfo['object_items']);
 
-        echo "</code>";
+        echo '</code>';
 
         $feedback = ob_get_clean();
-        if (method_exists($module, "setMessage")) {
+        if (method_exists($module, 'setMessage')) {
             $module->setMessage($feedback);
         } else {
             echo $feedback;
         }
-        smart_SetMeta("version", $newDbVersion, $dirname); //Set meta version to current
+        smart_SetMeta('version', $newDbVersion, $dirname); //Set meta version to current
+
         return true;
     }
 }
-?>

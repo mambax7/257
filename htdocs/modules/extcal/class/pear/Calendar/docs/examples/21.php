@@ -1,12 +1,12 @@
 <?php
 /**
- * Description: a complete year with numeric week numbers
+ * Description: a complete year with numeric week numbers.
  */
 function getmicrotime()
 {
     list($usec, $sec) = explode(' ', microtime());
 
-    return ((float)$usec + (float)$sec);
+    return (float)$usec + (float)$sec;
 }
 
 $start = getmicrotime();
@@ -24,9 +24,10 @@ if (!isset($_GET['year'])) {
     $_GET['year'] = date('Y');
 }
 
-$week_types = array(
+$week_types = [
     'n_in_year',
-    'n_in_month');
+    'n_in_month',
+];
 
 if (!isset($_GET['week_type']) || !in_array($_GET['week_type'], $week_types)) {
     $_GET['week_type'] = 'n_in_year';
@@ -146,6 +147,6 @@ $Year->build();
     }
     ?>
 </table>
-<p>Took: <?php echo(getmicrotime() - $start); ?></p>
+<p>Took: <?php echo getmicrotime() - $start; ?></p>
 </body>
 </html>

@@ -28,28 +28,30 @@
 // Project: RW-Banner                                                        //
 // Descrição: Sistema de gerenciamento de mídias publicitárias               //
 // ------------------------------------------------------------------------- //
-include_once(dirname(dirname(__FILE__)) ."/class/class.tags.php");
+// require_once __DIR__ . '/../class/class.tags.php';
+
+use XoopsModules\Rwbanner;
 
 global $xoopsConfig;
 
-$valid_aligns = array('left','center','right');
-$tag = new RWTag();
-$lista_tags = $tag->getTags('ORDER BY id ASC');
-$valid_tags = $tag->getTags('ORDER BY id ASC', true);
+$valid_aligns = ['left', 'center', 'right'];
+$tag          = new Tag();
+$lista_tags   = $tag->getTags('ORDER BY id ASC');
+$valid_tags   = $tag->getTags('ORDER BY id ASC', true);
 if (preg_match_all('/\[RW align=(.*)\](.*)\[\/RW\]/sU', $text, $texto)) {
-    if (count($texto) == 3) {
-        for ($i = 0; $i <= count($texto[0])-1; $i++) {
+    if (3 == count($texto)) {
+        for ($i = 0; $i <= count($texto[0]) - 1; ++$i) {
             $arr[$i]['tag']   = $texto[2][$i];
             $arr[$i]['algin'] = $texto[1][$i];
         }
 
-        for ($i = 0; $i <= count($arr)-1; $i++) {
+        for ($i = 0; $i <= count($arr) - 1; ++$i) {
             if (in_array($arr[$i]['tag'], $valid_tags)) {
                 foreach ($lista_tags as $tag) {
-                    if ($arr[$i]['tag'] == $tag->getName() && $tag->getStatus() == 1) {
+                    if ($arr[$i]['tag'] == $tag->getName() && 1 == $tag->getStatus()) {
                         if (in_array($arr[$i]['algin'], $valid_aligns)) {
-                            $banner = new RWbanners();
-                            $patterns[] = "/\[RW align=".$arr[$i]['algin']."]".$tag->getName()."\[\/RW\]/sU";
+                            $banner     = new Banner();
+                            $patterns[] = "/\[RW align=" . $arr[$i]['algin'] . ']' . $tag->getName() . "\[\/RW\]/sU";
                             if ($tag->isRandom) {
                                 $replacements[] = $banner->showBanner($tag->getCateg(), $tag->getQtde(), $tag->getCols(), $arr[$i]['algin']);
                             } else {
@@ -57,21 +59,16 @@ if (preg_match_all('/\[RW align=(.*)\](.*)\[\/RW\]/sU', $text, $texto)) {
                             }
                             unset($banner);
                         } else {
-                            $patterns[] = "/\[RW align=".$arr[$i]['algin']."]".$tag->getName()."\[\/RW\]/sU";
+                            $patterns[]     = "/\[RW align=" . $arr[$i]['algin'] . ']' . $tag->getName() . "\[\/RW\]/sU";
                             $replacements[] = sprintf(_MD_RWBANNER_TAG_ERROR, $arr[$i]['tag']);
                         }
                     }
                 }
             } else {
-                $patterns[] = "/\[RW align=".$arr[$i]['algin']."]".$arr[$i]['tag']."\[\/RW\]/sU";
+                $patterns[]     = "/\[RW align=" . $arr[$i]['algin'] . ']' . $arr[$i]['tag'] . "\[\/RW\]/sU";
                 $replacements[] = sprintf(_MD_RWBANNER_TAG_ERROR1, $arr[$i]['tag']);
             }
         }
     }
 }
-unset($texto);
-unset($valid_aligns);
-unset($lista_tags);
-unset($valid_tags);
-unset($arr);
-unset($banner);
+unset($texto, $valid_aligns, $lista_tags, $valid_tags, $arr, $banner);

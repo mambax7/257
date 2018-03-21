@@ -9,15 +9,16 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright   {@link http://xoops.org/ XOOPS Project}
+ * @copyright   {@link https://xoops.org/ XOOPS Project}
  * @license     GNU GPL 2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  * @author      Zoullou (http://www.zoullou.net)
  * @package     ExtGallery
- * @version     $Id: public-slideshow.php 10874 2013-01-23 17:23:02Z beckmi $
  */
 
-require dirname(dirname(__DIR__)) . '/mainfile.php';
-include_once XOOPS_ROOT_PATH . '/modules/extgallery/class/publicPerm.php';
+use XoopsModules\Extgallery;
+
+include __DIR__ . '/header.php';
+//require_once XOOPS_ROOT_PATH . '/modules/extgallery/class/publicPerm.php';
 
 $GLOBALS['xoopsOption']['template_main'] = 'extgallery_public-slideshow.tpl';
 include XOOPS_ROOT_PATH . '/header.php';
@@ -29,19 +30,19 @@ if (!isset($_GET['id'])) {
 }
 
 // Check the access permission
-$permHandler = ExtgalleryPublicPermHandler::getHandler();
-if (!$permHandler->isAllowed($xoopsUser, 'public_access', $catId)) {
+$permHandler = Extgallery\PublicPermHandler::getInstance();
+if (!$permHandler->isAllowed($GLOBALS['xoopsUser'], 'public_access', $catId)) {
     redirect_header('index.php', 3, _NOPERM);
-    exit;
 }
-
-$catHandler   = xoops_getModuleHandler('publiccat', 'extgallery');
-$photoHandler = xoops_getModuleHandler('publicphoto', 'extgallery');
+/** @var Extgallery\CategoryHandler $catHandler */
+$catHandler = Extgallery\Helper::getInstance()->getHandler('PublicCategory');
+/** @var Extgallery\PublicPhotoHandler $photoHandler */
+$photoHandler = Extgallery\Helper::getInstance()->getHandler('PublicPhoto');
 
 $catObj = $catHandler->getCat($catId);
 
 if (null === $catObj) {
-    include(XOOPS_ROOT_PATH . '/footer.php');
+    include XOOPS_ROOT_PATH . '/footer.php';
     exit;
 }
 $ajaxeffect = $xoopsModuleConfig['use_slideshow_effects'];
@@ -70,7 +71,7 @@ $xoTheme->addStylesheet('modules/extgallery/assets/css/style.css');
 
 $jquery = $xoopsModuleConfig['enable_jquery'];
 $xoopsTpl->assign('jquery', $jquery);
-if ($jquery == 1) {
+if (1 == $jquery) {
     $xoTheme->addScript('browse.php?Frameworks/jquery/jquery.js');
     switch ($ajaxeffect) {
         case 'galleryview':
@@ -126,7 +127,7 @@ $xoopsTpl->assign('galleria_panelwidth', $xoopsModuleConfig['galleria_panelwidth
 $xoopsTpl->assign('galleria_bgcolor', $xoopsModuleConfig['galleria_bgcolor']);
 $xoopsTpl->assign('galleria_bcolor', $xoopsModuleConfig['galleria_bcolor']);
 $xoopsTpl->assign('galleria_bgimg', $xoopsModuleConfig['galleria_bgimg']);
-if ($xoopsModuleConfig['galleria_autoplay'] == 1) {
+if (1 == $xoopsModuleConfig['galleria_autoplay']) {
     $xoopsTpl->assign('galleria_autoplay', 'true');
 } else {
     $xoopsTpl->assign('galleria_autoplay', 'false');
@@ -138,7 +139,7 @@ $xoopsTpl->assign('galleria_tspeed', $xoopsModuleConfig['galleria_tspeed']);
 $xoopsTpl->assign('galleriffic_nb_thumbs', $xoopsModuleConfig['galleriffic_nb_thumbs']);
 $xoopsTpl->assign('galleriffic_nb_colthumbs', $xoopsModuleConfig['galleriffic_nb_colthumbs']);
 $xoopsTpl->assign('galleriffic_nb_preload', $xoopsModuleConfig['galleriffic_nb_preload']);
-if ($xoopsModuleConfig['galleriffic_autoplay'] == 1) {
+if (1 == $xoopsModuleConfig['galleriffic_autoplay']) {
     $xoopsTpl->assign('galleriffic_autoplay', 'true');
 } else {
     $xoopsTpl->assign('galleriffic_autoplay', 'false');
@@ -150,15 +151,15 @@ $var_nav_width   = 0;
 $var_nav_visible = 'hidden';
 
 switch ($xoopsModuleConfig['galleriffic_nb_colthumbs']) {
-    case 1;
+    case 1:
         $var_nav_width   = 130;
         $var_nav_visible = 'visible';
         break;
-    case 2;
+    case 2:
         $var_nav_width   = 200;
         $var_nav_visible = 'visible';
         break;
-    case 3;
+    case 3:
         $var_nav_width   = 280;
         $var_nav_visible = 'visible';
         break;
@@ -181,4 +182,4 @@ $xoopsTpl->assign('pic_width', $xoopsModuleConfig['galleriffic_width']);
 $xoopsTpl->assign('galleriffic_show_descr', $xoopsModuleConfig['galleriffic_show_descr']);
 $xoopsTpl->assign('galleriffic_download', $xoopsModuleConfig['galleriffic_download']);
 
-include(XOOPS_ROOT_PATH . '/footer.php');
+include XOOPS_ROOT_PATH . '/footer.php';

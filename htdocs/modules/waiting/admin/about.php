@@ -1,29 +1,32 @@
 <?php
-/**
- * Birthday module
- *
- * You may not change or alter any portion of this comment or credits
- * of supporting developers from this source code or any supporting source code
- * which is considered copyrighted (c) material of the original comment or credit authors.
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
- * @copyright    The XOOPS Project (http://www.xoops.org)
- * @license      GNU GPL (http://www.gnu.org/licenses/gpl-2.0.html)
- * @package    birthday
- * @since        2.5.0
- * @author     XOOPS Module Team
- * @version    $Id $
- **/
+/*
+ You may not change or alter any portion of this comment or credits of
+ supporting developers from this source code or any supporting source code
+ which is considered copyrighted (c) material of the original comment or credit
+ authors.
 
-include_once dirname(__FILE__) . '/admin_header.php';
+ This program is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ */
+/**
+ * Module: Waiting
+ *
+ * @category        Module
+ * @package         waiting
+ * @author          XOOPS Module Development Team
+ * @copyright       {@link https://xoops.org 2001-2016 XOOPS Project}
+ * @license         {@link http://www.fsf.org/copyleft/gpl.html GNU public license}
+ * @link            https://xoops.org XOOPS
+ */
+
+require_once __DIR__ . '/admin_header.php';
 
 xoops_cp_header();
 
-$aboutAdmin = new ModuleAdmin();
+$aboutAdmin = \Xmf\Module\Admin::getInstance();
 
-echo $aboutAdmin->addNavigation('about.php');
-echo $aboutAdmin->renderAbout('WKFZBRBGMYKCA', false);
+$adminObject->displayNavigation(basename(__FILE__));
+$adminObject->displayAbout('WKFZBRBGMYKCA', false);
 
-include 'admin_footer.php';
+require_once __DIR__ . '/admin_footer.php';

@@ -1,76 +1,91 @@
 CREATE TABLE `extgallery_publiccat` (
-  `cat_id` int(11) NOT NULL auto_increment,
-  `cat_pid` int(11) NOT NULL default '0',
-  `nleft` int(11) NOT NULL default '0',
-  `nright` int(11) NOT NULL default '0',
-  `nlevel` int(11) NOT NULL default '0',
-  `cat_name` varchar(255) NOT NULL,
-  `cat_desc` text NOT NULL,
-  `cat_date` int(11) NOT NULL default '0',
-  `cat_isalbum` tinyint(1) NOT NULL default '0',
-  `cat_weight` int(11) NOT NULL default '0',
-  `cat_nb_album` int(11) NOT NULL default '0',
-  `cat_nb_photo` int(11) NOT NULL default '0',
-  `cat_imgurl` varchar(150) NOT NULL,
-  `photo_id` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`cat_id`)
-) ENGINE=MyISAM CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' COMMENT='eXtGallery By Zoullou (www.Zoullou.net)' ;
+  `cat_id`       INT(11)      NOT NULL AUTO_INCREMENT,
+  `cat_pid`      INT(11)      NOT NULL DEFAULT '0',
+  `nleft`        INT(11)      NOT NULL DEFAULT '0',
+  `nright`       INT(11)      NOT NULL DEFAULT '0',
+  `nlevel`       INT(11)      NOT NULL DEFAULT '0',
+  `cat_name`     VARCHAR(255) NOT NULL DEFAULT '',
+  `cat_desc`     TEXT         NULL,
+  `cat_date`     INT(11)      NOT NULL DEFAULT '0',
+  `cat_isalbum`  TINYINT(1)   NOT NULL DEFAULT '0',
+  `cat_weight`   INT(11)      NOT NULL DEFAULT '0',
+  `cat_nb_album` INT(11)      NOT NULL DEFAULT '0',
+  `cat_nb_photo` INT(11)      NOT NULL DEFAULT '0',
+  `cat_imgurl`   VARCHAR(150) NOT NULL DEFAULT '',
+  `photo_id`     INT(11)      NOT NULL DEFAULT '0',
+  PRIMARY KEY (`cat_id`)
+)
+  ENGINE = MyISAM
+  CHARACTER SET 'utf8'
+  COLLATE 'utf8_general_ci';
 
 CREATE TABLE `extgallery_publicecard` (
-  `ecard_id` int(11) NOT NULL auto_increment,
-  `ecard_cardid` varchar(32) NOT NULL,
-  `ecard_fromname` varchar(60) NOT NULL,
-  `ecard_fromemail` varchar(60) NOT NULL,
-  `ecard_toname` varchar(60) NOT NULL,
-  `ecard_toemail` varchar(60) NOT NULL,
-  `ecard_greetings` varchar(50) NOT NULL,
-  `ecard_desc` text NOT NULL,
-  `ecard_date` int(11) NOT NULL default '0',
-  `ecard_ip` varchar(15) NOT NULL,
-  `uid` int(11) NOT NULL default '0',
-  `photo_id` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`ecard_id`)
-) ENGINE=MyISAM CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' COMMENT='eXtGallery By Zoullou (www.Zoullou.net)' ;
+  `ecard_id`        INT(11)     NOT NULL AUTO_INCREMENT,
+  `ecard_cardid`    VARCHAR(32) NOT NULL DEFAULT '',
+  `ecard_fromname`  VARCHAR(60) NOT NULL DEFAULT '',
+  `ecard_fromemail` VARCHAR(60) NOT NULL DEFAULT '',
+  `ecard_toname`    VARCHAR(60) NOT NULL DEFAULT '',
+  `ecard_toemail`   VARCHAR(60) NOT NULL DEFAULT '',
+  `ecard_greetings` VARCHAR(50) NOT NULL DEFAULT '',
+  `ecard_desc`      TEXT        NULL,
+  `ecard_date`      INT(11)     NOT NULL DEFAULT '0',
+  `ecard_ip`        VARCHAR(15) NOT NULL DEFAULT '',
+  `uid`             INT(11)     NOT NULL DEFAULT '0',
+  `photo_id`        INT(11)     NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ecard_id`)
+)
+  ENGINE = MyISAM
+  CHARACTER SET 'utf8'
+  COLLATE 'utf8_general_ci';
 
 CREATE TABLE `extgallery_publicphoto` (
-  `photo_id` int(11) NOT NULL auto_increment,
-  `photo_title` varchar(150) NOT NULL,
-  `photo_desc` text NOT NULL,
-  `photo_serveur` varchar(255) NOT NULL,
-  `photo_name` varchar(255) NOT NULL,
-  `photo_orig_name` varchar(40) NOT NULL,
-  `photo_size` float NOT NULL,
-  `photo_res_x` int(11) NOT NULL,
-  `photo_res_y` int(11) NOT NULL,
-  `photo_hits` int(11) NOT NULL,
-  `photo_comment` int(11) NOT NULL,
-  `photo_rating` tinyint(4) NOT NULL,
-  `photo_nbrating` int(11) NOT NULL,
-  `photo_download` int(11) NOT NULL,
-  `photo_ecard` int(11) NOT NULL,
-  `photo_date` int(11) NOT NULL,
-  `photo_havelarge` tinyint(1) NOT NULL,
-  `photo_approved` tinyint(1) NOT NULL,
-  `photo_extra` text NOT NULL,
-  `photo_weight` int(11) NOT NULL default '0',
-  `cat_id` int(11) NOT NULL,
-  `uid` int(11) NOT NULL,
-  `dohtml` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`photo_id`)
-) ENGINE=MyISAM CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' COMMENT='eXtGallery By Zoullou (www.Zoullou.net)' ;
+  `photo_id`        INT(11)      NOT NULL AUTO_INCREMENT,
+  `photo_title`     VARCHAR(150) NOT NULL DEFAULT '',
+  `photo_desc`      TEXT         NULL,
+  `photo_serveur`   VARCHAR(255) NOT NULL DEFAULT '',
+  `photo_name`      VARCHAR(255) NOT NULL DEFAULT '',
+  `photo_orig_name` VARCHAR(40)  NOT NULL DEFAULT '',
+  `photo_size`      FLOAT        NOT NULL DEFAULT '0',
+  `photo_res_x`     INT(11)      NOT NULL DEFAULT '0',
+  `photo_res_y`     INT(11)      NOT NULL DEFAULT '0',
+  `photo_hits`      INT(11)      NOT NULL DEFAULT '0',
+  `photo_comment`   INT(11)      NOT NULL DEFAULT '0',
+  `photo_rating`    TINYINT(4)   NOT NULL DEFAULT '0',
+  `photo_nbrating`  INT(11)      NOT NULL DEFAULT '0',
+  `photo_download`  INT(11)      NOT NULL DEFAULT '0',
+  `photo_ecard`     INT(11)      NOT NULL DEFAULT '0',
+  `photo_date`      INT(11)      NOT NULL DEFAULT '0',
+  `photo_havelarge` TINYINT(1)   NOT NULL DEFAULT '0',
+  `photo_approved`  TINYINT(1)   NOT NULL DEFAULT '0',
+  `photo_extra`     TEXT         NULL,
+  `photo_weight`    INT(11)      NOT NULL DEFAULT '0',
+  `cat_id`          INT(11)      NOT NULL DEFAULT '0',
+  `uid`             INT(11)      NOT NULL DEFAULT '0',
+  `dohtml`          TINYINT(1)   NOT NULL DEFAULT '0',
+  PRIMARY KEY (`photo_id`)
+)
+  ENGINE = MyISAM
+  CHARACTER SET 'utf8'
+  COLLATE 'utf8_general_ci';
 
 CREATE TABLE `extgallery_publicrating` (
-  `rating_id` int(11) NOT NULL auto_increment,
-  `photo_id` int(11) NOT NULL,
-  `uid` int(11) NOT NULL,
-  `rating_rate` tinyint(4) NOT NULL,
-  PRIMARY KEY  (`rating_id`)
-) ENGINE=MyISAM CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' COMMENT='eXtGallery By Zoullou (www.Zoullou.net)' ;
+  `rating_id`   INT(11)    NOT NULL AUTO_INCREMENT,
+  `photo_id`    INT(11)    NOT NULL DEFAULT '0',
+  `uid`         INT(11)    NOT NULL DEFAULT '0',
+  `rating_rate` TINYINT(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`rating_id`)
+)
+  ENGINE = MyISAM
+  CHARACTER SET 'utf8'
+  COLLATE 'utf8_general_ci';
 
 CREATE TABLE `extgallery_quota` (
-  `quota_id` int(11) NOT NULL auto_increment,
-  `groupid` int(11) NOT NULL,
-  `quota_name` varchar(255) NOT NULL,
-  `quota_value` int(11) NOT NULL,
-  PRIMARY KEY  (`quota_id`)
-) ENGINE=MyISAM CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' COMMENT='eXtGallery By Zoullou (www.Zoullou.net)' ;
+  `quota_id`    INT(11)      NOT NULL AUTO_INCREMENT,
+  `groupid`     INT(11)      NOT NULL DEFAULT '0',
+  `quota_name`  VARCHAR(255) NOT NULL DEFAULT '',
+  `quota_value` INT(11)      NOT NULL DEFAULT '0',
+  PRIMARY KEY (`quota_id`)
+)
+  ENGINE = MyISAM
+  CHARACTER SET 'utf8'
+  COLLATE 'utf8_general_ci';

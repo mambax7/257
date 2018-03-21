@@ -28,70 +28,73 @@
 # Descrição: Sistema de gerenciamento de mídias publicitárias               #
 # ------------------------------------------------------------------------- #
 
-# Table structure for table rw_banner
+# Table structure for table rwbanner_banner
 #
 
-CREATE TABLE rw_banner (
-  codigo int(11) NOT NULL auto_increment,
-  categoria int(11) default NULL,
-  titulo varchar(255) default NULL,
-  texto text,
-  url varchar(255) default NULL,
-  grafico varchar(255) default NULL,
-  usarhtml int(1) default NULL,
-  htmlcode text,
-  showimg int(1) NOT NULL default '1',
-  exibicoes int(11) default NULL,
-  maxexib int(11) NOT NULL default '0',
-  clicks int(11) default NULL,
-  maxclick int(11) NOT NULL default '0',
-  data datetime default NULL,
-  periodo int(5) NOT NULL default '0',
-  status int(1) unsigned NOT NULL default '1',
-  target varchar(50) default '_blank',
-  idcliente int(11) default NULL,
-  obs text,
-  PRIMARY KEY  (`codigo`)
-) ENGINE=MyISAM;
-
-
-#
-# Table structure for table rw_categorias
-#
-
-CREATE TABLE rw_categorias (
-  cod int(11) unsigned NOT NULL auto_increment,
-  titulo varchar(50) default NULL,
-  larg int(11) unsigned NOT NULL default '0',
-  alt int(11) unsigned NOT NULL default '0',
-  PRIMARY KEY  (cod)
-) ENGINE=MyISAM;
+CREATE TABLE rwbanner_banner (
+  codigo    INT(11)         NOT NULL AUTO_INCREMENT,
+  categoria INT(11)                  DEFAULT NULL,
+  titulo    VARCHAR(255)             DEFAULT NULL,
+  texto     TEXT,
+  url       VARCHAR(255)             DEFAULT NULL,
+  grafico   VARCHAR(255)             DEFAULT NULL,
+  usarhtml  INT(1)                   DEFAULT NULL,
+  htmlcode  TEXT,
+  showimg   INT(1)          NOT NULL DEFAULT '1',
+  exibicoes INT(11)                  DEFAULT NULL,
+  maxexib   INT(11)         NOT NULL DEFAULT '0',
+  clicks    INT(11)                  DEFAULT NULL,
+  maxclick  INT(11)         NOT NULL DEFAULT '0',
+  data      DATETIME                 DEFAULT NULL,
+  periodo   INT(5)          NOT NULL DEFAULT '0',
+  status    INT(1) UNSIGNED NOT NULL DEFAULT '1',
+  target    VARCHAR(50)              DEFAULT '_blank',
+  idcliente INT(11)                  DEFAULT NULL,
+  obs       TEXT,
+  PRIMARY KEY (`codigo`)
+)
+  ENGINE = MyISAM;
 
 #
-# Dumping data for table rw_categorias
+# Table structure for table rwbanner_categorias
 #
 
-INSERT INTO rw_categorias VALUES (1,'468x60',468,60);
-INSERT INTO rw_categorias VALUES (2,'120x60',120,60);
+CREATE TABLE rwbanner_categorias (
+  cod    INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  titulo VARCHAR(50)               DEFAULT NULL,
+  larg   INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  alt    INT(11) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (cod)
+)
+  ENGINE = MyISAM;
 
 #
-# Table structure for table rw_tags
+# Dumping data for table rwbanner_categorias
 #
-CREATE TABLE rw_tags (
-  id int(11) NOT NULL auto_increment,
-  title varchar(255) default NULL,
-  name varchar(255) NOT NULL default 'rw_banner',
-  codbanner int(5) default NULL,
-  categ int(5) NOT NULL default '1',
-  qtde int(5) NOT NULL default '1',
-  cols int(5) NOT NULL default '1',
-  modid text,
-  obs text,
-  status int(1) NOT NULL default '1',
-  PRIMARY KEY  (id)
-) ENGINE=MyISAM;
+
+INSERT INTO rwbanner_categorias VALUES (1, '468x60', 468, 60);
+INSERT INTO rwbanner_categorias VALUES (2, '120x60', 120, 60);
 
 #
-# Dumping data for table rw_tags
+# Table structure for table rwbanner_tags
 #
-INSERT INTO rw_tags (id,title,name,categ,qtde,cols,modid,obs,status) VALUES (1,'RW-BANNER Default TAG','rw_banner',1,1,1,'a:1:{i:0;s:1:\"0\";}',"",1);
+CREATE TABLE rwbanner_tags (
+  id        INT(11)      NOT NULL AUTO_INCREMENT,
+  title     VARCHAR(255)          DEFAULT NULL,
+  name      VARCHAR(255) NOT NULL DEFAULT 'rwbanner',
+  codbanner INT(5)                DEFAULT NULL,
+  categ     INT(5)       NOT NULL DEFAULT '1',
+  qtde      INT(5)       NOT NULL DEFAULT '1',
+  cols      INT(5)       NOT NULL DEFAULT '1',
+  modid     TEXT,
+  obs       TEXT,
+  status    INT(1)       NOT NULL DEFAULT '1',
+  PRIMARY KEY (id)
+)
+  ENGINE = MyISAM;
+
+#
+# Dumping data for table rwbanner_tags
+#
+INSERT INTO rwbanner_tags (id, title, name, categ, qtde, cols, modid, obs, status)
+VALUES (1, 'RW-BANNER Default TAG', 'rwbanner_banner', 1, 1, 1, 'a:1:{i:0;s:1:\"0\";}', '', 1);

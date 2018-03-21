@@ -16,61 +16,70 @@
  * @package           marquee
  * @author            Hervé Thouzard (http://www.herve-thouzard.com)
  *
- * Version : $Id:
+ * Version :
  * ****************************************************************************
  *
  * @param $limit
- * @param $dateformat
- * @param $itemssize
+ * @param $dateFormat
+ * @param $itemsSize
  *
  * @return array
  */
 
+use XoopsModules\Wfdownloads;
+
 // Script to list recent files from the wfdownloads module (tested with wfdownloads 3.1)
-function b_marquee_wfdownloads($limit, $dateformat, $itemssize)
+/**
+ * @param $limit
+ * @param $dateFormat
+ * @param $itemsSize
+ * @return array
+ */
+function b_marquee_wfdownloads($limit, $dateFormat, $itemsSize)
 {
-    $block = array();
+    $block = [];
 
     global $xoopsUser;
-    $modhandler     = xoops_getHandler('module');
-    $wfModule       = $modhandler->getByDirname('wfdownloads');
-    $config_handler = xoops_getHandler('config');
-    $wfModuleConfig = $config_handler->getConfigsByCat(0, $wfModule->getVar('mid'));
+    $moduleHandler  = xoops_getHandler('module');
+    $wfModule       = $moduleHandler->getByDirname('wfdownloads');
+    $configHandler  = xoops_getHandler('config');
+    $wfModuleConfig = $configHandler->getConfigsByCat(0, $wfModule->getVar('mid'));
 
-    $groups        = is_object($xoopsUser) ? $xoopsUser->getGroups() : XOOPS_GROUP_ANONYMOUS;
-    $gperm_handler = xoops_getHandler('groupperm');
-    $allowed_cats  = $gperm_handler->getItemIds('WFDownCatPerm', $groups, $wfModule->getVar('mid'));
+    $groups       = is_object($xoopsUser) ? $xoopsUser->getGroups() : XOOPS_GROUP_ANONYMOUS;
+    $gpermHandler = xoops_getHandler('groupperm');
+    $allowed_cats = $gpermHandler->getItemIds('WFDownCatPerm', $groups, $wfModule->getVar('mid'));
 
-    $criteria = new Criteria('cid', '(' . implode(',', $allowed_cats) . ')', 'IN');
-    $criteria = new CriteriaCompo(new Criteria('offline', 0));
+    $criteria = new \Criteria('cid', '(' . implode(',', $allowed_cats) . ')', 'IN');
+    $criteria = new \CriteriaCompo(new \Criteria('offline', 0));
     $criteria->setSort('published');
     $criteria->setOrder('DESC');
     $criteria->setLimit($limit);
-    $download_handler = xoops_getModuleHandler('download', 'wfdownloads');
-    $category_handler = xoops_getModuleHandler('category', 'wfdownloads');
-    $buffer_category  = array();
+    $downloadHandler = Wfdownloads\Helper::getInstance()->getHandler('Download');
+    $categoryHandler = Wfdownloads\Helper::getInstance()->getHandler('Category');
+    $buffer_category = [];
 
-    $downloads = $download_handler->getObjects($criteria);
+    $downloads = $downloadHandler->getObjects($criteria);
 
     foreach (array_keys($downloads) as $i) {
         $download = $downloads[$i]->toArray();
-        if ($itemssize > 0) {
-            $title = xoops_substr($download['title'], 0, $itemssize);
+        if ($itemsSize > 0) {
+            $title = xoops_substr($download['title'], 0, $itemsSize);
         } else {
             $title = $download['title'];
         }
         if (isset($buffer_category[$download['cid']])) {
             $categtitle = $buffer_category[$download['cid']];
         } else {
-            $category   = $category_handler->get($download['cid']);
+            $category   = $categoryHandler->get($download['cid']);
             $categtitle = $buffer_category[$download['cid']] = $category->getVar('title');
         }
-        $block[] = array(
+        $block[] = [
             'date'     => formatTimestamp($download['published'], $wfModuleConfig['dateformat']),
             'category' => $categtitle,
             'author'   => $download['publisher'],
             'title'    => $title,
-            'link'     => "<a href='" . XOOPS_URL . '/modules/wfdownloads/singlefile.php?cid=' . $download['cid'] . '&lid=' . $download['lid'] . "'>" . $title . '</a>');
+            'link'     => "<a href='" . XOOPS_URL . '/modules/wfdownloads/singlefile.php?cid=' . $download['cid'] . '&lid=' . $download['lid'] . "'>" . $title . '</a>'
+        ];
     }
 
     return $block;

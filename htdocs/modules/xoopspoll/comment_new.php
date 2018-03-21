@@ -1,8 +1,8 @@
 <?php
 /*
                 XOOPS - PHP Content Management System
-                   Copyright (c) 2000 XOOPS.org
-                      <http://xoops.org/>
+                   Copyright (c) 2000-2016 XOOPS.org
+                      <https://xoops.org>
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either rsion 2 of the License, or
@@ -25,14 +25,13 @@
 /**
  * Add New Comments for the XoopsPoll Module
  *
- * @copyright::  {@link http://xoops.org/ XOOPS Project}
+ * @copyright::  {@link https://xoops.org/ XOOPS Project}
  * @license  ::    {@link http://www.fsf.org/copyleft/gpl.html GNU public license}
  * @package  ::    xoopspoll
  * @since    ::         1.0
  * @author   ::     XOOPS Module Dev Team
- * @version  ::    $Id: $
  *
  * @uses     $GLOBALS['xoops']::path gets XOOPS directory information
  */
-include_once dirname(dirname(__DIR__)) . '/mainfile.php';
+require_once __DIR__ . '/../../mainfile.php';
 include $GLOBALS['xoops']->path('include/comment_new.php');

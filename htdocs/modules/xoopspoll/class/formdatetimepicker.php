@@ -1,4 +1,5 @@
-<?php
+<?php namespace XoopsModules\Xoopspoll;
+
 /**
  * Xoopspoll form timepicker
  *
@@ -9,7 +10,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright ::   &copy; {@link http://xoops.org/ XOOPS Project}
+ * @copyright ::   &copy; {@link https://xoops.org/ XOOPS Project}
  * @license   ::     {@link http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU GPL 2}
  * @package   ::     xoopspoll
  * @subpackage::  class
@@ -17,15 +18,14 @@
  * @author    ::      TXMod Xoops (aka timgno) {@link http://www.txmodxoops.org/ TXMod Xoops}
  * @author    ::      zyspec <owners@zyspec.com>
  * @credits::     {@link http://www.trentrichardson.com Trent Richardson}
- * @version   ::     $Id: $
  */
 
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 /**
  * Creates a text field with jquery ui calendar & time select popup
  */
-class XoopspollFormDateTimePicker extends XoopsFormText
+class FormDateTimePicker extends \XoopsFormText
 {
     /**
      *
@@ -43,8 +43,8 @@ class XoopspollFormDateTimePicker extends XoopsFormText
      */
     public function __construct($caption, $name, $size, $value)
     {
-        $value = (!is_numeric($value) || (0 === (int)($value))) ? time($value) : (int)($value);
-        $size  = (int)($size);
+        $value = (!is_numeric($value) || (0 === (int)$value)) ? time($value) : (int)$value;
+        $size  = (int)$size;
         $size  = ($size > 0 && $size <= self::MAXSIZE) ? $size : self::MAXSIZE;
         parent::__construct($caption, $name, $size, self::MAXSIZE, $value);
     }
@@ -71,11 +71,11 @@ class XoopspollFormDateTimePicker extends XoopsFormText
         }
 
         if (is_object($GLOBALS['xoTheme'])) {
-            $mod_handler    =& xoops_gethandler('module');
-            $sys_module     =& $mod_handler->getByDirname('system');
-            $config_handler =& xoops_gethandler('config');
-            $moduleConfig   =& $config_handler->getConfigsByCat(0, $sys_module->getVar('mid'));
-            $jq_theme_dir   = $moduleConfig['jquery_theme'];
+            $moduleHandler = xoops_getHandler('module');
+            $sys_module    = $moduleHandler->getByDirname('system');
+            $configHandler = xoops_getHandler('config');
+            $moduleConfig  = $configHandler->getConfigsByCat(0, $sys_module->getVar('mid'));
+            $jq_theme_dir  = $moduleConfig['jquery_theme'];
 
             $GLOBALS['xoTheme']->addStylesheet($GLOBALS['xoops']->url("modules/system/css/ui/{$jq_theme_dir}/ui.all.css"));
             $GLOBALS['xoTheme']->addScript('browse.php?Frameworks/jquery/jquery.js');
@@ -88,9 +88,75 @@ class XoopspollFormDateTimePicker extends XoopsFormText
                 $included = true;
                 xoops_loadLanguage('admin', 'xoopspoll');
                 // setup regional date variables
-                $reg_values = "closeText: '" . _AM_XOOPSPOLL_DTP_CLOSETEXT . "'," . "prevText: '" . _AM_XOOPSPOLL_DTP_PREVTEXT . "'," . "nextText: '" . _AM_XOOPSPOLL_DTP_NEXTTEXT . "'," . "currentText: '" . _AM_XOOPSPOLL_DTP_CURRENTTEXT . "'," . 'monthNames: [' . _AM_XOOPSPOLL_DTP_MONTHNAMES . '],' . 'monthNamesShort: [' . _AM_XOOPSPOLL_DTP_MONTHNAMESSHORT . '],' . 'dayNames: [' . _AM_XOOPSPOLL_DTP_DAYNAMES . '],' . 'dayNamesShort: [' . _AM_XOOPSPOLL_DTP_DAYNAMESSHORT . '],' . 'dayNamesMin: [' . _AM_XOOPSPOLL_DTP_DAYNAMESMIN . '],' . "weekHeader: '" . _AM_XOOPSPOLL_DTP_WEEKHEADER . "'," . "dateFormat: '" . _AM_XOOPSPOLL_DTP_DATEFORMAT . "'," . "firstDay: '" . _AM_XOOPSPOLL_DTP_FIRSTDAY . "'," . 'isRTL: ' . _AM_XOOPSPOLL_DTP_ISRTL . ',' . 'showMonthAfterYear: ' . _AM_XOOPSPOLL_DTP_SHOWMONTHAFTERYEAR . ',' . "yearSuffix: '" . _AM_XOOPSPOLL_DTP_YEARSUFFIX . "',";
+                $reg_values = "closeText: '"
+                              . _AM_XOOPSPOLL_DTP_CLOSETEXT
+                              . "',"
+                              . "prevText: '"
+                              . _AM_XOOPSPOLL_DTP_PREVTEXT
+                              . "',"
+                              . "nextText: '"
+                              . _AM_XOOPSPOLL_DTP_NEXTTEXT
+                              . "',"
+                              . "currentText: '"
+                              . _AM_XOOPSPOLL_DTP_CURRENTTEXT
+                              . "',"
+                              . 'monthNames: ['
+                              . _AM_XOOPSPOLL_DTP_MONTHNAMES
+                              . '],'
+                              . 'monthNamesShort: ['
+                              . _AM_XOOPSPOLL_DTP_MONTHNAMESSHORT
+                              . '],'
+                              . 'dayNames: ['
+                              . _AM_XOOPSPOLL_DTP_DAYNAMES
+                              . '],'
+                              . 'dayNamesShort: ['
+                              . _AM_XOOPSPOLL_DTP_DAYNAMESSHORT
+                              . '],'
+                              . 'dayNamesMin: ['
+                              . _AM_XOOPSPOLL_DTP_DAYNAMESMIN
+                              . '],'
+                              . "weekHeader: '"
+                              . _AM_XOOPSPOLL_DTP_WEEKHEADER
+                              . "',"
+                              . "dateFormat: '"
+                              . _AM_XOOPSPOLL_DTP_DATEFORMAT
+                              . "',"
+                              . "firstDay: '"
+                              . _AM_XOOPSPOLL_DTP_FIRSTDAY
+                              . "',"
+                              . 'isRTL: '
+                              . _AM_XOOPSPOLL_DTP_ISRTL
+                              . ','
+                              . 'showMonthAfterYear: '
+                              . _AM_XOOPSPOLL_DTP_SHOWMONTHAFTERYEAR
+                              . ','
+                              . "yearSuffix: '"
+                              . _AM_XOOPSPOLL_DTP_YEARSUFFIX
+                              . "',";
                 // set regional time variables
-                $reg_values .= "timeOnlyTitle: '" . _AM_XOOPSPOLL_DTP_TIMEONLYTITLE . "'," . "timeText: '" . _AM_XOOPSPOLL_DTP_TIMETEXT . "'," . "hourText: '" . _AM_XOOPSPOLL_DTP_HOURTEXT . "'," . "minuteText: '" . _AM_XOOPSPOLL_DTP_MINUTETEXT . "'," . "secondText: '" . _AM_XOOPSPOLL_DTP_SECONDTEXT . "'," . "millisecText: '" . _AM_XOOPSPOLL_DTP_MILLISECTEXT . "'," . "timeFormat: '" . _AM_XOOPSPOLL_DTP_TIMEFORMAT . "'," . 'ampm: false,' . 'stepMinute: 5';
+                $reg_values .= "timeOnlyTitle: '"
+                               . _AM_XOOPSPOLL_DTP_TIMEONLYTITLE
+                               . "',"
+                               . "timeText: '"
+                               . _AM_XOOPSPOLL_DTP_TIMETEXT
+                               . "',"
+                               . "hourText: '"
+                               . _AM_XOOPSPOLL_DTP_HOURTEXT
+                               . "',"
+                               . "minuteText: '"
+                               . _AM_XOOPSPOLL_DTP_MINUTETEXT
+                               . "',"
+                               . "secondText: '"
+                               . _AM_XOOPSPOLL_DTP_SECONDTEXT
+                               . "',"
+                               . "millisecText: '"
+                               . _AM_XOOPSPOLL_DTP_MILLISECTEXT
+                               . "',"
+                               . "timeFormat: '"
+                               . _AM_XOOPSPOLL_DTP_TIMEFORMAT
+                               . "',"
+                               . 'ampm: false,'
+                               . 'stepMinute: 5';
 
                 $GLOBALS['xoTheme']->addScript('', '', '
                   $(function() {
@@ -102,6 +168,6 @@ class XoopspollFormDateTimePicker extends XoopsFormText
             }
         }
 
-        return "<input type='text' name='{$ele_name}' id='{$ele_name}' class='datetimepicker' size='" . $this->getSize() . "' maxlength='" . $this->getMaxlength() . "' value='{$display_value}'" . $this->getExtra() . ' />';
+        return "<input type='text' name='{$ele_name}' id='{$ele_name}' class='datetimepicker' size='" . $this->getSize() . "' maxlength='" . $this->getMaxlength() . "' value='{$display_value}'" . $this->getExtra() . '>';
     }
 }

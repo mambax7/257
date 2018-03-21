@@ -1,4 +1,4 @@
-<?php
+<?php namespace XoopsModules\Extgallery;
 
 /**
  * ExtGallery Class Manager
@@ -10,13 +10,19 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright   {@link http://xoops.org/ XOOPS Project}
+ * @copyright   {@link https://xoops.org/ XOOPS Project}
  * @license     GNU GPL 2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  * @author      Zoullou (http://www.zoullou.net)
  * @package     ExtGallery
- * @version     $Id: photoUploader.php 8088 2011-11-06 09:38:12Z beckmi $
  */
-class ExtgalleryPhotoUploader
+
+use XoopsModules\Extgallery;
+
+/**
+ * Class PhotoUploader
+ * @package XoopsModules\Extgallery
+ */
+class PhotoUploader
 {
     public $uploadDir;
     public $savedDestination;
@@ -29,8 +35,9 @@ class ExtgalleryPhotoUploader
     public $checkMd5;
 
     /**
+     * Extgallery\PhotoUploader constructor.
      * @param      $uploadDir
-     * @param int $maxFileSize
+     * @param int  $maxFileSize
      * @param null $maxWidth
      * @param null $maxHeight
      */
@@ -61,7 +68,7 @@ class ExtgalleryPhotoUploader
         $jufinal = isset($_POST['jufinal']) ? (int)$_POST['jufinal'] : 1;
         $md5sums = isset($_POST['md5sum'][0]) ? $_POST['md5sum'][0] : null;
 
-        if ($this->uploadDir == '') {
+        if ('' == $this->uploadDir) {
             $this->abort('upload dir not defined');
 
             return false;
@@ -97,11 +104,11 @@ class ExtgalleryPhotoUploader
 
         if ($jupart) {
             // got a chunk of a multi-part upload
-            $len = filesize($tmpname);
+            $len                       = filesize($tmpname);
             $_SESSION['juvar.tmpsize'] += $len;
             if ($len > 0) {
                 $src = fopen($tmpname, 'rb');
-                $dst = fopen($dstname, ($jupart == 1) ? 'wb' : 'ab');
+                $dst = fopen($dstname, (1 == $jupart) ? 'wb' : 'ab');
                 while ($len > 0) {
                     $rlen = ($len > 8192) ? 8192 : $len;
                     $buf  = fread($src, $rlen);
@@ -203,14 +210,14 @@ class ExtgalleryPhotoUploader
     {
         //  $imageExtensions = array(IMAGETYPE_GIF => 'gif', IMAGETYPE_JPEG => 'jpeg', IMAGETYPE_JPG => 'jpg', IMAGETYPE_PNG => 'png');
 
-        $valid_types = array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_BMP);
+        $valid_types = [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_BMP];
 
-        $imageExtensions = array('gif', 'jpg', 'jpeg', 'png');
+        $imageExtensions = ['gif', 'jpg', 'jpeg', 'png'];
 
         // Check IE XSS before returning success
         $ext       = strtolower(substr(strrchr($this->savedDestination, '.'), 1));
         $photoInfo = getimagesize($tmpDestination);
-        if ($photoInfo === false || $imageExtensions[(int)$photoInfo[2]] != $ext) {
+        if (false === $photoInfo || $imageExtensions[(int)$photoInfo[2]] != $ext) {
             $this->abort('Suspicious image upload refused');
 
             return false;
@@ -305,7 +312,7 @@ class ExtgalleryPhotoUploader
     public function checkImageType($photoInfo)
     {
         //  $allowedMimeTypes = array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_JPG, IMAGETYPE_PNG);
-        $allowedMimeTypes = array('image/gif', 'image/jpg', 'image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png');
+        $allowedMimeTypes = ['image/gif', 'image/jpg', 'image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png'];
         if (!in_array($photoInfo['mime'], $allowedMimeTypes)) {
             return false;
         }

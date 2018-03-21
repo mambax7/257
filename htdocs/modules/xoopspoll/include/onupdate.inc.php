@@ -11,23 +11,22 @@
 /**
  * Xoopspoll install functions.php
  *
- * @copyright:: {@link http://xoops.org/ XOOPS Project}
+ * @copyright:: {@link https://xoops.org/ XOOPS Project}
  * @license  ::   {@link http://www.fsf.org/copyleft/gpl.html GNU public license}
  * @package  ::   xoopspoll
  * @since    ::     1.40
  * @author   ::    zyspec <owners@zyspec.com>
- * @version  ::   $Id: $
  */
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 xoops_load('pollUtility', 'xoopspoll');
 
 /**
- * @param $db
- * @param $fromTable
- * @param $toTable
+ * @param XoopsDatabase $db
+ * @param               $fromTable
+ * @param               $toTable
  * @return bool
  */
-function xoopspollChangeTableName(&$db, $fromTable, $toTable)
+function xoopspollChangeTableName(\XoopsDatabase $db, $fromTable, $toTable)
 {
     $fromTable = addslashes($fromTable);
     $toTable   = addslashes($toTable);
@@ -36,12 +35,12 @@ function xoopspollChangeTableName(&$db, $fromTable, $toTable)
         $toThisTable = $db->prefix("{$toTable}");
     */
     $success = false;
-    if (XoopspollPollUtility::dbTableExists($db, $fromTable) && !XoopspollPollUtility::dbTableExists($db, $toTable)) {
+    if (\Xoopspoll\Utility::dbTableExists($db, $fromTable) && !Xoopspoll\Utility::dbTableExists($db, $toTable)) {
         $sql     = sprintf('ALTER TABLE ' . $db->prefix("{$fromTable}") . ' RENAME ' . $db->prefix('{$toTable}'));
         $success = $db->queryF($sql);
-        if (!$success) {
-            $modHandler      =& xoops_getmodulehandler('module');
-            $xoopspollModule =& $modHandler->getByDirname('xoopspoll');
+        if (false === $success) {
+            $moduleHandler   = xoops_getModuleHandler('module');
+            $xoopspollModule = $moduleHandler->getByDirname('xoopspoll');
             $xoopspollModule->setErrors(sprintf(_AM_XOOPSPOLL_UPGRADE_FAILED, $fromTable));
         }
     }
@@ -50,11 +49,11 @@ function xoopspollChangeTableName(&$db, $fromTable, $toTable)
 }
 
 /**
- * @param $module
- * @param $prev_version
+ * @param  XoopsModule $module
+ * @param              $prev_version
  * @return bool
  */
-function xoops_module_update_xoopspoll(&$module, &$prev_version)
+function xoops_module_update_xoopspoll(\XoopsModule $module, &$prev_version)
 {
     // referer check
     $success = false;
@@ -63,9 +62,9 @@ function xoops_module_update_xoopspoll(&$module, &$prev_version)
         /* module specific part */
         require_once $GLOBALS['xoops']->path('modules/xoopspoll/include/oninstall.inc.php');
 
-        $installedVersion = (int)($prev_version);
+        $installedVersion = (int)$prev_version;
         xoops_loadLanguage('admin', 'xoopspoll');
-        $db      =& XoopsDatabaseFactory::getDatabaseConnection();
+        $db      = \XoopsDatabaseFactory::getDatabaseConnection();
         $success = true;
         if ($installedVersion < 140) {
             /* add column for poll anonymous which was created in versions prior
@@ -75,28 +74,28 @@ function xoops_module_update_xoopspoll(&$module, &$prev_version)
             $foundAnon = $db->getRowsNum($result);
             if (empty($foundAnon)) {
                 // column doesn't exist, so try and add it
-                $success = $db->queryF('ALTER TABLE ' . $db->prefix('xoopspoll_desc') . ' ADD anonymous TINYINT( 1 ) DEFAULT 0 NOT null AFTER multiple');
-                if (!$success) {
+                $success = $db->queryF('ALTER TABLE ' . $db->prefix('xoopspoll_desc') . ' ADD anonymous TINYINT( 1 ) DEFAULT 0 NOT NULL AFTER multiple');
+                if (false === $success) {
                     $module->setErrors(_AM_XOOPSPOLL_ERROR_COLUMN . 'anonymous');
                 }
             }
             /* change description to TINYTEXT */
             if ($success) {
                 $success = $db->queryF('ALTER TABLE ' . $db->prefix('xoopspoll_desc') . ' MODIFY description TINYTEXT NOT NULL');
-                if (!$success) {
+                if (false === $success) {
                     $module->setErrors(_AM_XOOPSPOLL_ERROR_COLUMN . 'description');
                 }
             }
             /* */
             if ($success) {
-                $success = $db->queryF('ALTER TABLE ' . $db->prefix('xoopspoll_desc') . " ADD multilimit TINYINT( 63 ) UNSIGNED DEFAULT '0' NOT null AFTER multiple");
-                if (!$success) {
+                $success = $db->queryF('ALTER TABLE ' . $db->prefix('xoopspoll_desc') . " ADD multilimit TINYINT( 63 ) UNSIGNED DEFAULT '0' NOT NULL AFTER multiple");
+                if (false === $success) {
                     $module->setErrors(_AM_XOOPSPOLL_ERROR_COLUMN . 'multilimit');
                 }
             }
             if ($success) {
-                $success = $db->queryF('ALTER TABLE ' . $db->prefix('xoopspoll_desc') . " ADD mail_voter TINYINT( 1 ) UNSIGNED DEFAULT '0' NOT null AFTER mail_status");
-                if (!$success) {
+                $success = $db->queryF('ALTER TABLE ' . $db->prefix('xoopspoll_desc') . " ADD mail_voter TINYINT( 1 ) UNSIGNED DEFAULT '0' NOT NULL AFTER mail_status");
+                if (false === $success) {
                     $module->setErrors(_AM_XOOPSPOLL_ERROR_COLUMN . 'mail_voter');
                 }
             }
@@ -105,8 +104,8 @@ function xoops_module_update_xoopspoll(&$module, &$prev_version)
                 $foundCol = $db->getRowsNum($result);
                 if (empty($foundCol)) {
                     // column doesn't exist, so try and add it
-                    $success = $db->queryF('ALTER TABLE ' . $db->prefix('xoopspoll_desc') . " ADD visibility INT( 3 ) DEFAULT '0' NOT null AFTER display");
-                    if (!$success) {
+                    $success = $db->queryF('ALTER TABLE ' . $db->prefix('xoopspoll_desc') . " ADD visibility INT( 3 ) DEFAULT '0' NOT NULL AFTER display");
+                    if (false === $success) {
                         $module->setErrors(_AM_XOOPSPOLL_ERROR_COLUMN . 'visibility');
                     }
                 }

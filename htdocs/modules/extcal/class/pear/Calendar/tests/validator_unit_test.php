@@ -1,14 +1,14 @@
 <?php
-// $Id: validator_unit_test.php 1645 2011-12-30 20:03:00Z jjdai $
+//
 
-require_once 'simple_include.php';
-require_once 'calendar_include.php';
+require_once __DIR__ . '/simple_include.php';
+require_once __DIR__ . '/calendar_include.php';
 
 Mock::generate('Calendar_Engine_Interface', 'Mock_Calendar_Engine');
 Mock::generate('Calendar_Second', 'Mock_Calendar_Second');
 
 /**
- * Class TestOfValidator
+ * Class TestOfValidator.
  */
 class TestOfValidator extends UnitTestCase
 {
@@ -200,7 +200,7 @@ class TestOfValidator extends UnitTestCase
 }
 
 /**
- * Class TestOfValidatorLive
+ * Class TestOfValidatorLive.
  */
 class TestOfValidatorLive extends UnitTestCase
 {

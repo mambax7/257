@@ -3,7 +3,6 @@
  *
  * @license GNU
  * @author marcan <marcan@smartfactory.ca>
- * @version $Id: readme.txt,v 1.1 2007/06/05 18:31:42 marcan Exp $
  * @link http://smartfactory.ca The SmartFactory
  * @package SmartObject
  * @subpackage SmartObjectCore
@@ -32,6 +31,6 @@ We have included an example of the modified file in include/common.php
 Please report any bugs on The SmartFactory (http://smartfactory.ca)
 
 
-.:: marcan aka Marc-André Lanciault ::.
+.:: marcan aka Marc-AndrÃ© Lanciault ::.
 .:: Open Source :: smartfactory.ca::.
 .:: Professionnal :: inboxsolutions.net ::.

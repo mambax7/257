@@ -10,16 +10,16 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright   {@link http://xoops.org/ XOOPS Project}
+ * @copyright   {@link https://xoops.org/ XOOPS Project}
  * @license     GNU GPL 2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  * @author      Zoullou (http://www.zoullou.net)
  * @package     ExtGallery
- * @version     $Id: moduleUpdateFunction.php 8088 2011-11-06 09:38:12Z beckmi $
  */
 
+require_once __DIR__ . '/admin_header.php';
 define('_MU_MODULE_VERSION_FILE_URL', 'http://www.zoullou.net/extgalleryVersion.xml');
 define('_MU_MODULE_DOWNLOAD_SERVER', 'http://downloads.sourceforge.net/zoullou/');
-define('_MU_MODULE_XOOPS_VERSION_SUPPORTED', '2.4.0');
+define('_MU_MODULE_XOOPS_VERSION_SUPPORTED', '2.5.9');
 
 /**
  * @return array|bool
@@ -43,19 +43,19 @@ function moduleLastVersionInfo()
     xml_parse_into_struct($parser, $data, $values, $tags);
     xml_parser_free($parser);
 
-    $result = array();
+    $result = [];
 
     // boucle à travers les structures
     foreach ($tags as $key => $val) {
-        if ($key === 'module') {
+        if ('module' === $key) {
             $ranges = $val;
             // each contiguous pair of array entries are the
             // lower and upper range for each joueur definition
-            for ($i = 0; $i < count($ranges); $i += 2) {
+            for ($i = 0, $iMax = count($ranges); $i < $iMax; $i += 2) {
                 $offset     = $ranges[$i] + 1;
                 $len        = $ranges[$i + 1] - $offset;
                 $dataValues = array_slice($values, $offset, $len);
-                for ($j = 0; $j < count($dataValues); ++$j) {
+                for ($j = 0, $jMax = count($dataValues); $j < $jMax; ++$j) {
                     $value                          = isset($dataValues[$j]['value']) ? $dataValues[$j]['value'] : '';
                     $result[$dataValues[$j]['tag']] = $value;
                 }
@@ -93,7 +93,7 @@ function getModuleVersion()
  */
 function isModuleUpToDate()
 {
-    if (compareVersion(getModuleVersion(), getLastModuleVersion()) != -1) {
+    if (-1 != compareVersion(getModuleVersion(), getLastModuleVersion())) {
         return true;
     } else {
         return false;
@@ -135,7 +135,7 @@ function compareVersion($v1, $v2)
  */
 function isXoopsVersionSupportInstalledModuleVersion()
 {
-    if (compareVersion(substr(XOOPS_VERSION, 6), _MU_MODULE_XOOPS_VERSION_SUPPORTED) != -1) {
+    if (-1 != compareVersion(substr(XOOPS_VERSION, 6), _MU_MODULE_XOOPS_VERSION_SUPPORTED)) {
         return true;
     } else {
         return false;
@@ -149,7 +149,7 @@ function isXoopsVersionSupportLastModuleVersion()
 {
     $moduleInfos = moduleLastVersionInfo();
 
-    if (compareVersion(substr(XOOPS_VERSION, 6), $moduleInfos['xoopsVersionNeeded']) != -1) {
+    if (-1 != compareVersion(substr(XOOPS_VERSION, 6), $moduleInfos['xoopsVersionNeeded'])) {
         return true;
     } else {
         return false;

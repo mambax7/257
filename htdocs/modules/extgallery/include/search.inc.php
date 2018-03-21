@@ -9,14 +9,15 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright   {@link http://xoops.org/ XOOPS Project}
+ * @copyright   {@link https://xoops.org/ XOOPS Project}
  * @license     GNU GPL 2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  * @author      Zoullou (http://www.zoullou.net)
  * @package     ExtGallery
- * @version     $Id: search.inc.php 8088 2011-11-06 09:38:12Z beckmi $
  */
 
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+use XoopsModules\Extgallery;
+
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
 /**
  * @param $queryarray
@@ -29,7 +30,8 @@
  */
 function extgallerySearch($queryarray, $andor, $limit, $offset, $userid)
 {
-    $photoHandler = xoops_getModuleHandler('publicphoto', 'extgallery');
+    /** @var Extgallery\PublicPhotoHandler $photoHandler */
+    $photoHandler = Extgallery\Helper::getInstance()->getHandler('PublicPhoto');
 
     return $photoHandler->getSearchedPhoto($queryarray, $andor, $limit, $offset, $userid);
 }

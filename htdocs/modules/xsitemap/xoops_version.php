@@ -1,10 +1,7 @@
 <?php
-/**
- * ****************************************************************************
- * Module généré par TDMCreate de la TDM "http://www.tdmxoops.net"
+/*
  * ****************************************************************************
  * xsitemap - MODULE FOR XOOPS CMS
- * Copyright (c) Urbanspaceman (http://www.takeaweb.it)
  *
  * You may not change or alter any portion of this comment or credits
  * of supporting developers from this source code or any supporting source code
@@ -13,114 +10,142 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright       Urbanspaceman (http://www.takeaweb.it)
- * @license         GPL
- * @package         xsitemap
- * @author          Urbanspaceman (http://www.takeaweb.it)
- * @version         $Id $
  * ****************************************************************************
  */
+/**
+ * @package    module\Xsitemap\frontside
+ * @author     Urbanspaceman (http://www.takeaweb.it)
+ * @copyright  Urbanspaceman (http://www.takeaweb.it)
+ * @copyright  XOOPS Project (https://xoops.org)
+ * @license    http://www.fsf.org/copyleft/gpl.html GNU public license
+ * @link       https://xoops.org XOOPS
+ */
 
-    $modversion["name"] = "xSiteMap";
-    $modversion["version"] = 1.52;
-    $modversion['description']    = _MI_XSITEMAP_DESC;
-    $modversion["author"] = "Urbanspaceman";
-    $modversion["author_website_url"] = "http://www.takeaweb.it";
-    $modversion["author_website_name"] = "TAKEAWEB";
-    $modversion["credits"] = "astueo.com (CSS Stylesheet), Mage, Mamba";
-    $modversion['license'] = 'GNU GPL 2.0';
-    $modversion['license_url'] = "www.gnu.org/licenses/gpl-2.0.html";
-    $modversion['help'] = 'page=help';
-    $modversion["release_info"] = "This is a new module for SITEMAP written and tested only in XOOPS 2.3.x";
-    $modversion["release_file"] = "";
-    $modversion["manual"] = "";
-    $modversion["manual_file"] = "";
-    $modversion["image"] = "images/logo.png";
-    $modversion["dirname"] = "xsitemap";
-    $modversion['dirmoduleadmin'] = '/Frameworks/moduleclasses/moduleadmin';
-    $modversion['icons16'] = '../../Frameworks/moduleclasses/icons/16';
-    $modversion['icons32'] = '../../Frameworks/moduleclasses/icons/32';
-    $modversion['min_php']='5.2';
-    $modversion['min_xoops']="2.5.6";
-    $modversion['min_admin']='1.1';
-    $modversion['min_db']= array('mysql'=>'5.0.7', 'mysqli'=>'5.0.7');
+include __DIR__ . '/preloads/autoloader.php';
 
-    //about
-    $modversion["demo_site_url"] = "http://www.takeaweb.it";
-    $modversion["demo_site_name"] = "Takeaweb ";
-    $modversion["module_website_url"] = "www.xoops.org";
-    $modversion["module_website_name"] = "XOOPS";
-    $modversion["release_date"] = "2012/12/22";
-    $modversion["module_status"] = "Final";
-
-    // Admin things
-    $modversion["hasAdmin"] = 1;
-
-    $modversion["adminindex"] = "admin/index.php";
-    $modversion["adminmenu"] = "admin/menu.php";
-
-    // Mysql file
-    $modversion["sqlfile"]["mysql"] = "sql/mysql.sql";
-
-    // Tables
-    $modversion["tables"][0] = "xsitemap_plugin";
-
-    // Scripts to run upon installation or update
-    $modversion["onInstall"] = "include/install.php";
-    //$modversion["onUpdate"] = "include/update.php";
-
-    // Menu
-    $modversion["hasMain"] = 1;
-    $modversion['system_menu'] = 1;
-
-    //Templates
-    $i = 1;
-    $modversion['templates'][$i]['file'] = 'xsitemap_index.html';
-    $modversion['templates'][$i]['description'] = '';
-    $i++;
-
-    $modversion['templates'][$i]['file'] = 'xsitemap_slickmap.html';
-    $modversion['templates'][$i]['description'] = '';
-    $i++;
-
-    $modversion['templates'][$i]['file'] = 'xsitemap_style.html';
-    $modversion['templates'][$i]['description'] = '';
-    $i++;
-
-    $modversion['templates'][$i]['file'] = 'xsitemap_xml.html';
-    $modversion['templates'][$i]['description'] = '';
-    $i++;
-
-    // Preferences
-    $i = 1;
-    $modversion['config'][$i]['name'] = 'show_subcategories';
-    $modversion['config'][$i]['title'] = '_MI_XSITEMAP_SHOW_PARENT';
-    $modversion['config'][$i]['description'] = '_MI_XSITEMAP_SHOW_PARENT_DESC';
-    $modversion['config'][$i]['formtype'] = 'yesno';
-    $modversion['config'][$i]['valuetype'] = 'int';
-    $modversion['config'][$i]['default'] = 1;
-    $i++;
-
-    $modversion['config'][$i]['name'] = 'show_sublink';
-    $modversion['config'][$i]['title'] = '_MI_XSITEMAP_SHOW_ACTION';
-    $modversion['config'][$i]['description'] = '_MI_XSITEMAP_SHOW_ACTION_DESC';
-    $modversion['config'][$i]['formtype'] = 'yesno';
-    $modversion['config'][$i]['valuetype'] = 'int';
-    $modversion['config'][$i]['default'] = 1;
-    $i++;
-
-    $modversion['config'][$i]['name'] = 'invisible_dirnames';
-    $modversion['config'][$i]['title'] = '_MI_XSITEMAP_DIRNAMES';
-    $modversion['config'][$i]['description'] = '_MI_XSITEMAP_DIRNAMES_DESC';
-    $modversion['config'][$i]['formtype'] = 'textbox';
-    $modversion['config'][$i]['valuetype'] = 'text';
-    $i++;
-
-    $modversion['config'][$i]['name'] = 'columns_number';
-    $modversion['config'][$i]['title'] = '_MI_XSITEMAP_COLS';
-    $modversion['config'][$i]['description'] = '_MI_XSITEMAP_COLS_DESC';
-    $modversion['config'][$i]['formtype'] = 'select';
-    $modversion['config'][$i]['valuetype'] = 'int';
-    $modversion['config'][$i]['default'] = 4;
-    $modversion['config'][$i]['options'] = array('1' => 1, '2' => 2, '3' => 3, '4' => 4, '5' => 5, '6' => 6, '7' => 7, '8' => 8, '9' => 9, '10' => 10);
-    $i++;
+$moduleDirName = basename(__DIR__);
+$modversion    = [
+            'version'             => 1.54,
+            'module_status'       => 'RC-2',
+            'release_date'        => '2017/11/15',
+            'name'                => _MI_XSITEMAP_NAME,
+            'description'         => _MI_XSITEMAP_DESC,
+            'author'              => 'Urbanspaceman',
+            'author_website_url'  => 'http://www.takeaweb.it',
+            'author_website_name' => 'TAKEAWEB',
+            'credits'             => 'astueo.com (CSS Stylesheet), Mage, Mamba, Zyspec, Aerograf',
+            'license'             => 'GNU GPL 2.0',
+            'license_url'         => 'www.gnu.org/licenses/gpl-2.0.html',
+            'help'                => 'page=help',
+            'release_info'        => 'This is a SITEMAP module written for XOOPS 2.5.9',
+            'manual'              => '',
+            'manual_file'         => '',
+            'image'               => 'assets/images/logoModule.png',
+            'dirname'             => $moduleDirName,
+            'modicons16'          => 'assets/images/icons/16',
+            'modicons32'          => 'assets/images/icons/32',
+            'min_php'             => '5.5',
+            'min_xoops'           => '2.5.9',
+            'min_admin'           => '1.2',
+            'min_db'              => ['mysql' => '5.5'],
+            // About
+            'module_website_name' => 'XOOPS',
+            'module_website_url'  => 'www.xoops.org',
+            'release_file'        => $GLOBALS['xoops']->url("www/modules/{$moduleDirName}/docs/changelog.txt"),
+            // Admin things
+            'hasAdmin'            => 1,
+            'adminindex'          => 'admin/index.php',
+            'adminmenu'           => 'admin/menu.php',
+            // Mysql file
+            'sqlfile'             => ['mysql' => 'sql/mysql.sql'],
+            // Tables
+            'tables'              =>  [
+                  $moduleDirName . '_' . 'plugin'
+            ],
+            // Scripts to run upon installation or update
+            'onInstall'           => 'include/oninstall.php',
+            'onUpdate'            => 'include/onupdate.php',
+            'onUninstall'         => 'include/onuninstall.php',
+            // Menu
+            'hasMain'             => 1,
+            'system_menu'         => 1,
+            // ------------------- Help files ------------------- //
+            'helpsection'         => [
+                ['name' => _MI_XSITEMAP_OVERVIEW, 'link'   => 'page=help'],
+                ['name' => _MI_XSITEMAP_DISCLAIMER, 'link' => 'page=disclaimer'],
+                ['name' => _MI_XSITEMAP_LICENSE, 'link'    => 'page=license'],
+                ['name' => _MI_XSITEMAP_SUPPORT, 'link'    => 'page=support']
+            ],
+            //Templates
+            'templates'           => [
+            [
+                'file'        => 'xsitemap_index.tpl',
+                'description' => ''
+            ],
+            [
+                'file'        => 'xsitemap_slickmap.tpl',
+                'description' => ''
+            ],
+            /*
+            [
+                file' => 'xsitemap_style.tpl',
+                description' => ''
+            ],
+            */
+            [
+                'file'        => 'xsitemap_xml.tpl',
+                'description' => ''
+            ],
+            [
+                'file'        => 'admin/xsitemap_index.tpl',
+                'description' => ''
+            ]
+        ],
+];
+// Preferences
+$modversion['config'] = [
+    [
+        'name'        => 'show_subcategories',
+        'title'       => '_MI_XSITEMAP_SHOW_PARENT',
+        'description' => '_MI_XSITEMAP_SHOW_PARENT_DESC',
+        'formtype'    => 'yesno',
+        'valuetype'   => 'int',
+        'default'     => 1
+    ],
+    [
+        'name'        => 'show_sublink',
+        'title'       => '_MI_XSITEMAP_SHOW_ACTION',
+        'description' => '_MI_XSITEMAP_SHOW_ACTION_DESC',
+        'formtype'    => 'yesno',
+        'valuetype'   => 'int',
+        'default'     => 1
+    ],
+    [
+        'name'        => 'invisible_dirnames',
+        'title'       => '_MI_XSITEMAP_DIRNAMES',
+        'description' => '_MI_XSITEMAP_DIRNAMES_DESC',
+        'formtype'    => 'textbox',
+        'valuetype'   => 'text',
+        'default'     => ''
+    ],
+    [
+        'name'        => 'columns_number',
+        'title'       => '_MI_XSITEMAP_COLS',
+        'description' => '_MI_XSITEMAP_COLS_DESC',
+        'formtype'    => 'select',
+        'valuetype'   => 'int',
+        'default'     => 4,
+        'options'     => [
+            '1'  => 1,
+            '2'  => 2,
+            '3'  => 3,
+            '4'  => 4,
+            '5'  => 5,
+            '6'  => 6,
+            '7'  => 7,
+            '8'  => 8,
+            '9'  => 9,
+            '10' => 10
+        ]
+    ]
+];

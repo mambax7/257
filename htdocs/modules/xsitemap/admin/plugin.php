@@ -1,7 +1,5 @@
 <?php
-/**
- * ****************************************************************************
- * Module généré par TDMCreate de la TDM "http://www.tdmxoops.net"
+/*
  * ****************************************************************************
  * xsitemap - MODULE FOR XOOPS CMS
  * Copyright (c) Urbanspaceman (http://www.takeaweb.it)
@@ -12,173 +10,182 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
- * @copyright       Urbanspaceman (http://www.takeaweb.it)
- * @license         GPL
- * @package         xsitemap
- * @author          Urbanspaceman (http://www.takeaweb.it)
- *
- * Version : 1.00:
- * ****************************************************************************
  */
-include '../../../include/cp_header.php';
+/**
+ * Module: xsitemap
+ *
+ * @package         module\Xsitemap\admin
+ * @author          Urbanspaceman (http://www.takeaweb.it)
+ * @copyright       Urbanspaceman (http://www.takeaweb.it)
+ * @author          XOOPS Module Development Team
+ * @copyright       XOOPS Project (https://xoops.org)
+ * @license         http://www.fsf.org/copyleft/gpl.html GNU public license
+ * @link            https://xoops.org XOOPS
+ * @since           1.00
+ */
 
-include 'admin_header.php';
+use Xmf\Request;
+use \XoopsModules\Xsitemap;
+
+include __DIR__ . '/admin_header.php';
 
 xoops_cp_header();
-$index_admin = new ModuleAdmin();
+$adminObject = \Xmf\Module\Admin::getInstance();
+$adminObject->displayNavigation(basename(__FILE__));
 
-if (isset($_REQUEST["op"])) {
-    $op = $_REQUEST["op"];
-} else {
-    @$op = "show_list_plugin";
-}
-
-echo $index_admin->addNavigation('plugin.php');
+$op = Request::getCmd('op', 'show_list_plugin');
 
 switch ($op) {
-    case "save_plugin":
-        if (!$GLOBALS["xoopsSecurity"]->check()) {
-            redirect_header("plugin.php", 3, implode(",", $GLOBALS["xoopsSecurity"]->getErrors()));
-        }
-        if (isset($_REQUEST["plugin_id"])) {
-            $obj =& $pluginHandler->get($_REQUEST["plugin_id"]);
-        } else {
-            $obj =& $pluginHandler->create();
-        }
+    case 'add_plugin':
 
-        //Form plugin_name
-        $obj->setVar("plugin_name", $_REQUEST["plugin_name"]);
-        //Form plugin_mod_version
-        $obj->setVar("plugin_mod_version", $_REQUEST["plugin_mod_version"]);
-        //Form plugin_mod_table
-        $obj->setVar("plugin_mod_table", $_REQUEST["plugin_mod_table"]);
-        //Form plugin_cat_id
-        $obj->setVar("plugin_cat_id", $_REQUEST["plugin_cat_id"]);
-        //Form plugin_cat_pid
-        $obj->setVar("plugin_cat_pid", $_REQUEST["plugin_cat_pid"]);
-        //Form plugin_cat_name
-        $obj->setVar("plugin_cat_name", $_REQUEST["plugin_cat_name"]);
-        //Form plugin_weight
-        $obj->setVar("plugin_weight", $_REQUEST["plugin_weight"]);
-        //Form plugin_call
-        $obj->setVar("plugin_call", $_REQUEST["plugin_call"]);
-        //Form plugin_submitter
-        $obj->setVar("plugin_submitter", $_REQUEST["plugin_submitter"]);
-        //Form plugin_date_created
-        $obj->setVar("plugin_date_created", strtotime($_REQUEST["plugin_date_created"]));
-        //Form plugin_online
-        $verif_plugin_online = ($_REQUEST["plugin_online"] == 1) ? "1" : "0";
-        $obj->setVar("plugin_online", $verif_plugin_online);
+        // Display the form
+        /** @var Xsitemap\Plugin $obj */
+        $obj = $pluginHandler->create();
+        echo $obj->getForm();
+        break;
+
+    case 'save_plugin':
+        if (!$GLOBALS['xoopsSecurity']->check()) {
+            $helper->redirect('admin/plugin.php', 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
+        }
+        $pluginId = Request::getInt('plugin_id', 0, 'POST');
+
+        if (!empty($pluginId)) {
+            $obj = $pluginHandler->get($pluginId);
+            if (!$obj instanceof Xsitemap\Plugin) { // passed Id for non-existent plugin so create new plugin
+                $obj = $pluginHandler->create();
+            }
+        } else {
+            $obj = $pluginHandler->create();
+        }
+        $timestamp_created = strtotime(Request::getString('plugin_date_created', 0, 'POST'));
+
+        $verif_plugin_online = (1 === Request::getInt('plugin_online', 0, 'POST')) ? 1 : 0;                    //Form plugin_online
+        $obj->setVars(
+            [
+                          'plugin_name'         => Request::getString('plugin_name', '', 'POST'),                   //Form plugin_name
+                          'plugin_mod_version'  => Request::getCmd('plugin_mod_version', '', 'POST'),               //Form plugin_mod_version
+                          'plugin_mod_table'    => Request::getCmd('plugin_mod_table', '', 'POST'),                 //Form plugin_mod_table
+                          'plugin_cat_id'       => Request::getCmd('plugin_cat_id', '', 'POST'),                    //Form plugin_cat_id
+                          'plugin_cat_pid'      => Request::getCmd('plugin_cat_pid', '', 'POST'),                   //Form plugin_cat_pid
+                          'plugin_cat_name'     => Request::getText('plugin_cat_name', '', 'POST'),                 //Form plugin_cat_name
+                          'plugin_weight'       => Request::getCmd('plugin_weight', '', 'POST'),                    //Form plugin_weight
+                          'plugin_call'         => Request::getString('plugin_call', '', 'POST'),                   //Form plugin_call
+                          'plugin_submitter'    => Request::getInt('plugin_submitter', 0, 'POST'),                  //Form plugin_submitter
+                          'plugin_date_created' => strtotime(Request::getString('plugin_date_created', 0, 'POST')), //Form plugin_date_created
+                          'plugin_online'       => $verif_plugin_online
+            ]                                            //Form plugin_online
+        );
 
         if ($pluginHandler->insert($obj)) {
-            redirect_header("plugin.php?op=show_list_plugin", 2, _AM_XSITEMAP_FORMOK);
+            $helper->redirect('admin/plugin.php?op=show_list_plugin', 2, _AM_XSITEMAP_FORMOK);
         }
         //include_once("../include/forms.php");
         echo $obj->getHtmlErrors();
-        $form =& $obj->getForm();
-    break;
+        echo $obj->getForm();
+        break;
 
-    case "edit_plugin":
-        $obj = $pluginHandler->get($_REQUEST["plugin_id"]);
-        $form = $obj->getForm();
-    break;
+    case 'edit_plugin':
+        $obj = $pluginHandler->get(Request::getInt('plugin_id'));
+        if ($obj instanceof Xsitemap\Plugin) {
+            echo $obj->getForm();
+        } else {
+            echo _AM_XSITEMAP_ERROR_NO_PLUGIN;
+        }
+        break;
 
-    case "delete_plugin":
-        $obj =& $pluginHandler->get($_REQUEST["plugin_id"]);
-        if (isset($_REQUEST["ok"]) && $_REQUEST["ok"] == 1) {
-            if (!$GLOBALS["xoopsSecurity"]->check()) {
-                redirect_header("plugin.php", 3, implode(",", $GLOBALS["xoopsSecurity"]->getErrors()));
+    case 'delete_plugin':
+        $obj = $pluginHandler->get(Request::getInt('plugin_id', 0));
+        $ok  = Request::getInt('ok', 0, 'POST');
+        if (1 == $ok) {
+            //        if (isset($_REQUEST["ok"]) && $_REQUEST["ok"] == 1) {
+            if (!$GLOBALS['xoopsSecurity']->check()) {
+                $helper->redirect('admin/plugin.php', 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
             }
             if ($pluginHandler->delete($obj)) {
-                redirect_header("plugin.php", 3, _AM_XSITEMAP_FORMDELOK);
+                $helper->redirect('admin/plugin.php', 3, _AM_XSITEMAP_FORMDELOK);
             } else {
                 echo $obj->getHtmlErrors();
             }
         } else {
-            xoops_confirm(array("ok" => 1, "plugin_id" => $_REQUEST["plugin_id"], "op" => "delete_plugin"), $_SERVER["REQUEST_URI"], sprintf(_AM_XSITEMAP_FORMSUREDEL, $obj->getVar("plugin")));
+            xoops_confirm([
+                              'ok'        => 1,
+                              'plugin_id' => Request::getInt('plugin_id', 0),
+                              'op'        => 'delete_plugin'
+                          ], $_SERVER['REQUEST_URI'], sprintf(_AM_XSITEMAP_FORMSUREDEL, $obj->getVar('plugin')));
         }
-    break;
+        break;
 
-    case "update_online_plugin":
+    case 'update_online_plugin':
 
-    if (isset($_REQUEST["plugin_id"])) {
-        $obj =& $pluginHandler->get($_REQUEST["plugin_id"]);
-    }
-    $obj->setVar("plugin_online", $_REQUEST["plugin_online"]);
+        if (isset($_REQUEST['plugin_id'])) {
+            $obj = $pluginHandler->get(Request::getInt('plugin_id'));
+        }
+        $obj->setVar('plugin_online', Request::getInt('plugin_online', 0));
 
-    if ($pluginHandler->insert($obj)) {
-        redirect_header("plugin.php", 3, _AM_XSITEMAP_FORMOK);
-    }
-    echo $obj->getHtmlErrors();
+        if ($pluginHandler->insert($obj)) {
+            $helper->redirect('admin/plugin.php', 3, _AM_XSITEMAP_FORMOK);
+        }
+        echo $obj->getHtmlErrors();
 
-    break;
+        break;
 
-    case "default":
+    case 'default':
     default:
+        $adminObject->addItemButton(_AM_XSITEMAP_CREATE_PLUGIN, basename(__FILE__) . '?op=add_plugin', 'add');
+        $adminObject->displayButton('left', '');
 
-        $criteria = new CriteriaCompo();
-        $criteria->setSort("plugin_name");
-        $criteria->setOrder("ASC");
-        $numrows = $pluginHandler->getCount();
-        $plugin_arr = $pluginHandler->getall($criteria);
+        $criteria = new \CriteriaCompo();
+        $criteria->setSort('plugin_name');
+        $criteria->order = 'ASC';
+        $numrows         = $pluginHandler->getCount();
+        $plugin_arr      = $pluginHandler->getAll($criteria);
 
-            //Affichage du tableau
-            if ($numrows>0) {
-                echo "<table width=\"100%\" cellspacing=\"1\" class=\"outer\">
-                    <tr>
-                        <th align=\"center\">"._AM_XSITEMAP_PLUGIN_NAME."</th>
-                        <th align=\"center\">"._AM_XSITEMAP_PLUGIN_MOD_VERSION."</th>
-                        <th align=\"center\">"._AM_XSITEMAP_PLUGIN_MOD_TABLE_SHORT."</th>
-                        <th align=\"center\">"._AM_XSITEMAP_PLUGIN_CAT_ID_SHORT."</th>
-                        <th align=\"center\">"._AM_XSITEMAP_PLUGIN_CAT_PID_SHORT."</th>
-                        <th align=\"center\">"._AM_XSITEMAP_PLUGIN_CAT_NAME_SHORT."</th>
-                        <th align=\"center\">"._AM_XSITEMAP_PLUGIN_WEIGHT_SHORT."</th>
-                        <th align=\"center\">"._AM_XSITEMAP_PLUGIN_CALL_SHORT."</th>
-                        <th align=\"center\">"._AM_XSITEMAP_PLUGIN_SUBMITTER."</th>
-                        <th align=\"center\">"._AM_XSITEMAP_PLUGIN_DATE_CREATED."</th>
-                        <th align=\"center\">"._AM_XSITEMAP_PLUGIN_ONLINE."</th>
+        //Display the table
+        if ($numrows > 0) {
+            echo "<table cellspacing='1' class='outer width100'>\n" . "  <thead>\n" . "  <tr>\n" . "    <th class='txtcenter'>" . _AM_XSITEMAP_PLUGIN_ONLINE . "</th>\n" . "    <th class='txtcenter'>"
+                 . _AM_XSITEMAP_PLUGIN_NAME . "</th>\n" . "    <th class='txtcenter'>" . _AM_XSITEMAP_PLUGIN_MOD_VERSION . "</th>\n" . "    <th class='txtcenter'>"
+                 . _AM_XSITEMAP_PLUGIN_MOD_TABLE_SHORT . "</th>\n" . "    <th class='txtcenter'>" . _AM_XSITEMAP_PLUGIN_CAT_ID_SHORT . "</th>\n" . "    <th class='txtcenter'>"
+                 . _AM_XSITEMAP_PLUGIN_CAT_PID_SHORT . "</th>\n" . "    <th class='txtcenter'>" . _AM_XSITEMAP_PLUGIN_CAT_NAME_SHORT . "</th>\n" . "    <th class='txtcenter'>"
+                 . _AM_XSITEMAP_PLUGIN_WEIGHT_SHORT . "</th>\n" . "    <th class='txtcenter'>" . _AM_XSITEMAP_PLUGIN_CALL_SHORT . "</th>\n" . "    <th class='txtcenter'>"
+                 . _AM_XSITEMAP_PLUGIN_SUBMITTER . "</th>\n" . "    <th class='txtcenter'>" . _AM_XSITEMAP_PLUGIN_DATE_CREATED . "</th>\n" . "    <th class='txtcenter width10'>"
+                 . _AM_XSITEMAP_FORMACTION . "</th>\n" . "  </tr>\n" . "  </thead>\n" . "  <tbody>\n";
 
-                        <th align=\"center\" width=\"10%\">"._AM_XSITEMAP_FORMACTION."</th>
-                    </tr>";
-
-                $class = "odd";
-
-                foreach (array_keys($plugin_arr) as $i) {
-                    if ($plugin_arr[$i]->getVar("topic_pid") == 0) {
-                        echo "<tr class=\"".$class."\">";
-                        $class = ($class == "even") ? "odd" : "even";
-                        echo "<td align=\"center\">".$plugin_arr[$i]->getVar("plugin_name")."</td>";
-                        echo "<td align=\"center\">".$plugin_arr[$i]->getVar("plugin_mod_version")."</td>";
-                        echo "<td align=\"center\">".$plugin_arr[$i]->getVar("plugin_mod_table")."</td>";
-                        echo "<td align=\"center\">".$plugin_arr[$i]->getVar("plugin_cat_id")."</td>";
-                        echo "<td align=\"center\">".$plugin_arr[$i]->getVar("plugin_cat_pid")."</td>";
-                        echo "<td align=\"center\">".$plugin_arr[$i]->getVar("plugin_cat_name")."</td>";
-                        echo "<td align=\"center\">".$plugin_arr[$i]->getVar("plugin_weight")."</td>";
-                        echo "<td align=\"center\">".$plugin_arr[$i]->getVar("plugin_call")."</td>";
-                        echo "<td align=\"center\">".XoopsUser::getUnameFromId($plugin_arr[$i]->getVar("plugin_submitter"), "S")."</td>";
-                        echo "<td align=\"center\">".formatTimeStamp($plugin_arr[$i]->getVar("plugin_date_created"), "S")."</td>";
-
-                        $online = $plugin_arr[$i]->getVar("plugin_online");
-
-                        if ($online == 1) {
-                            echo "<td align=\"center\"><a href=\"./plugin.php?op=update_online_plugin&plugin_id=".$plugin_arr[$i]->getVar("plugin_id")."&plugin_online=0\"><img src=\"./../images/icons/on.png\" border=\"0\" alt=\""._AM_XSITEMAP_ON."\" title=\""._AM_XSITEMAP_ON."\"></a></td>";
-                        } else {
-                            echo "<td align=\"center\"><a href=\"./plugin.php?op=update_online_plugin&plugin_id=".$plugin_arr[$i]->getVar("plugin_id")."&plugin_online=1\"><img src=\"./../images/icons/off.png\" border=\"0\" alt=\""._AM_XSITEMAP_OFF."\" title=\""._AM_XSITEMAP_OFF."\"></a></td>";
-                        }
-                        echo "<td align=\"center\" width=\"10%\">
-                                        <a href=\"plugin.php?op=edit_plugin&plugin_id=".$plugin_arr[$i]->getVar("plugin_id")."\"><img src=\"../images/icons/edit.png\" alt=\""._AM_XSITEMAP_EDIT."\" title=\""._AM_XSITEMAP_EDIT."\"></a>
-                                        <a href=\"plugin.php?op=delete_plugin&plugin_id=".$plugin_arr[$i]->getVar("plugin_id")."\"><img src=\"../images/icons/delete.png\" alt=\""._AM_XSITEMAP_DELETE."\" title=\""._AM_XSITEMAP_DELETE."\"></a>
-                                      </td>";
-                        echo "</tr>";
+            $class = 'odd';
+            /** @var \XoopsObject[] $plugin_arr[] */
+            foreach (array_keys($plugin_arr) as $i) {
+                if (0 == $plugin_arr[$i]->getVar('topic_pid')) {
+                    echo "  <tr class='{$class}'>\n";
+                    $class  = ('even' === $class) ? 'odd' : 'even';
+                    $online = $plugin_arr[$i]->getVar('plugin_online');
+                    if (1 == $online) {
+                        echo "    <td class='txtcenter width5'><a href='./plugin.php?op=update_online_plugin&plugin_id=" . $plugin_arr[$i]->getVar('plugin_id') . "&plugin_online=0'><img src='"
+                             . \Xmf\Module\Admin::iconUrl('on.png', '16') . "' border='0' alt='" . _AM_XSITEMAP_ON . "' title='" . _AM_XSITEMAP_ON . ', ' . sprintf(
+                                 _AM_XSITEMAP_CLICK_TO,
+                                                                                                                                                                    _AM_XSITEMAP_OFF
+                             ) . "'></a></td>\n";
+                    } else {
+                        echo "    <td class='txtcenter width5'><a href='./plugin.php?op=update_online_plugin&plugin_id=" . $plugin_arr[$i]->getVar('plugin_id') . "&plugin_online=1'><img src='"
+                             . \Xmf\Module\Admin::iconUrl('off.png', '16') . "' border='0' alt='" . _AM_XSITEMAP_OFF . "' title='" . _AM_XSITEMAP_OFF . ', ' . sprintf(
+                                 _AM_XSITEMAP_CLICK_TO,
+                                                                                                                                                                       _AM_XSITEMAP_ON
+                             )
+                             . "'></a></td>\n";
                     }
+                    echo "    <td class='txtcenter'>" . $plugin_arr[$i]->getVar('plugin_name') . "</td>\n" . "    <td class='txtcenter'>" . $plugin_arr[$i]->getVar('plugin_mod_version') . "</td>\n"
+                         . "    <td class='txtcenter'>" . $plugin_arr[$i]->getVar('plugin_mod_table') . "</td>\n" . "    <td class='txtcenter'>" . $plugin_arr[$i]->getVar('plugin_cat_id') . "</td>\n"
+                         . "    <td class='txtcenter'>" . $plugin_arr[$i]->getVar('plugin_cat_pid') . "</td>\n" . "    <td class='txtcenter'>" . $plugin_arr[$i]->getVar('plugin_cat_name') . "</td>\n"
+                         . "    <td class='txtcenter'>" . $plugin_arr[$i]->getVar('plugin_weight') . "</td>\n" . "    <td class='txtcenter'>" . $plugin_arr[$i]->getVar('plugin_call') . "</td>\n"
+                         . "    <td class='txtcenter'>" . XoopsUser::getUnameFromId($plugin_arr[$i]->getVar('plugin_submitter'), 'S') . "</td>\n" . "    <td class='txtcenter'>"
+                         . formatTimestamp($plugin_arr[$i]->getVar('plugin_date_created'), 'S') . "</td>\n" . "    <td class='txtcenter width5'>\n"
+                         . "      <a href='plugin.php?op=edit_plugin&plugin_id=" . $plugin_arr[$i]->getVar('plugin_id') . "'><img src='" . \Xmf\Module\Admin::iconUrl('edit.png', '16') . "' alt='"
+                         . _EDIT . "' title='" . _EDIT . "'></a>\n" . "      <a href='plugin.php?op=delete_plugin&plugin_id=" . $plugin_arr[$i]->getVar('plugin_id') . "'><img src='"
+                         . \Xmf\Module\Admin::iconUrl('delete.png', '16') . "' alt='" . _DELETE . "' title='" . _DELETE . "'></a>\n" . "    </td>\n" . "  </tr>\n";
                 }
-                echo "</table><br><br>";
             }
-
-        // Affichage du formulaire
-        $obj =& $pluginHandler->create();
-        $form = $obj->getForm();
+            echo "</tbody>\n" . "</table>\n";
+        }
+        break;
 }
 
-include 'admin_footer.php';
+include __DIR__ . '/admin_footer.php';

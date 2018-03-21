@@ -12,7 +12,7 @@
  * See the enclosed file license.txt for licensing information.
  * If you did not receive this file, get it at http://www.gnu.org/licenses/gpl-2.0.html
  *
- * @copyright   XOOPS Project (http://xoops.org)
+ * @copyright   XOOPS Project (https://xoops.org)
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License (GPL)
  * @package     installer
  * @since       2.3.0
@@ -22,46 +22,61 @@
  * @author      Taiwen Jiang <phppp@users.sourceforge.net>
  * @author      DuGris (aka L. JEN) <dugris@frxoops.org>
  */
-$pages = array(
-    'langselect'      => array(
+$pages = [
+    'langselect'      => [
         'name'  => LANGUAGE_SELECTION,
-        'title' => LANGUAGE_SELECTION_TITLE),
-    'start'           => array(
+        'title' => LANGUAGE_SELECTION_TITLE
+    ],
+    'start'           => [
         'name'  => INTRODUCTION,
-        'title' => INTRODUCTION_TITLE),
-    'modcheck'        => array(
+        'title' => INTRODUCTION_TITLE
+    ],
+    'modcheck'        => [
         'name'  => CONFIGURATION_CHECK,
-        'title' => CONFIGURATION_CHECK_TITLE),
-    'pathsettings'    => array(
+        'title' => CONFIGURATION_CHECK_TITLE
+    ],
+    'pathsettings'    => [
         'name'  => PATHS_SETTINGS,
-        'title' => PATHS_SETTINGS_TITLE),
-    'dbconnection'    => array(
+        'title' => PATHS_SETTINGS_TITLE
+    ],
+    'dbconnection'    => [
         'name'  => DATABASE_CONNECTION,
-        'title' => DATABASE_CONNECTION_TITLE),
-    'dbsettings'      => array(
+        'title' => DATABASE_CONNECTION_TITLE
+    ],
+    'dbsettings'      => [
         'name'  => DATABASE_CONFIG,
-        'title' => DATABASE_CONFIG_TITLE),
-    'configsave'      => array(
+        'title' => DATABASE_CONFIG_TITLE
+    ],
+    'configsave'      => [
         'name'  => CONFIG_SAVE,
-        'title' => CONFIG_SAVE_TITLE),
-    'tablescreate'    => array(
+        'title' => CONFIG_SAVE_TITLE
+    ],
+    'tablescreate'    => [
         'name'  => TABLES_CREATION,
-        'title' => TABLES_CREATION_TITLE),
-    'siteinit'        => array(
+        'title' => TABLES_CREATION_TITLE
+    ],
+    'siteinit'        => [
         'name'  => INITIAL_SETTINGS,
-        'title' => INITIAL_SETTINGS_TITLE),
-    'tablesfill'      => array(
+        'title' => INITIAL_SETTINGS_TITLE
+    ],
+    'tablesfill'      => [
         'name'  => DATA_INSERTION,
-        'title' => DATA_INSERTION_TITLE),
-    'configsite'      => array(
+        'title' => DATA_INSERTION_TITLE
+    ],
+    'configsite'      => [
         'name'  => CONFIG_SITE,
-        'title' => CONFIG_SITE_TITLE),
-    'theme'           => array(
+        'title' => CONFIG_SITE_TITLE
+    ],
+    'theme'           => [
         'name'  => THEME,
-        'title' => THEME_TITLE),
-    'moduleinstaller' => array(
+        'title' => THEME_TITLE
+    ],
+    'moduleinstaller' => [
         'name'  => MODULES,
-        'title' => MODULES_TITLE),
-    'end'             => array(
+        'title' => MODULES_TITLE
+    ],
+    'end'             => [
         'name'  => WELCOME,
-        'title' => WELCOME_TITLE));
+        'title' => WELCOME_TITLE
+    ]
+];

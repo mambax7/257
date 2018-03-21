@@ -15,77 +15,81 @@
  * @subpackage      Include
  * @since           1.0
  * @author          trabis <lusopoemas@gmail.com>
- * @version         $Id: search.inc.php 10374 2012-12-12 23:39:48Z trabis $
  */
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
 
-include_once dirname(__DIR__) . '/include/common.php';
+use XoopsModules\Publisher;
+
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
+
+require_once __DIR__ . '/common.php';
 
 /**
- * @param        $queryarray
- * @param        $andor
- * @param        $limit
- * @param        $offset
- * @param        $userid
- * @param array  $categories
- * @param int    $sortby
- * @param string $searchin
- * @param string $extra
+ * @param string|array $queryArray
+ * @param              $andor
+ * @param              $limit
+ * @param              $offset
+ * @param              $userid
+ * @param array        $categories
+ * @param int          $sortby
+ * @param string       $searchin
+ * @param string       $extra
  *
  * @return array
  */
-function publisher_search($queryarray, $andor, $limit, $offset, $userid, $categories = array(), $sortby = 0, $searchin = '', $extra = '')
+function publisher_search($queryArray, $andor, $limit, $offset, $userid, $categories = [], $sortby = 0, $searchin = '', $extra = '')
 {
-    $publisher = PublisherPublisher::getInstance();
-    $ret       = array();
-    if ($queryarray == '' || count($queryarray) == 0) {
+    $helper = Publisher\Helper::getInstance();
+    $ret       = $item = [];
+    if ('' == $queryArray || 0 == count($queryArray)) {
         $hightlightKey = '';
     } else {
-        $keywords       = implode('+', $queryarray);
+        $keywords      = implode('+', $queryArray);
         $hightlightKey = '&amp;keywords=' . $keywords;
     }
-    $itemsObjs        = $publisher->getHandler('item')->getItemsFromSearch($queryarray, $andor, $limit, $offset, $userid, $categories, $sortby, $searchin, $extra);
-    $withCategoryPath = $publisher->getConfig('search_cat_path');
+    $itemsObjs        = $helper->getHandler('Item')->getItemsFromSearch($queryArray, $andor, $limit, $offset, $userid, $categories, $sortby, $searchin, $extra);
+    $withCategoryPath = $helper->getConfig('search_cat_path');
     //xoops_load("xoopslocal");
-    $usersIds = array();
-    foreach ($itemsObjs as $obj) {
-        $item['image'] = 'assets/images/item_icon.gif';
-        $item['link']  = $obj->getItemUrl();
-        $item['link'] .= (!empty($hightlightKey) && (strpos($item['link'], '.php?') === false)) ? '?' . ltrim($hightlightKey, '&amp;') : $hightlightKey;
-        if ($withCategoryPath) {
-            $item['title'] = $obj->getCategoryPath(false) . ' > ' . $obj->getTitle();
-        } else {
-            $item['title'] = $obj->getTitle();
-        }
-        $item['time'] = $obj->getVar('datesub'); //must go has unix timestamp
-        $item['uid']  = $obj->uid();
-        //"Fulltext search/highlight
-        $text           = $obj->getBody();
-        $sanitizedText = '';
-        $textLower         = strtolower($text);
-        $queryarray     = is_array($queryarray) ? $queryarray : array($queryarray);
-
-        if ($queryarray[0] != '' && count($queryarray) > 0) {
-            foreach ($queryarray as $query) {
-                $pos     = strpos($textLower, strtolower($query)); //xoops_local("strpos", $textLower, strtolower($query));
-                $start   = max($pos - 100, 0);
-                $length  = strlen($query) + 200; //xoops_local("strlen", $query) + 200;
-                $context = $obj->highlight(xoops_substr($text, $start, $length, ' [...]'), $query);
-                $sanitizedText .= '<p>[...] ' . $context . '</p>';
+    $usersIds = [];
+    if (0 !== count($itemsObjs)) {
+        foreach ($itemsObjs as $obj) {
+            $item['image'] = 'assets/images/item_icon.gif';
+            $item['link']  = $obj->getItemUrl();
+            $item['link']  .= (!empty($hightlightKey) && (false === strpos($item['link'], '.php?'))) ? '?' . ltrim($hightlightKey, '&amp;') : $hightlightKey;
+            if ($withCategoryPath) {
+                $item['title'] = $obj->getCategoryPath(false) . ' > ' . $obj->getTitle();
+            } else {
+                $item['title'] = $obj->getTitle();
             }
+            $item['time'] = $obj->getVar('datesub'); //must go has unix timestamp
+            $item['uid']  = $obj->uid();
+            //"Fulltext search/highlight
+            $text          = $obj->getBody();
+            $sanitizedText = '';
+            $textLower     = strtolower($text);
+            $queryArray    = is_array($queryArray) ? $queryArray : [$queryArray];
+
+            if ('' != $queryArray[0] && count($queryArray) > 0) {
+                foreach ($queryArray as $query) {
+                    $pos           = stripos($textLower, $query); //xoops_local("strpos", $textLower, strtolower($query));
+                    $start         = max($pos - 100, 0);
+                    $length        = strlen($query) + 200; //xoops_local("strlen", $query) + 200;
+                    $context       = $obj->highlight(xoops_substr($text, $start, $length, ' [...]'), $query);
+                    $sanitizedText .= '<p>[...] ' . $context . '</p>';
+                }
+            }
+            //End of highlight
+            $item['text']          = $sanitizedText;
+            $item['author']        = $obj->author_alias();
+            $item['datesub']       = $obj->getDatesub($helper->getConfig('format_date'));
+            $usersIds[$obj->uid()] = $obj->uid();
+            $ret[]                 = $item;
+            unset($item, $sanitizedText);
         }
-        //End of highlight
-        $item['text']          = $sanitizedText;
-        $item['author']        = $obj->author_alias();
-        $item['datesub']       = $obj->getDatesub($publisher->getConfig('format_date'));
-        $usersIds[$obj->uid()] = $obj->uid();
-        $ret[]                 = $item;
-        unset($item, $sanitizedText);
     }
     xoops_load('XoopsUserUtility');
-    $usersNames = XoopsUserUtility::getUnameFromIds($usersIds, $publisher->getConfig('format_realname'), true);
+    $usersNames = \XoopsUserUtility::getUnameFromIds($usersIds, $helper->getConfig('format_realname'), true);
     foreach ($ret as $key => $item) {
-        if ($item['author'] == '') {
+        if ('' == $item['author']) {
             $ret[$key]['author'] = isset($usersNames[$item['uid']]) ? $usersNames[$item['uid']] : '';
         }
     }

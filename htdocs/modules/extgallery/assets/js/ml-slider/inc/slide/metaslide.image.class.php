@@ -123,21 +123,21 @@ class MetaImageSlide extends MetaSlide
             $row .= "<div class='warning'>" . __('Warning: Image data does not exist. Please re-upload the image.') . '</div>';
         }
         $row .= "                <textarea name='attachment[{$this->slide->ID}][post_excerpt]' placeholder='{$str_caption}'>{$caption}</textarea>";
-        $row .= "                <input class='url' type='text' name='attachment[{$this->slide->ID}][url]' placeholder='{$str_url}' value='{$url}' />";
+        $row .= "                <input class='url' type='text' name='attachment[{$this->slide->ID}][url]' placeholder='{$str_url}' value='{$url}' >";
         $row .= "                <div class='new_window'>";
-        $row .= "                    <label>{$str_new_window}<input type='checkbox' name='attachment[{$this->slide->ID}][new_window]' {$target} /></label>";
+        $row .= "                    <label>{$str_new_window}<input type='checkbox' name='attachment[{$this->slide->ID}][new_window]' {$target} ></label>";
         $row .= '                </div>';
         $row .= '            </div>';
         $row .= "            <div class='tab tab-2' style='display: none;'>";
         $row .= "                <div class='row'><label>" . __('Image Title Text', 'metaslider') . '</label></div>';
-        $row .= "                <div class='row'><input type='text' size='50' name='attachment[{$this->slide->ID}][title]' value='{$title}' /></div>";
+        $row .= "                <div class='row'><input type='text' size='50' name='attachment[{$this->slide->ID}][title]' value='{$title}' ></div>";
         $row .= "                <div class='row'><label>" . __('Image Alt Text', 'metaslider') . '</label></div>';
-        $row .= "                <div class='row'><input type='text' size='50' name='attachment[{$this->slide->ID}][alt]' value='{$alt}' /></div>";
+        $row .= "                <div class='row'><input type='text' size='50' name='attachment[{$this->slide->ID}][alt]' value='{$alt}' ></div>";
         $row .= '            </div>';
         $row .= '        </div>';
-        $row .= "        <input type='hidden' name='attachment[{$this->slide->ID}][type]' value='image' />";
-        $row .= "        <input type='hidden' class='menu_order' name='attachment[{$this->slide->ID}][menu_order]' value='{$this->slide->menu_order}' />";
-        $row .= "        <input type='hidden' name='resize_slide_id' data-slide_id='{$this->slide->ID}' data-width='{$this->settings['width']}' data-height='{$this->settings['height']}' />";
+        $row .= "        <input type='hidden' name='attachment[{$this->slide->ID}][type]' value='image' >";
+        $row .= "        <input type='hidden' class='menu_order' name='attachment[{$this->slide->ID}][menu_order]' value='{$this->slide->menu_order}' >";
+        $row .= "        <input type='hidden' name='resize_slide_id' data-slide_id='{$this->slide->ID}' data-width='{$this->settings['width']}' data-height='{$this->settings['height']}' >";
         $row .= '    </td>';
         $row .= '</tr>';
 
@@ -196,10 +196,11 @@ class MetaImageSlide extends MetaSlide
             'caption_raw' => __($this->slide->post_excerpt),
             'class'       => "slider-{$this->slider->ID} slide-{$this->slide->ID}",
             'rel'         => '',
-            'data-thumb'  => '');
+            'data-thumb'  => ''
+        );
 
         // fix slide URLs
-        if (strpos($slide['url'], 'www.') === 0) {
+        if (0 === strpos($slide['url'], 'www.')) {
             $slide['url'] = 'http://' . $slide['url'];
         }
 
@@ -237,13 +238,15 @@ class MetaImageSlide extends MetaSlide
             'title'      => $slide['title'],
             'alt'        => $slide['alt'],
             'rel'        => $slide['rel'],
-            'class'      => $slide['class']), $slide, $this->slider->ID);
+            'class'      => $slide['class']
+        ), $slide, $this->slider->ID);
 
         $html = $this->build_image_tag($attributes);
 
         $anchor_attributes = apply_filters('metaslider_nivo_slider_anchor_attributes', array(
             'href'   => $slide['url'],
-            'target' => $slide['target']), $slide, $this->slider->ID);
+            'target' => $slide['target']
+        ), $slide, $this->slider->ID);
 
         if (strlen($anchor_attributes['href'])) {
             $html = $this->build_anchor_tag($anchor_attributes, $html);
@@ -267,13 +270,15 @@ class MetaImageSlide extends MetaSlide
             'alt'    => $slide['alt'],
             'rel'    => $slide['rel'],
             'class'  => $slide['class'],
-            'title'  => $slide['title']), $slide, $this->slider->ID);
+            'title'  => $slide['title']
+        ), $slide, $this->slider->ID);
 
         $html = $this->build_image_tag($attributes);
 
         $anchor_attributes = apply_filters('metaslider_flex_slider_anchor_attributes', array(
             'href'   => $slide['url'],
-            'target' => $slide['target']), $slide, $this->slider->ID);
+            'target' => $slide['target']
+        ), $slide, $this->slider->ID);
 
         if (strlen($anchor_attributes['href'])) {
             $html = $this->build_anchor_tag($anchor_attributes, $html);
@@ -307,7 +312,8 @@ class MetaImageSlide extends MetaSlide
             'rel'    => $slide['rel'],
             'class'  => $slide['class'],
             'title'  => $slide['title'],
-            'style'  => 'display: none;'), $slide, $this->slider->ID);
+            'style'  => 'display: none;'
+        ), $slide, $this->slider->ID);
 
         $html = $this->build_image_tag($attributes);
 
@@ -316,7 +322,8 @@ class MetaImageSlide extends MetaSlide
         }
 
         $attributes = apply_filters('metaslider_coin_slider_anchor_attributes', array(
-            'href' => strlen($slide['url']) ? $slide['url'] : 'javascript:void(0)'), $slide, $this->slider->ID);
+            'href' => strlen($slide['url']) ? $slide['url'] : 'javascript:void(0)'
+        ), $slide, $this->slider->ID);
 
         $html = $this->build_anchor_tag($attributes, $html);
 
@@ -338,7 +345,8 @@ class MetaImageSlide extends MetaSlide
             'alt'    => $slide['alt'],
             'rel'    => $slide['rel'],
             'class'  => $slide['class'],
-            'title'  => $slide['title']), $slide, $this->slider->ID);
+            'title'  => $slide['title']
+        ), $slide, $this->slider->ID);
 
         $html = $this->build_image_tag($attributes);
 
@@ -348,7 +356,8 @@ class MetaImageSlide extends MetaSlide
 
         $anchor_attributes = apply_filters('metaslider_responsive_slider_anchor_attributes', array(
             'href'   => $slide['url'],
-            'target' => $slide['target']), $slide, $this->slider->ID);
+            'target' => $slide['target']
+        ), $slide, $this->slider->ID);
 
         if (strlen($anchor_attributes['href'])) {
             $html = $this->build_anchor_tag($anchor_attributes, $html);
@@ -367,7 +376,8 @@ class MetaImageSlide extends MetaSlide
         wp_update_post(array(
                            'ID'           => $this->slide->ID,
                            'post_excerpt' => $fields['post_excerpt'],
-                           'menu_order'   => $fields['menu_order']));
+                           'menu_order'   => $fields['menu_order']
+                       ));
 
         // store the URL as a meta field against the attachment
         $this->add_or_update_or_delete_meta($this->slide->ID, 'url', $fields['url']);
@@ -379,7 +389,7 @@ class MetaImageSlide extends MetaSlide
         }
 
         // store the 'new window' setting
-        $new_window = isset($fields['new_window']) && $fields['new_window'] === 'on' ? 'true' : 'false';
+        $new_window = isset($fields['new_window']) && 'on' === $fields['new_window'] ? 'true' : 'false';
 
         $this->add_or_update_or_delete_meta($this->slide->ID, 'new_window', $new_window);
     }

@@ -29,34 +29,33 @@
 // Descrição: Sistema de gerenciamento de mídias publicitárias               //
 // ------------------------------------------------------------------------- //
 
-$path = dirname(dirname(dirname(dirname(__FILE__))));
-include_once $path . '/mainfile.php';
-include_once $path . '/include/cp_header.php';
-include_once $path ."/kernel/module.php";
-include_once $path ."/class/xoopstree.php";
-include_once $path ."/class/xoopslists.php";
-include_once $path ."/class/xoopsformloader.php";
-include_once $path .'/class/pagenav.php';
+use XoopsModules\Rwbanner;
+
+$path = dirname(dirname(dirname(__DIR__)));
+require_once $path . '/mainfile.php';
+require_once $path . '/include/cp_header.php';
+require_once $path . '/kernel/module.php';
+require_once $path . '/class/xoopstree.php';
+require_once $path . '/class/xoopslists.php';
+require_once $path . '/class/xoopsformloader.php';
+require_once $path . '/class/pagenav.php';
 
 if (is_object($xoopsUser)) {
-    $dirname         = basename(dirname(dirname(__FILE__)));
-    $module_handler  = xoops_gethandler('module');
-    $module          = $module_handler->getByDirname($dirname);
+    $dirname = basename(dirname(__DIR__));
+    /** @var XoopsModuleHandler $moduleHandler */
+    $moduleHandler = xoops_getHandler('module');
+    $module        = $moduleHandler->getByDirname($dirname);
     if (!$xoopsUser->isAdmin($module->mid())) {
-        redirect_header(XOOPS_URL."/", 1, _MD_RWBANNER_NOPERM);
-        exit();
+        redirect_header(XOOPS_URL . '/', 1, _MD_RWBANNER_NOPERM);
     }
 } else {
-    redirect_header(XOOPS_URL."/", 1, _MD_RWBANNER_NOPERM);
-    exit();
+    redirect_header(XOOPS_URL . '/', 1, _MD_RWBANNER_NOPERM);
 }
 
-include_once XOOPS_ROOT_PATH."/modules/".$module->dirname()."/include/functions.php";
+require_once XOOPS_ROOT_PATH . '/modules/' . $module->dirname() . '/include/functions.php';
 
-if (file_exists("../language/".$xoopsConfig['language']."/modinfo.php")) {
-    include("../language/".$xoopsConfig['language']."/modinfo.php");
-} else {
-    include("../language/english/modinfo.php");
-}
+/** @var Rwbanner\Helper $helper */
+$helper = Rwbanner\Helper::getInstance();
+$helper->loadLanguage('modinfo');
 
-$myts =& MyTextSanitizer::getInstance();
+$myts = \MyTextSanitizer::getInstance();

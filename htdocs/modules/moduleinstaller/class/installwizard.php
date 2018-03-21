@@ -13,7 +13,7 @@
  * See the enclosed file license.txt for licensing information.
  * If you did not receive this file, get it at http://www.gnu.org/licenses/gpl-2.0.html
  *
- * @copyright   XOOPS Project (http://xoops.org)
+ * @copyright   XOOPS Project (https://xoops.org)
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GNU General Public License (GPL)
  * @package     installer
  * @since       2.3.0
@@ -26,10 +26,10 @@
 class XoopsInstallWizard
 {
     public $language    = 'english';
-    public $pages       = array();
+    public $pages       = [];
     public $currentPage = 'langselect';
     public $pageIndex   = 0;
-    public $configs     = array();
+    public $configs     = [];
 
     /**
      * @return bool
@@ -43,11 +43,11 @@ class XoopsInstallWizard
         // Load the main language file
         $this->initLanguage(!empty($_COOKIE['xo_install_lang']) ? $_COOKIE['xo_install_lang'] : 'english');
         // Setup pages
-        include_once './../include/page.php';
+        require_once __DIR__ . '/../include/page.php';
         $this->pages = $pages;
 
         // Load default configs
-        include_once './../include/config.php';
+        require_once __DIR__ . '/../include/config.php';
         $this->configs = $configs;
         /*
         // Database type
@@ -105,7 +105,7 @@ class XoopsInstallWizard
 
                 return false;
             }
-            if (INSTALL_USER != '' && $_SERVER['PHP_AUTH_USER'] != INSTALL_USER) {
+            if (INSTALL_USER != '' && INSTALL_USER != $_SERVER['PHP_AUTH_USER']) {
                 header('HTTP/1.0 401 Unauthorized');
                 echo 'You can not access this XOOPS installer.';
 
@@ -142,9 +142,9 @@ class XoopsInstallWizard
     public function loadLangFile($file)
     {
         if (file_exists("./language/{$this->language}/{$file}.php")) {
-            include_once "./language/{$this->language}/{$file}.php";
+            require_once __DIR__ . "./language/{$this->language}/{$file}.php";
         } else {
-            include_once "./../language/english/$file.php";
+            require_once "./../language/english/$file.php";
         }
     }
 
@@ -191,7 +191,7 @@ class XoopsInstallWizard
      */
     public function baseLocation()
     {
-        $proto = (@$_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+        $proto = ('on' === @$_SERVER['HTTPS']) ? 'https' : 'http';
         $host  = $_SERVER['HTTP_HOST'];
         $base  = substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/'));
 
@@ -208,9 +208,9 @@ class XoopsInstallWizard
         $pages     = array_keys($this->pages);
         $pageIndex = $this->pageIndex;
         if (!(int)$page{0}) {
-            if ($page{0} == '+') {
+            if ('+' == $page{0}) {
                 $pageIndex += substr($page, 1);
-            } elseif ($page{0} == '-') {
+            } elseif ('-' == $page{0}) {
                 $pageIndex -= substr($page, 1);
             } else {
                 $pageIndex = (int)array_search($page, $pages);
@@ -245,7 +245,7 @@ class XoopsInstallWizard
     /**
      * @return string
      */
-    public function CreateForm()
+    public function createForm()
     {
         $hidden = '';
         $ret    = '';
@@ -256,10 +256,10 @@ class XoopsInstallWizard
             foreach ($form->getElements() as $ele) {
                 if (is_object($ele)) {
                     if (!$ele->isHidden()) {
-                        if (($caption = $ele->getCaption()) != '') {
+                        if ('' != ($caption = $ele->getCaption())) {
                             $name = $ele->getName();
-                            $ret .= "<label class='xolabel' for='" . $ele->getName() . "'>" . $caption . '</label>';
-                            if (($desc = $ele->getDescription()) != '') {
+                            $ret  .= "<label class='xolabel' for='" . $ele->getName() . "'>" . $caption . '</label>';
+                            if ('' != ($desc = $ele->getDescription())) {
                                 $ret .= "<div class='xoform-help'>";
                                 $ret .= $desc;
                                 $ret .= '</div>';

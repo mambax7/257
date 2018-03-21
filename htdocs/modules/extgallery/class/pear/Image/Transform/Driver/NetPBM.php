@@ -19,10 +19,12 @@
  * @author     Philippe Jausions <Philippe.Jausions@11abacus.com>
  * @copyright  2002-2005 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: NetPBM.php 8088 2011-11-06 09:38:12Z beckmi $
+ * @version    CVS: $Id: NetPBM.php 236527 2007-05-28 16:36:09Z dufuz $
  * @link       http://pear.php.net/package/Image_Transform
  */
 
+//require_once 'Image/Transform.php';
+//require_once 'System.php';
 require_once XOOPS_ROOT_PATH . '/modules/extgallery/class/pear/Image/Transform.php';
 require_once XOOPS_ROOT_PATH . '/modules/extgallery/class/pear/System.php';
 
@@ -51,14 +53,21 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
     /**
      * Class Constructor
      */
+    public function Image_Transform_Driver_NetPBM()
+    {
+        $this->__construct();
+    } // End function Image_NetPBM
+
+    /**
+     * Class Constructor
+     */
     public function __construct()
     {
-        require_once XOOPS_ROOT_PATH . '/modules/extgallery/class/pear/System.php';
         if (!defined('IMAGE_TRANSFORM_NETPBM_PATH')) {
-            $path = dirname(System::which('pnmscale')) . '/';
+            $path = dirname(System::which('pnmscale')) . DIRECTORY_SEPARATOR;
             define('IMAGE_TRANSFORM_NETPBM_PATH', $path);
         }
-        if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'pnmscale' . (OS_WINDOWS ? '.exe' : ''))) {
+        if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'pnmscale' . ((OS_WINDOWS) ? '.exe' : ''))) {
             $this->isError(PEAR::raiseError('Couldn\'t find "pnmscale" binary', IMAGE_TRANSFORM_ERROR_UNSUPPORTED));
         }
     } // End function Image_NetPBM
@@ -86,8 +95,8 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
      *
      * @access private
      *
-     * @param int $new_x     New width
-     * @param int $new_y     New height
+     * @param int   $new_x   New width
+     * @param int   $new_y   New height
      * @param mixed $options Optional parameters
      *
      * @return true on success or PEAR Error object on error
@@ -101,8 +110,10 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
         switch ($scaleMethod) {
             case 'pixel':
                 $scale_x = $new_x / $this->img_x;
-                if ($scale_x == $new_y / $this->img_x && $scale_x > 1 && floor($scale_x) == $scale_x) {
-                    if (System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'pnmenlarge' . (OS_WINDOWS ? '.exe' : ''))) {
+                if ($scale_x == $new_y / $this->img_x
+                    && $scale_x > 1
+                    && floor($scale_x) == $scale_x) {
+                    if (System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'pnmenlarge' . ((OS_WINDOWS) ? '.exe' : ''))) {
                         $this->command[] = $this->_prepare_cmd(IMAGE_TRANSFORM_NETPBM_PATH, 'pnmenlarge', $scale_x);
                     } else {
                         return PEAR::raiseError('Couldn\'t find "pnmenlarge" binary', IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
@@ -117,8 +128,9 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
                 $this->command[] = $this->_prepare_cmd(IMAGE_TRANSFORM_NETPBM_PATH, 'pnmscale', '-width ' . ((int)$new_x) . ' -height ' . ((int)$new_y));
                 // Smooth things if scaling by a factor more than 3
                 // (see pnmscale man page)
-                if ($new_x / $this->img_x > 3 || $new_y / $this->img_y > 3) {
-                    if (System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'pnmsmooth' . (OS_WINDOWS ? '.exe' : ''))) {
+                if ($new_x / $this->img_x > 3
+                    || $new_y / $this->img_y > 3) {
+                    if (System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'pnmsmooth' . ((OS_WINDOWS) ? '.exe' : ''))) {
                         $this->command[] = $this->_prepare_cmd(IMAGE_TRANSFORM_NETPBM_PATH, 'pnmsmooth');
                     } else {
                         return PEAR::raiseError('Couldn\'t find "pnmsmooth" binary', IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
@@ -135,8 +147,8 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
     /**
      * Rotates the image
      *
-     * @param  int $angle The angle to rotate the image through
-     * @param  array $options
+     * @param int   $angle The angle to rotate the image through
+     * @param array $options
      * @return bool|PEAR_Error TRUE on success, PEAR_Error object on error
      */
     public function rotate($angle, $options = null)
@@ -150,21 +162,21 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
         // even if acceptable range is -90 to +90 (see pnmrotate man page)
         // Bring image to that range by using pamflip
         if ($angle > 45 && $angle < 315) {
-            if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'pamflip' . (OS_WINDOWS ? '.exe' : ''))) {
+            if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'pamflip' . ((OS_WINDOWS) ? '.exe' : ''))) {
                 return PEAR::raiseError('Couldn\'t find "pamflip" binary', IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
             }
 
             $quarters        = floor(ceil($angle / 45) / 2);
             $this->command[] = $this->_prepare_cmd(IMAGE_TRANSFORM_NETPBM_PATH, 'pamflip', '-rotate' . (360 - $quarters * 90));
-            $angle -= $quarters * 90;
+            $angle           -= $quarters * 90;
         }
 
-        if ($angle != 0) {
+        if (0 != $angle) {
             if ($angle > 45) {
                 $angle -= 360;
             }
 
-            if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'pnmrotate' . (OS_WINDOWS ? '.exe' : ''))) {
+            if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'pnmrotate' . ((OS_WINDOWS) ? '.exe' : ''))) {
                 return PEAR::raiseError('Couldn\'t find "pnmrotate" binary', IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
             }
 
@@ -172,7 +184,7 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
             $bgcolor = $this->colorarray2colorhex($bgcolor);
 
             $scaleMethod = $this->_getOption('scaleMethod', $options, 'smooth');
-            if ($scaleMethod !== 'pixel') {
+            if ('pixel' != $scaleMethod) {
                 $this->command[] = $this->_prepare_cmd(IMAGE_TRANSFORM_NETPBM_PATH, 'pnmrotate', '-background=' . $bgcolor . ' -' . (float)$angle);
             } else {
                 $this->command[] = $this->_prepare_cmd(IMAGE_TRANSFORM_NETPBM_PATH, 'pnmrotate', '-background=' . $bgcolor . ' -noantialias -' . (float)$angle);
@@ -185,17 +197,24 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
     /**
      * Crop an image
      *
-     * @param int width Cropped image width
-     * @param int height Cropped image height
-     * @param int x X-coordinate to crop at
-     * @param int y Y-coordinate to crop at
+     * @param int $width  Cropped image width
+     * @param int $height Cropped image height
+     * @param int $x      positive X-coordinate to crop at
+     * @param int $y      positive Y-coordinate to crop at
      *
      * @return mixed TRUE or a PEAR error object on error
+     * @todo keep track of the new cropped size
      **/
     public function crop($width, $height, $x = 0, $y = 0)
     {
-        if ($x != 0 || $y != 0 || $width != $this->img_x || $height != $this->img_y) {
-            if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'pnmcut' . (OS_WINDOWS ? '.exe' : ''))) {
+        // Sanity check
+        if (!$this->intersects($width, $height, $x, $y)) {
+            return PEAR::raiseError('Nothing to crop', IMAGE_TRANSFORM_ERROR_OUTOFBOUND);
+        }
+        if (0 != $x || 0 != $y
+            || $width != $this->img_x
+            || $height != $this->img_y) {
+            if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'pnmcut' . ((OS_WINDOWS) ? '.exe' : ''))) {
                 return PEAR::raiseError('Couldn\'t find "pnmcut" binary', IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
             }
 
@@ -214,8 +233,8 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
      */
     public function gamma($outputgamma = 1.0)
     {
-        if ($outputgamme != 1.0) {
-            if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'pnmgamma' . (OS_WINDOWS ? '.exe' : ''))) {
+        if (1.0 != $outputgamme) {
+            if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'pnmgamma' . ((OS_WINDOWS) ? '.exe' : ''))) {
                 return PEAR::raiseError('Couldn\'t find "pnmgamma" binary', IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
             }
             $this->command[] = $this->_prepare_cmd(IMAGE_TRANSFORM_NETPBM_PATH, 'pnmgamma', (float)$outputgamma);
@@ -232,7 +251,7 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
      **/
     public function flip()
     {
-        if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'pamflip' . (OS_WINDOWS ? '.exe' : ''))) {
+        if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'pamflip' . ((OS_WINDOWS) ? '.exe' : ''))) {
             return PEAR::raiseError('Couldn\'t find "pamflip" binary', IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
         $this->command[] = $this->_prepare_cmd(IMAGE_TRANSFORM_NETPBM_PATH, 'pamflip', '-topbottom');
@@ -248,7 +267,7 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
      **/
     public function mirror()
     {
-        if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'pamflip' . (OS_WINDOWS ? '.exe' : ''))) {
+        if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'pamflip' . ((OS_WINDOWS) ? '.exe' : ''))) {
             return PEAR::raiseError('Couldn\'t find "pamflip" binary', IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
         $this->command[] = $this->_prepare_cmd(IMAGE_TRANSFORM_NETPBM_PATH, 'pamflip', '-leftright');
@@ -264,7 +283,7 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
      **/
     public function greyscale()
     {
-        if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'ppmtopgm' . (OS_WINDOWS ? '.exe' : ''))) {
+        if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'ppmtopgm' . ((OS_WINDOWS) ? '.exe' : ''))) {
             return PEAR::raiseError('Couldn\'t find "ppmtopgm" binary', IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
         $this->command[] = $this->_prepare_cmd(IMAGE_TRANSFORM_NETPBM_PATH, 'ppmtopgm');
@@ -291,7 +310,7 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
      */
     public function addText($params)
     {
-        if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'ppmlabel' . (OS_WINDOWS ? '.exe' : ''))) {
+        if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'ppmlabel' . ((OS_WINDOWS) ? '.exe' : ''))) {
             return PEAR::raiseError('Couldn\'t find "ppmlabel" binary', IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
 
@@ -323,10 +342,11 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
         switch ($type) {
             // ppmto* converters
             case 'gif':
-                if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'ppmquant' . (OS_WINDOWS ? '.exe' : ''))) {
+                if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . 'ppmquant' . ((OS_WINDOWS) ? '.exe' : ''))) {
                     return PEAR::raiseError('Couldn\'t find "ppmquant" binary', IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
                 }
                 $this->command[] = $this->_prepare_cmd(IMAGE_TRANSFORM_NETPBM_PATH, 'ppmquant', 256);
+                // no break
             case 'acad':
             case 'bmp':
             case 'eyuv':
@@ -362,6 +382,7 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
             case 'text':
             case 'txt':
                 $type = 'ascii';
+                // no break
             case 'atk':
             case 'bbubg':
             case 'epsi':
@@ -370,7 +391,7 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
             case 'icon':    // Sun icon
             case 'gem':
             case 'go':
-//            case 'lj':
+            case 'lj':
             case 'ln03':
             case 'lps':
             case 'macp':
@@ -392,6 +413,7 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
             // pamto* converters
             case 'jpc':
                 $type = 'jpeg2k';
+                // no break
             case 'html':
             case 'pfm':
             case 'tga':
@@ -407,8 +429,10 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
                 break;
             case 'jpg':
                 $type = 'jpeg';
+                // no break
             case 'jpeg':
                 $arg = '--quality=' . $quality;
+                // no break
             case 'jbig':
             case 'fits':
             case 'palm':
@@ -426,11 +450,11 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
 
         } // switch
 
-        if ($program == '') {
+        if ('' == $program) {
             $program = 'pnmto' . $type;
         }
 
-        if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . $program . (OS_WINDOWS ? '.exe' : ''))) {
+        if (!System::which(IMAGE_TRANSFORM_NETPBM_PATH . $program . ((OS_WINDOWS) ? '.exe' : ''))) {
             return PEAR::raiseError("Couldn't find \"$program\" binary", IMAGE_TRANSFORM_ERROR_UNSUPPORTED);
         }
         $this->command[] = $this->_prepare_cmd(IMAGE_TRANSFORM_NETPBM_PATH, $program);
@@ -441,43 +465,43 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
     /**
      * Save the image file
      *
-     * @param $filename     string the name of the file to write to
-     * @param  string $type (jpeg,png...);
-     * @param  int $quality 75
-     * @return TRUE   or PEAR Error object on error
+     * @param        $filename string the name of the file to write to
+     * @param string $type     (jpeg,png...);
+     * @param int    $quality  75
+     * @return TRUE or PEAR Error object on error
      */
-    public function save($filename, $type = null, $quality = null)
+    public function save($filename, $type = null, $quality = 75)
     {
-        $type    = null === $type ? $this->type : $type;
+        $type    = (is_null($type)) ? $this->type : $type;
         $options = array();
-        if (!null === $quality) {
+        if (!is_null($quality)) {
             $options['quality'] = $quality;
         }
-        $quality = $this->_getOption('quality', $options, 75);
+        $quality = $this->_getOption('quality', $options, $quality);
 
-        $nullDevice = OS_WINDOWS ? 'nul' : '/dev/null';
+        $nullDevice = (OS_WINDOWS) ? 'nul' : '/dev/null';
 
         $cmd = $this->_postProcess($type, $quality) . '> "' . $filename . '"';
-        exec($cmd . '2> ' . $nullDevice, $res, $exit);
+        exec($cmd . ' 2>  ' . $nullDevice, $res, $exit);
         if (!$this->keep_settings_on_save) {
             $this->free();
         }
 
-        return ($exit == 0) ? true : PEAR::raiseError(implode('. ', $res), IMAGE_TRANSFORM_ERROR_IO);
+        return (0 == $exit) ? true : PEAR::raiseError(implode('. ', $res), IMAGE_TRANSFORM_ERROR_IO);
     } // End save
 
     /**
      * Display image without saving and lose changes
      *
-     * @param  string $type (jpeg,png...);
-     * @param  int $quality 75
-     * @return TRUE   or PEAR Error object on error
+     * @param string $type    (jpeg,png...);
+     * @param int    $quality 75
+     * @return TRUE or PEAR Error object on error
      */
     public function display($type = null, $quality = null)
     {
-        $type    = null === $type ? $this->type : $type;
+        $type    = (is_null($type)) ? $this->type : $type;
         $options = array();
-        if (!null === $quality) {
+        if (!is_null($quality)) {
             $options['quality'] = $quality;
         }
         $quality = $this->_getOption('quality', $options, 75);
@@ -502,4 +526,3 @@ class Image_Transform_Driver_NetPBM extends Image_Transform
         $this->command = array();
     }
 } // End class ImageIM
-

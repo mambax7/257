@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * xSitemMap module
  *
  * You may not change or alter any portion of this comment or credits
@@ -8,19 +8,19 @@
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
- * @copyright   The XOOPS Project http://sourceforge.net/projects/xoops/
- * @license             http://www.gnu.org/licenses/gpl-2.0.html GNU Public License
- * @package xSitemMap
- * @since       2.5.0
- * @author  XOOPS Module Team
- * @version $Id $
-**/
-echo "<div class='adminfooter'>\n"
-    ."  <div style='text-align: center;'>\n"
-    ."    <a href='http://www.xoops.org' rel='external'><img src='{$pathIcon32}/xoopsmicrobutton.gif' alt='XOOPS' title='XOOPS'></a>\n"
-    ."  </div>\n"
-    ."  " . _AM_MODULEADMIN_ADMIN_FOOTER . "\n"
-    ."</div>";
+ */
+/**
+ * @package    module\Xsitemap\admin
+ * @author     XOOPS Module Development Team
+ * @copyright  XOOPS Project (https://xoops.org)
+ * @license    http://www.gnu.org/licenses/gpl-2.0.html GNU Public License
+ * @link       https://xoops.org XOOPS
+ **/
+
+echo "<div class='adminfooter'>\n" . "  <div class='txtcenter'>\n" . "    <a href='https://xoops.org' rel='external' target='_blank'><img src='" . \Xmf\Module\Admin::iconUrl(
+    'xoopsmicrobutton.gif',
+                                                                                                                                                                                 '32'
+)
+     . "' alt='XOOPS' title='XOOPS'></a>\n" . "  </div>\n" . '  ' . _AM_MODULEADMIN_ADMIN_FOOTER . "\n" . "</div>\n";
 
 xoops_cp_footer();

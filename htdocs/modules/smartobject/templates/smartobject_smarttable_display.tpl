@@ -1,7 +1,8 @@
 <form>
     <div style="margin-bottom: 12px;">
-         <{foreach from=$smartobject_introButtons item=introButton}>
-            <input type="button" name="<{$introButton.name}>" onclick="location='<{$introButton.location}>'" value="<{$introButton.value}>">
+        <{foreach from=$smartobject_introButtons item=introButton}>
+            <input type="button" name="<{$introButton.name}>" onclick="location='<{$introButton.location}>'"
+                   value="<{$introButton.value}>">
         <{/foreach}>
     </div>
 </form>
@@ -11,7 +12,8 @@
 <{/if}>
 
 <form name='pick' id='pick' action='<{$smartobject_optionssel_action}>' method='POST' style='margin: 0;'>
-    <table width='100%' cellspacing='1' cellpadding='2' border='0' style='border-left: 1px solid silver; border-top: 1px solid silver; border-right: 1px solid silver;'>
+    <table width='100%' cellspacing='1' cellpadding='2' border='0'
+           style='border-left: 1px solid silver; border-top: 1px solid silver; border-right: 1px solid silver;'>
         <tr>
             <td>
                 <{if $smartobject_optionssel_fieldsForFilter}>
@@ -31,7 +33,7 @@
                 <{/if}>
             </td>
             <td align='right'>
-                <{$smarty.const._CO_OBJ_SORT}>
+                <{$smarty.const._CO_OBJ_SORT_BY}>
                 <select name='sortsel' onchange='submit()'>
                     <{foreach from=$smartobject_optionssel_fieldsForSorting key=key item=field}>
                         <option value='<{$key}>' <{$field.selected}> > <{$field.caption}></option>
@@ -42,7 +44,7 @@
                         <option value='<{$key}>' <{$field.selected}> > <{$field.caption}></option>
                     <{/foreach}>
                 </select>
-                <{$smarty.const._CO_OBJ_LIMIT}>
+                <{$smarty.const._CO_SOBJECT_LIMIT}>
                 <select name='limitsel' onchange='submit()'>
                     <{foreach from=$smartobject_optionssel_limitsArray key=key item=field}>
                         <option value='<{$key}>' <{$field.selected}> > <{$field.caption}></option>
@@ -53,19 +55,21 @@
     </table>
 </form>
 
-<table width='100%' cellspacing=1 cellpadding=3 border=0 class = outer>
+<table width='100%' cellspacing=1 cellpadding=3 border=0 class=outer>
     <tr>
-     <{foreach from=$smartobject_columns item=column}>
-        <td class='bg3' width="<{$column.width}>" align='<{$column.align}>'><b><{$column.caption}></b></td>
-     <{/foreach}>
-     <td width='<{$smartobject_actions_column_width}>' class='bg3' align='center'><b><{$smarty.const._CO_SOBJECT_ACTIONS}></b></td>
+        <{foreach from=$smartobject_columns item=column}>
+            <td class='bg3' width="<{$column.width}>" align='<{$column.align}>'><b><{$column.caption}></b></td>
+        <{/foreach}>
+        <td width='<{$smartobject_actions_column_width}>' class='bg3' align='center'>
+            <b><{$smarty.const._CO_SOBJECT_ACTIONS}></b></td>
     </tr>
 
     <{if $smartobject_objects}>
         <{foreach from=$smartobject_objects item=smartobject_object}>
             <tr>
                 <{foreach from=$smartobject_object.columns item=column}>
-                    <td class="<{$smartobject_object.class}>" width="<{$column.width}>" align="<{$column.align}>"><{$column.value}></td>
+                    <td class="<{$smartobject_object.class}>" width="<{$column.width}>"
+                        align="<{$column.align}>"><{$column.value}></td>
                 <{/foreach}>
                 <td class="<{$smartobject_object.class}>" align='center'>
                     <{foreach from=$smartobject_object.actions item=action}>
@@ -76,7 +80,8 @@
         <{/foreach}>
     <{else}>
         <tr>
-            <td class='head' style='text-align: center; font-weight: bold;' colspan="<{$smartobject_colspan}>"><{$smarty.const._CO_OBJ_NO_OBJECTS}></td>
+            <td class='head' style='text-align: center; font-weight: bold;'
+                colspan="<{$smartobject_colspan}>"><{$smarty.const._CO_SOBJECT_NO_OBJECT}></td>
         </tr>
     <{/if}>
 </table>

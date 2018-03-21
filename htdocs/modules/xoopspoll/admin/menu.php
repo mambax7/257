@@ -1,8 +1,8 @@
 <?php
 /*
                XOOPS - PHP Content Management System
-                   Copyright (c) 2000 XOOPS.org
-                      <http://xoops.org/>
+                   Copyright (c) 2000-2016 XOOPS.org
+                      <https://xoops.org>
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
@@ -22,51 +22,54 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  */
+
 /**
  * Administration menu for the XoopsPoll Module
  *
- * @copyright::  {@link http://xoops.org/ XOOPS Project}
+ * @copyright ::  {@link https://xoops.org/ XOOPS Project}
  * @license   :: {@link http://www.fsf.org/copyleft/gpl.html GNU public license}
  * @package   :: xoopspoll
  * @subpackage:: admin
  * @since     :: 2.5.0
  * @author    :: XOOPS Module Team
- * @version   :: $Id: $
  */
 
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+use XoopsModules\Xoopspoll;
 
-$moduleHandler  =& xoops_gethandler('module');
-$xoopsModule    =& XoopsModule::getByDirName('xoopspoll');
-$moduleInfo     =& $moduleHandler->get($xoopsModule->getVar('mid'));
-$pathImageAdmin = $moduleInfo->getInfo('icons32');
+// require_once __DIR__ . '/../class/Helper.php';
+//require_once __DIR__ . '/../include/common.php';
+$helper = Xoopspoll\Helper::getInstance();
+
+$pathIcon32 = \Xmf\Module\Admin::menuIconPath('');
+$pathModIcon32 = $helper->getModule()->getInfo('modicons32');
+
 
 /**
  * Admin Menu
  */
 
-$adminmenu     = array();
-$i             = 1;
-$adminmenu[$i] = array(
+$adminmenu[] = [
     'title' => _MI_XOOPSPOLL_HOME,
     'link'  => 'admin/index.php',
     'desc'  => _MI_XOOPSPOLL_HOMEDSC,
-    'icon'  => "{$pathImageAdmin}" . '/home.png');
-++$i;
-$adminmenu[$i] = array(
+    'icon'  => "{$pathIcon32}" . '/home.png'
+];
+
+$adminmenu[] = [
     'title' => _MI_XOOPSPOLL_ADMENU1,
     'link'  => 'admin/main.php',
     'desc'  => _MI_XOOPSPOLL_ADMENU1DSC,
-    'icon'  => "{$pathImageAdmin}" . '/poll.png');
-++$i;
-$adminmenu[$i] = array(
+    'icon'  => "{$pathIcon32}" . '/poll.png'
+];
+$adminmenu[] = [
     'title' => _MI_XOOPSPOLL_ADMENU2,
     'link'  => 'admin/utility.php',
     'desc'  => _MI_XOOPSPOLL_ADMENU2DSC,
-    'icon'  => "{$pathImageAdmin}" . '/wizard.png');
-++$i;
-$adminmenu[$i] = array(
+    'icon'  => "{$pathIcon32}" . '/wizard.png'
+];
+$adminmenu[] = [
     'title' => _MI_XOOPSPOLL_ADABOUT,
     'link'  => 'admin/about.php',
     'desc'  => _MI_XOOPSPOLL_ADABOUTDSC,
-    'icon'  => "{$pathImageAdmin}" . '/about.png');
+    'icon'  => "{$pathIcon32}" . '/about.png'
+];

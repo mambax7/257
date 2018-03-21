@@ -9,7 +9,7 @@ function getmicrotime()
 {
     list($usec, $sec) = explode(' ', microtime());
 
-    return ((float)$usec + (float)$sec);
+    return (float)$usec + (float)$sec;
 }
 
 // Switch to PEAR::Date engine
@@ -41,6 +41,7 @@ if (!isset($_GET['s'])) {
 switch (@$_GET['view']) {
     default:
         $_GET['view'] = 'calendar_year';
+    // no break
     case 'calendar_year':
         require_once CALENDAR_ROOT . 'Year.php';
         $c = new Calendar_Year($_GET['y']);
@@ -70,41 +71,41 @@ switch (@$_GET['view']) {
 // Convert timestamp to human readable date
 $date = new Date($c->getTimestamp());
 
-echo('<h1>Using PEAR::Date engine</h1>');
-echo('Viewing: ' . @$_GET['view'] . '<br />');
-echo('The time is now: ' . $date->format('%Y %a %e %T') . '<br >');
+echo '<h1>Using PEAR::Date engine</h1>';
+echo 'Viewing: ' . @$_GET['view'] . '<br>';
+echo 'The time is now: ' . $date->format('%Y %a %e %T') . '<br >';
 
 $i = 1;
-echo('<h1>First Iteration</h1>');
-echo('<p>The first iteration is more "expensive", the calendar data
-        structures having to be built.</p>');
+echo '<h1>First Iteration</h1>';
+echo '<p>The first iteration is more "expensive", the calendar data
+        structures having to be built.</p>';
 $start = getmicrotime();
 $c->build();
 while ($e = $c->fetch()) {
     $class  = strtolower(get_class($e));
     $link   = '&y=' . $e->thisYear() . '&m=' . $e->thisMonth() . '&d=' . $e->thisDay() . '&h=' . $e->thisHour() . '&i=' . $e->thisMinute() . '&s=' . $e->thisSecond();
     $method = 'this' . str_replace('calendar_', '', $class);
-    echo("<a href=\"" . $_SERVER['PHP_SELF'] . '?view=' . $class . $link . "\">" . $e->{$method}() . '</a> : ');
-    if (($i % 10) == 0) {
-        echo('<br>');
+    echo '<a href="' . $_SERVER['PHP_SELF'] . '?view=' . $class . $link . '">' . $e->{$method}() . '</a> : ';
+    if (0 == ($i % 10)) {
+        echo '<br>';
     }
     ++$i;
 }
-echo('<p><b>Took: ' . (getmicrotime() - $start) . ' seconds</b></p>');
+echo '<p><b>Took: ' . (getmicrotime() - $start) . ' seconds</b></p>';
 
 $i = 1;
-echo('<h1>Second Iteration</h1>');
-echo('<p>This second iteration is faster, the data structures
-        being re-used</p>');
+echo '<h1>Second Iteration</h1>';
+echo '<p>This second iteration is faster, the data structures
+        being re-used</p>';
 $start = getmicrotime();
 while ($e = $c->fetch()) {
     $class  = strtolower(get_class($e));
     $link   = '&y=' . $e->thisYear() . '&m=' . $e->thisMonth() . '&d=' . $e->thisDay() . '&h=' . $e->thisHour() . '&i=' . $e->thisMinute() . '&s=' . $e->thisSecond();
     $method = 'this' . str_replace('calendar_', '', $class);
-    echo("<a href=\"" . $_SERVER['PHP_SELF'] . '?view=' . $class . $link . "\">" . $e->{$method}() . '</a> : ');
-    if (($i % 10) == 0) {
-        echo('<br>');
+    echo '<a href="' . $_SERVER['PHP_SELF'] . '?view=' . $class . $link . '">' . $e->{$method}() . '</a> : ';
+    if (0 == ($i % 10)) {
+        echo '<br>';
     }
     ++$i;
 }
-echo('<p><b>Took: ' . (getmicrotime() - $start) . ' seconds</b></p>');
+echo '<p><b>Took: ' . (getmicrotime() - $start) . ' seconds</b></p>';

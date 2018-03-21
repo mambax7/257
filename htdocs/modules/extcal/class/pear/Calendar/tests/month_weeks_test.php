@@ -1,13 +1,13 @@
 <?php
-// $Id: month_weeks_test.php 1511 2011-09-01 20:56:07Z jjdai $
+//
 
-require_once 'simple_include.php';
-require_once 'calendar_include.php';
+require_once __DIR__ . '/simple_include.php';
+require_once __DIR__ . '/calendar_include.php';
 
-require_once './calendar_test.php';
+require_once __DIR__ . '/./calendar_test.php';
 
 /**
- * Class TestOfMonthWeeks
+ * Class TestOfMonthWeeks.
  */
 class TestOfMonthWeeks extends TestOfCalendar
 {
@@ -31,13 +31,14 @@ class TestOfMonthWeeks extends TestOfCalendar
 
     public function testPrevDay_Array()
     {
-        $this->assertEqual(array(
+        $this->assertEqual([
                                'year'   => 2003,
                                'month'  => 9,
                                'day'    => 30,
                                'hour'   => 0,
                                'minute' => 0,
-                               'second' => 0), $this->cal->prevDay('array'));
+                               'second' => 0,
+                           ], $this->cal->prevDay('array'));
     }
 
     public function testThisDay()
@@ -103,7 +104,7 @@ class TestOfMonthWeeks extends TestOfCalendar
 }
 
 /**
- * Class TestOfMonthWeeksBuild
+ * Class TestOfMonthWeeksBuild.
  */
 class TestOfMonthWeeksBuild extends TestOfMonthWeeks
 {
@@ -146,8 +147,8 @@ class TestOfMonthWeeksBuild extends TestOfMonthWeeks
     */
     public function testSelection()
     {
-        include_once CALENDAR_ROOT . 'Week.php';
-        $selection = array(new Calendar_Week(2003, 10, 12));
+        require_once CALENDAR_ROOT . 'Week.php';
+        $selection = [new Calendar_Week(2003, 10, 12)];
         $this->cal->build($selection);
         $i        = 1;
         $expected = (CALENDAR_FIRST_DAY_OF_WEEK == 0) ? 3 : 2;

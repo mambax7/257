@@ -10,45 +10,52 @@
  */
 
 /**
- * @copyright    XOOPS Project (http://xoops.org)
+ * @copyright    XOOPS Project (https://xoops.org)
  * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
  * @package
  * @since
  * @author       XOOPS Development Team
  */
 
+use XoopsModules\Smartfaq;
+
+require_once __DIR__ . '/../../../include/cp_header.php';
+//require_once $GLOBALS['xoops']->path('www/class/xoopsformloader.php');
+
+// require_once __DIR__ . '/../class/Utility.php';
+//require_once __DIR__ . '/../include/common.php';
+
+$moduleDirName = basename(dirname(__DIR__));
+
 $path = dirname(dirname(dirname(__DIR__)));
-include_once $path . '/mainfile.php';
-include_once $path . '/include/cp_functions.php';
-require_once $path . '/include/cp_header.php';
+require_once $path . '/kernel/module.php';
+require_once $path . '/class/xoopstree.php';
+require_once $path . '/class/xoopslists.php';
+require_once $path . '/class/pagenav.php';
+require_once $path . '/class/xoopsformloader.php';
 
-include_once $path . '/kernel/module.php';
-include_once $path . '/class/xoopstree.php';
-include_once $path . '/class/xoopslists.php';
-include_once $path . '/class/pagenav.php';
-include_once $path . '/class/xoopsformloader.php';
+//require_once __DIR__ . '/../include/functions.php';
+// require_once __DIR__ . '/../class/category.php';
+// require_once __DIR__ . '/../class/faq.php';
+// require_once __DIR__ . '/../class/answer.php';
+// require_once __DIR__ . '/../class/Utility.php';
+require_once __DIR__ . '/../include/common.php';
+/** @var Smartfaq\Helper $helper */
+$helper      = Smartfaq\Helper::getInstance();
+$adminObject = \Xmf\Module\Admin::getInstance();
 
-include_once $path . '/modules/smartfaq/include/functions.php';
-include_once $path . '/modules/smartfaq/class/category.php';
-include_once $path . '/modules/smartfaq/class/faq.php';
-include_once $path . '/modules/smartfaq/class/answer.php';
-
-$myts = MyTextSanitizer::getInstance();
-
-global $xoopsModule;
-
-$moduleDirName = $GLOBALS['xoopsModule']->getVar('dirname');
-
-//if functions.php file exist
-//require_once dirname(__DIR__) . '/include/functions.php';
+$pathIcon16    = \Xmf\Module\Admin::iconUrl('', 16);
+$pathIcon32    = \Xmf\Module\Admin::iconUrl('', 32);
+$pathModIcon32 = $helper->getModule()->getInfo('modicons32');
 
 // Load language files
-xoops_loadLanguage('admin', $moduleDirName);
-xoops_loadLanguage('modinfo', $moduleDirName);
-xoops_loadLanguage('main', $moduleDirName);
+$helper->loadLanguage('admin');
+$helper->loadLanguage('modinfo');
+$helper->loadLanguage('main');
 
-$pathIcon16      = '../' . $xoopsModule->getInfo('icons16');
-$pathIcon32      = '../' . $xoopsModule->getInfo('icons32');
-$pathModuleAdmin =& $xoopsModule->getInfo('dirmoduleadmin');
+$myts = \MyTextSanitizer::getInstance();
 
-include_once $GLOBALS['xoops']->path($pathModuleAdmin . '/moduleadmin.php');
+if (!isset($GLOBALS['xoopsTpl']) || !($GLOBALS['xoopsTpl'] instanceof XoopsTpl)) {
+    require_once $GLOBALS['xoops']->path('class/template.php');
+    $xoopsTpl = new \XoopsTpl();
+}

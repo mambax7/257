@@ -6,28 +6,36 @@
  * Licence: GNU
  */
 
-include_once __DIR__ . '/header.php';
-include_once(XOOPS_ROOT_PATH . '/header.php');
+use XoopsModules\Smartfaq;
+use XoopsModules\Smartfaq\Constants;
+
+require_once __DIR__ . '/header.php';
+require_once XOOPS_ROOT_PATH . '/header.php';
 
 global $xoopsUser, $xoopsConfig, $xoopsModuleConfig, $xoopsModule;
 
 // Creating the category handler object
-$categoryHandler = sf_gethandler('category');
+/** @var \XoopsModules\Smartfaq\CategoryHandler $categoryHandler */
+$categoryHandler = \XoopsModules\Smartfaq\Helper::getInstance()->getHandler('Category');
 
 // Creating the FAQ handler object
-$faqHandler = sf_gethandler('faq');
+/** @var \XoopsModules\Smartfaq\FaqHandler $faqHandler */
+$faqHandler = \XoopsModules\Smartfaq\Helper::getInstance()->getHandler('Faq');
 
 // Get the total number of categories
 $totalCategories = count($categoryHandler->getCategories());
 
-if ($totalCategories == 0) {
+if (0 == $totalCategories) {
     redirect_header('index.php', 1, _AM_SF_NOCOLEXISTS);
 }
 
 // Find if the user is admin of the module
-$isAdmin = sf_userIsAdmin();
+$isAdmin = Smartfaq\Utility::userIsAdmin();
 // If the user is not admin AND we don't allow user submission, exit
-if (!($isAdmin || (isset($xoopsModuleConfig['allowrequest']) && $xoopsModuleConfig['allowrequest'] == 1 && (is_object($xoopsUser) || (isset($xoopsModuleConfig['anonpost']) && $xoopsModuleConfig['anonpost'] == 1))))) {
+if (!($isAdmin
+      || (isset($xoopsModuleConfig['allowrequest'])
+          && 1 == $xoopsModuleConfig['allowrequest']
+          && (is_object($xoopsUser) || (isset($xoopsModuleConfig['anonpost']) && 1 == $xoopsModuleConfig['anonpost']))))) {
     redirect_header('index.php', 1, _NOPERM);
 }
 
@@ -48,7 +56,7 @@ switch ($op) {
         $newFaqObj = $faqHandler->create();
 
         if (!$xoopsUser) {
-            if ($xoopsModuleConfig['anonpost'] == 1) {
+            if (1 == $xoopsModuleConfig['anonpost']) {
                 $uid = 0;
             } else {
                 redirect_header('index.php', 3, _NOPERM);
@@ -65,35 +73,35 @@ switch ($op) {
         $newFaqObj->setVar('notifypub', $notifypub);
 
         // Setting the status of the FAQ
-        if ($xoopsModuleConfig['autoapprove_request'] == 1) {
-            $newFaqObj->setVar('status', _SF_STATUS_OPENED);
+        if (1 == $xoopsModuleConfig['autoapprove_request']) {
+            $newFaqObj->setVar('status', Constants::SF_STATUS_OPENED);
         } else {
-            $newFaqObj->setVar('status', _SF_STATUS_ASKED);
+            $newFaqObj->setVar('status', Constants::SF_STATUS_ASKED);
         }
 
         // Storing the FAQ object in the database
         if (!$newFaqObj->store()) {
-            redirect_header('javascript:history.go(-1)', 3, _MD_SF_REQUEST_ERROR . sf_formatErrors($newFaqObj->getErrors()));
+            redirect_header('javascript:history.go(-1)', 3, _MD_SF_REQUEST_ERROR . Smartfaq\Utility::formatErrors($newFaqObj->getErrors()));
         }
 
         // Get the cateopry object related to that FAQ
         // If autoapprove_requested
-        if ($xoopsModuleConfig['autoapprove_request'] == 1) {
+        if (1 == $xoopsModuleConfig['autoapprove_request']) {
             // We do not not subscribe user to notification on publish since we publish it right away
 
             // Send notifications
-            $newFaqObj->sendNotifications(array(_SF_NOT_QUESTION_PUBLISHED));
+            $newFaqObj->sendNotifications([Constants::SF_NOT_QUESTION_PUBLISHED]);
 
             $redirect_msg = _MD_SF_REQUEST_RECEIVED_AND_PUBLISHED;
         } else {
             // Subscribe the user to On Published notification, if requested
-            if ($notifypub == 1) {
-                include_once XOOPS_ROOT_PATH . '/include/notification_constants.php';
+            if (1 == $notifypub) {
+                require_once XOOPS_ROOT_PATH . '/include/notification_constants.php';
                 $notificationHandler = xoops_getHandler('notification');
                 $notificationHandler->subscribe('question', $newFaqObj->faqid(), 'approved', XOOPS_NOTIFICATION_MODE_SENDONCETHENDELETE);
             }
             // Send notifications
-            $newFaqObj->sendNotifications(array(_SF_NOT_QUESTION_SUBMITTED));
+            $newFaqObj->sendNotifications([Constants::SF_NOT_QUESTION_SUBMITTED]);
 
             $redirect_msg = _MD_SF_REQUEST_RECEIVED_NEED_APPROVAL;
         }
@@ -107,9 +115,9 @@ switch ($op) {
 
         global $xoopsUser, $myts;
 
-        $xoopsOption['template_main'] = 'smartfaq_submit.tpl';
-        include_once(XOOPS_ROOT_PATH . '/header.php');
-        include_once __DIR__ . '/footer.php';
+        $GLOBALS['xoopsOption']['template_main'] = 'smartfaq_submit.tpl';
+        require_once XOOPS_ROOT_PATH . '/header.php';
+        require_once __DIR__ . '/footer.php';
 
         $name = $xoopsUser ? ucwords($xoopsUser->getVar('uname')) : 'Anonymous';
 
@@ -120,15 +128,15 @@ switch ($op) {
         $xoopsTpl->assign('lang_intro_title', _MD_SF_REQUEST);
         $xoopsTpl->assign('lang_intro_text', _MD_SF_GOODDAY . "<b>$name</b>, " . $myts->displayTarea($xoopsModuleConfig['requestintromsg']));
 
-        include_once 'include/request.inc.php';
+        require_once __DIR__ . '/include/request.inc.php';
 
         $name = $xoopsUser ? ucwords($xoopsUser->getVar('uname')) : 'Anonymous';
 
         $sectionname = $myts->htmlSpecialChars($xoopsModule->getVar('name'));
 
-        include_once 'include/request.inc.php';
+        require_once __DIR__ . '/include/request.inc.php';
 
-        include_once XOOPS_ROOT_PATH . '/footer.php';
+        require_once XOOPS_ROOT_PATH . '/footer.php';
 
         break;
 }

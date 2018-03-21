@@ -9,30 +9,39 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright   {@link http://xoops.org/ XOOPS Project}
+ * @copyright   {@link https://xoops.org/ XOOPS Project}
  * @license     GNU GPL 2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  * @author      Zoullou (http://www.zoullou.net)
  * @package     ExtGallery
- * @version     $Id: update_function.php 10467 2012-12-19 02:04:40Z beckmi $
- * @param $xoopsModule
- * @param null $oldVersion
+ */
+
+/**
+ * @param  XoopsModule $xoopsModule
+ * @param  null        $oldVersion
  * @return bool
  */
 
-function xoops_module_update_extgallery(&$xoopsModule, $oldVersion = null)
+use XoopsModules\Extgallery;
+
+/**
+ * @param \XoopsModule $xoopsModule
+ * @param null         $oldVersion
+ * @return bool
+ */
+function xoops_module_update_extgallery(\XoopsModule $xoopsModule, $oldVersion = null)
 {
-    $catHandler = xoops_getModuleHandler('publiccat', 'extgallery');
+    $catHandler = Extgallery\Helper::getInstance()->getHandler('PublicCategory');
     $catHandler->rebuild();
 
     if ($oldVersion < 101) {
-        $db = XoopsDatabaseFactory::getDatabaseConnection();
+        $db = \XoopsDatabaseFactory::getDatabaseConnection();
         // Remove the UNIQUE key on the rating table. This constraint is software cheked now
         $sql = 'ALTER TABLE `' . $db->prefix('extgallery_publicrating') . '` DROP INDEX `photo_rate` ;';
         $db->query($sql);
     }
 
     if ($oldVersion < 102) {
-        $db = XoopsDatabaseFactory::getDatabaseConnection();
+        $db = \XoopsDatabaseFactory::getDatabaseConnection();
 
         $sql = 'ALTER TABLE `' . $db->prefix('extgallery_publiccat') . '` ADD `cat_imgurl` VARCHAR(150) NOT NULL AFTER `cat_nb_photo` ;';
         $db->query($sql);
@@ -40,12 +49,12 @@ function xoops_module_update_extgallery(&$xoopsModule, $oldVersion = null)
         $sql = 'ALTER TABLE `' . $db->prefix('extgallery_publicphoto') . '` ADD `photo_title` VARCHAR(150) NOT NULL AFTER `photo_id` ;';
         $db->query($sql);
 
-        $sql = 'ALTER TABLE `' . $db->prefix('extgallery_publicphoto') . '` ADD `photo_weight` int(11) NOT NULL AFTER `photo_extra` ;';
+        $sql = 'ALTER TABLE `' . $db->prefix('extgallery_publicphoto') . '` ADD `photo_weight` INT(11) NOT NULL AFTER `photo_extra` ;';
         $db->query($sql);
     }
 
     if ($oldVersion < 104) {
-        $db = XoopsDatabaseFactory::getDatabaseConnection();
+        $db = \XoopsDatabaseFactory::getDatabaseConnection();
 
         $sql = 'ALTER TABLE `' . $db->prefix('extgallery_publicphoto') . "` ADD `dohtml` BOOL NOT NULL DEFAULT '0';";
         $db->query($sql);
@@ -54,11 +63,12 @@ function xoops_module_update_extgallery(&$xoopsModule, $oldVersion = null)
         $db->query($sql);
 
         // Set display parmission for all XOOPS base Groups
-        $sql          = 'SELECT cat_id FROM `' . $db->prefix('extgallery_publiccat') . '`;';
-        $result       = $db->query($sql);
-        $module_id    = $xoopsModule->getVar('mid');
+        $sql       = 'SELECT cat_id FROM `' . $db->prefix('extgallery_publiccat') . '`;';
+        $result    = $db->query($sql);
+        $module_id = $xoopsModule->getVar('mid');
+        /** @var XoopsGroupPermHandler $gpermHandler */
         $gpermHandler = xoops_getHandler('groupperm');
-        while ($cat = $db->fetchArray($result)) {
+        while (false !== ($cat = $db->fetchArray($result))) {
             $gpermHandler->addRight('public_displayed', $cat['cat_id'], XOOPS_GROUP_ADMIN, $module_id);
             $gpermHandler->addRight('public_displayed', $cat['cat_id'], XOOPS_GROUP_USERS, $module_id);
             $gpermHandler->addRight('public_displayed', $cat['cat_id'], XOOPS_GROUP_ANONYMOUS, $module_id);
@@ -88,7 +98,7 @@ function xoops_module_update_extgallery(&$xoopsModule, $oldVersion = null)
     }
 
     if ($oldVersion < 109) {
-        $db = XoopsDatabaseFactory::getDatabaseConnection();
+        $db = \XoopsDatabaseFactory::getDatabaseConnection();
 
         $sql = 'ALTER TABLE `' . $db->prefix('extgallery_publiccat') . "` CHANGE `cat_weight` `cat_weight` INT( 11 ) NOT NULL DEFAULT '0' ;";
         $db->query($sql);

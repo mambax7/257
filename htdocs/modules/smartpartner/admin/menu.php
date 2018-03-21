@@ -1,37 +1,60 @@
 <?php
 
 /**
- * $Id: menu.php 9889 2012-07-16 12:08:42Z beckmi $
+ *
  * Module: SmartPartner
  * Author: The SmartFactory <www.smartfactory.ca>
  * Licence: GNU
  */
 
-$adminmenu[0]['title'] = _MI_SPARTNER_ADMENU1;
-$adminmenu[0]['link'] = "admin/index.php";
+use XoopsModules\Smartpartner;
 
-$adminmenu[1]['title'] = _MI_SPARTNER_CATEGORIES;
-$adminmenu[1]['link'] = "admin/category.php";
+// require_once __DIR__ . '/../class/Helper.php';
+//require_once __DIR__ . '/../include/common.php';
+$helper = Smartpartner\Helper::getInstance();
 
-$adminmenu[2]['title'] = _MI_SPARTNER_ADMENU2;
-$adminmenu[2]['link'] = "admin/partner.php";
+$pathIcon32 = \Xmf\Module\Admin::menuIconPath('');
+$pathModIcon32 = $helper->getModule()->getInfo('modicons32');
 
-$adminmenu[3]['title'] = _MI_SPARTNER_ADMENU3;
-$adminmenu[3]['link'] = "admin/offer.php";
 
-if (isset($xoopsModule)) {
-    $headermenu[0]['title'] = _PREFERENCES;
-    $headermenu[0]['link'] = '../../system/admin.php?fct=preferences&amp;op=showmod&amp;mod=' . $xoopsModule->getVar('mid');
+$adminmenu[] = [
+    'title' => _MI_SPARTNER_HOME,
+    'link'  => 'admin/index.php',
+    'icon'  => $pathIcon32 . '/home.png',
+];
 
-    $headermenu[1]['title'] = _AM_SPARTNER_GOMOD;
-    $headermenu[1]['link'] = SMARTPARTNER_URL;
+$adminmenu[] = [
+    'title' => _MI_SPARTNER_ADMENU1,
+    'link'  => 'admin/main.php',
+    'icon'  => $pathIcon32 . '/manage.png',
+];
 
-    $headermenu[2]['title'] = _AM_SPARTNER_UPDATE_MODULE;
-    $headermenu[2]['link'] = XOOPS_URL . "/modules/system/admin.php?fct=modulesadmin&op=update&module=" . $xoopsModule->getVar('dirname');
+$adminmenu[] = [
+    'title' => _MI_SPARTNER_CATEGORIES,
+    'link'  => 'admin/category.php',
+    'icon'  => $pathIcon32 . '/category.png',
+];
 
-    $headermenu[3]['title'] = _AM_SPARTNER_IMPORT;
-    $headermenu[3]['link'] = SMARTPARTNER_URL . "admin/import.php";
+$adminmenu[] = [
+    'title' => _MI_SPARTNER_ADMENU2,
+    'link'  => 'admin/partner.php',
+    'icon'  => $pathIcon32 . '/users.png',
+];
 
-    $headermenu[4]['title'] = _AM_SPARTNER_ABOUT;
-    $headermenu[4]['link'] = SMARTPARTNER_URL . "admin/about.php";
-}
+$adminmenu[] = [
+    'title' => _MI_SPARTNER_ADMENU3,
+    'link'  => 'admin/offer.php',
+    'icon'  => $pathIcon32 . '/cash_stack.png',
+];
+
+$adminmenu[] = [
+    'title' => _MI_SPARTNER_IMPORT,
+    'link'  => 'admin/import.php',
+    'icon'  => $pathIcon32 . '/compfile.png',
+];
+
+$adminmenu[] = [
+    'title' => _MI_SPARTNER_ABOUT,
+    'link'  => 'admin/about.php',
+    'icon'  => $pathIcon32 . '/about.png',
+];

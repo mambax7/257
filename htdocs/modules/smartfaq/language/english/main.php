@@ -74,7 +74,12 @@ define('_MD_SF_INTARTFOUND', 'Here is an interesting Question and Answer I have 
 define('_MD_SF_INTARTICLE', 'Have a look at this FAQ at %s');
 define('_MD_SF_MAIL', 'Send Q&amp;A');
 define('_MD_SF_MAINHEAD', 'Welcome to the');
-define('_MD_SF_MAININTRO', "In this area of the site, you will find the answers to the frequently asked questions. Each Q&amp;A is placed in a category for easier finding. This is the section from where the random Q&amp;As in the right column of the site come from. Should you not find the answer to a particular question, don't hesitate to <a href='" . XOOPS_URL . "/forms/askus/form.php'>Ask us a Question!</a>");
+define(
+    '_MD_SF_MAININTRO',
+       "In this area of the site, you will find the answers to the frequently asked questions. Each Q&amp;A is placed in a category for easier finding. This is the section from where the random Q&amp;As in the right column of the site come from. Should you not find the answer to a particular question, don't hesitate to <a href='"
+       . XOOPS_URL
+       . "/forms/askus/form.php'>Ask us a Question!</a>"
+);
 define('_MD_SF_MAINNOSELECTCAT', 'You did not select a valid category');
 define('_MD_SF_MAINNOFAQS', 'There are no Q&amp;As in this category');
 define('_MD_SF_MODERATION_MAIN_HEAD', 'Moderation section of ');
@@ -83,7 +88,7 @@ define('_MD_SF_MODERATIONPAGE', 'Moderation');
 define('_MD_SF_MODERATION_PUBLISHED_NEW_ANSWER', 'Published Q&amp;A with newly submitted answer');
 define('_MD_SF_NO', 'No');
 define('_AM_SF_NO_CAT_PERMISSIONS', "Sorry, you don't have sufficient permissions to access this area.");
-define('_AM_SF_NO_CAT_EXISTS', 'Sorry, there&#8217s no category defined as yet.<br />Please contact the site administrator and tell them about this.');
+define('_AM_SF_NO_CAT_EXISTS', 'Sorry, there&#8217s no category defined as yet.<br>Please contact the site administrator and tell them about this.');
 define('_MD_SF_NO_OPEN_QUESTION', 'There is currently no question in the Open Questions section.');
 define('_AM_SF_NO_TOP_PERMISSIONS', 'Sorry, there is no Q&amp;A to display.');
 define('_MD_SF_NONE', 'None');
@@ -105,7 +110,7 @@ define('_MD_SF_POSTEDBY', 'Published by');
 define('_MD_SF_PREVIEW', 'Preview');
 define('_MD_SF_PRINT', 'Print Q&amp;A');
 define('_MD_SF_PRINTERFRIENDLY', 'Print this Q&amp;A in a printer friendly format');
-define('_MD_SF_QNA_RECEIVED_NEED_APPROVAL', 'Your Q&amp;A has been sent and will be published upon approval by a moderator.<br />Thank you for your contribution!');
+define('_MD_SF_QNA_RECEIVED_NEED_APPROVAL', 'Your Q&amp;A has been sent and will be published upon approval by a moderator.<br>Thank you for your contribution!');
 define('_MD_SF_QNA_RECEIVED_AND_PUBLISHED', 'Your Q&amp;A has been sent and automatically published. Thank you for your contribution!');
 define('_MD_SF_QUESTION', 'Question');
 define('_MD_SF_QUESTIONCOMEFROM', 'This Question was found on ');
@@ -113,8 +118,11 @@ define('_MD_SF_QUESTIONS', 'Questions');
 define('_MD_SF_READS', 'reads');
 define('_MD_SF_REQUEST', 'Request a new Q&amp;A');
 define('_MD_SF_REQUEST_ERROR', 'An error occured. Your request was not sent.');
-define('_MD_SF_REQUEST_INTRO', 'You did not find the answer to the question you were looking for? No problem! Simply fill the following form in order to request the answer for a new question. The site administrator will review your request and publish this new question in the Open Questions section for someone to answer it!');
-define('_MD_SF_REQUEST_RECEIVED_NEED_APPROVAL', 'Your request has been sent and will be published in the Open Questions section upon approval by a moderator.<br />Thank you for your contribution!');
+define(
+    '_MD_SF_REQUEST_INTRO',
+       'You did not find the answer to the question you were looking for? No problem! Simply fill the following form in order to request the answer for a new question. The site administrator will review your request and publish this new question in the Open Questions section for someone to answer it!'
+);
+define('_MD_SF_REQUEST_RECEIVED_NEED_APPROVAL', 'Your request has been sent and will be published in the Open Questions section upon approval by a moderator.<br>Thank you for your contribution!');
 define('_MD_SF_REQUEST_RECEIVED_AND_PUBLISHED', 'Your request has been sent and automatically published in the Open Questions section. Thank you for your contribution!');
 define('_MD_SF_REQUESTED', 'Requested');
 define('_MD_SF_REQUESTEDBY', 'Requested by %s on %s');
@@ -126,7 +134,7 @@ define('_MD_SF_SMARTFAQS', 'Q&amp;A');
 define('_MD_SF_SPECIFIC_URL_SELECT', 'Specific URL...');
 define('_MD_SF_SENDSTORY', 'Send this Q&amp;A to a friend');
 define('_MD_SF_SPECIFIC_URL', 'Specific URL');
-define('_MD_SF_SPECIFIC_URL_DSC', "If you have set the 'Contextually link to this module' to <i>" . _MD_SF_SPECIFIC_URL_SELECT . "</i>, please specify the URL.<br />\n<b>Example :</b> modules/newbb");
+define('_MD_SF_SPECIFIC_URL_DSC', "If you have set the 'Contextually link to this module' to <i>" . _MD_SF_SPECIFIC_URL_SELECT . "</i>, please specify the URL.<br>\n<b>Example :</b> modules/newbb");
 define('_MD_SF_SUB_INTRO', 'please fill this form to send your Q&amp;A. The site administrator will review it and then publish it as soon as possible. Thank you in advance for your contribution.');
 define('_MD_SF_SUB_SNEWNAME', 'Submit a Q&amp;A');
 define('_MD_SF_SUB_SMNAME', 'Submit a Q&amp;A');
@@ -162,4 +170,21 @@ define('_MD_SF_FILESIZE', 'Size');
 define('_MD_SF_MAXPIC', 'Images at the max. Size %s X %s pixels.');
 define('_MD_SF_REMOVE', 'Remove');
 define('_MD_SF_UPLOAD', 'Upload');
-define('_MD_SF_ATTACHED_FILES', 'Attached files: <br />Check those that you want to delete');
+define('_MD_SF_ATTACHED_FILES', 'Attached files: <br>Check those that you want to delete');
+//1.12
+//searchform.php
+define('_MD_WB_SEARCHFORM', 'Search Form');
+define('_MD_WB_LOOKON', 'Look on');
+define('_MD_WB_TERMS', 'Terms');
+define('_MD_WB_DEFINS', 'Defines');
+define('_MD_WB_TERMSDEFS', 'Terms Definitions');
+define('_MD_WB_CATEGORY', 'Category');
+define('_MD_WB_ALLOFTHEM', 'All of them');
+define('_MD_WB_TERM', 'Term');
+define('_MD_WB_SEARCH', 'Search');
+
+
+define('_MD_FILESIZE', 'File Size');
+define('_MD_ATTACHMENT', 'Attach file');
+define('_MD_HITS', 'Hits');
+define('_MD_REMOVE', 'Remove');

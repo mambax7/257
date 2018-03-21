@@ -3,9 +3,8 @@
  * Contains the classes for easily exporting data
  *
  * @license GNU
- * @author marcan <marcan@smartfactory.ca>
- * @version $Id: smartexport.php 159 2007-12-17 16:44:05Z malanciault $
- * @link http://www.smartfactory.ca The SmartFactory
+ * @author  marcan <marcan@smartfactory.ca>
+ * @link    http://www.smartfactory.ca The SmartFactory
  * @package SmartObject
  */
 
@@ -15,59 +14,69 @@
  * Class to easily export data from SmartObjects
  *
  * @package SmartObject
- * @author marcan <marcan@smartfactory.ca>
- * @link http://www.smartfactory.ca The SmartFactory
+ * @author  marcan <marcan@smartfactory.ca>
+ * @link    http://www.smartfactory.ca The SmartFactory
  */
-class SmartObjectExport {
-
-    var $handler;
-    var $criteria;
-    var $fields;
-    var $format;
-    var $filename;
-    var $filepath;
-    var $options;
-    var $outputMethods=false;
-    var $notDisplayFields;
+class SmartObjectExport
+{
+    public $handler;
+    public $criteria;
+    public $fields;
+    public $format;
+    public $filename;
+    public $filepath;
+    public $options;
+    public $outputMethods = false;
+    public $notDisplayFields;
 
     /**
      * Constructor
      *
-     * @param object $objectHandler SmartObjectHandler handling the data we want to export
-     * @param object $criteria containing the criteria of the query fetching the objects to be exported
-     * @param array $fields fields to be exported. If FALSE then all fields will be exported
-     * @param string $filename name of the file to be created
-     * @param string $filepath path where the file will be saved
-     * @param string $format format of the ouputed export. Currently only supports CSV
-     * @param array $options options of the format to be exported in
+     * @param SmartPersistableObjectHandler $objectHandler SmartObjectHandler handling the data we want to export
+     * @param CriteriaElement               $criteria      containing the criteria of the query fetching the objects to be exported
+     * @param array|bool                    $fields        fields to be exported. If FALSE then all fields will be exported
+     * @param bool|string                   $filename      name of the file to be created
+     * @param bool|string                   $filepath      path where the file will be saved
+     * @param string                        $format        format of the ouputed export. Currently only supports CSV
+     * @param array|bool                    $options       options of the format to be exported in
      */
-    function SmartObjectExport(&$objectHandler, $criteria=null, $fields=false, $filename=false, $filepath=false, $format='csv', $options=false) {
-        $this->handler = $objectHandler;
-        $this->criteria = $criteria;
-        $this->fields = $fields;
-        $this->filename = $filename;
-        $this->format = $format;
-        $this->options = $options;
+    public function __construct(
+        SmartPersistableObjectHandler $objectHandler,
+        CriteriaElement $criteria = null,
+        $fields = false,
+        $filename = false,
+        $filepath = false,
+        $format = 'csv',
+        $options = false
+    ) {
+        $this->handler          = $objectHandler;
+        $this->criteria         = $criteria;
+        $this->fields           = $fields;
+        $this->filename         = $filename;
+        $this->format           = $format;
+        $this->options          = $options;
         $this->notDisplayFields = false;
     }
 
     /**
      * Renders the export
+     * @param $filename
      */
-    function render($filename) {
-
+    public function render($filename)
+    {
         $this->filename = $filename;
 
-        $objects = $this->handler->getObjects($this->criteria);
-        $rows = array();
-        $columnsHeaders = array();
-        $firstObject = true;
+        $objects        = $this->handler->getObjects($this->criteria);
+        $rows           = [];
+        $columnsHeaders = [];
+        $firstObject    = true;
         foreach ($objects as $object) {
-            $row = array();
-            foreach ($object->vars as $key=>$var) {
+            $row = [];
+            foreach ($object->vars as $key => $var) {
                 if ((!$this->fields || in_array($key, $this->fields)) && !in_array($key, $this->notDisplayFields)) {
-                    if ($this->outputMethods && (isset($this->outputMethods[$key])) && (method_exists($object, $this->outputMethods[$key]))) {
-                        $method = $this->outputMethods[$key];
+                    if ($this->outputMethods && isset($this->outputMethods[$key])
+                        && method_exists($object, $this->outputMethods[$key])) {
+                        $method    = $this->outputMethods[$key];
                         $row[$key] = $object->$method();
                     } else {
                         $row[$key] = $object->getVar($key);
@@ -79,43 +88,49 @@ class SmartObjectExport {
                 }
             }
             $firstObject = false;
-            $rows[] = $row;
+            $rows[]      = $row;
             unset($row);
         }
-        $data = array();
-        $data['rows'] = $rows;
+        $data                   = [];
+        $data['rows']           = $rows;
         $data['columnsHeaders'] = $columnsHeaders;
-        $smartExportRenderer = new SmartExportRenderer($data, $this->filename, $this->filepath, $this->format, $this->options);
+        $smartExportRenderer    = new SmartExportRenderer($data, $this->filename, $this->filepath, $this->format, $this->options);
         $smartExportRenderer->execute();
     }
 
     /**
      * Set an array contaning the alternate methods to use instead of the default getVar()
      *
-     * $outputMethods array example : 'uid' => 'getUserName'...
+     * $outputMethods array example: 'uid' => 'getUserName'...
+     * @param $outputMethods
      */
-    function setOuptutMethods($outputMethods) {
+    public function setOuptutMethods($outputMethods)
+    {
         $this->outputMethods = $outputMethods;
     }
 
     /*
      * Set an array of fields that we don't want in export
      */
-     function setNotDisplayFields($fields){
-        if(!$this->notDisplayFields){
-            if(is_array($fields)){
+    /**
+     * @param $fields
+     */
+    public function setNotDisplayFields($fields)
+    {
+        if (!$this->notDisplayFields) {
+            if (is_array($fields)) {
                 $this->notDisplayFields = $fields;
-            }else{
-                $this->notDisplayFields = array($fields);
+            } else {
+                $this->notDisplayFields = [$fields];
             }
-        }else{
-            if(is_array($fields)){
+        } else {
+            if (is_array($fields)) {
                 $this->notDisplayFields = array_merge($this->notDisplayFields, $fields);
-            }else{
+            } else {
                 $this->notDisplayFields[] = $fields;
             }
         }
-     }
+    }
 }
 
 /**
@@ -124,112 +139,144 @@ class SmartObjectExport {
  * Class that renders a set of data into a specific export format
  *
  * @package SmartObject
- * @author marcan <marcan@smartfactory.ca>
- * @link http://www.smartfactory.ca The SmartFactory
+ * @author  marcan <marcan@smartfactory.ca>
+ * @link    http://www.smartfactory.ca The SmartFactory
  */
-class SmartExportRenderer {
-
-    var $data;
-    var $format;
-    var $filename;
-    var $filepath;
-    var $options;
+class SmartExportRenderer
+{
+    public $data;
+    public $format;
+    public $filename;
+    public $filepath;
+    public $options;
 
     /**
      * Constructor
      *
-     * @param array $data contains the data to be exported
-     * @param string $format format of the ouputed export. Currently only supports CSV
-     * @param string $filename name of the file in which the exported data will be saved
-     * @param string $filepath path where the file will be saved
-     * @param array $options options of the format to be exported in
+     * @param array       $data     contains the data to be exported
+     * @param bool|string $filename name of the file in which the exported data will be saved
+     * @param bool|string $filepath path where the file will be saved
+     * @param string      $format   format of the ouputed export. Currently only supports CSV
+     * @param array       $options  options of the format to be exported in
      */
-    function SmartExportRenderer($data, $filename=false, $filepath=false, $format='csv', $options=array('separator'=>';')) {
-        $this->data = $data;
-        $this->format = $format;
+    public function __construct(
+        $data,
+        $filename = false,
+        $filepath = false,
+        $format = 'csv',
+        $options = ['separator' => ';']
+    ) {
+        $this->data     = $data;
+        $this->format   = $format;
         $this->filename = $filename;
         $this->filepath = $filepath;
-        $this->options = $options;
+        $this->options  = $options;
     }
 
-    function arrayToCsvString($dataArray, $separator, $trim = 'both', $removeEmptyLines = TRUE) {
-        if (!is_array($dataArray) || empty ($dataArray))
+    /**
+     * @param         $dataArray
+     * @param         $separator
+     * @param  string $trim
+     * @param  bool   $removeEmptyLines
+     * @return string
+     */
+    public function arrayToCsvString($dataArray, $separator, $trim = 'both', $removeEmptyLines = true)
+    {
+        if (!is_array($dataArray) || empty($dataArray)) {
             return '';
+        }
         switch ($trim) {
-            case 'none' :
-                $trimFunction = FALSE;
+            case 'none':
+                $trimFunction = false;
                 break;
-            case 'left' :
+            case 'left':
                 $trimFunction = 'ltrim';
                 break;
-            case 'right' :
+            case 'right':
                 $trimFunction = 'rtrim';
                 break;
-            default : //'both':
+            default: //'both':
                 $trimFunction = 'trim';
                 break;
         }
-        $ret = array ();
-        foreach($dataArray as $key=>$field){
+        $ret = [];
+        foreach ($dataArray as $key => $field) {
             $ret[$key] = $this->valToCsvHelper($field, $separator, $trimFunction);
         }
 
         return implode($separator, $ret);
-
     }
-    function valToCsvHelper($val, $separator, $trimFunction) {
-        if ($trimFunction)
-            $val = $trimFunction ($val);
+
+    /**
+     * @param $val
+     * @param $separator
+     * @param $trimFunction
+     * @return mixed|string
+     */
+    public function valToCsvHelper($val, $separator, $trimFunction)
+    {
+        if ($trimFunction) {
+            $val = $trimFunction($val);
+        }
         //If there is a separator (;) or a quote (") or a linebreak in the string, we need to quote it.
-        $needQuote = FALSE;
+        $needQuote = false;
         do {
-            if (strpos($val, '"') !== FALSE) {
-                $val = str_replace('"', '""', $val);
-                $needQuote = TRUE;
+            if (false !== strpos($val, '"')) {
+                $val       = str_replace('"', '""', $val);
+                $needQuote = true;
                 break;
             }
-            if (strpos($val, $separator) !== FALSE) {
-                $needQuote = TRUE;
+            if (false !== strpos($val, $separator)) {
+                $needQuote = true;
                 break;
             }
-            if ((strpos($val, "\n") !== FALSE) || (strpos($val, "\r") !== FALSE)) { // \r is for mac
-                $needQuote = TRUE;
+            if ((false !== strpos($val, "\n")) || (false !== strpos($val, "\r"))) { // \r is for mac
+                $needQuote = true;
                 break;
             }
-        } while (FALSE);
+        } while (false);
         if ($needQuote) {
             $val = '"' . $val . '"';
         }
+
         return $val;
     }
 
-
-    function execute() {
+    public function execute()
+    {
         $exportFileData = '';
 
         switch ($this->format) {
             case 'csv':
-                $separator = isset($this->options['separator']) ? $this->options['separator'] : ';';
-                $firstRow = implode($separator, $this->data['columnsHeaders']);
+                $separator      = isset($this->options['separator']) ? $this->options['separator'] : ';';
+                $firstRow       = implode($separator, $this->data['columnsHeaders']);
                 $exportFileData .= $firstRow . "\r\n";
 
-                foreach($this->data['rows'] as $cols) {
+                foreach ($this->data['rows'] as $cols) {
                     $exportFileData .= $this->arrayToCsvString($cols, $separator) . "\r\n";
                 }
-            break;
+                break;
         }
         $this->saveExportFile($exportFileData);
     }
 
-    function saveExportFile($content) {
+    /**
+     * @param $content
+     */
+    public function saveExportFile($content)
+    {
         switch ($this->format) {
             case 'csv':
                 $this->saveCsv($content);
-            break;
+                break;
         }
     }
 
-    function saveCsv($content) {
+    /**
+     * @param $content
+     */
+    public function saveCsv($content)
+    {
         if (!$this->filepath) {
             $this->filepath = XOOPS_UPLOAD_PATH . '/';
         }
@@ -242,38 +289,37 @@ class SmartExportRenderer {
 
         if (!$handle = fopen($fullFileName, 'a+')) {
             trigger_error('Unable to open ' . $fullFileName, E_USER_WARNING);
-        } elseif (fwrite($handle, $content) === FALSE) {
+        } elseif (false === fwrite($handle, $content)) {
             trigger_error('Unable to write in ' . $fullFileName, E_USER_WARNING);
         } else {
-            $mimeType = 'text/csv';
-            $file = strrev($this->filename);
-            $temp_name = strtolower(strrev(substr($file,0,strpos($file,"--"))) );
-            if ($temp_name == '') {
+            $mimeType  = 'text/csv';
+            $file      = strrev($this->filename);
+            $temp_name = strtolower(strrev(substr($file, 0, strpos($file, '--'))));
+            if ('' === $temp_name) {
                 $file_name = $this->filename;
             } else {
                 $file_name = $temp_name;
             }
             $fullFileName = $this->filepath . stripslashes(trim($this->filename));
 
-            if(ini_get('zlib.output_compression')) {
+            if (ini_get('zlib.output_compression')) {
                 ini_set('zlib.output_compression', 'Off');
             }
 
-            header("Pragma: public");
-            header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-            header("Cache-Control: private",false);
-            header("Content-Transfer-Encoding: binary");
-            if(isset($mimeType)) {
-                header("Content-Type: " . $mimeType);
+            header('Pragma: public');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Cache-Control: private', false);
+            header('Content-Transfer-Encoding: binary');
+            if (isset($mimeType)) {
+                header('Content-Type: ' . $mimeType);
             }
 
-            header("Content-Disposition: attachment; filename=" . $file_name);
+            header('Content-Disposition: attachment; filename=' . $file_name);
 
-            if(isset($mimeType) && strstr($mimeType, "text/")) {
-                $fp = fopen($fullFileName, "r");
-            }
-            else {
-                $fp = fopen($fullFileName, "rb");
+            if (isset($mimeType) && false !== strpos($mimeType, 'text/')) {
+                $fp = fopen($fullFileName, 'r');
+            } else {
+                $fp = fopen($fullFileName, 'rb');
             }
             fpassthru($fp);
             exit();
@@ -281,5 +327,3 @@ class SmartExportRenderer {
         fclose($handle);
     }
 }
-
-?>

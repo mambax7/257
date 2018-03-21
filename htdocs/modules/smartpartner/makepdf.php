@@ -1,46 +1,36 @@
 <?php
-// $Id: makepdf.php 9889 2012-07-16 12:08:42Z beckmi $
-//  ------------------------------------------------------------------------ //
-//                XOOPS - PHP Content Management System                      //
-//                    Copyright (c) 2000 XOOPS.org                           //
-//                       <http://www.xoops.org/>                             //
-//  ------------------------------------------------------------------------ //
-//  This program is free software; you can redistribute it and/or modify     //
-//  it under the terms of the GNU General Public License as published by     //
-//  the Free Software Foundation; either version 2 of the License, or        //
-//  (at your option) any later version.                                      //
-//                                                                           //
-//  You may not change or alter any portion of this comment or credits       //
-//  of supporting developers from this source code or any supporting         //
-//  source code which is considered copyrighted (c) material of the          //
-//  original comment or credit authors.                                      //
-//                                                                           //
-//  This program is distributed in the hope that it will be useful,          //
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of           //
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            //
-//  GNU General Public License for more details.                             //
-//                                                                           //
-//  You should have received a copy of the GNU General Public License        //
-//  along with this program; if not, write to the Free Software              //
-//  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA //
-//  ------------------------------------------------------------------------ //
-// Author: Kazumi Ono (AKA onokazu)                                          //
-// URL: http://www.myweb.ne.jp/, http://www.xoops.org/, http://jp.xoops.org/ //
-// Project: The XOOPS Project                                                //
-// ------------------------------------------------------------------------- //
+/*
+ * You may not change or alter any portion of this comment or credits
+ * of supporting developers from this source code or any supporting source code
+ * which is considered copyrighted (c) material of the original comment or credit authors.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ */
 
-include "header.php";
+/**
+ * @copyright    XOOPS Project https://xoops.org/
+ * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @package
+ * @since
+ * @author       XOOPS Development Team, Kazumi Ono (AKA onokazu)
+ */
+
+//TODO needs to be refactored for TCPDF
+
+require_once __DIR__ . '/header.php';
 //error_reporting(0);
 //error_reporting(0);
-include_once 'header.php';
-$myts =& MyTextSanitizer::getInstance();
-require_once SMARTPARTNER_ROOT_PATH . 'fpdf/fpdf.inc.php';
 
-$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$myts = \MyTextSanitizer::getInstance();
+//require_once SMARTPARTNER_ROOT_PATH . 'fpdf/fpdf.inc.php';
+require_once XOOPS_ROOT_PATH . '/class/libraries/vendor/tecnickcom/tcpdf/tcpdf.php';
 
-if ($id == 0) {
-    redirect_header("javascript:history.go(-1)", 2, _MD_SPARTNER_NOPARTNERSELECTED);
-    exit();
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+if (0 == $id) {
+    redirect_header('javascript:history.go(-1)', 2, _MD_SPARTNER_NOPARTNERSELECTED);
 }
 
 // Creating the Partner object for the selected FAQ
@@ -48,33 +38,32 @@ $partnerObj = new SmartpartnerPartner($id);
 
 // If the selected partner was not found, exit
 if ($partnerObj->notLoaded()) {
-    redirect_header("javascript:history.go(-1)", 2, _MD_SPARTNER_NOPARTNERSELECTED);
-    exit();
+    redirect_header('javascript:history.go(-1)', 2, _MD_SPARTNER_NOPARTNERSELECTED);
 }
 
 // Chech the status
-if ($partnerObj->status() != _SPARTNER_STATUS_ACTIVE) {
-    redirect_header("javascript:history.go(-1)", 2, _NOPERM);
-    exit();
+if (_SPARTNER_STATUS_ACTIVE != $partnerObj->status()) {
+    redirect_header('javascript:history.go(-1)', 2, _NOPERM);
 }
 
-$pdf_data['title'] = $partnerObj->title();
-$pdf_data['subtitle'] = "subtitle...";
-$pdf_data['subsubtitle'] = "subsubtitle...";
-$pdf_data['date'] = "date...";
-$pdf_data['filename'] = "filename..."; //preg_replace("/[^0-9a-z\-_\.]/i",'', $myts->htmlSpecialChars($article->topic_title()).' - '.$article->title());
-$pdf_data['content'] = $partnerObj->description();
-$pdf_data['author'] = "author...";
+$pdf_data['title']       = $partnerObj->title();
+$pdf_data['subtitle']    = 'subtitle...';
+$pdf_data['subsubtitle'] = 'subsubtitle...';
+$pdf_data['date']        = 'date...';
+$pdf_data['filename']    = 'filename...'; //preg_replace("/[^0-9a-z\-_\.]/i",'', $myts->htmlSpecialChars($article->topic_title()).' - '.$article->title());
+$pdf_data['content']     = $partnerObj->description();
+$pdf_data['author']      = 'author...';
 
-echo "test";
+echo 'test';
 //Other stuff
-$puff = '<br />';
-$puffer = '<br /><br /><br />';
+$puff   = '<br>';
+$puffer = '<br><br><br>';
 
 //create the A4-PDF...
 $pdf_config['slogan'] = $xoopsConfig['sitename'] . ' - ' . $xoopsConfig['slogan'];
 
-$pdf = new PDF();
+//$pdf = new PDF();
+$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, _CHARSET, false);
 $pdf->SetCreator($pdf_config['creator']);
 $pdf->SetTitle($pdf_data['title']);
 $pdf->SetAuthor($pdf_config['url']);
@@ -97,12 +86,12 @@ $pdf->SetXY(25, 35);
 $pdf->SetFont($pdf_config['font']['title']['family'], $pdf_config['font']['title']['style'], $pdf_config['font']['title']['size']);
 $pdf->WriteHTML($pdf_data['title'], $pdf_config['scale']);
 
-if ($pdf_data['subtitle'] <> '') {
+if ('' <> $pdf_data['subtitle']) {
     $pdf->WriteHTML($puff, $pdf_config['scale']);
     $pdf->SetFont($pdf_config['font']['subtitle']['family'], $pdf_config['font']['subtitle']['style'], $pdf_config['font']['subtitle']['size']);
     $pdf->WriteHTML($pdf_data['subtitle'], $pdf_config['scale']);
 }
-if ($pdf_data['subsubtitle'] <> '') {
+if ('' <> $pdf_data['subsubtitle']) {
     $pdf->WriteHTML($puff, $pdf_config['scale']);
     $pdf->SetFont($pdf_config['font']['subsubtitle']['family'], $pdf_config['font']['subsubtitle']['style'], $pdf_config['font']['subsubtitle']['size']);
     $pdf->WriteHTML($pdf_data['subsubtitle'], $pdf_config['scale']);

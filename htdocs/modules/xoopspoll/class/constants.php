@@ -1,8 +1,9 @@
-<?php
+<?php namespace XoopsModules\Xoopspoll;
+
 /*
                XOOPS - PHP Content Management System
-                   Copyright (c) 2000 XOOPS.org
-                      <http://www.xoops.org/>
+                   Copyright (c) 2000-2016 XOOPS.org
+                      <https://xoops.org>
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
@@ -32,16 +33,15 @@
  * the value(s) before module installation. Additionally the module may not
  * work correctly if trying to upgrade if these values have been changed.
  *
- * @copyright::  {@link http://xoops.org/ XOOPS Project}
+ * @copyright::  {@link https://xoops.org/ XOOPS Project}
  * @license  ::  {@link http://www.gnu.org/licenses/gpl-2.0.html GNU Public License}
  * @author   ::  zyspec <owners@zyspec.com>
  * @package  ::  xoopspoll
  * @since    ::  1.40
- * @version  ::  $Id: $
  **/
-// defined('XOOPS_ROOT_PATH') || exit('XOOPS root path not defined');
+// defined('XOOPS_ROOT_PATH') || die('Restricted access');
 
-interface XoopspollConstants
+class Constants
 {
     /**#@+
      * Constant definition

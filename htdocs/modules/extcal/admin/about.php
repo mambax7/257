@@ -1,6 +1,6 @@
 <?php
 /**
- * extCal module
+ * extCal module.
  *
  * You may not change or alter any portion of this comment or credits
  * of supporting developers from this source code or any supporting source code
@@ -9,22 +9,17 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright    XOOPS Project (http://xoops.org)
+ * @copyright    XOOPS Project (https://xoops.org)
  * @license      GNU GPL (http://www.gnu.org/licenses/gpl-2.0.html/)
- * @package      extCal
+ *
  * @since        2.5.0
+ *
  * @author       Mage, Mamba
- * @version      $Id $
  **/
-
-include_once dirname(dirname(dirname(__DIR__))) . '/include/cp_header.php';
-include dirname(dirname(dirname(__DIR__))) . '/class/xoopsformloader.php';
-include_once __DIR__ . '/admin_header.php';
-
+require_once __DIR__ . '/admin_header.php';
 xoops_cp_header();
 
-$aboutAdmin = new ModuleAdmin();
-echo $aboutAdmin->addNavigation(basename(__FILE__));
-echo $aboutAdmin->renderabout('6KJ7RW5DR3VTJ', false);
+$adminObject->displayNavigation(basename(__FILE__));
+$adminObject->displayAbout('xoopsfoundation@gmail.com', false);
 
-include_once __DIR__ . '/admin_footer.php';
+require_once __DIR__ . '/admin_footer.php';

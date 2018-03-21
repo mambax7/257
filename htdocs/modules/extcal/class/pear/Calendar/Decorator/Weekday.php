@@ -1,8 +1,9 @@
 <?php
+
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * Contains the Calendar_Decorator_Weekday class
+ * Contains the Calendar_Decorator_Weekday class.
  *
  * PHP versions 4 and 5
  *
@@ -28,17 +29,18 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @category  Date and Time
- * @package   Calendar
+ *
  * @author    Harry Fuecks <hfuecks@phppatterns.com>
  * @author    Lorenzo Alberton <l.alberton@quipo.it>
  * @copyright 2003-2007 Harry Fuecks, Lorenzo Alberton
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * @version   CVS: $Id: Weekday.php 1511 2011-09-01 20:56:07Z jjdai $
+ *
  * @link      http://pear.php.net/package/Calendar
  */
 
 /**
- * Allows Calendar include path to be redefined
+ * Allows Calendar include path to be redefined.
+ *
  * @ignore
  */
 if (!defined('CALENDAR_ROOT')) {
@@ -46,12 +48,12 @@ if (!defined('CALENDAR_ROOT')) {
 }
 
 /**
- * Load Calendar decorator base class
+ * Load Calendar decorator base class.
  */
 require_once CALENDAR_ROOT . 'Decorator.php';
 
 /**
- * Load a Calendar_Day
+ * Load a Calendar_Day.
  */
 require_once CALENDAR_ROOT . 'Day.php';
 
@@ -62,32 +64,30 @@ require_once CALENDAR_ROOT . 'Day.php';
  * $Weekday = new Calendar_Decorator_Weekday($Day);
  * $Weekday->setFirstDay(0); // Set first day of week to Sunday (default Mon)
  * echo $Weekday->thisWeekDay(); // Displays 5 - fifth day of week relative to Sun
- * </code>
+ * </code>.
  *
  * @category  Date and Time
- * @package   Calendar
+ *
  * @author    Harry Fuecks <hfuecks@phppatterns.com>
  * @author    Lorenzo Alberton <l.alberton@quipo.it>
  * @copyright 2003-2007 Harry Fuecks, Lorenzo Alberton
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
+ *
  * @link      http://pear.php.net/package/Calendar
- * @access    public
  */
 class Calendar_Decorator_Weekday extends Calendar_Decorator
 {
     /**
-     * First day of week
+     * First day of week.
+     *
      * @var int (default = 1 for Monday)
-     * @access private
      */
     public $firstDay = 1;
 
     /**
-     * Constructs Calendar_Decorator_Weekday
+     * Constructs Calendar_Decorator_Weekday.
      *
      * @param object &$Calendar subclass of Calendar
-     *
-     * @access public
      */
     public function __construct(&$Calendar)
     {
@@ -95,12 +95,9 @@ class Calendar_Decorator_Weekday extends Calendar_Decorator
     }
 
     /**
-     * Sets the first day of the week (0 = Sunday, 1 = Monday (default) etc)
+     * Sets the first day of the week (0 = Sunday, 1 = Monday (default) etc).
      *
      * @param int $firstDay first day of week
-     *
-     * @return void
-     * @access public
      */
     public function setFirstDay($firstDay)
     {
@@ -108,12 +105,11 @@ class Calendar_Decorator_Weekday extends Calendar_Decorator
     }
 
     /**
-     * Returns the previous weekday
+     * Returns the previous weekday.
      *
      * @param string $format (default = 'int') return value format
      *
      * @return int $format numeric day of week or timestamp
-     * @access public
      */
     public function prevWeekDay($format = 'int')
     {
@@ -127,12 +123,11 @@ class Calendar_Decorator_Weekday extends Calendar_Decorator
     }
 
     /**
-     * Returns the current weekday
+     * Returns the current weekday.
      *
      * @param string $format (default = 'int') return value format
      *
      * @return int numeric day of week or timestamp
-     * @access public
      */
     public function thisWeekDay($format = 'int')
     {
@@ -144,12 +139,11 @@ class Calendar_Decorator_Weekday extends Calendar_Decorator
     }
 
     /**
-     * Returns the next weekday
+     * Returns the next weekday.
      *
      * @param string $format (default = 'int') return value format
      *
      * @return int numeric day of week or timestamp
-     * @access public
      */
     public function nextWeekDay($format = 'int')
     {
@@ -163,12 +157,11 @@ class Calendar_Decorator_Weekday extends Calendar_Decorator
     }
 
     /**
-     * Adjusts the day of the week relative to the first day of the week
+     * Adjusts the day of the week relative to the first day of the week.
      *
      * @param int $dayOfWeek day of week calendar from Calendar_Engine
      *
      * @return int day of week adjusted to first day
-     * @access private
      */
     public function adjustWeekScale($dayOfWeek)
     {
